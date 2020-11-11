@@ -170,11 +170,26 @@ class TestIgnoreAlpha(BaseTest):
 
 
 class TestGaussianSmoothing(BaseTest):
-    def test_gaussian_smoothing_3d(self) -> None:
+    def test_gaussian_smoothing_1d(self) -> None:
+        channels = 6
+        kernel_size = 3
+        sigma = 2
+        dim = 1
+        smoothening_module = GaussianSmoothing(channels, kernel_size, sigma, dim)
+
+        test_tensor = torch.tensor([1.0, 5.0]).repeat(6, 2).unsqueeze(0)
+
+        diff_tensor = smoothening_module(test_tensor) - torch.tensor(
+            [2.4467, 3.5533]
+        ).repeat(6,1).unsqueeze(0)
+        assert diff_tensor.max() < 4.268e-05 and diff_tensor.min() > -4.197e-05
+
+    def test_gaussian_smoothing_2d(self) -> None:
         channels = 3
         kernel_size = 3
         sigma = 2
-        smoothening_module = transform.GaussianSmoothing(channels, kernel_size, sigma)
+        dim = 2
+        smoothening_module = transform.GaussianSmoothing(channels, kernel_size, sigma, dim)
 
         test_tensor = torch.tensor([1.0, 5.0]).repeat(3, 6, 3).unsqueeze(0)
 
@@ -182,6 +197,20 @@ class TestGaussianSmoothing(BaseTest):
             [2.4467, 3.5533]
         ).repeat(3, 4, 2).unsqueeze(0)
         assert diff_tensor.max() < 4.5539e-05 and diff_tensor.min() > -4.5539e-05
+
+    def test_gaussian_smoothing_3d(self) -> None:
+        channels = 4
+        kernel_size = 3
+        sigma = 1.021
+        dim = 3
+        smoothening_module = GaussianSmoothing(channels, kernel_size, sigma, dim)
+
+        test_tensor = torch.tensor([1.0, 5.0, 1.0]).repeat(4, 6, 6, 2).unsqueeze(0)
+
+        diff_tensor = smoothening_module(test_tensor) - torch.tensor(
+            [2.7873, 2.1063, 2.1063, 2.7873]
+        ).repeat(4, 4, 4, 1).unsqueeze(0)
+        assert diff_tensor.max() < 4.8162e-05 and diff_tensor.min() > 3.5762e-06
 
 
 if __name__ == "__main__":
