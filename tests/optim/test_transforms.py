@@ -4,7 +4,7 @@ import unittest
 import torch
 import torch.nn.functional as F
 from captum.optim._param.image import transform
-from tests.helpers.basic import BaseTest
+from captum.tests.helpers.basic import BaseTest
 
 
 class TestRandSelect(BaseTest):
