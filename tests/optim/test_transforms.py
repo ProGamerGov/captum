@@ -238,6 +238,7 @@ class TestGaussianSmoothing(BaseTest):
         test_tensor = torch.tensor([1.0, 5.0]).repeat(3, 6, 3).unsqueeze(0)
 
         assertTensorAlmostEqual(
+            self,
             smoothening_module(test_tensor),
             torch.tensor([2.3613, 3.6387]).repeat(3, 4, 2).unsqueeze(0),
         )
