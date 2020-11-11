@@ -10,7 +10,7 @@ import torch.optim as optim
 try:
     from tqdm.auto import tqdm
 except (ImportError, AssertionError):
-    pass
+    print("The tqdm package is required to use Captum's Optim library")
 
 from captum.optim._core.output_hook import AbortForwardException, ModuleOutputsHook
 from captum.optim._param.image.images import InputParameterization, NaturalImage
