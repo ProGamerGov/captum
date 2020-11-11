@@ -2,7 +2,6 @@
 import unittest
 
 import torch
-import torch.nn.functional as F
 
 from captum.optim._param.image import images
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
