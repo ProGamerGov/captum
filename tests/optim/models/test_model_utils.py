@@ -13,3 +13,7 @@ class TestReluLayer(BaseTest):
 
         relu_layer = model_utils.ReluLayer()
         assert torch.all(relu_layer(x).eq(F.relu(x)))
+
+
+if __name__ == "__main__":
+    unittest.main()
