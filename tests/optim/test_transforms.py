@@ -175,7 +175,7 @@ class TestGaussianSmoothing(BaseTest):
         kernel_size = 3
         sigma = 2
         dim = 1
-        smoothening_module = GaussianSmoothing(channels, kernel_size, sigma, dim)
+        smoothening_module = transform.GaussianSmoothing(channels, kernel_size, sigma, dim)
 
         test_tensor = torch.tensor([1.0, 5.0]).repeat(6, 2).unsqueeze(0)
 
@@ -203,7 +203,7 @@ class TestGaussianSmoothing(BaseTest):
         kernel_size = 3
         sigma = 1.021
         dim = 3
-        smoothening_module = GaussianSmoothing(channels, kernel_size, sigma, dim)
+        smoothening_module = transform.GaussianSmoothing(channels, kernel_size, sigma, dim)
 
         test_tensor = torch.tensor([1.0, 5.0, 1.0]).repeat(4, 6, 6, 2).unsqueeze(0)
 
