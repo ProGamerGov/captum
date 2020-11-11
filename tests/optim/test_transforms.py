@@ -169,6 +169,80 @@ class TestIgnoreAlpha(BaseTest):
         assert rgb_tensor.size(1) == 3
 
 
+class TestToRGB(BaseTest):
+    def test_to_rgb_i1i2i3(self) -> None:
+        to_rgb = transform.ToRGB(transform_name="i1i2i3")
+        assert torch.all(
+            to_rgb.transform.eq(
+                torch.tensor(
+                    [
+                        [1 / 3, 1 / 3, 1 / 3],
+                        [1 / 2, 0, -1 / 2],
+                        [-1 / 4, 1 / 2, -1 / 4],
+                    ]
+                )
+            )
+        )
+
+    def test_to_rgb_klt(self) -> None:
+        to_rgb = transform.ToRGB(transform_name="klt")
+
+        klt_expected = torch.Tensor(
+            [[0.26, 0.09, 0.02], [0.27, 0.00, -0.05], [0.27, -0.09, 0.03]]
+        )
+        klt_expected = klt_expected / torch.max(torch.norm(klt_expected, dim=0))
+        assert torch.all(to_rgb.transform.eq(klt_expected))
+
+    def test_to_rgb(self) -> None:
+        to_rgb = transform.ToRGB(transform_name="klt")
+        test_tensor = torch.ones(3, 4, 4).refine_names("C", "H", "W")
+
+        rgb_tensor = to_rgb(test_tensor)
+
+        r = torch.ones(4).repeat(4, 1) * 0.8009
+        b = torch.ones(4).repeat(4, 1) * 0.4762
+        g = torch.ones(4).repeat(4, 1) * 0.4546
+        expected_rgb = torch.stack([r, b, g])
+
+        diff_rgb = rgb_tensor - expected_rgb
+        assert diff_rgb.max() < 4.8340e-05 and diff_rgb.min() > -7.7189e-06
+
+        inverse_tensor = to_rgb(rgb_tensor, inverse=True)
+
+        r_i = torch.ones(4).repeat(4, 1) * 0.9948
+        b_i = torch.ones(4).repeat(4, 1) * 0.0675
+        g_i = torch.ones(4).repeat(4, 1) * 0.0127
+        expected_inverse = torch.stack([r_i, b_i, g_i])
+
+        diff_inverse = inverse_tensor - expected_inverse
+        assert diff_inverse.max() < 4.5310e-05 and diff_inverse.min() > -4.7711e-05
+
+    def test_to_rgb_alpha(self) -> None:
+        to_rgb = transform.ToRGB(transform_name="klt")
+        test_tensor = torch.ones(4, 4, 4).refine_names("C", "H", "W")
+        alpha = torch.ones(4).repeat(4, 1)
+
+        rgb_tensor = to_rgb(test_tensor)
+
+        r = torch.ones(4).repeat(4, 1) * 0.8009
+        b = torch.ones(4).repeat(4, 1) * 0.4762
+        g = torch.ones(4).repeat(4, 1) * 0.4546
+        expected_rgb = torch.stack([r, b, g, alpha])
+
+        diff_rgb = rgb_tensor - expected_rgb
+        assert diff_rgb.max() < 4.8340e-05 and diff_rgb.min() > -7.7189e-06
+
+        inverse_tensor = to_rgb(rgb_tensor, inverse=True)
+
+        r_i = torch.ones(4).repeat(4, 1) * 0.9948
+        b_i = torch.ones(4).repeat(4, 1) * 0.0675
+        g_i = torch.ones(4).repeat(4, 1) * 0.0127
+        expected_inverse = torch.stack([r_i, b_i, g_i, alpha])
+
+        diff_inverse = inverse_tensor - expected_inverse
+        assert diff_inverse.max() < 4.5310e-05 and diff_inverse.min() > -4.7711e-05
+
+
 class TestGaussianSmoothing(BaseTest):
     def test_gaussian_smoothing_1d(self) -> None:
         channels = 6
@@ -216,7 +290,7 @@ class TestGaussianSmoothing(BaseTest):
         diff_tensor = smoothening_module(test_tensor) - torch.tensor(
             [2.7873, 2.1063, 2.1063, 2.7873]
         ).repeat(4, 4, 4, 1).unsqueeze(0)
-        assert diff_tensor.max() < 4.8162e-05 and diff_tensor.min() > 3.5762e-06
+        assert diff_tensor.max().max() < 4.8162e-05 and diff_tensor.min().min() > 3.5762e-06
 
 
 if __name__ == "__main__":
