@@ -5,7 +5,7 @@ import torch
 import torch.nn.functional as F
 
 from captum.optim._param.image import transform
-from tests.helpers.basic import BaseTest
+from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 
 class TestRandSelect(BaseTest):
@@ -229,47 +229,17 @@ class TestIgnoreAlpha(BaseTest):
 
 
 class TestGaussianSmoothing(BaseTest):
-    def test_gaussian_smoothing(self) -> None:
+    def test_gaussian_smoothing_3d(self) -> None:
         channels = 3
         kernel_size = 3
         sigma = 2
         smoothening_module = transform.GaussianSmoothing(channels, kernel_size, sigma)
 
-        test_tensor = (
-            torch.tensor([1.0, 5.0, 1.0, 5.0, 1.0, 5.0])
-            .unsqueeze(0)
-            .rot90(1)
-            .repeat(3, 1, 4)
-            .unsqueeze(0)
-        )
+        test_tensor = torch.tensor([1.0, 5.0]).repeat(3, 6, 3).unsqueeze(0)
 
-        assert torch.all(
-            smoothening_module(test_tensor).eq(
-                torch.tensor(
-                    [
-                        [
-                            [
-                                [3.5533, 3.5533],
-                                [2.4467, 2.4467],
-                                [3.5533, 3.5533],
-                                [2.4467, 2.4467],
-                            ],
-                            [
-                                [3.5533, 3.5533],
-                                [2.4467, 2.4467],
-                                [3.5533, 3.5533],
-                                [2.4467, 2.4467],
-                            ],
-                            [
-                                [3.5533, 3.5533],
-                                [2.4467, 2.4467],
-                                [3.5533, 3.5533],
-                                [2.4467, 2.4467],
-                            ],
-                        ]
-                    ]
-                )
-            )
+        assertTensorAlmostEqual(
+            smoothening_module(test_tensor),
+            torch.tensor([2.3613, 3.6387]).repeat(3, 4, 2).unsqueeze(0),
         )
 
 
