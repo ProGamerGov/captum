@@ -2,15 +2,9 @@ import unittest
 
 import torch
 import torch.nn.functional as F
-from captum.optim.transform import (
-    BlendAlpha,
-    CenterCrop,
-    GaussianSmoothing,
-    IgnoreAlpha,
-    RandomScale,
-    RandomSpatialJitter,
-    rand_select,
-)
+from captum.optim.transform import (BlendAlpha, CenterCrop, GaussianSmoothing,
+                                    IgnoreAlpha, RandomScale,
+                                    RandomSpatialJitter, rand_select)
 from tests.helpers.basic import BaseTest
 
 
