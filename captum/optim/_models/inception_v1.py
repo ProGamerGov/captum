@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+import captum.optim._models.model_utils as model_utils
+
 GS_SAVED_WEIGHTS_URL = (
     "https://github.com/pytorch/captum/raw/"
     + "optim-wip/captum/optim/_models/inception5h.pth"
@@ -39,64 +41,10 @@ def googlenet(pretrained=False, progress=True, model_path=None, **kwargs):
         else:
             state_dict = torch.load(model_path, map_location="cpu")
         model.load_state_dict(state_dict)
-        relu_to_redirected_relu(model)
+        model_utils.relu_to_redirected_relu(model)
         return model
 
     return InceptionV1(**kwargs)
-
-
-# RedirectedReLU autograd function
-class RedirectedReLU(torch.autograd.Function):
-    @staticmethod
-    def forward(self, input_tensor):
-        self.save_for_backward(input_tensor)
-        return input_tensor.clamp(min=0)
-
-    @staticmethod
-    def backward(self, grad_output):
-        (input_tensor,) = self.saved_tensors
-        grad_input = grad_output.clone()
-        grad_input[input_tensor < 0] = grad_input[input_tensor < 0] * 1e-1
-        return grad_input
-
-
-# RedirectedReLU layer
-class RedirectedReluLayer(nn.Module):
-    def forward(self, input):
-        if F.relu(input.detach().sum()) != 0:
-            return F.relu(input, inplace=True)
-        else:
-            return RedirectedReLU.apply(input)
-
-
-# Replace all ReLU layers with RedirectedReLU
-def relu_to_redirected_relu(model):
-    for name, child in model.named_children():
-        if isinstance(child, ReluLayer):
-            setattr(model, name, RedirectedReluLayer())
-        else:
-            relu_to_redirected_relu(child)
-
-
-# Basic Hookable & Replaceable ReLU layer
-class ReluLayer(nn.Module):
-    def forward(self, input):
-        return F.relu(input, inplace=True)
-
-
-# Basic Hookable Local Response Norm layer
-class LocalResponseNormLayer(nn.Module):
-    def __init__(self, size=5, alpha=9.999999747378752e-05, beta=0.75, k=1):
-        super(LocalResponseNormLayer, self).__init__()
-        self.size = size
-        self.alpha = alpha
-        self.beta = beta
-        self.k = k
-
-    def forward(self, input):
-        return F.local_response_norm(
-            input, size=self.size, alpha=self.alpha, beta=self.beta, k=self.k
-        )
 
 
 # Better version of Inception V1/GoogleNet for Inception5h
@@ -116,9 +64,9 @@ class InceptionV1(nn.Module):
             groups=1,
             bias=True,
         )
-        self.conv1_relu = ReluLayer()
+        self.conv1_relu = model_utils.ReluLayer()
         self.pool1 = nn.MaxPool2d(kernel_size=3, stride=2, padding=0)
-        self.localresponsenorm1 = LocalResponseNormLayer(*lrn_vals)
+        self.localresponsenorm1 = model_utils.LocalResponseNormLayer(*lrn_vals)
 
         self.conv2 = nn.Conv2d(
             in_channels=64,
@@ -128,7 +76,7 @@ class InceptionV1(nn.Module):
             groups=1,
             bias=True,
         )
-        self.conv2_relu = ReluLayer()
+        self.conv2_relu = model_utils.ReluLayer()
         self.conv3 = nn.Conv2d(
             in_channels=64,
             out_channels=192,
@@ -138,8 +86,8 @@ class InceptionV1(nn.Module):
             groups=1,
             bias=True,
         )
-        self.conv3_relu = ReluLayer()
-        self.localresponsenorm2 = LocalResponseNormLayer(*lrn_vals)
+        self.conv3_relu = model_utils.ReluLayer()
+        self.localresponsenorm2 = model_utils.LocalResponseNormLayer(*lrn_vals)
 
         self.pool2 = nn.MaxPool2d(kernel_size=3, stride=2, padding=0)
         self.mixed3a = InceptionModule(192, 64, 96, 128, 16, 32, 32)
@@ -234,7 +182,7 @@ class InceptionModule(nn.Module):
             groups=1,
             bias=True,
         )
-        self.conv_1x1_relu = ReluLayer()
+        self.conv_1x1_relu = model_utils.ReluLayer()
 
         self.conv_3x3_reduce = nn.Conv2d(
             in_channels=in_channels,
@@ -244,7 +192,7 @@ class InceptionModule(nn.Module):
             groups=1,
             bias=True,
         )
-        self.conv_3x3_reduce_relu = ReluLayer()
+        self.conv_3x3_reduce_relu = model_utils.ReluLayer()
         self.conv_3x3 = nn.Conv2d(
             in_channels=c3x3reduce,
             out_channels=c3x3,
@@ -254,7 +202,7 @@ class InceptionModule(nn.Module):
             groups=1,
             bias=True,
         )
-        self.conv_3x3_relu = ReluLayer()
+        self.conv_3x3_relu = model_utils.ReluLayer()
 
         self.conv_5x5_reduce = nn.Conv2d(
             in_channels=in_channels,
@@ -264,7 +212,7 @@ class InceptionModule(nn.Module):
             groups=1,
             bias=True,
         )
-        self.conv_5x5_reduce_relu = ReluLayer()
+        self.conv_5x5_reduce_relu = model_utils.ReluLayer()
         self.conv_5x5 = nn.Conv2d(
             in_channels=c5x5reduce,
             out_channels=c5x5,
@@ -274,7 +222,7 @@ class InceptionModule(nn.Module):
             groups=1,
             bias=True,
         )
-        self.conv_5x5_relu = ReluLayer()
+        self.conv_5x5_relu = model_utils.ReluLayer()
 
         self.pool = nn.MaxPool2d(kernel_size=3, stride=1, padding=0)
         self.pool_proj = nn.Conv2d(
@@ -285,7 +233,7 @@ class InceptionModule(nn.Module):
             groups=1,
             bias=True,
         )
-        self.pool_proj_relu = ReluLayer()
+        self.pool_proj_relu = model_utils.ReluLayer()
 
     def forward(self, x):
         c1x1 = self.conv_1x1(x)
@@ -320,9 +268,9 @@ class AuxBranch(nn.Module):
             groups=1,
             bias=True,
         )
-        self.loss_conv_relu = ReluLayer()
+        self.loss_conv_relu = model_utils.ReluLayer()
         self.loss_fc = nn.Linear(in_features=2048, out_features=1024, bias=True)
-        self.loss_fc_relu = ReluLayer()
+        self.loss_fc_relu = model_utils.ReluLayer()
         self.loss_dropout = nn.Dropout(0.699999988079071)
         self.loss_classifier = nn.Linear(
             in_features=1024, out_features=out_features, bias=True
