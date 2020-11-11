@@ -9,6 +9,7 @@ def get_model_layers(model):
     """
     layers = []
     # recursive function to get layers
+
     def get_layers(net, prefix=[]):
         if hasattr(net, "_modules"):
             for name, layer in net._modules.items():
