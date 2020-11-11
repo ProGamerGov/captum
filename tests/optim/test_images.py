@@ -9,9 +9,6 @@ from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 
 class TestFFTImage(BaseTest):
-
-    # def test_to_rgb_klt(self) -> None:
-
     def test_pytorch_fftfreq(self) -> None:
         assert torch.all(
             images.FFTImage.pytorch_fftfreq(5).eq(
