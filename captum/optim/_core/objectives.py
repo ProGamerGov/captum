@@ -147,8 +147,7 @@ def n_steps(n: int) -> StopCriteria:
     Returns:
         *StopCriteria* callable
     """
-    if tqdm_exists:
-        pbar = tqdm(total=n, unit="step")
+    pbar = tqdm(total=n, unit="step")
 
     def continue_while(step, obj, history, optim):
         if len(history) > 0:
