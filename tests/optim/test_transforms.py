@@ -1,7 +1,7 @@
 import unittest
 
 import torch
-import torch.nn as nn
+import torch.nn.functional as F
 from captum.optim.transform import (
     BlendAlpha,
     CenterCrop,
@@ -69,6 +69,8 @@ class TestRandomScale(BaseTest):
         )
 
     def test_random_scale_matrix(self) -> None:
+        scale_module = RandomScale(scale=(1, 0.975, 1.025, 0.95, 1.05))
+        test_tensor = torch.ones(1, 3, 3, 3)
         # Test scale matrices
         assert torch.all(
             scale_module.get_scale_mat(0.5, test_tensor.device, test_tensor.dtype).eq(
