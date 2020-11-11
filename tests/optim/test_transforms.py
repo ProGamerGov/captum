@@ -290,7 +290,10 @@ class TestGaussianSmoothing(BaseTest):
         diff_tensor = smoothening_module(test_tensor) - torch.tensor(
             [2.7873, 2.1063, 2.1063, 2.7873]
         ).repeat(4, 4, 4, 1).unsqueeze(0)
-        assert diff_tensor.max().max() < 4.8162e-05 and diff_tensor.min().min() > 3.5762e-06
+        assert (
+            diff_tensor.max().max() < 4.8162e-05
+            and diff_tensor.min().min() > 3.5762e-06
+        )
 
 
 if __name__ == "__main__":
