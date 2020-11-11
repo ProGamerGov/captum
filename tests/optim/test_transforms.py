@@ -194,6 +194,10 @@ class TestToRGB(BaseTest):
         assert torch.all(to_rgb.transform.eq(klt_expected))
 
     def test_to_rgb(self) -> None:
+        if torch.__version__ != "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping ToRGB forward due to insufficient Torch version."
+            )
         to_rgb = transform.ToRGB(transform_name="klt")
         test_tensor = torch.ones(3, 4, 4).refine_names("C", "H", "W")
 
@@ -218,6 +222,10 @@ class TestToRGB(BaseTest):
         assert diff_inverse.max() < 4.5310e-05 and diff_inverse.min() > -4.7711e-05
 
     def test_to_rgb_alpha(self) -> None:
+        if torch.__version__ != "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping ToRGB with Alpha forward due to insufficient Torch version."
+            )
         to_rgb = transform.ToRGB(transform_name="klt")
         test_tensor = torch.ones(4, 4, 4).refine_names("C", "H", "W")
         alpha = torch.ones(4).repeat(4, 1)
@@ -276,7 +284,6 @@ class TestGaussianSmoothing(BaseTest):
         ).repeat(3, 4, 2).unsqueeze(0)
         assert diff_tensor.max() < 4.5539e-05 and diff_tensor.min() > -4.5539e-05
 
-    @unittest.skip("Weird error")
     def test_gaussian_smoothing_3d(self) -> None:
         channels = 4
         kernel_size = 3
@@ -291,7 +298,7 @@ class TestGaussianSmoothing(BaseTest):
         diff_tensor = smoothening_module(test_tensor) - torch.tensor(
             [2.7873, 2.1063, 2.1063, 2.7873]
         ).repeat(4, 4, 4, 1).unsqueeze(0)
-        assert diff_tensor.max() < 4.8162e-05 and diff_tensor.min() > 3.5762e-06
+        assert diff_tensor.max().item() < 4.8162e-05 and diff_tensor.min().item() > 3.5762e-06
 
 
 if __name__ == "__main__":
