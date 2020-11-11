@@ -300,7 +300,7 @@ class TestGaussianSmoothing(BaseTest):
         ).repeat(4, 4, 4, 1).unsqueeze(0)
         t_max = diff_tensor.max().item()
         t_min = diff_tensor.min().item()
-        assert t_max < 4.8162e-05 and t_min > 3.5762e-06
+        assert t_max < 4.8162e-05 and t_min > 3.3377e-06
 
 
 if __name__ == "__main__":
