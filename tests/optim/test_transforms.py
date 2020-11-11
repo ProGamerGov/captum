@@ -5,7 +5,7 @@ import torch
 import torch.nn.functional as F
 
 from captum.optim._param.image import transform
-from tests.helpers.basic import BaseTest
+from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 
 class TestRandSelect(BaseTest):
@@ -25,40 +25,20 @@ class TestRandomScale(BaseTest):
         # Test rescaling
         assert torch.all(
             scale_module.scale_tensor(test_tensor, 0.5).eq(
-                torch.tensor(
-                    [
-                        [
-                            [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]],
-                            [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]],
-                            [[1.0, 1.0, 1.0], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0]],
-                        ]
-                    ]
-                )
+                torch.ones(3, 1).repeat(3, 1, 3).unsqueeze(0)
             )
         )
         assert torch.all(
             scale_module.scale_tensor(test_tensor, 1.5).eq(
                 torch.tensor(
                     [
-                        [
-                            [
-                                [0.2500, 0.5000, 0.2500],
-                                [0.5000, 1.0000, 0.5000],
-                                [0.2500, 0.5000, 0.2500],
-                            ],
-                            [
-                                [0.2500, 0.5000, 0.2500],
-                                [0.5000, 1.0000, 0.5000],
-                                [0.2500, 0.5000, 0.2500],
-                            ],
-                            [
-                                [0.2500, 0.5000, 0.2500],
-                                [0.5000, 1.0000, 0.5000],
-                                [0.2500, 0.5000, 0.2500],
-                            ],
-                        ]
+                        [0.2500, 0.5000, 0.2500],
+                        [0.5000, 1.0000, 0.5000],
+                        [0.2500, 0.5000, 0.2500],
                     ]
                 )
+                .repeat(3, 1, 1)
+                .unsqueeze(0)
             )
         )
 
@@ -88,28 +68,14 @@ class TestRandomSpatialJitter(BaseTest):
             spatialjitter.translate_tensor(test_input, [4, 4]).eq(
                 torch.tensor(
                     [
-                        [
-                            [
-                                [1.0, 0.0, 0.0, 0.0],
-                                [0.0, 1.0, 0.0, 1.0],
-                                [0.0, 0.0, 1.0, 0.0],
-                                [0.0, 1.0, 0.0, 1.0],
-                            ],
-                            [
-                                [1.0, 0.0, 0.0, 0.0],
-                                [0.0, 1.0, 0.0, 1.0],
-                                [0.0, 0.0, 1.0, 0.0],
-                                [0.0, 1.0, 0.0, 1.0],
-                            ],
-                            [
-                                [1.0, 0.0, 0.0, 0.0],
-                                [0.0, 1.0, 0.0, 1.0],
-                                [0.0, 0.0, 1.0, 0.0],
-                                [0.0, 1.0, 0.0, 1.0],
-                            ],
-                        ]
+                        [1.0, 0.0, 0.0, 0.0],
+                        [0.0, 1.0, 0.0, 1.0],
+                        [0.0, 0.0, 1.0, 0.0],
+                        [0.0, 1.0, 0.0, 1.0],
                     ]
                 )
+                .repeat(3, 1, 1)
+                .unsqueeze(0)
             )
         )
 
@@ -119,28 +85,14 @@ class TestRandomSpatialJitter(BaseTest):
             spatialjitter.translate_tensor(test_input, [0, 3]).eq(
                 torch.tensor(
                     [
-                        [
-                            [
-                                [0.0, 1.0, 0.0, 1.0],
-                                [1.0, 0.0, 0.0, 0.0],
-                                [0.0, 0.0, 0.0, 0.0],
-                                [1.0, 0.0, 0.0, 0.0],
-                            ],
-                            [
-                                [0.0, 1.0, 0.0, 1.0],
-                                [1.0, 0.0, 0.0, 0.0],
-                                [0.0, 0.0, 0.0, 0.0],
-                                [1.0, 0.0, 0.0, 0.0],
-                            ],
-                            [
-                                [0.0, 1.0, 0.0, 1.0],
-                                [1.0, 0.0, 0.0, 0.0],
-                                [0.0, 0.0, 0.0, 0.0],
-                                [1.0, 0.0, 0.0, 0.0],
-                            ],
-                        ]
+                        [0.0, 1.0, 0.0, 1.0],
+                        [1.0, 0.0, 0.0, 0.0],
+                        [0.0, 0.0, 0.0, 0.0],
+                        [1.0, 0.0, 0.0, 0.0],
                     ]
                 )
+                .repeat(3, 1, 1)
+                .unsqueeze(0)
             )
         )
 
@@ -160,13 +112,13 @@ class TestCenterCrop(BaseTest):
             crop_tensor(test_tensor).eq(
                 torch.tensor(
                     [
-                        [
-                            [[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]],
-                            [[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]],
-                            [[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]],
-                        ]
+                        [1.0, 1.0, 0.0],
+                        [1.0, 1.0, 0.0],
+                        [0.0, 0.0, 0.0],
                     ]
                 )
+                .repeat(3, 1, 1)
+                .unsqueeze(0)
             )
         )
 
@@ -176,22 +128,11 @@ class TestCenterCrop(BaseTest):
             crop_tensor(test_tensor).eq(
                 torch.tensor(
                     [
-                        [
-                            [
-                                [1.0, 0.0, 1.0, 1.0, 0.0, 1.0],
-                                [1.0, 0.0, 1.0, 1.0, 0.0, 1.0],
-                            ],
-                            [
-                                [1.0, 0.0, 1.0, 1.0, 0.0, 1.0],
-                                [1.0, 0.0, 1.0, 1.0, 0.0, 1.0],
-                            ],
-                            [
-                                [1.0, 0.0, 1.0, 1.0, 0.0, 1.0],
-                                [1.0, 0.0, 1.0, 1.0, 0.0, 1.0],
-                            ],
-                        ]
+                        [1.0, 0.0, 1.0, 1.0, 0.0, 1.0],
                     ]
                 )
+                .repeat(3, 2, 1)
+                .unsqueeze(0)
             )
         )
 
@@ -209,13 +150,13 @@ class TestBlendAlpha(BaseTest):
             blend_alpha(test_tensor).eq(
                 torch.tensor(
                     [
-                        [
-                            [[3.0, 5.0, 3.0], [5.0, 1.0, 5.0], [3.0, 5.0, 3.0]],
-                            [[3.0, 5.0, 3.0], [5.0, 1.0, 5.0], [3.0, 5.0, 3.0]],
-                            [[3.0, 5.0, 3.0], [5.0, 1.0, 5.0], [3.0, 5.0, 3.0]],
-                        ]
+                        [3.0, 5.0, 3.0],
+                        [5.0, 1.0, 5.0],
+                        [3.0, 5.0, 3.0],
                     ]
                 )
+                .repeat(3, 1, 1)
+                .unsqueeze(0)
             )
         )
 
@@ -237,10 +178,11 @@ class TestGaussianSmoothing(BaseTest):
 
         test_tensor = torch.tensor([1.0, 5.0]).repeat(3, 6, 3).unsqueeze(0)
 
-        diff_tensor = smoothening_module(test_tensor) - torch.tensor(
-            [2.4467, 3.5533]
-        ).repeat(3, 4, 2).unsqueeze(0)
-        assert diff_tensor.max() < 4.5539e-05 and diff_tensor.min() > -4.5539e-05
+        assertTensorAlmostEqual(
+            self,
+            smoothening_module(test_tensor),
+            torch.tensor([2.3613, 3.6387]).repeat(3, 4, 2).unsqueeze(0),
+        )
 
 
 if __name__ == "__main__":
