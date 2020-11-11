@@ -194,7 +194,7 @@ class TestToRGB(BaseTest):
         assert torch.all(to_rgb.transform.eq(klt_expected))
 
     def test_to_rgb(self) -> None:
-        if torch.__version__ != "1.7.0":
+        if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
                 "Skipping ToRGB forward due to insufficient Torch version."
             )
@@ -222,7 +222,7 @@ class TestToRGB(BaseTest):
         assert diff_inverse.max() < 4.5310e-05 and diff_inverse.min() > -4.7711e-05
 
     def test_to_rgb_alpha(self) -> None:
-        if torch.__version__ != "1.7.0":
+        if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
                 "Skipping ToRGB with Alpha forward due to insufficient Torch version."
             )
