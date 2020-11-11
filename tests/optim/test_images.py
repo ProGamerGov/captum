@@ -25,6 +25,7 @@ class TestFFTImage(BaseTest):
             self,
             images.FFTImage.rfft2d_freqs(height=2, width=3),
             torch.tensor([[0.0000, 0.3333, 0.3333], [0.5000, 0.6009, 0.6009]]),
+            delta=0.0002,
         )
 
 
