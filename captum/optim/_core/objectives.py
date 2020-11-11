@@ -9,7 +9,7 @@ import torch.optim as optim
 
 try:
     from tqdm.auto import tqdm
-except(ImportError, AssertionError):
+except (ImportError, AssertionError):
     pass
 
 from captum.optim._core.output_hook import AbortForwardException, ModuleOutputsHook
