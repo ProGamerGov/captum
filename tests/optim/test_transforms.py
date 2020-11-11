@@ -5,7 +5,7 @@ import torch
 import torch.nn.functional as F
 
 from captum.optim._param.image import transform
-from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
+from tests.helpers.basic import BaseTest
 
 
 class TestRandSelect(BaseTest):
@@ -178,11 +178,10 @@ class TestGaussianSmoothing(BaseTest):
 
         test_tensor = torch.tensor([1.0, 5.0]).repeat(3, 6, 3).unsqueeze(0)
 
-        assertTensorAlmostEqual(
-            self,
-            smoothening_module(test_tensor),
-            torch.tensor([2.3613, 3.6387]).repeat(3, 4, 2).unsqueeze(0),
-        )
+        diff_tensor = smoothening_module(test_tensor) - torch.tensor(
+            [2.4467, 3.5533]
+        ).repeat(3, 4, 2).unsqueeze(0)
+        assert diff_tensor.max() < 4.5539e-05 and diff_tensor.min() > -4.5539e-05
 
 
 if __name__ == "__main__":
