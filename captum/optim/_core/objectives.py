@@ -6,7 +6,11 @@ from typing import Callable, Iterable, List, Optional
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from tqdm.auto import tqdm
+
+try:
+    from tqdm.auto import tqdm
+except(ImportError, AssertionError):
+    pass
 
 from captum.optim._core.output_hook import AbortForwardException, ModuleOutputsHook
 from captum.optim._param.image.images import InputParameterization, NaturalImage
@@ -143,7 +147,8 @@ def n_steps(n: int) -> StopCriteria:
     Returns:
         *StopCriteria* callable
     """
-    pbar = tqdm(total=n, unit="step")
+    if tqdm_exists:
+        pbar = tqdm(total=n, unit="step")
 
     def continue_while(step, obj, history, optim):
         if len(history) > 0:
