@@ -233,14 +233,14 @@ class TestGaussianSmoothing(BaseTest):
         channels = 3
         kernel_size = 3
         sigma = 2
-        smoothening_module = GaussianSmoothing(channels, kernel_size, sigma)
+        smoothening_module = transform.GaussianSmoothing(channels, kernel_size, sigma)
 
         test_tensor = torch.tensor([1.0, 5.0]).repeat(3, 6, 3).unsqueeze(0)
 
         diff_tensor = smoothening_module(test_tensor) - torch.tensor(
             [2.4467, 3.5533]
         ).repeat(3, 4, 2).unsqueeze(0)
-        assert diff.max() < 4.5539e-05 and diff.min() > -4.5539e-05
+        assert diff_tensor.max() < 4.5539e-05 and diff_tensor.min() > -4.5539e-05
 
 
 if __name__ == "__main__":
