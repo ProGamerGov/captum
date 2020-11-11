@@ -2,9 +2,7 @@ import unittest
 
 import torch
 import torch.nn.functional as F
-from captum.optim.transform import (BlendAlpha, CenterCrop, GaussianSmoothing,
-                                    IgnoreAlpha, RandomScale,
-                                    RandomSpatialJitter, rand_select)
+from captum.optim._param.image import transform
 from tests.helpers.basic import BaseTest
 
 
@@ -13,13 +11,13 @@ class TestRandSelect(BaseTest):
         a = (1, 2, 3, 4, 5)
         b = torch.Tensor([0.1, -5, 56.7, 99.0])
 
-        assert rand_select(a) in a
-        assert rand_select(b) in b
+        assert transform.rand_select(a) in a
+        assert transform.rand_select(b) in b
 
 
 class TestRandomScale(BaseTest):
     def test_random_scale(self) -> None:
-        scale_module = RandomScale(scale=(1, 0.975, 1.025, 0.95, 1.05))
+        scale_module = transform.RandomScale(scale=(1, 0.975, 1.025, 0.95, 1.05))
         test_tensor = torch.ones(1, 3, 3, 3)
 
         # Test rescaling
@@ -63,7 +61,7 @@ class TestRandomScale(BaseTest):
         )
 
     def test_random_scale_matrix(self) -> None:
-        scale_module = RandomScale(scale=(1, 0.975, 1.025, 0.95, 1.05))
+        scale_module = transform.RandomScale(scale=(1, 0.975, 1.025, 0.95, 1.05))
         test_tensor = torch.ones(1, 3, 3, 3)
         # Test scale matrices
         assert torch.all(
@@ -81,7 +79,7 @@ class TestRandomScale(BaseTest):
 class TestRandomSpatialJitter(BaseTest):
     def test_random_spatial_jitter(self) -> None:
 
-        spatialjitter = RandomSpatialJitter(3)
+        spatialjitter = transform.RandomSpatialJitter(3)
         test_input = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
 
         assert torch.all(
@@ -113,7 +111,7 @@ class TestRandomSpatialJitter(BaseTest):
             )
         )
 
-        spatialjitter = RandomSpatialJitter(2)
+        spatialjitter = transform.RandomSpatialJitter(2)
 
         assert torch.all(
             spatialjitter.translate_tensor(test_input, [0, 3]).eq(
@@ -154,7 +152,7 @@ class TestCenterCrop(BaseTest):
             .unsqueeze(0)
         )
 
-        crop_tensor = CenterCrop(size=3)
+        crop_tensor = transform.CenterCrop(size=3)
 
         assert torch.all(
             crop_tensor(test_tensor).eq(
@@ -170,7 +168,7 @@ class TestCenterCrop(BaseTest):
             )
         )
 
-        crop_tensor = CenterCrop(size=(4, 0))
+        crop_tensor = transform.CenterCrop(size=(4, 0))
 
         assert torch.all(
             crop_tensor(test_tensor).eq(
@@ -203,7 +201,7 @@ class TestBlendAlpha(BaseTest):
         test_tensor = torch.cat([rgb_tensor, alpha_tensor]).unsqueeze(0)
 
         background_tensor = torch.ones_like(rgb_tensor) * 5
-        blend_alpha = BlendAlpha(background=background_tensor)
+        blend_alpha = transform.BlendAlpha(background=background_tensor)
 
         assert torch.all(
             blend_alpha(test_tensor).eq(
@@ -222,7 +220,7 @@ class TestBlendAlpha(BaseTest):
 
 class TestIgnoreAlpha(BaseTest):
     def test_ignore_alpha(self) -> None:
-        ignore_alpha = IgnoreAlpha()
+        ignore_alpha = transform.IgnoreAlpha()
         test_input = torch.ones(1, 4, 3, 3)
         rgb_tensor = ignore_alpha(test_input)
         assert rgb_tensor.size(1) == 3
@@ -233,7 +231,7 @@ class TestGaussianSmoothing(BaseTest):
         channels = 3
         kernel_size = 3
         sigma = 2
-        smoothening_module = GaussianSmoothing(channels, kernel_size, sigma)
+        smoothening_module = transform.GaussianSmoothing(channels, kernel_size, sigma)
 
         test_tensor = (
             torch.tensor([1.0, 5.0, 1.0, 5.0, 1.0, 5.0])
