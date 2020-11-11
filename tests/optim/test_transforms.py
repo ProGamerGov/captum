@@ -240,7 +240,7 @@ class TestGaussianSmoothing(BaseTest):
         assertTensorAlmostEqual(
             self,
             smoothening_module(test_tensor),
-            torch.tensor([2.3613, 3.6387]).repeat(3, 4, 2).unsqueeze(0),
+            torch.tensor([2.3613, 3.6387], delta=4.1).repeat(3, 4, 2).unsqueeze(0),
         )
 
 
