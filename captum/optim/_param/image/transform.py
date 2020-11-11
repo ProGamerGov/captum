@@ -112,7 +112,7 @@ class CenterCrop(torch.nn.Module):
         if type(size) is list or type(size) is tuple:
             assert (
                 len(size) == 2
-            ), "CenterCrop requires a single crop value or a tuple of (height,width) in pixels for cropping."
+            ), "CenterCrop requires a single integer or a tuple of integers."
             self.crop_val = size
         else:
             self.crop_val = [size] * 2
