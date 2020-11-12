@@ -10,14 +10,14 @@ from tests.helpers.basic import BaseTest
 class TestInceptionV1(BaseTest):
     def test_load_inceptionv1(self) -> None:
         try:
-            model = googlenet(pretrained=True)
+            googlenet(pretrained=True)
             test = True
         except Exception:
             test = False
         assert test
 
     def test_load_and_forward_basic_inceptionv1(self) -> None:
-        x = torch.randn(1, 3, 224, 224).clamp(0,1)
+        x = torch.randn(1, 3, 224, 224).clamp(0, 1)
         model = googlenet(pretrained=True)
         try:
             model(x)
@@ -27,8 +27,8 @@ class TestInceptionV1(BaseTest):
         assert test
 
     def test_load_and_forward_diff_sizes_inceptionv1(self) -> None:
-        x = torch.randn(1, 3, 512, 512).clamp(0,1)
-        x2 = torch.randn(1, 3, 383, 511).clamp(0,1)
+        x = torch.randn(1, 3, 512, 512).clamp(0, 1)
+        x2 = torch.randn(1, 3, 383, 511).clamp(0, 1)
         model = googlenet(pretrained=True)
         try:
             model(x)
