@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-import captum.optim._models.model_utils as model_utils
+import captum.optim._utils.model_utils as model_utils
 
 GS_SAVED_WEIGHTS_URL = (
     "https://github.com/pytorch/captum/raw/"
@@ -41,7 +41,7 @@ def googlenet(pretrained=False, progress=True, model_path=None, **kwargs):
         else:
             state_dict = torch.load(model_path, map_location="cpu")
         model.load_state_dict(state_dict)
-        model_utils.relu_to_redirected_relu(model)
+        model_utils.replace_layer(model)
         return model
 
     return InceptionV1(**kwargs)
