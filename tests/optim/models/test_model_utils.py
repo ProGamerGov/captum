@@ -44,7 +44,7 @@ class TestRedirectedReluLayer(BaseTest):
 
 
 class TestGetLayers(BaseTest):
-    def test_get_layers_inceptionv1(self) -> None:
+    def test_get_layers_pretrained_inceptionv1(self) -> None:
         expected_list = [
             "conv1",
             "conv1_relu",
