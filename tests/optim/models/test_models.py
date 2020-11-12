@@ -7,7 +7,7 @@ from captum.optim._models.inception_v1 import googlenet
 from tests.helpers.basic import BaseTest
 
 
-class TestInceptionV1(BaseTest):    
+class TestInceptionV1(BaseTest):
     def test_load_inceptionv1(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
