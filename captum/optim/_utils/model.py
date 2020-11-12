@@ -45,6 +45,12 @@ class RedirectedReluLayer(nn.Module):
             return RedirectedReLU.apply(input)
 
 
+# Basic Hookable & Replaceable ReLU layer
+class ReluLayer(nn.Module):
+    def forward(self, input):
+        return F.relu(input, inplace=True)
+
+
 # Replace all target layers
 def replace_layer(model, layer1=ReluLayer, layer2=RedirectedReluLayer()):
     for name, child in model.named_children():
@@ -52,12 +58,6 @@ def replace_layer(model, layer1=ReluLayer, layer2=RedirectedReluLayer()):
             setattr(model, name, layer2)
         else:
             relu_to_redirected_relu(child)
-
-
-# Basic Hookable & Replaceable ReLU layer
-class ReluLayer(nn.Module):
-    def forward(self, input):
-        return F.relu(input, inplace=True)
 
 
 # Basic Hookable Local Response Norm layer
