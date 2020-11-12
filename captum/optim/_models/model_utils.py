@@ -46,11 +46,11 @@ class RedirectedReluLayer(nn.Module):
             return RedirectedReLU.apply(input)
 
 
-# Replace all ReLU layers with RedirectedReLU
-def relu_to_redirected_relu(model):
+# Replace all target layers
+def replace_layer(model, layer1=ReluLayer, layer2=RedirectedReluLayer()):
     for name, child in model.named_children():
-        if isinstance(child, ReluLayer):
-            setattr(model, name, RedirectedReluLayer())
+        if isinstance(child, layer1):
+            setattr(model, name, layer2)
         else:
             relu_to_redirected_relu(child)
 
