@@ -2,6 +2,7 @@
 import unittest
 
 import torch
+
 from captum.optim._models.inception_v1 import googlenet
 from tests.helpers.basic import BaseTest
 
