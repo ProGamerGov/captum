@@ -11,7 +11,7 @@ class TestInceptionV1(BaseTest):
     def test_load_inceptionv1(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
-                "Skipping PixelImage random due to insufficient Torch version."
+                "Skipping load pretrained inception due to insufficient Torch version."
             )
         try:
             googlenet(pretrained=True)
@@ -23,7 +23,7 @@ class TestInceptionV1(BaseTest):
     def test_transform_inceptionv1(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
-                "Skipping PixelImage random due to insufficient Torch version."
+                "Skipping inceptionV1 internal transform due to insufficient Torch version."
             )
         x = torch.randn(1, 3, 224, 224).clamp(0, 1)
         model = googlenet(pretrained=True)
@@ -34,7 +34,7 @@ class TestInceptionV1(BaseTest):
     def test_load_and_forward_basic_inceptionv1(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
-                "Skipping PixelImage random due to insufficient Torch version."
+                "Skipping basic pretrained inceptionV1 forward due to insufficient Torch version."
             )
         x = torch.randn(1, 3, 224, 224).clamp(0, 1)
         model = googlenet(pretrained=True)
@@ -48,7 +48,7 @@ class TestInceptionV1(BaseTest):
     def test_load_and_forward_diff_sizes_inceptionv1(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
-                "Skipping PixelImage random due to insufficient Torch version."
+                "Skipping pretrained inceptionV1 forward with different sized inputs due to insufficient Torch version."
             )
         x = torch.randn(1, 3, 512, 512).clamp(0, 1)
         x2 = torch.randn(1, 3, 383, 511).clamp(0, 1)
@@ -64,7 +64,7 @@ class TestInceptionV1(BaseTest):
     def test_forward_aux_inceptionv1(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
-                "Skipping PixelImage random due to insufficient Torch version."
+                "Skipping pretrained inceptionV1 with aux logits forward due to insufficient Torch version."
             )
         x = torch.randn(1, 3, 224, 224).clamp(0, 1)
         model = googlenet(pretrained=False, aux_logits=True)
