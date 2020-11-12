@@ -188,7 +188,7 @@ class TestGetLayers(BaseTest):
             "fc",
         ]
         model = googlenet(pretrained=True)
-        collected_layers = get_model_layers(model)
+        collected_layers = model_utils.get_model_layers(model)
         assert collected_layers == expected_list
 
 
