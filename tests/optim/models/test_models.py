@@ -27,3 +27,7 @@ class TestInceptionV1(BaseTest):
         except:
             test = False
         assert test == True
+
+
+if __name__ == "__main__":
+    unittest.main()
