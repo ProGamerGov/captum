@@ -57,7 +57,7 @@ def replace_layer(model, layer1=ReluLayer, layer2=RedirectedReluLayer()):
         if isinstance(child, layer1):
             setattr(model, name, layer2)
         else:
-            relu_to_redirected_relu(child)
+            replace_layer(child)
 
 
 # Basic Hookable Local Response Norm layer
