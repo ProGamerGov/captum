@@ -8,7 +8,6 @@ def get_model_layers(model):
     Return a list of hookable layers for the target model.
     """
     layers = []
-    # recursive function to get layers
 
     def get_layers(net, prefix=[]):
         if hasattr(net, "_modules"):
