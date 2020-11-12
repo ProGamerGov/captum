@@ -13,7 +13,7 @@ class TestInceptionV1(BaseTest):
         try:
             output = model(x)
             test = True
-        except:
+        except Exception as e:
             test = False
         assert test == True
 
@@ -25,7 +25,7 @@ class TestInceptionV1(BaseTest):
             output = model(x)
             output2 = model(x2)
             test = True
-        except:
+        except Exception as e:
             test = False
         assert test == True
 
