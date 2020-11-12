@@ -8,6 +8,14 @@ from tests.helpers.basic import BaseTest
 
 
 class TestInceptionV1(BaseTest):
+    def test_load_inceptionv1(self) -> None:
+        try:
+            model = googlenet(pretrained=True)
+            test = True
+        except Exception:
+            test = False
+        assert test
+
     def test_load_and_forward_basic_inceptionv1(self) -> None:
         x = torch.randn(1, 3, 224, 224)
         model = googlenet(pretrained=True)
