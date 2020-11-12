@@ -6,7 +6,7 @@ from captum.optim._models.inception_v1 import googlenet
 
 
 class TestInceptionV1(BaseTest):
-    def test_inceptionv1(self) -> None:
+    def test_load_and_forward_inceptionv1(self) -> None:
         x = torch.randn(1, 3, 224, 224)
         model = googlenet(pretrained=True)
         try:
