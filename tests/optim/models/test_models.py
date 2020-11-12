@@ -7,8 +7,12 @@ from captum.optim._models.inception_v1 import googlenet
 from tests.helpers.basic import BaseTest
 
 
-class TestInceptionV1(BaseTest):
+class TestInceptionV1(BaseTest):    
     def test_load_inceptionv1(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage random due to insufficient Torch version."
+            )
         try:
             googlenet(pretrained=True)
             test = True
@@ -17,6 +21,10 @@ class TestInceptionV1(BaseTest):
         assert test
 
     def test_load_and_forward_basic_inceptionv1(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage random due to insufficient Torch version."
+            )
         x = torch.randn(1, 3, 224, 224).clamp(0, 1)
         model = googlenet(pretrained=True)
         try:
@@ -27,6 +35,10 @@ class TestInceptionV1(BaseTest):
         assert test
 
     def test_load_and_forward_diff_sizes_inceptionv1(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage random due to insufficient Torch version."
+            )
         x = torch.randn(1, 3, 512, 512).clamp(0, 1)
         x2 = torch.randn(1, 3, 383, 511).clamp(0, 1)
         model = googlenet(pretrained=True)
