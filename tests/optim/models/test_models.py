@@ -20,6 +20,17 @@ class TestInceptionV1(BaseTest):
             test = False
         assert test
 
+    def test_transform_inceptionv1(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage random due to insufficient Torch version."
+            )
+        x = torch.randn(1, 3, 224, 224).clamp(0, 1)
+        model = googlenet(pretrained=True)
+        output = model._transform_inputs(x)
+        expected_output = x[:, [2, 1, 0]] * 255 - 117
+        assert torch.all(output.eq(expected_output))
+
     def test_load_and_forward_basic_inceptionv1(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
@@ -49,6 +60,16 @@ class TestInceptionV1(BaseTest):
         except Exception:
             test = False
         assert test
+
+    def test_forward_aux_inceptionv1(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage random due to insufficient Torch version."
+            )
+        x = torch.randn(1, 3, 224, 224).clamp(0, 1)
+        model = googlenet(pretrained=False, aux_logits=True)
+        outputs = model(x)
+        assert len(outputs) == 3
 
 
 if __name__ == "__main__":
