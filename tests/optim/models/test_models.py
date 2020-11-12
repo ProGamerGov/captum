@@ -11,23 +11,23 @@ class TestInceptionV1(BaseTest):
         x = torch.randn(1, 3, 224, 224)
         model = googlenet(pretrained=True)
         try:
-            output = model(x)
+            model(x)
             test = True
         except Exception as e:
             test = False
-        assert test == True
+        assert test
 
     def test_load_and_forward_diff_sizes_inceptionv1(self) -> None:
         x = torch.randn(1, 3, 512, 512)
         x2 = torch.randn(1, 3, 383, 511)
         model = googlenet(pretrained=True)
         try:
-            output = model(x)
-            output2 = model(x2)
+            model(x)
+            model(x2)
             test = True
         except Exception as e:
             test = False
-        assert test == True
+        assert test
 
 
 if __name__ == "__main__":
