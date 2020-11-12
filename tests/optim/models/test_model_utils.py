@@ -46,7 +46,7 @@ class TestGetLayers(BaseTest):
     def test_get_layers_pretrained_inceptionv1(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
-                "Skipping PixelImage random due to insufficient Torch version."
+                "Skipping get_layers test due to insufficient Torch version."
             )
         expected_list = [
             "conv1",
