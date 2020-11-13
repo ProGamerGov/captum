@@ -79,7 +79,7 @@ class TestReplaceLayers(BaseTest):
         toy_model = BasicReluModel()
         old_layer = torch.nn.ReLU
         new_layer = model_utils.RedirectedReluLayer
-        model_utils.replace_layer(toy_model, old_layer, new_layer)
+        model_utils.replace_layers(toy_model, old_layer, new_layer)
         assert type(toy_model.relu1) != old_layer and type(toy_model.relu1) == new_layer
         assert (
             type(toy_model.relu2.relu) != old_layer
