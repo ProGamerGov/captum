@@ -52,10 +52,10 @@ class ReluLayer(nn.Module):
 
 
 # Replace all target layers
-def replace_layer(model, layer1=ReluLayer, layer2=RedirectedReluLayer()):
+def replace_layer(model, layer1=ReluLayer, layer2=RedirectedReluLayer):
     for name, child in model.named_children():
         if isinstance(child, layer1):
-            setattr(model, name, layer2)
+            setattr(model, name, layer2())
         else:
             replace_layer(child)
 
