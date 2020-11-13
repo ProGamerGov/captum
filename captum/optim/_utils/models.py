@@ -53,11 +53,11 @@ class ReluLayer(nn.Module):
 
 # Replace all target layers
 def replace_layers(model, old_layer=ReluLayer, new_layer=RedirectedReluLayer):
-    for name, child in model.named_children():
+    for name, child in model._modules.items():
         if isinstance(child, old_layer):
             setattr(model, name, new_layer())
         else:
-            replace_layers(child)
+            replace_layers(child, old_layer, new_layer)
 
 
 # Basic Hookable Local Response Norm layer
