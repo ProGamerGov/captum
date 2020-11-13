@@ -50,7 +50,7 @@ class TestRedirectedReluLayer(BaseTest):
 
         rr_layer = model_utils.RedirectedReluLayer()
         x = (torch.randn(1, 3, 4, 4, requires_grad=True) - 5).clamp(0, 1)
-        h = rr_layer.register_backward_hook(check_grad)
+        rr_layer.register_backward_hook(check_grad)
         rr_loss = rr_layer(x * 1).mean()
         rr_loss.backward()
 
@@ -59,18 +59,18 @@ class TestRedirectedReluLayer(BaseTest):
 
 class TestReplaceLayers(BaseTest):
     def test_replace_layers(self) -> None:
-        class BasicReluModule(nn.Module):
+        class BasicReluModule(torch.nn.Module):
             def __init__(self):
                 super().__init__()
-                self.relu = nn.ReLU()
+                self.relu = torch.nn.ReLU()
 
             def forward(self, input):
                 return self.relu(input)
 
-        class BasicReluModel(nn.Module):
+        class BasicReluModel(torch.nn.Module):
             def __init__(self):
                 super().__init__()
-                self.relu1 = nn.ReLU()
+                self.relu1 = torch.nn.ReLU()
                 self.relu2 = BasicReluModule()
 
             def forward(self, input):
