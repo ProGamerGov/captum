@@ -57,7 +57,7 @@ def replace_layers(model, old_layer=ReluLayer, new_layer=RedirectedReluLayer):
         if isinstance(child, old_layer):
             setattr(model, name, new_layer())
         else:
-            replace_layer(child)
+            replace_layers(child)
 
 
 # Basic Hookable Local Response Norm layer
