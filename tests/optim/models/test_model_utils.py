@@ -41,6 +41,21 @@ class TestRedirectedReluLayer(BaseTest):
         layer = model_utils.RedirectedReluLayer()
         assert torch.all(layer(x).eq(F.relu(x)))
 
+    def test_backward_redirected_relu_layer(self) -> None:
+        t_grad_input, t_grad_output = [], []
+
+        def check_grad(self, grad_input, grad_output):
+            t_grad_input.append(grad_input[0].clone().detach())
+            t_grad_output.append(grad_output[0].clone().detach())
+
+        rr_layer = model_utils.RedirectedReluLayer()
+        x = (torch.randn(1, 3, 4, 4, requires_grad=True) - 5).clamp(0, 1)
+        h = rr_layer.register_backward_hook(check_grad)
+        rr_loss = rr_layer(x * 1).mean()
+        rr_loss.backward()
+
+        assert torch.all(t_grad_input[0].eq(t_grad_output[0]))
+
 
 class TestGetLayers(BaseTest):
     def test_get_layers_pretrained_inceptionv1(self) -> None:
