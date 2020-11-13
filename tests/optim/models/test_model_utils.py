@@ -57,6 +57,36 @@ class TestRedirectedReluLayer(BaseTest):
         assert torch.all(t_grad_input[0].eq(t_grad_output[0]))
 
 
+class TestReplaceLayers(BaseTest):
+    def test_replace_layers(self) -> None:
+        class BasicReluModule(nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.relu = nn.ReLU()
+
+            def forward(self, input):
+                return self.relu(input)
+
+        class BasicReluModel(nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.relu1 = nn.ReLU()
+                self.relu2 = BasicReluModule()
+
+            def forward(self, input):
+                return self.relu2(self.relu1(input))
+
+        toy_model = BasicReluModel()
+        old_layer = torch.nn.ReLU
+        new_layer = model_utils.RedirectedReluLayer
+        model_utils.replace_layer(toy_model, old_layer, new_layer)
+        assert type(toy_model.relu1) != old_layer and type(toy_model.relu1) == new_layer
+        assert (
+            type(toy_model.relu2.relu) != old_layer
+            and type(toy_model.relu2.relu) == new_layer
+        )
+
+
 class TestGetLayers(BaseTest):
     def test_get_layers_pretrained_inceptionv1(self) -> None:
         if torch.__version__ == "1.2.0":
