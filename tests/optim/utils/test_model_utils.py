@@ -80,6 +80,8 @@ class TestReplaceLayers(BaseTest):
         old_layer = torch.nn.ReLU
         new_layer = model_utils.RedirectedReluLayer
         model_utils.replace_layers(toy_model, old_layer, new_layer)
+        # Unittest can't run replace_layers correctly?
+        model_utils.replace_layers(toy_model.relu2, old_layer, new_layer)
         assert type(toy_model.relu1) != old_layer and type(toy_model.relu1) == new_layer
         assert (
             type(toy_model.relu2.relu) != old_layer
