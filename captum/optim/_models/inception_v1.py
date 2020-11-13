@@ -41,7 +41,7 @@ def googlenet(pretrained=False, progress=True, model_path=None, **kwargs):
         else:
             state_dict = torch.load(model_path, map_location="cpu")
         model.load_state_dict(state_dict)
-        model_utils.replace_layer(model)
+        model_utils.replace_layers(model)
         return model
 
     return InceptionV1(**kwargs)
