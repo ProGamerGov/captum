@@ -50,7 +50,7 @@ class ToRGB(nn.Module):
     """
 
     @staticmethod
-    def klt_transform():
+    def klt_transform() -> torch.Tensor:
         """Karhunen-Loève transform (KLT) measured on ImageNet"""
         KLT = [[0.26, 0.09, 0.02], [0.27, 0.00, -0.05], [0.27, -0.09, 0.03]]
         transform = torch.Tensor(KLT).float()
@@ -58,7 +58,7 @@ class ToRGB(nn.Module):
         return transform
 
     @staticmethod
-    def i1i2i3_transform():
+    def i1i2i3_transform() -> torch.Tensor:
         i1i2i3_matrix = [
             [1 / 3, 1 / 3, 1 / 3],
             [1 / 2, 0, -1 / 2],
