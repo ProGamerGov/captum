@@ -23,8 +23,11 @@ def get_model_layers(model) -> List[str]:
     return layers
 
 
-# RedirectedReLU autograd function
 class RedirectedReLU(torch.autograd.Function):
+    """
+    A workaround when there is no gradient flow from an initial random input.
+    """
+
     @staticmethod
     def forward(self, input_tensor):
         self.save_for_backward(input_tensor)
@@ -38,8 +41,11 @@ class RedirectedReLU(torch.autograd.Function):
         return grad_input
 
 
-# RedirectedReLU layer
 class RedirectedReluLayer(nn.Module):
+    """
+    Class for applying RedirectedReLU
+    """
+
     def forward(self, input):
         if F.relu(input.detach().sum()) != 0:
             return F.relu(input, inplace=True)
@@ -47,14 +53,20 @@ class RedirectedReluLayer(nn.Module):
             return RedirectedReLU.apply(input)
 
 
-# Basic Hookable & Replaceable ReLU layer
 class ReluLayer(nn.Module):
+    """
+    Basic Hookable & Replaceable ReLU layer.
+    """
+
     def forward(self, input):
         return F.relu(input, inplace=True)
 
 
-# Replace all target layers
 def replace_layers(model, old_layer=ReluLayer, new_layer=RedirectedReluLayer) -> None:
+    """
+    Replace all target layers with new layers.
+    """
+
     for name, child in model._modules.items():
         if isinstance(child, old_layer):
             setattr(model, name, new_layer())
@@ -62,8 +74,11 @@ def replace_layers(model, old_layer=ReluLayer, new_layer=RedirectedReluLayer) ->
             replace_layers(child, old_layer, new_layer)
 
 
-# Basic Hookable Local Response Norm layer
 class LocalResponseNormLayer(nn.Module):
+    """
+    Basic Hookable Local Response Norm layer.
+    """
+
     def __init__(self, size=5, alpha=9.999999747378752e-05, beta=0.75, k=1):
         super(LocalResponseNormLayer, self).__init__()
         self.size = size
