@@ -1,9 +1,11 @@
+from typing import List
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 
-def get_model_layers(model):
+def get_model_layers(model) -> List[str]:
     """
     Return a list of hookable layers for the target model.
     """
@@ -52,7 +54,7 @@ class ReluLayer(nn.Module):
 
 
 # Replace all target layers
-def replace_layers(model, old_layer=ReluLayer, new_layer=RedirectedReluLayer):
+def replace_layers(model, old_layer=ReluLayer, new_layer=RedirectedReluLayer) -> None:
     for name, child in model._modules.items():
         if isinstance(child, old_layer):
             setattr(model, name, new_layer())
