@@ -76,6 +76,13 @@ class ToRGB(nn.Module):
         else:
             raise ValueError("transform_name has to be either 'klt' or 'i1i2i3'")
 
+    def decorrelate_init(self, x: torch.Tensor) -> torch.Tensor:
+        x = x.refine_names("C", "H", "W")
+        h, w = x.size("H"), x.size("W")
+        flat = x.flatten(("H", "W"), "spatials")
+        correct = torch.inverse(self.transform) @ flat
+        return correct.unflatten("spatials", (("H", h), ("W", w))).rename(None)
+
     def forward(self, x, inverse=False):
         assert x.dim() == 3
 
