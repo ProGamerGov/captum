@@ -204,3 +204,26 @@ class DirectionNeuron(Loss):
         )
         activations = activations[:, self.channel_index, _x, _y]
         return torch.cosine_similarity(self.direction, activations[None, None, None])
+
+
+class TensorDirection(Loss):
+    """
+    Visualize a tensor direction.
+    """
+
+    def __init__(self, target: nn.Module, vec: torch.Tensor):
+        super(Loss, self).__init__()
+        self.target = target
+        self.direction = vec
+
+    def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
+        activations = targets_to_values[self.target]
+
+        H_vec, W_vec = self.direction.size(2), self.direction.size(3)
+        H_activ, W_activ = activations.size(2), activations.size(3)
+
+        H = (H_activ - W_vec) // 2
+        W = (W_activ - W_vec) // 2
+
+        activations = activations[:, :, H : H + H_vec, W : W + W_vec]
+        return torch.cosine_similarity(self.direction, activations)
