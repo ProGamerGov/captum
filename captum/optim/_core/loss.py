@@ -72,7 +72,9 @@ class NeuronActivation(Loss):
         activations = targets_to_values[self.target]
         assert activations is not None
         assert len(activations.shape) == 4  # assume NCHW
-        _x, _y = self.get_neuron_pos(activations.size(2), activations.size(3), self.x, self.y)
+        _x, _y = self.get_neuron_pos(
+            activations.size(2), activations.size(3), self.x, self.y
+        )
 
         return activations[:, self.channel_index, _x, _y]
 
@@ -171,9 +173,7 @@ class Direction(Loss):
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
-        return torch.nn.CosineSimilarity(dim=1)(
-            self.direction.reshape((1, -1, 1, 1)), activations
-        )
+        return torch.nn.CosineSimilarity(self.direction, activations)
 
 
 class DirectionNeuron(Loss):
@@ -199,8 +199,8 @@ class DirectionNeuron(Loss):
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
 
-        _x, _y = self.get_neuron_pos(activations.size(2), activations.size(3), self.x, self.y)
-        activations = activations[:, self.channel_index, _x, _y]
-        return torch.nn.CosineSimilarity(dim=1)(
-            self.direction.reshape((1, -1, 1, 1)), activations
+        _x, _y = self.get_neuron_pos(
+            activations.size(2), activations.size(3), self.x, self.y
         )
+        activations = activations[:, self.channel_index, _x, _y]
+        return torch.nn.CosineSimilarity(self.direction, activations)
