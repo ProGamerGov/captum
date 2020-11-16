@@ -172,7 +172,7 @@ class Direction(Loss):
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
         return torch.nn.CosineSimilarity(dim=1)(
-            direction.reshape((1, -1, 1, 1)), activations
+            self.direction.reshape((1, -1, 1, 1)), activations
         )
 
 
@@ -202,5 +202,5 @@ class DirectionNeuron(Loss):
         _x, _y = self.get_neuron_pos(activations.size(2), activations.size(3), self.x, self.y)
         activations = activations[:, self.channel_index, _x, _y]
         return torch.nn.CosineSimilarity(dim=1)(
-            direction.reshape((1, -1, 1, 1)), activations
+            self.direction.reshape((1, -1, 1, 1)), activations
         )
