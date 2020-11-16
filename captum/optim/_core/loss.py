@@ -19,6 +19,20 @@ class Loss(ABC):
     def __call__(self, x):
         pass
 
+    def get_neuron_pos(self, H, W, x=None, y=None):
+        if x is None:
+            _x = W // 2
+        else:
+            assert x < W
+            _x = x
+
+        if y is None:
+            _y = H // 2
+        else:
+            assert y < W
+            _y = y
+        return _x, _y
+
 
 class ChannelActivation(Loss):
     """
@@ -58,19 +72,7 @@ class NeuronActivation(Loss):
         activations = targets_to_values[self.target]
         assert activations is not None
         assert len(activations.shape) == 4  # assume NCHW
-        _, _, H, W = activations.shape
-
-        if self.x is None:
-            _x = W // 2
-        else:
-            assert self.x < W
-            _x = self.x
-
-        if self.y is None:
-            _y = H // 2
-        else:
-            assert self.y < W
-            _y = self.y
+         _x, _y = self.get_neuron_pos(activations.size(2), activations.size(3), self.x, self.y)
 
         return activations[:, self.channel_index, _x, _y]
 
@@ -155,3 +157,50 @@ class Diversity(Loss):
                 for j in range(activations.size(0))
             ]
         ) / activations.size(0)
+    
+    
+class Direction(Loss):
+    """
+    Visualize a neuron direction.
+    """
+
+    def __init__(self, target: nn.Module, vec: torch.Tensor):
+        super(Loss, self).__init__()
+        self.target = target
+        self.direction = vec.reshape((1, -1, 1, 1))
+
+    def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
+        activations = targets_to_values[self.target]
+        return torch.nn.CosineSimilarity(dim=1)(
+            direction.reshape((1, -1, 1, 1)), activations
+        )
+
+
+class DirectionNeuron(Loss):
+    """
+    Visualize a direction.
+    """
+
+    def __init__(
+        self,
+        target: nn.Module,
+        vec: torch.Tensor,
+        channel_index: int,
+        x: int = None,
+        y: int = None,
+    ):
+        super(Loss, self).__init__()
+        self.target = target
+        self.direction = vec.reshape((1, -1, 1, 1))
+        self.channel_index = channel_index
+        self.x = x
+        self.y = y
+
+    def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
+        activations = targets_to_values[self.target]
+
+        _x, _y = self.get_neuron_pos(activations.size(2), activations.size(3), self.x, self.y)
+        activations = activations[:, self.channel_index, _x, _y]
+        return torch.nn.CosineSimilarity(dim=1)(
+            direction.reshape((1, -1, 1, 1)), activations
+        )
