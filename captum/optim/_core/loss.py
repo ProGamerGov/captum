@@ -161,17 +161,17 @@ class Diversity(Loss):
         ) / activations.size(0)
 
 
-class ChannelInterpolation(Loss):
+class ActivationInterpolation(Loss):
     """
     Interpolate between two different layers & channels
     """
 
     def __init__(
         self,
-        target1: nn.Module,
-        channel_index1: int,
-        target2: nn.Module,
-        channel_index2: int,
+        target1: nn.Module = None,
+        channel_index1: int = -1,
+        target2: nn.Module = None,
+        channel_index2: int = -1,
     ):
         super(Loss, self).__init__()
         self.target_one = target1
@@ -191,15 +191,17 @@ class ChannelInterpolation(Loss):
         )
         assert activations_one.size(0) == activations_two.size(0)
 
-        activations_one = activations_one[:, self.channel_index_one]
-        activations_two = activations_two[:, self.channel_index_two]
+        if self.channel_index_one > -1:
+            activations_one = activations_one[:, self.channel_index_one]
+        if self.channel_index_two > -1:
+            activations_two = activations_two[:, self.channel_index_two]
         B = activations_one.size(0)
 
         batch_weights = torch.arange(B, device=activations_one.device) / (B - 1)
         sum_tensor = torch.zeros(1, device=activations_one.device)
         for n in range(B):
-            sum_tensor = sum_tensor + ((1 - batch_weights[n]) * activations_one[n])
-            sum_tensor = sum_tensor + (batch_weights[n] * activations_two[n])
+            sum_tensor = sum_tensor + ((1 - batch_weights[n]) * activations_one[n]).mean()
+            sum_tensor = sum_tensor + (batch_weights[n] * activations_two[n]).mean()
         return sum_tensor
 
 
