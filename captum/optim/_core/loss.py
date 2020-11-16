@@ -203,4 +203,4 @@ class DirectionNeuron(Loss):
             activations.size(2), activations.size(3), self.x, self.y
         )
         activations = activations[:, self.channel_index, _x, _y]
-        return torch.cosine_similarity(self.direction, activations)
+        return torch.cosine_similarity(self.direction, activations[None, None, None])
