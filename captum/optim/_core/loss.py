@@ -72,7 +72,7 @@ class NeuronActivation(Loss):
         activations = targets_to_values[self.target]
         assert activations is not None
         assert len(activations.shape) == 4  # assume NCHW
-         _x, _y = self.get_neuron_pos(activations.size(2), activations.size(3), self.x, self.y)
+        _x, _y = self.get_neuron_pos(activations.size(2), activations.size(3), self.x, self.y)
 
         return activations[:, self.channel_index, _x, _y]
 
