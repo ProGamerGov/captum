@@ -186,8 +186,8 @@ class ChannelInterpolation(Loss):
         assert activations_one is not None and activations_two is not None
         # ensure channel indices are valid
         assert (
-            self.channel_index_one < activations.shape[1]
-            and self.channel_index_two < activations.shape[1]
+            self.channel_index_one < activations_one.shape[1]
+            and self.channel_index_two < activations_two.shape[1]
         )
         assert activations_one.size(0) == activations_two.size(0)
 
