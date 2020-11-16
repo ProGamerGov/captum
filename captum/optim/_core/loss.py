@@ -163,7 +163,7 @@ class Diversity(Loss):
 
 class ChannelInterpolation(Loss):
     """
-    Interpole between two different layers & channels
+    Interpolate between two different layers & channels
     """
 
     def __init__(
