@@ -331,7 +331,14 @@ class ActivationWeights(Loss):
         self.loc = [x, y, wx, wy]
         self.weights = weights
         self.neuron = x is not None or y is not None or neuron
-        assert wx is None and wy is None or wx is not None and wy is not None
+        assert (
+            wx is None
+            and wy is None
+            or wx is not None
+            and wy is not None
+            and x is not None
+            and y is not None
+        )
 
     def _call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
@@ -348,7 +355,7 @@ class ActivationWeights(Loss):
             else:
                 assert x is not None and y is not None
                 activations = activations[
-                    ..., y: y + wy, x: x + wx
+                    ..., y : y + wy, x : x + wx
                 ] * self.weights.view(1, -1, 1, 1)
         else:
             activations = activations * self.weights.view(1, -1, 1, 1)
