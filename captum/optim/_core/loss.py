@@ -332,7 +332,7 @@ class ActivationWeights(Loss):
     def _call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
         if self.neuron:
-            assert activations.dim() == 3 or activations.dim() == 4
+            assert activations.dim() == 4
             x, y, wx, wy = self.loc[0], self.loc[1], self.loc[2], self.loc[3]
             if wx is None and wy is None:
                 _x, _y = (
