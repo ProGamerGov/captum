@@ -316,6 +316,10 @@ class TensorDirection(Loss):
 
 
 class ActivationWeights(Loss):
+    """
+    Apply weights to channels, neurons, or spots in the target.
+    """
+
     def __init__(
         self,
         target: nn.Module,
