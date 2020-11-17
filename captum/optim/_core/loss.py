@@ -348,12 +348,10 @@ class ActivationWeights(Loss):
         if self.neuron:
             assert activations.dim() == 4
             if self.wx is None and self.wy is None:
-                _x, _y = (
-                    self.get_neuron_pos(
-                        activations.size(2), activations.size(3), self.x, self.y
-                    ).squeeze()
-                    * self.weights
+                _x, _y = self.get_neuron_pos(
+                    activations.size(2), activations.size(3), self.x, self.y
                 )
+                activations = activations[..., _x, _y].squeeze() * self.weights
             else:
                 activations = activations[
                     ..., self.y: self.y + self.wy, self.x: self.x + self.wx
