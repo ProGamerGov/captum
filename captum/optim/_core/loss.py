@@ -328,7 +328,10 @@ class ActivationWeights(Loss):
     ):
         super(Loss, self).__init__()
         self.target = target
-        self.loc = [x, y, wx, wy]
+        self.x = x
+        self.y = y
+        self.wx = wx
+        self.wy = wy
         self.weights = weights
         self.neuron = x is not None or y is not None or neuron
         assert (
@@ -344,18 +347,16 @@ class ActivationWeights(Loss):
         activations = targets_to_values[self.target]
         if self.neuron:
             assert activations.dim() == 4
-            x, y, wx, wy = self.loc[0], self.loc[1], self.loc[2], self.loc[3]
-            if wx is None and wy is None:
+            if self.wx is None and self.wy is None:
                 _x, _y = (
                     self.get_neuron_pos(
-                        activations.size(2), activations.size(3), x, y
+                        activations.size(2), activations.size(3), self.x, self.y
                     ).squeeze()
                     * self.weights
                 )
             else:
-                assert x is not None and y is not None
                 activations = activations[
-                    ..., y : y + wy, x : x + wx
+                    ..., self.y: self.y + self.wy, self.x: self.x + self.wx
                 ] * self.weights.view(1, -1, 1, 1)
         else:
             activations = activations * self.weights.view(1, -1, 1, 1)
