@@ -132,7 +132,7 @@ class InputOptimization(Objective, Parameterized):
                 (-1 * loss_value.mean()).backward()
                 optimizer.step()
                 step += 1
-        except Exception:
+        except (Exception, BaseException):
             self.cleanup()
         self.cleanup()
         return history
