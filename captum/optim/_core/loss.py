@@ -282,6 +282,7 @@ class DirectionNeuron(Loss):
         activations = targets_to_values[self.target]
 
         assert activations.dim() == 4
+
         _x, _y = self.get_neuron_pos(
             activations.size(2), activations.size(3), self.x, self.y
         )
@@ -301,6 +302,8 @@ class TensorDirection(Loss):
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
+
+        assert activations.dim() == 4
 
         H_vec, W_vec = self.direction.size(2), self.direction.size(3)
         H_activ, W_activ = activations.size(2), activations.size(3)
