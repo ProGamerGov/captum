@@ -309,3 +309,42 @@ class TensorDirection(Loss):
 
         activations = activations[:, :, H : H + H_vec, W : W + W_vec]
         return torch.cosine_similarity(self.direction, activations)
+
+
+class ActivationWeights(Loss):
+    def __init__(
+        self,
+        target: nn.Module,
+        weights: torch.Tensor = None,
+        neuron: bool = False,
+        x: int = None,
+        y: int = None,
+        wx: int = None,
+        wy: int = None,
+    ):
+        super(Loss, self).__init__()
+        self.target = target
+        self.loc = [x, y, wx, wy]
+        self.weights = weights
+        self.neuron = x is not None or y is not None or neuron
+        assert wx is None and wy is None or wx is not None and wy is not None
+
+    def _call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
+        activations = targets_to_values[self.target]
+        if self.neuron:
+            x, y, wx, wy = self.loc[0], self.loc[1], self.loc[2], self.loc[3]
+            if wx is None and wy is None:
+                _x, _y = (
+                    self.get_neuron_pos(
+                        activations.size(2), activations.size(3), x, y
+                    ).squeeze()
+                    * self.weights
+                )
+            else:
+                assert x is not None and y is not None
+                activations = activations[
+                    ..., y: y + wy, x: x + wx
+                ] * self.weights.view(1, -1, 1, 1)
+        else:
+            activations = activations * self.weights.view(1, -1, 1, 1)
+        return activations
