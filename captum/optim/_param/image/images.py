@@ -147,7 +147,11 @@ class ImageParameterization(InputParameterization):
     def setup_batch(self, x: torch.Tensor, batch: int = 1, dim: int = 3):
         assert batch > 0
         x = x.unsqueeze(0) if x.dim() == dim and batch == 1 else x
-        x = torch.stack([x.clone() for b in range(batch)]) if x.dim() == dim and batch > 1 else x
+        x = (
+            torch.stack([x.clone() for b in range(batch)])
+            if x.dim() == dim and batch > 1
+            else x
+        )
         return x
 
     def set_image(self, x: torch.Tensor):
@@ -157,7 +161,9 @@ class ImageParameterization(InputParameterization):
 class FFTImage(ImageParameterization):
     """Parameterize an image using inverse real 2D FFT"""
 
-    def __init__(self, size, channels: int = 3, batch: int = 1, init: torch.Tensor = None):
+    def __init__(
+        self, size, channels: int = 3, batch: int = 1, init: torch.Tensor = None
+    ):
         super().__init__()
         if init is None:
             assert len(size) == 2
@@ -183,7 +189,7 @@ class FFTImage(ImageParameterization):
             self.fourier_coeffs = random_coeffs / 50
         else:
             self.fourier_coeffs = torch.rfft(init, signal_ndim=2) / spectrum_scale
-     
+
         self.fourier_coeffs = self.setup_batch(self.fourier_coeffs, batch, 4)
         self.fourier_coeffs = nn.Parameter(self.fourier_coeffs)
 
@@ -217,7 +223,9 @@ class FFTImage(ImageParameterization):
 
 
 class PixelImage(ImageParameterization):
-    def __init__(self, size=None, channels: int = 3, batch: int = 1, init: torch.Tensor = None):
+    def __init__(
+        self, size=None, channels: int = 3, batch: int = 1, init: torch.Tensor = None
+    ):
         super().__init__()
         if init is None:
             assert size is not None and channels is not None and batch is not None
@@ -235,7 +243,9 @@ class PixelImage(ImageParameterization):
 
 
 class LaplacianImage(ImageParameterization):
-    def __init__(self, size=None, channels: int = 3, batch: int = 1, init: torch.Tensor = None):
+    def __init__(
+        self, size=None, channels: int = 3, batch: int = 1, init: torch.Tensor = None
+    ):
         super().__init__()
         power = 0.1
         self.tensor_params = []
@@ -260,7 +270,11 @@ class LaplacianImage(ImageParameterization):
         A = []
         for xi, upsamplei in zip(self.tensor_params, self.scaler):
             A.append(upsamplei(xi))
-        return (torch.sum(torch.cat(A), 0) + 0.5).unsqueeze(0).refine_names("B", "C", "H", "W")
+        return (
+            (torch.sum(torch.cat(A), 0) + 0.5)
+            .unsqueeze(0)
+            .refine_names("B", "C", "H", "W")
+        )
 
 
 class NaturalImage(ImageParameterization):

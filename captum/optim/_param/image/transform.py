@@ -99,7 +99,7 @@ class ToRGB(nn.Module):
         chw = correct.unflatten("spatials", (("H", h), ("W", w)))
 
         if x.dim() == 3:
-            chw = chw.refine_names("C", ...)      
+            chw = chw.refine_names("C", ...)
         elif x.dim() == 4:
             chw = chw.refine_names("B", "C", ...)
 
