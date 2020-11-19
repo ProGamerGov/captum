@@ -180,7 +180,7 @@ class FFTImage(ImageParameterization):
             random_coeffs = torch.randn(
                 coeffs_shape
             )  # names=["C", "H_f", "W_f", "complex"]
-            self.fourier_coeffs = andom_coeff / 50
+            self.fourier_coeffs = random_coeffs / 50
         else:
             self.fourier_coeffs = torch.rfft(init, signal_ndim=2) / spectrum_scale
      
