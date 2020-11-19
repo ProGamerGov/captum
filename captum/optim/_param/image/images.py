@@ -144,6 +144,12 @@ class InputParameterization(torch.nn.Module):
 
 
 class ImageParameterization(InputParameterization):
+    def setup_batch(self, x: torch.Tensor, batch: int = 1):
+        assert batch > 0
+        x = x.unsqueeze(0) if x.dim() == 3 and batch == 1 else x
+        x = torch.stack([x.clone() for b in range(batch)]) if x.dim() == 3 and batch > 1 else x
+        return x
+
     def set_image(self, x: torch.Tensor):
         ...
 
@@ -174,11 +180,12 @@ class FFTImage(ImageParameterization):
             random_coeffs = torch.randn(
                 coeffs_shape
             )  # names=["C", "H_f", "W_f", "complex"]
-            self.fourier_coeffs = nn.Parameter(random_coeffs.unsqueeze(0) / 50)
+            self.fourier_coeffs = andom_coeff / 50
         else:
-            self.fourier_coeffs = nn.Parameter(
-                torch.rfft(init, signal_ndim=2).unsqueeze(0) / spectrum_scale
-            )
+            self.fourier_coeffs = torch.rfft(init, signal_ndim=2) / spectrum_scale
+     
+        self.fourier_coeffs = self.setup_batch(self.fourier_coeffs, batch)
+        self.fourier_coeffs = nn.Parameter(self.fourier_coeffs)
 
     @staticmethod
     def rfft2d_freqs(height: int, width: int) -> torch.Tensor:
@@ -213,12 +220,11 @@ class PixelImage(ImageParameterization):
     def __init__(self, size=None, channels: int = 3, batch: int = 1, init: torch.Tensor = None):
         super().__init__()
         if init is None:
-            assert size is not None and channels is not None
+            assert size is not None and channels is not None and batch is not None
             init = torch.randn([channels, size[0], size[1]]) / 10 + 0.5
         else:
             assert init.shape[0] == 3 or init.shape[0] == 4
-            
-        init = torch.stack([init.clone() for b in range(batch)]) if init.dim() == 3 else init
+        init = self.setup_batch(init, batch)
         self.image = nn.Parameter(init)
 
     def forward(self):
@@ -245,7 +251,7 @@ class LaplacianImage(ImageParameterization):
                 x = x / 6  # Prevents output from being all white
             upsample = torch.nn.Upsample(scale_factor=scale, mode="nearest")
             x = x * (scale ** power) / (32 ** power)
-            x = torch.nn.Parameter(x.unsqueeze(0))
+            x = torch.nn.Parameter(x)
             self.tensor_params.append(x)
             self.scaler.append(upsample)
         self.tensor_params = torch.nn.ParameterList(self.tensor_params)
@@ -254,7 +260,7 @@ class LaplacianImage(ImageParameterization):
         A = []
         for xi, upsamplei in zip(self.tensor_params, self.scaler):
             A.append(upsamplei(xi))
-        return (torch.sum(torch.cat(A), 0) + 0.5).refine_names("B", "C", "H", "W")
+        return (torch.sum(torch.cat(A), 0) + 0.5).unsqueeze(0).refine_names("B", "C", "H", "W")
 
 
 class NaturalImage(ImageParameterization):
