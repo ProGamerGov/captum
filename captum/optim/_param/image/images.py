@@ -144,10 +144,10 @@ class InputParameterization(torch.nn.Module):
 
 
 class ImageParameterization(InputParameterization):
-    def setup_batch(self, x: torch.Tensor, batch: int = 1):
+    def setup_batch(self, x: torch.Tensor, batch: int = 1, dim: int = 3):
         assert batch > 0
-        x = x.unsqueeze(0) if x.dim() == 3 and batch == 1 else x
-        x = torch.stack([x.clone() for b in range(batch)]) if x.dim() == 3 and batch > 1 else x
+        x = x.unsqueeze(0) if x.dim() == dim and batch == 1 else x
+        x = torch.stack([x.clone() for b in range(batch)]) if x.dim() == dim and batch > 1 else x
         return x
 
     def set_image(self, x: torch.Tensor):
@@ -184,7 +184,7 @@ class FFTImage(ImageParameterization):
         else:
             self.fourier_coeffs = torch.rfft(init, signal_ndim=2) / spectrum_scale
      
-        self.fourier_coeffs = self.setup_batch(self.fourier_coeffs, batch)
+        self.fourier_coeffs = self.setup_batch(self.fourier_coeffs, batch, 4)
         self.fourier_coeffs = nn.Parameter(self.fourier_coeffs)
 
     @staticmethod
