@@ -223,7 +223,7 @@ class PixelImage(ImageParameterization):
             assert size is not None and channels is not None and batch is not None
             init = torch.randn([channels, size[0], size[1]]) / 10 + 0.5
         else:
-            assert init.shape[0] == 3 or init.shape[0] == 4
+            assert init.shape[0] == 3
         init = self.setup_batch(init, batch)
         self.image = nn.Parameter(init)
 
