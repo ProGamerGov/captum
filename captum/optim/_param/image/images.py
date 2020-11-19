@@ -151,7 +151,7 @@ class ImageParameterization(InputParameterization):
 class FFTImage(ImageParameterization):
     """Parameterize an image using inverse real 2D FFT"""
 
-    def __init__(self, size, channels: int = 3, init: torch.Tensor = None):
+    def __init__(self, size, channels: int = 3, batch: int = 1, init: torch.Tensor = None):
         super().__init__()
         if init is None:
             assert len(size) == 2
@@ -174,10 +174,10 @@ class FFTImage(ImageParameterization):
             random_coeffs = torch.randn(
                 coeffs_shape
             )  # names=["C", "H_f", "W_f", "complex"]
-            self.fourier_coeffs = nn.Parameter(random_coeffs / 50)
+            self.fourier_coeffs = nn.Parameter(random_coeffs.unsqueeze(0) / 50)
         else:
             self.fourier_coeffs = nn.Parameter(
-                torch.rfft(init, signal_ndim=2) / spectrum_scale
+                torch.rfft(init, signal_ndim=2).unsqueeze(0) / spectrum_scale
             )
 
     @staticmethod
@@ -205,29 +205,31 @@ class FFTImage(ImageParameterization):
     def forward(self):
         h, w = self.size
         scaled_spectrum = self.fourier_coeffs * self.spectrum_scale
-        output = torch.irfft(scaled_spectrum, signal_ndim=2)[:, :h, :w]
-        return output.refine_names("C", "H", "W")
+        output = torch.irfft(scaled_spectrum, signal_ndim=2)[:, :, :h, :w]
+        return output.refine_names("B", "C", "H", "W")
 
 
 class PixelImage(ImageParameterization):
-    def __init__(self, size=None, channels: int = 3, init: torch.Tensor = None):
+    def __init__(self, size=None, channels: int = 3, batch: int = 1, init: torch.Tensor = None):
         super().__init__()
         if init is None:
             assert size is not None and channels is not None
             init = torch.randn([channels, size[0], size[1]]) / 10 + 0.5
         else:
-            assert init.shape[0] == 3
+            assert init.shape[0] == 3 or init.shape[0] == 4
+            
+        init = torch.stack([init.clone() for b in range(batch)]) if init.dim() == 3 else init
         self.image = nn.Parameter(init)
 
     def forward(self):
-        return self.image.refine_names("C", "H", "W")
+        return self.image.refine_names("B", "C", "H", "W")
 
     def set_image(self, correlated_image: torch.Tensor):
         self.image = nn.Parameter(correlated_image)
 
 
 class LaplacianImage(ImageParameterization):
-    def __init__(self, size=None, channels: int = 3, init: torch.Tensor = None):
+    def __init__(self, size=None, channels: int = 3, batch: int = 1, init: torch.Tensor = None):
         super().__init__()
         power = 0.1
         self.tensor_params = []
@@ -243,7 +245,7 @@ class LaplacianImage(ImageParameterization):
                 x = x / 6  # Prevents output from being all white
             upsample = torch.nn.Upsample(scale_factor=scale, mode="nearest")
             x = x * (scale ** power) / (32 ** power)
-            x = torch.nn.Parameter(x)
+            x = torch.nn.Parameter(x.unsqueeze(0))
             self.tensor_params.append(x)
             self.scaler.append(upsample)
         self.tensor_params = torch.nn.ParameterList(self.tensor_params)
@@ -252,7 +254,7 @@ class LaplacianImage(ImageParameterization):
         A = []
         for xi, upsamplei in zip(self.tensor_params, self.scaler):
             A.append(upsamplei(xi))
-        return (torch.sum(torch.cat(A), 0) + 0.5).refine_names("C", "H", "W")
+        return (torch.sum(torch.cat(A), 0) + 0.5).refine_names("B", "C", "H", "W")
 
 
 class NaturalImage(ImageParameterization):
@@ -271,7 +273,8 @@ class NaturalImage(ImageParameterization):
     def __init__(
         self,
         size=None,
-        channels=3,
+        channels: int = 3,
+        batch: int = 1,
         Parameterization=FFTImage,
         init: torch.Tensor = None,
     ):
@@ -284,7 +287,7 @@ class NaturalImage(ImageParameterization):
         else:
             self.squash_func = lambda x: torch.sigmoid(x)
         self.parameterization = Parameterization(
-            size=size, channels=channels, init=init
+            size=size, channels=channels, batch=batch, init=init
         )
 
     def forward(self):
