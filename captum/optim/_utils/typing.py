@@ -34,4 +34,4 @@ LossFunction = Callable[[ModuleOutputMapping], Tensor]
 SingleTargetLossFunction = Callable[[Tensor], Tensor]
 
 InitSize = Tuple[int, int]
-SquashFunc = Callable[[torch.tensor], torch.tensor]
+SquashFunc = Callable[[Tensor], Tensor]
