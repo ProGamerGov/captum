@@ -10,7 +10,7 @@ GS_SAVED_WEIGHTS_URL = (
 )
 
 
-def googlenet(pretrained=False, progress=True, model_path=None, **kwargs):
+def googlenet(pretrained: bool = False, progress: bool = True, model_path: str = None, **kwargs):
     r"""GoogLeNet (also known as Inception v1 & Inception 5h) model architecture from
     `"Going Deeper with Convolutions" <http://arxiv.org/abs/1409.4842>`_.
     Args:
@@ -49,7 +49,7 @@ def googlenet(pretrained=False, progress=True, model_path=None, **kwargs):
 
 # Better version of Inception V1/GoogleNet for Inception5h
 class InceptionV1(nn.Module):
-    def __init__(self, out_features=1008, aux_logits=False, transform_input=False):
+    def __init__(self, out_features: int = 1008, aux_logits: bool = False, transform_input: bool = False) -> None:
         super(InceptionV1, self).__init__()
         self.aux_logits = aux_logits
         self.transform_input = transform_input
@@ -121,7 +121,7 @@ class InceptionV1(nn.Module):
             x = x.clone()[:, [2, 1, 0]] if x.dim() == 4 else x  # RGB to BGR
         return x
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self._transform_input(x)
         x = self.conv1(x)
         x = self.conv1_relu(x)
@@ -171,8 +171,8 @@ class InceptionV1(nn.Module):
 
 class InceptionModule(nn.Module):
     def __init__(
-        self, in_channels, c1x1, c3x3reduce, c3x3, c5x5reduce, c5x5, pool_proj
-    ):
+        self, in_channels: int, c1x1: int, c3x3reduce, c3x3: int, c5x5reduce: int, c5x5, pool_proj: int
+    ) -> None:
         super(InceptionModule, self).__init__()
         self.conv_1x1 = nn.Conv2d(
             in_channels=in_channels,
@@ -235,7 +235,7 @@ class InceptionModule(nn.Module):
         )
         self.pool_proj_relu = model_utils.ReluLayer()
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         c1x1 = self.conv_1x1(x)
         c1x1 = self.conv_1x1_relu(c1x1)
 
@@ -257,7 +257,7 @@ class InceptionModule(nn.Module):
 
 
 class AuxBranch(nn.Module):
-    def __init__(self, in_channels=508, out_features=1008):
+    def __init__(self, in_channels: int = 508, out_features: int = 1008) -> None:
         super(AuxBranch, self).__init__()
         self.avg_pool = nn.AdaptiveAvgPool2d((4, 4))
         self.loss_conv = nn.Conv2d(
@@ -276,7 +276,7 @@ class AuxBranch(nn.Module):
             in_features=1024, out_features=out_features, bias=True
         )
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.avg_pool(x)
         x = self.loss_conv(x)
         x = self.loss_conv_relu(x)
