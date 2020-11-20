@@ -278,7 +278,7 @@ class LaplacianImage(ImageParameterization):
             [deepcopy(tensor_params) for b in range(batch)]
         )
 
-    def create_tensor(self, params_list):
+    def create_tensor(self, params_list: torch.nn.ParameterList) -> torch.Tensor:
         A = []
         for xi, upsamplei in zip(params_list, self.scaler):
             A.append(upsamplei(xi))
