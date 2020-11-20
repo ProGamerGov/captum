@@ -14,7 +14,7 @@ class BlendAlpha(nn.Module):
     You can specify a fixed background, or a random one will be used by default.
     """
 
-    def __init__(self, background: torch.Tensor = None):
+    def __init__(self, background: torch.Tensor = None) -> None:
         super().__init__()
         self.background = background
 
@@ -110,7 +110,7 @@ class CenterCrop(torch.nn.Module):
         size (int, sequence) or (int): Number of pixels to center crop away.
     """
 
-    def __init__(self, size=0):
+    def __init__(self, size=0) -> None:
         super(CenterCrop, self).__init__()
         self.crop_val = [size] * 2 if size is not list and size is not tuple else size
 
@@ -140,7 +140,7 @@ class RandomScale(nn.Module):
         scale (float, sequence): Tuple of rescaling values to randomly select from.
     """
 
-    def __init__(self, scale):
+    def __init__(self, scale) -> None:
         super(RandomScale, self).__init__()
         self.scale = scale
 
@@ -170,7 +170,7 @@ class RandomSpatialJitter(torch.nn.Module):
         translate (int):
     """
 
-    def __init__(self, translate: int):
+    def __init__(self, translate: int) -> None:
         super(RandomSpatialJitter, self).__init__()
         self.pad_range = 2 * translate
         self.pad = nn.ReflectionPad2d(translate)
@@ -239,7 +239,7 @@ class GaussianSmoothing(nn.Module):
             Default value is 2 (spatial).
     """
 
-    def __init__(self, channels, kernel_size, sigma, dim: int = 2):
+    def __init__(self, channels, kernel_size, sigma, dim: int = 2) -> None:
         super().__init__()
         if isinstance(kernel_size, numbers.Number):
             kernel_size = [kernel_size] * dim
