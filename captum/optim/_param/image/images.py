@@ -256,27 +256,44 @@ class LaplacianImage(ImageParameterization):
     ):
         super().__init__()
         self.power = 0.1
-        tensor_params = []
-        self.scaler = []
         self.scale_list = [1, 2, 4, 8, 16, 32]
-        for scale in self.scale_list:
+
+        if init is None:
+            tensor_params, self.scaler = self.setup_input(
+                size, channels, self.scale_list, self.power, init
+            )
+
+            self.tensor_params = torch.nn.ModuleList(
+                [deepcopy(tensor_params) for b in range(batch)]
+            )
+        else:
+            init = init.unsqueeze(0) if init.dim() == 3 else init
+            P = []
+            for b in range(init.size(0)):
+                tensor_params, self.scaler = self.setup_input(
+                    size, channels, self.scale_list, self.power, init[b].unsqueeze(0)
+                )
+                P.append(tensor_params)
+            self.tensor_params = torch.nn.ModuleList(P)
+
+    def setup_input(
+        self, size, channels, scale_list, power: float = 0.1, init: torch.tensor = None
+    ):
+        tensor_params, scaler = [], []
+        for scale in scale_list:
             h, w = int(size[0] // scale), int(size[1] // scale)
             if init is None:
                 x = torch.randn([1, channels, h, w]) / 10
             else:
-                x = init.unsqueeze(0) if init.dim() == 3 else init
-                x = F.interpolate(x.clone(), size=(h, w), mode="bilinear")
+                x = F.interpolate(init.clone(), size=(h, w), mode="bilinear")
                 x = x / 6  # Prevents output from being all white
             upsample = torch.nn.Upsample(scale_factor=scale, mode="nearest")
-            x = x * (scale ** self.power) / (32 ** self.power)
+            x = x * (scale ** power) / (32 ** power)
             x = torch.nn.Parameter(x)
             tensor_params.append(x)
-            self.scaler.append(upsample)
-
+            scaler.append(upsample)
         tensor_params = torch.nn.ParameterList(tensor_params)
-        self.tensor_params = torch.nn.ModuleList(
-            [deepcopy(tensor_params) for b in range(batch)]
-        )
+        return tensor_params, scaler
 
     def create_tensor(self, params_list: torch.nn.ParameterList) -> torch.Tensor:
         A = []
