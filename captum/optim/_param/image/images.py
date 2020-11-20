@@ -255,12 +255,12 @@ class LaplacianImage(ImageParameterization):
         self, size=None, channels: int = 3, batch: int = 1, init: torch.Tensor = None
     ):
         super().__init__()
-        self.power = 0.1
-        self.scale_list = [1, 2, 4, 8, 16, 32]
+        power = 0.1
+        scale_list = [1, 2, 4, 8, 16, 32]
 
         if init is None:
             tensor_params, self.scaler = self.setup_input(
-                size, channels, self.scale_list, self.power, init
+                size, channels, scale_list, power, init
             )
 
             self.tensor_params = torch.nn.ModuleList(
@@ -271,7 +271,7 @@ class LaplacianImage(ImageParameterization):
             P = []
             for b in range(init.size(0)):
                 tensor_params, self.scaler = self.setup_input(
-                    size, channels, self.scale_list, self.power, init[b].unsqueeze(0)
+                    size, channels, scale_list, power, init[b].unsqueeze(0)
                 )
                 P.append(tensor_params)
             self.tensor_params = torch.nn.ModuleList(P)
