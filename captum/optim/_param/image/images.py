@@ -228,7 +228,7 @@ class FFTImage(ImageParameterization):
         coeffs = torch.rfft(correlated_image, signal_ndim=2)
         self.fourier_coeffs = coeffs / self.spectrum_scale
 
-    def forward(self):
+    def forward(self) -> torch.Tensor:
         h, w = self.size
         scaled_spectrum = self.fourier_coeffs * self.spectrum_scale
         output = torch.irfft(scaled_spectrum, signal_ndim=2)[:, :, :h, :w]
@@ -252,7 +252,7 @@ class PixelImage(ImageParameterization):
         init = self.setup_batch(init, batch)
         self.image = nn.Parameter(init)
 
-    def forward(self):
+    def forward(self) -> torch.Tensor:
         return self.image.refine_names("B", "C", "H", "W")
 
     def set_image(self, correlated_image: torch.Tensor) -> None:
@@ -316,7 +316,7 @@ class LaplacianImage(ImageParameterization):
             A.append(upsamplei(xi))
         return torch.sum(torch.cat(A), 0) + 0.5
 
-    def forward(self):
+    def forward(self) -> torch.Tensor:
         A = []
         for params_list in self.tensor_params:
             tensor = self.create_tensor(params_list)
@@ -368,7 +368,7 @@ class NaturalImage(ImageParameterization):
             size=size, channels=channels, batch=batch, init=init
         )
 
-    def forward(self):
+    def forward(self) -> torch.Tensor:
         image = self.parameterization()
         image = self.decorrelate(image)
         image = image.rename(None)  # TODO: the world is not yet ready
