@@ -10,7 +10,9 @@ GS_SAVED_WEIGHTS_URL = (
 )
 
 
-def googlenet(pretrained: bool = False, progress: bool = True, model_path: str = None, **kwargs):
+def googlenet(
+    pretrained: bool = False, progress: bool = True, model_path: str = None, **kwargs
+):
     r"""GoogLeNet (also known as Inception v1 & Inception 5h) model architecture from
     `"Going Deeper with Convolutions" <http://arxiv.org/abs/1409.4842>`_.
     Args:
@@ -49,7 +51,12 @@ def googlenet(pretrained: bool = False, progress: bool = True, model_path: str =
 
 # Better version of Inception V1/GoogleNet for Inception5h
 class InceptionV1(nn.Module):
-    def __init__(self, out_features: int = 1008, aux_logits: bool = False, transform_input: bool = False) -> None:
+    def __init__(
+        self,
+        out_features: int = 1008,
+        aux_logits: bool = False,
+        transform_input: bool = False,
+    ) -> None:
         super(InceptionV1, self).__init__()
         self.aux_logits = aux_logits
         self.transform_input = transform_input
@@ -171,7 +178,14 @@ class InceptionV1(nn.Module):
 
 class InceptionModule(nn.Module):
     def __init__(
-        self, in_channels: int, c1x1: int, c3x3reduce, c3x3: int, c5x5reduce: int, c5x5, pool_proj: int
+        self,
+        in_channels: int,
+        c1x1: int,
+        c3x3reduce,
+        c3x3: int,
+        c5x5reduce: int,
+        c5x5,
+        pool_proj: int,
     ) -> None:
         super(InceptionModule, self).__init__()
         self.conv_1x1 = nn.Conv2d(
