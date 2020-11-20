@@ -285,8 +285,8 @@ class LaplacianImage(ImageParameterization):
 
     def forward(self):
         A = []
-        for p_list in self.tensor_params:
-            tensor = self.create_tensor(p_list)
+        for params_list in self.tensor_params:
+            tensor = self.create_tensor(params_list)
             A.append(tensor)
         return torch.stack(A).refine_names("B", "C", "H", "W")
 
