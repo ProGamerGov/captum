@@ -264,8 +264,8 @@ class LaplacianImage(ImageParameterization):
             if init is None:
                 x = torch.randn([1, channels, h, w]) / 10
             else:
-                x = x.unsqueeze(0) if x.dim() == 3 else x
-                x = F.interpolate(init.clone(), size=(h, w), mode="bilinear")
+                x = init.unsqueeze(0) if init.dim() == 3 else init
+                x = F.interpolate(x.clone(), size=(h, w), mode="bilinear")
                 x = x / 6  # Prevents output from being all white
             upsample = torch.nn.Upsample(scale_factor=scale, mode="nearest")
             x = x * (scale ** self.power) / (32 ** self.power)
