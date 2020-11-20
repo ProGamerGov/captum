@@ -258,7 +258,8 @@ class LaplacianImage(ImageParameterization):
         self.power = 0.1
         tensor_params = []
         self.scaler = []
-        for scale in [1, 2, 4, 8, 16, 32]:
+        self.scale_list = [1, 2, 4, 8, 16, 32]
+        for scale in self.scale_list:
             h, w = int(size[0] // scale), int(size[1] // scale)
             if init is None:
                 x = torch.randn([1, channels, h, w]) / 10
