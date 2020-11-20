@@ -18,7 +18,7 @@ class BlendAlpha(nn.Module):
         super().__init__()
         self.background = background
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         assert x.size(1) == 4
         rgb, alpha = x[:, :3, ...], x[:, 3:4, ...]
         background = self.background or torch.rand_like(rgb)
@@ -29,7 +29,7 @@ class BlendAlpha(nn.Module):
 class IgnoreAlpha(nn.Module):
     r"""Ignores a 4th channel"""
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         assert x.size(1) == 4
         rgb = x[:, :3, ...]
         return rgb
@@ -64,7 +64,7 @@ class ToRGB(nn.Module):
         ]
         return torch.Tensor(i1i2i3_matrix)
 
-    def __init__(self, transform_name="klt"):
+    def __init__(self, transform_name: str = "klt"):
         super().__init__()
 
         if transform_name == "klt":
@@ -74,7 +74,7 @@ class ToRGB(nn.Module):
         else:
             raise ValueError("transform_name has to be either 'klt' or 'i1i2i3'")
 
-    def forward(self, x, inverse=False):
+    def forward(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
         assert x.dim() == 3 or x.dim() == 4
 
         # alpha channel is taken off...
@@ -114,7 +114,7 @@ class CenterCrop(torch.nn.Module):
         super(CenterCrop, self).__init__()
         self.crop_val = [size] * 2 if size is not list and size is not tuple else size
 
-    def forward(self, input):
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
         if input.dim() == 4:
             h, w = input.size(2), input.size(3)
         elif input.dim() == 3:
@@ -158,7 +158,7 @@ class RandomScale(nn.Module):
         x = F.grid_sample(x, grid)
         return x
 
-    def forward(self, input):
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
         scale = rand_select(self.scale)
         return self.scale_tensor(input, scale=scale)
 
@@ -188,7 +188,7 @@ class RandomSpatialJitter(torch.nn.Module):
         assert cropped.shape == x.shape
         return cropped
 
-    def forward(self, input):
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
         return self.translate_tensor(input)
 
 
@@ -281,7 +281,7 @@ class GaussianSmoothing(nn.Module):
                 "Only 1, 2 and 3 dimensions are supported. Received {}.".format(dim)
             )
 
-    def forward(self, input):
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
         """
         Apply gaussian filter to input.
         Arguments:
