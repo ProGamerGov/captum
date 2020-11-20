@@ -172,7 +172,7 @@ class FFTImage(ImageParameterization):
         channels: int = 3,
         batch: int = 1,
         init: torch.Tensor = None,
-    ):
+    ) -> None:
         super().__init__()
         if init is None:
             assert len(size) == 2
@@ -242,7 +242,7 @@ class PixelImage(ImageParameterization):
         channels: int = 3,
         batch: int = 1,
         init: torch.Tensor = None,
-    ):
+    ) -> None:
         super().__init__()
         if init is None:
             assert size is not None and channels is not None and batch is not None
@@ -266,7 +266,7 @@ class LaplacianImage(ImageParameterization):
         channels: int = 3,
         batch: int = 1,
         init: torch.Tensor = None,
-    ):
+    ) -> None:
         super().__init__()
         power = 0.1
 
@@ -291,7 +291,7 @@ class LaplacianImage(ImageParameterization):
         size: InitSize,
         channels: int,
         power: float = 0.1,
-        init: torch.tensor = None,
+        init: torch.Tensor = None,
     ):
         tensor_params, scaler = [], []
         scale_list = [1, 2, 4, 8, 16, 32]
@@ -346,7 +346,7 @@ class NaturalImage(ImageParameterization):
         init: torch.Tensor = None,
         decorrelate_init: bool = True,
         squash_func: SquashFunc = None,
-    ):
+    ) -> None:
         super().__init__()
         self.decorrelate = ToRGB(transform_name="klt")
         if init is not None:
@@ -374,7 +374,7 @@ class NaturalImage(ImageParameterization):
         image = image.rename(None)  # TODO: the world is not yet ready
         return CudaImageTensor(self.squash_func(image))
 
-    def set_image(self, image) -> None:
+    def set_image(self, image: torch.Tensor) -> None:
         logits = logit(image, epsilon=1e-4)
         correlated = self.decorrelate(logits, inverse=True)
         self.parameterization.set_image(correlated)
