@@ -121,7 +121,7 @@ class InceptionV1(nn.Module):
         self.drop = nn.Dropout(0.4000000059604645)
         self.fc = nn.Linear(1024, out_features)
 
-    def _transform_input(self, x):
+    def _transform_input(self, x: torch.Tensor) -> torch.Tensor:
         if self.transform_input:
             assert x.min() >= 0.0 and x.max() <= 1.0
             x = x * 255 - 117
@@ -184,7 +184,7 @@ class InceptionModule(nn.Module):
         c3x3reduce,
         c3x3: int,
         c5x5reduce: int,
-        c5x5,
+        c5x5: int,
         pool_proj: int,
     ) -> None:
         super(InceptionModule, self).__init__()
