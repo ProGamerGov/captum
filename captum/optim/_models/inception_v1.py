@@ -60,7 +60,7 @@ class InceptionV1(nn.Module):
         super(InceptionV1, self).__init__()
         self.aux_logits = aux_logits
         self.transform_input = transform_input
-        lrn_vals = (9, 9.99999974738e-05, 0.5, 1)
+        lrn_vals = (9, 9.99999974738e-05, 0.5, 1.0)
 
         self.conv1 = nn.Conv2d(
             in_channels=3,
