@@ -29,7 +29,7 @@ class RedirectedReLU(torch.autograd.Function):
     """
 
     @staticmethod
-    def forward(self, input_tensor):
+    def forward(self, input_tensor: torch.Tensor) -> torch.Tensor:
         self.save_for_backward(input_tensor)
         return input_tensor.clamp(min=0)
 
@@ -46,7 +46,7 @@ class RedirectedReluLayer(nn.Module):
     Class for applying RedirectedReLU
     """
 
-    def forward(self, input):
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
         if F.relu(input.detach().sum()) != 0:
             return F.relu(input, inplace=True)
         else:
@@ -58,7 +58,7 @@ class ReluLayer(nn.Module):
     Basic Hookable & Replaceable ReLU layer.
     """
 
-    def forward(self, input):
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
         return F.relu(input, inplace=True)
 
 
@@ -79,14 +79,20 @@ class LocalResponseNormLayer(nn.Module):
     Basic Hookable Local Response Norm layer.
     """
 
-    def __init__(self, size=5, alpha=9.999999747378752e-05, beta=0.75, k=1):
+    def __init__(
+        self,
+        size: int = 5,
+        alpha: float = 9.999999747378752e-05,
+        beta: float = 0.75,
+        k: float = 1.0,
+    ) -> None:
         super(LocalResponseNormLayer, self).__init__()
         self.size = size
         self.alpha = alpha
         self.beta = beta
         self.k = k
 
-    def forward(self, input):
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
         return F.local_response_norm(
             input, size=self.size, alpha=self.alpha, beta=self.beta, k=self.k
         )
