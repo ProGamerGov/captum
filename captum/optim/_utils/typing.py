@@ -1,7 +1,7 @@
 import sys
-from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Callable, Dict, Iterable, Optional, Tuple, Union
 
-from torch import Device, Dtype, Tensor
+from torch import Tensor
 from torch.nn import Module
 from torch.optim import Optimizer
 
@@ -35,10 +35,3 @@ SingleTargetLossFunction = Callable[[Tensor], Tensor]
 
 InitSize = Tuple[int, int]
 SquashFunc = Callable[[Tensor], Tensor]
-FloatTuple = Tuple[float]
-CropVal = Union[Tuple[int], List[int], int]
-RandSelect = Union[Tuple, List, Tensor]
-TensorOrVal = Union[int, float, Tensor]
-IntOrFloat = Union[int, float]
-TensorDevice = Device
-TensorDtype = Dtype
