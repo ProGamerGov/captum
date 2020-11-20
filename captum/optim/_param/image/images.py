@@ -172,7 +172,11 @@ class FFTImage(ImageParameterization):
             self.size = size
         else:
             assert init.dim() == 3 or init.dim() == 4
-            self.size = (init.size(1), init.size(2)) if init.dim() == 3 else (init.size(2), init.size(3))
+            self.size = (
+                (init.size(1), init.size(2))
+                if init.dim() == 3
+                else (init.size(2), init.size(3))
+            )
 
         frequencies = FFTImage.rfft2d_freqs(*self.size)
         scale = 1.0 / torch.max(
@@ -305,8 +309,12 @@ class NaturalImage(ImageParameterization):
         self.decorrelate = ToRGB(transform_name="klt")
         if init is not None:
             assert init.dim() == 3 or init.dim() == 4
-            init = init.refine_names("B", "C", "H", "W") if init.dim() == 4 else init.refine_names("C", "H", "W")
-            init = self.decorrelate(init, inverse=True).rename(None) 
+            init = (
+                init.refine_names("B", "C", "H", "W")
+                if init.dim() == 4
+                else init.refine_names("C", "H", "W")
+            )
+            init = self.decorrelate(init, inverse=True).rename(None)
             self.squash_func = lambda x: x.clamp(0, 1)
         else:
             self.squash_func = lambda x: torch.sigmoid(x)
