@@ -20,7 +20,9 @@ class Loss(ABC):
     def __call__(self, targets_to_values: ModuleOutputMapping):
         pass
 
-    def get_neuron_pos(self, H: int, W: int, x: Optional[int] = None, y: Optional[int] = None):
+    def get_neuron_pos(
+        self, H: int, W: int, x: Optional[int] = None, y: Optional[int] = None
+    ):
         if x is None:
             _x = W // 2
         else:
@@ -67,7 +69,11 @@ class ChannelActivation(Loss):
 
 class NeuronActivation(Loss):
     def __init__(
-        self, target: nn.Module, channel_index: int, x: Optional[int] = None, y: Optional[int] = None
+        self,
+        target: nn.Module,
+        channel_index: int,
+        x: Optional[int] = None,
+        y: Optional[int] = None,
     ) -> None:
         super(Loss, self).__init__()
         self.target = target
