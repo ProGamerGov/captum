@@ -1,5 +1,6 @@
 import math
 import numbers
+from typing import Optional
 
 import torch
 import torch.nn as nn
@@ -14,7 +15,7 @@ class BlendAlpha(nn.Module):
     You can specify a fixed background, or a random one will be used by default.
     """
 
-    def __init__(self, background: torch.Tensor = None) -> None:
+    def __init__(self, background: Optional[torch.Tensor] = None) -> None:
         super().__init__()
         self.background = background
 
@@ -239,7 +240,7 @@ class GaussianSmoothing(nn.Module):
             Default value is 2 (spatial).
     """
 
-    def __init__(self, channels, kernel_size, sigma, dim: int = 2) -> None:
+    def __init__(self, channels: int, kernel_size, sigma, dim: int = 2) -> None:
         super().__init__()
         if isinstance(kernel_size, numbers.Number):
             kernel_size = [kernel_size] * dim
