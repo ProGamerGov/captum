@@ -11,7 +11,7 @@ def get_model_layers(model) -> List[str]:
     """
     layers = []
 
-    def get_layers(net, prefix=[]):
+    def get_layers(net, prefix=[]) -> None:
         if hasattr(net, "_modules"):
             for name, layer in net._modules.items():
                 if layer is None:
@@ -34,7 +34,7 @@ class RedirectedReLU(torch.autograd.Function):
         return input_tensor.clamp(min=0)
 
     @staticmethod
-    def backward(self, grad_output):
+    def backward(self, grad_output: torch.Tensor) -> torch.Tensor:
         (input_tensor,) = self.saved_tensors
         grad_input = grad_output.clone()
         grad_input[input_tensor < 0] = grad_input[input_tensor < 0] * 1e-1
@@ -62,7 +62,9 @@ class ReluLayer(nn.Module):
         return F.relu(input, inplace=True)
 
 
-def replace_layers(model, old_layer=ReluLayer, new_layer=RedirectedReluLayer) -> None:
+def replace_layers(
+    model, old_layer: nn.Module = ReluLayer, new_layer: nn.Module = RedirectedReluLayer
+) -> None:
     """
     Replace all target layers with new layers.
     """
