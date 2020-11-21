@@ -35,3 +35,4 @@ SingleTargetLossFunction = Callable[[Tensor], Tensor]
 
 InitSize = Tuple[int, int]
 SquashFunc = Callable[[Tensor], Tensor]
+TransformList = Union[Sequence[int], Sequence[float], Tensor]
