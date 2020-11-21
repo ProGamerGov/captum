@@ -106,7 +106,7 @@ class Test(BaseTest):
 
     def test_lrp_simple_tanh(self):
         class Model(nn.Module):
-            def __init__(self):
+            def __init__(self) -> None:
                 super(Model, self).__init__()
                 self.linear = nn.Linear(3, 3, bias=False)
                 self.linear.weight.data.fill_(0.1)
