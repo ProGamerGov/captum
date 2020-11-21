@@ -180,9 +180,9 @@ class ActivationInterpolation(Loss):
 
     def __init__(
         self,
-        target1: nn.Module,
+        target1: nn.Module = None,
         channel_index1: Optional[int] = None,
-        target2: nn.Module,
+        target2: nn.Module = None,
         channel_index2: Optional[int] = None,
     ) -> None:
         super(Loss, self).__init__()
