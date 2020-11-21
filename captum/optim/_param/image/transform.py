@@ -147,7 +147,9 @@ class RandomScale(nn.Module):
         super(RandomScale, self).__init__()
         self.scale = scale
 
-    def get_scale_mat(self, m: TransformVal, device: torch.device, dtype: torch.dtype) -> torch.Tensor:
+    def get_scale_mat(
+        self, m: TransformVal, device: torch.device, dtype: torch.dtype
+    ) -> torch.Tensor:
         scale_mat = torch.tensor(
             [[m, 0.0, 0.0], [0.0, m, 0.0]], device=device, dtype=dtype
         )
@@ -242,7 +244,13 @@ class GaussianSmoothing(nn.Module):
             Default value is 2 (spatial).
     """
 
-    def __init__(self, channels: int, kernel_size: Union[int, Sequence[int]], sigma: Union[float, Sequence[float]], dim: int = 2) -> None:
+    def __init__(
+        self,
+        channels: int,
+        kernel_size: Union[int, Sequence[int]],
+        sigma: Union[float, Sequence[float]],
+        dim: int = 2,
+    ) -> None:
         super().__init__()
         if isinstance(kernel_size, numbers.Number):
             kernel_size = [kernel_size] * dim
