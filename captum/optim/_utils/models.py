@@ -62,9 +62,7 @@ class ReluLayer(nn.Module):
         return F.relu(input, inplace=True)
 
 
-def replace_layers(
-    model, old_layer: nn.Module = ReluLayer, new_layer: nn.Module = RedirectedReluLayer
-) -> None:
+def replace_layers(model, old_layer = ReluLayer, new_layer = RedirectedReluLayer) -> None:
     """
     Replace all target layers with new layers.
     """
