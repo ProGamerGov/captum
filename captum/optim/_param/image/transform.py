@@ -117,7 +117,7 @@ class CenterCrop(torch.nn.Module):
         else:
             self.crop_val = [size] * 2
 
-    def forward(self, input):
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
         assert (
             input.dim() == 3 or input.dim() == 4
         ), "Input to CenterCrop must be 3D or 4D"
@@ -193,7 +193,7 @@ class RandomSpatialJitter(torch.nn.Module):
         assert cropped.shape == x.shape
         return cropped
 
-    def forward(self, input):
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
         insets = torch.randint(high=self.pad_range, size=(2,))
         return self.translate_tensor(input, insets)
 
