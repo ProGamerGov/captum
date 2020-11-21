@@ -271,7 +271,7 @@ class TestGaussianSmoothing(BaseTest):
     def test_gaussian_smoothing_2d(self) -> None:
         channels = 3
         kernel_size = 3
-        sigma = 2
+        sigma = 2.0
         dim = 2
         smoothening_module = transform.GaussianSmoothing(
             channels, kernel_size, sigma, dim
