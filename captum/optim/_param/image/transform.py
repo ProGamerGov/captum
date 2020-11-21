@@ -242,7 +242,7 @@ class GaussianSmoothing(nn.Module):
             Default value is 2 (spatial).
     """
 
-    def __init__(self, channels: int, kernel_size: Union[int, sequence[int]], sigma: Union[float, sequence[float]], dim: int = 2) -> None:
+    def __init__(self, channels: int, kernel_size: Union[int, Sequence[int]], sigma: Union[float, Sequence[float]], dim: int = 2) -> None:
         super().__init__()
         if isinstance(kernel_size, numbers.Number):
             kernel_size = [kernel_size] * dim
