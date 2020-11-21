@@ -1,5 +1,5 @@
 import sys
-from typing import Callable, Dict, Iterable, Optional, Tuple, Union
+from typing import Callable, Dict, Iterable, Optional, Sequence, Tuple, Union
 
 from torch import Tensor
 from torch.nn import Module
@@ -35,4 +35,4 @@ SingleTargetLossFunction = Callable[[Tensor], Tensor]
 
 InitSize = Tuple[int, int]
 SquashFunc = Callable[[Tensor], Tensor]
-TransformList = Union[Sequence[int], Sequence[float], Tensor]
+TransformValList = Union[Sequence[int], Sequence[float], Tensor]
