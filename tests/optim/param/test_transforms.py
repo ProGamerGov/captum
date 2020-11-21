@@ -65,7 +65,7 @@ class TestRandomSpatialJitter(BaseTest):
         test_input = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
 
         assert torch.all(
-            spatialjitter.translate_tensor(test_input, [4, 4]).eq(
+            spatialjitter.translate_tensor(test_input, torch.tensor([4, 4])).eq(
                 torch.tensor(
                     [
                         [1.0, 0.0, 0.0, 0.0],
@@ -82,7 +82,7 @@ class TestRandomSpatialJitter(BaseTest):
         spatialjitter = transform.RandomSpatialJitter(2)
 
         assert torch.all(
-            spatialjitter.translate_tensor(test_input, [0, 3]).eq(
+            spatialjitter.translate_tensor(test_input, torch.tensor([0, 3])).eq(
                 torch.tensor(
                     [
                         [0.0, 1.0, 0.0, 1.0],
