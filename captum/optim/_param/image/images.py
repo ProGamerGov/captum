@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Optional
+from typing import List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -293,7 +293,7 @@ class LaplacianImage(ImageParameterization):
         channels: int,
         power: float = 0.1,
         init: Optional[torch.Tensor] = None,
-    ):
+    ) -> Tuple[List[torch.Tensor], List[torch.nn.Upsample]]:
         tensor_params, scaler = [], []
         scale_list = [1, 2, 4, 8, 16, 32]
         for scale in scale_list:
