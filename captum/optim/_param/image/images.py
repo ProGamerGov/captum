@@ -23,7 +23,7 @@ class ImageTensor(torch.Tensor):
         self._t = data
 
     @classmethod
-    def open(cls, path, scale: float = 255.0):
+    def open(cls, path: str, scale: float = 255.0):
         img_np = Image.open(path).convert("RGB")
         img_np = np.array(img_np).astype(np.float32)
         return cls(img_np.transpose(2, 0, 1) / scale)
@@ -47,7 +47,7 @@ class ImageTensor(torch.Tensor):
         plt.axis("off")
         plt.show()
 
-    def export(self, filename, scale: float = 255.0) -> None:
+    def export(self, filename: str, scale: float = 255.0) -> None:
         if len(self.shape) == 3:
             numpy_thing = self.cpu().detach().numpy().transpose(1, 2, 0) * scale
         elif len(self.shape) == 4:
@@ -83,7 +83,7 @@ class CudaImageTensor(object):
     def show(self) -> None:
         self.cpu().show()
 
-    def export(self, filename) -> None:
+    def export(self, filename: str) -> None:
         self.cpu().export(filename)
 
     def cpu(self) -> "ImageTensor":
