@@ -61,20 +61,20 @@ class TestRedirectedReluLayer(BaseTest):
 class TestReplaceLayers(BaseTest):
     def test_replace_layers(self) -> None:
         class BasicReluModule(torch.nn.Module):
-            def __init__(self):
+            def __init__(self) -> None:
                 super().__init__()
                 self.relu = torch.nn.ReLU()
 
-            def forward(self, input):
+            def forward(self, input: torch.Tensor) -> torch.Tensor:
                 return self.relu(input)
 
         class BasicReluModel(torch.nn.Module):
-            def __init__(self):
+            def __init__(self) -> None:
                 super().__init__()
                 self.relu1 = torch.nn.ReLU()
                 self.relu2 = BasicReluModule()
 
-            def forward(self, input):
+            def forward(self, input: torch.Tensor) -> torch.Tensor:
                 return self.relu2(self.relu1(input))
 
         toy_model = BasicReluModel()
