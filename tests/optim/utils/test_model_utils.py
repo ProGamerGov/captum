@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import unittest
+from typing import Tuple
 
 import torch
 import torch.nn.functional as F
@@ -44,7 +45,7 @@ class TestRedirectedReluLayer(BaseTest):
     def test_backward_redirected_relu_layer(self) -> None:
         t_grad_input, t_grad_output = [], []
 
-        def check_grad(self, grad_input, grad_output):
+        def check_grad(self, grad_input: Tuple, grad_output: Tuple) -> None:
             t_grad_input.append(grad_input[0].clone().detach())
             t_grad_output.append(grad_output[0].clone().detach())
 
