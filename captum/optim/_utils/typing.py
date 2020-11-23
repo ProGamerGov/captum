@@ -38,4 +38,7 @@ SquashFunc = Callable[[Tensor], Tensor]
 TransformValList = Union[Sequence[int], Sequence[float], Tensor]
 TransformVal = Union[int, float, Tensor]
 TransformSize = Union[List[int], Tuple[int], int]
-HookFuncArg = Callable[[Module, Union[Tuple[Tensor, ...], Tensor], Union[Tuple[Tensor, ...], Tensor]], Optional[Tensor]]
+HookFuncArg = Callable[
+    [Module, Union[Tuple[Tensor, ...], Tensor], Union[Tuple[Tensor, ...], Tensor]],
+    Optional[Tensor],
+]
