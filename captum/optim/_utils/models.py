@@ -11,7 +11,7 @@ def get_model_layers(model) -> List[str]:
     """
     layers = []
 
-    def get_layers(net, prefix=[]) -> None:
+    def get_layers(net, prefix: List = []) -> None:
         if hasattr(net, "_modules"):
             for name, layer in net._modules.items():
                 if layer is None:
