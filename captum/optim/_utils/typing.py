@@ -1,5 +1,5 @@
 import sys
-from typing import Callable, Dict, Iterable, Optional, Tuple, Union
+from typing import Callable, Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
 from torch import Tensor
 from torch.nn import Module
@@ -33,4 +33,9 @@ StopCriteria = Callable[[int, Objective, Optimizer], bool]
 LossFunction = Callable[[ModuleOutputMapping], Tensor]
 SingleTargetLossFunction = Callable[[Tensor], Tensor]
 
+InitSize = Tuple[int, int]
+SquashFunc = Callable[[Tensor], Tensor]
+TransformValList = Union[Sequence[int], Sequence[float], Tensor]
+TransformVal = Union[int, float, Tensor]
+TransformSize = Union[List[int], Tuple[int], int]
 HookFuncArg = Callable[[Module, Union[Tuple[Tensor, ...], Tensor], Union[Tuple[Tensor, ...], Tensor]], Optional[Tensor]]
