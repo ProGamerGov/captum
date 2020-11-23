@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 import unittest
-from typing import Tuple
 
 import torch
 import torch.nn.functional as F
 
 import captum.optim._utils.models as model_utils
 from captum.optim._models.inception_v1 import googlenet
-from captum.optim._utils.typing import HookFuncArg
 from tests.helpers.basic import BaseTest
 
 
@@ -46,7 +44,7 @@ class TestRedirectedReluLayer(BaseTest):
     def test_backward_redirected_relu_layer(self) -> None:
         t_grad_input, t_grad_output = [], []
 
-        def check_grad(self, grad_input: HookFuncArg, grad_output: Tuple) -> None:
+        def check_grad(self, grad_input, grad_output):
             t_grad_input.append(grad_input[0].clone().detach())
             t_grad_output.append(grad_output[0].clone().detach())
 
