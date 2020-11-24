@@ -4,6 +4,7 @@ from typing import Optional, Tuple
 import torch
 import torch.nn as nn
 
+from captum.optim._utils.images import get_neuron_pos
 from captum.optim._utils.typing import ModuleOutputMapping
 
 
@@ -19,22 +20,6 @@ class Loss(ABC):
     @abstractmethod
     def __call__(self, targets_to_values: ModuleOutputMapping):
         pass
-
-    def get_neuron_pos(
-        self, H: int, W: int, x: Optional[int] = None, y: Optional[int] = None
-    ) -> Tuple[int, int]:
-        if x is None:
-            _x = W // 2
-        else:
-            assert x < W
-            _x = x
-
-        if y is None:
-            _y = H // 2
-        else:
-            assert y < H
-            _y = y
-        return _x, _y
 
 
 class LayerActivation(Loss):
@@ -88,7 +73,7 @@ class NeuronActivation(Loss):
         activations = targets_to_values[self.target]
         assert activations is not None
         assert len(activations.shape) == 4  # assume NCHW
-        _x, _y = self.get_neuron_pos(
+        _x, _y = get_neuron_pos(
             activations.size(2), activations.size(3), self.x, self.y
         )
 
@@ -300,7 +285,7 @@ class DirectionNeuron(Loss):
 
         assert activations.dim() == 4
 
-        _x, _y = self.get_neuron_pos(
+        _x, _y = get_neuron_pos(
             activations.size(2), activations.size(3), self.x, self.y
         )
         activations = activations[:, self.channel_index, _x, _y]
@@ -371,7 +356,7 @@ class ActivationWeights(Loss):
         if self.neuron:
             assert activations.dim() == 4
             if self.wx is None and self.wy is None:
-                _x, _y = self.get_neuron_pos(
+                _x, _y = get_neuron_pos(
                     activations.size(2), activations.size(3), self.x, self.y
                 )
                 activations = activations[..., _x, _y].squeeze() * self.weights
