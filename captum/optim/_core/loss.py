@@ -254,7 +254,7 @@ class Alignment(Loss):
 
 class Direction(Loss):
     """
-    Visualize a direction.
+    Visualize a general direction vector.
     """
 
     def __init__(self, target: nn.Module, vec: torch.Tensor) -> None:
@@ -269,7 +269,7 @@ class Direction(Loss):
 
 class DirectionNeuron(Loss):
     """
-    Visualize a neuron direction.
+    Visualize a single (x, y) position for a direction vector.
     """
 
     def __init__(
