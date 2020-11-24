@@ -32,7 +32,7 @@ class Loss(ABC):
         if y is None:
             _y = H // 2
         else:
-            assert y < W
+            assert y < H
             _y = y
         return _x, _y
 
