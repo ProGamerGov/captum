@@ -181,7 +181,9 @@ class Diversity(Loss):
 
 class ActivationInterpolation(Loss):
     """
-    Interpolate between two different layers & channels
+    Interpolate between two different layers & channels.
+    Olah, Mordvintsev & Schubert, 2017.
+    https://distill.pub/2017/feature-visualization/#Interaction-between-Neurons
     """
 
     def __init__(
@@ -229,6 +231,8 @@ class Alignment(Loss):
     """
     Penalize the L2 distance between tensors in the batch to encourage visual
     similarity between them.
+    Olah, Mordvintsev & Schubert, 2017.
+    https://distill.pub/2017/feature-visualization/#Interaction-between-Neurons
     """
 
     def __init__(self, target: nn.Module, decay_ratio: float = 2.0) -> None:
@@ -255,6 +259,8 @@ class Alignment(Loss):
 class Direction(Loss):
     """
     Visualize a general direction vector.
+    Carter, et al., "Activation Atlas", Distill, 2019.
+    https://distill.pub/2019/activation-atlas/#Aggregating-Multiple-Images
     """
 
     def __init__(self, target: nn.Module, vec: torch.Tensor) -> None:
@@ -270,6 +276,8 @@ class Direction(Loss):
 class DirectionNeuron(Loss):
     """
     Visualize a single (x, y) position for a direction vector.
+    Carter, et al., "Activation Atlas", Distill, 2019.
+    https://distill.pub/2019/activation-atlas/#Aggregating-Multiple-Images
     """
 
     def __init__(
@@ -301,7 +309,9 @@ class DirectionNeuron(Loss):
 
 class TensorDirection(Loss):
     """
-    Visualize a tensor direction.
+    Visualize a tensor direction vector.
+    Carter, et al., "Activation Atlas", Distill, 2019.
+    https://distill.pub/2019/activation-atlas/#Aggregating-Multiple-Images
     """
 
     def __init__(self, target: nn.Module, vec: torch.Tensor) -> None:
