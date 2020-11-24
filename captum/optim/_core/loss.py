@@ -314,13 +314,13 @@ class TensorDirection(Loss):
 
         assert activations.dim() == 4
 
-        H_vec, W_vec = self.direction.size(2), self.direction.size(3)
+        H_direction, W_direction = self.direction.size(2), self.direction.size(3)
         H_activ, W_activ = activations.size(2), activations.size(3)
 
-        H = (H_activ - W_vec) // 2
-        W = (W_activ - W_vec) // 2
+        H = (H_activ - H_direction) // 2
+        W = (W_activ - W_direction) // 2
 
-        activations = activations[:, :, H : H + H_vec, W : W + W_vec]
+        activations = activations[:, :, H : H + H_direction, W : W + W_direction]
         return torch.cosine_similarity(self.direction, activations)
 
 
