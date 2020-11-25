@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -350,14 +350,22 @@ class SharedImage(ImageParameterization):
 
     def __init__(
         self,
-        shared_size: InitSize = None,
+        shared_size: Union[InitSize, Tuple[InitSize]] = None,
         output_size: InitSize = None,
         channels: int = 3,
         batch: int = 1,
         parameterization=None,
     ) -> None:
         super().__init__()
-        shared_init = torch.randn([batch, channels, shared_size[0], shared_size[1]])
+        if type(shared_size[0]) is not tuple:
+            shared_init = torch.randn([batch, channels, shared_size[0], shared_size[1]])
+        else:
+            assert len(shared_size) == batch
+            A = []
+            for s in shared_size:
+                A.append(torch.randn([channels, s[0], s[1]]))
+            shared_init = torch.stack(A)
+
         self.shared_init = torch.nn.ParameterList(
             [torch.nn.Parameter(shared_init.clone()) for b in range(batch)]
         )
