@@ -341,6 +341,34 @@ class LaplacianImage(ImageParameterization):
         return torch.stack(A).refine_names("B", "C", "H", "W")
 
 
+class SharedImage(ImageParameterization):
+    """Share some image parameters across the batch"""
+
+    def __init__(
+        self,
+        shared_size: InitSize = None,
+        output_size: InitSize = None,
+        channels: int = 3,
+        batch: int = 1,
+        parameterization=None,
+    ) -> None:
+        super().__init__()
+        shared_init = torch.randn([batch, channels, shared_size[0], shared_size[1]])
+        self.shared_init = torch.nn.ParameterList(
+            [torch.nn.Parameter(shared_init.clone()) for b in range(batch)]
+        )
+        self.output_size = output_size
+        self.parameterization = parameterization
+
+    def forward(self) -> torch.Tensor:
+        x = [
+            F.interpolate(shared_tensor, size=self.output_size, mode="bilinear")
+            for shared_tensor in self.shared_init
+        ]
+        output_image = self.parameterization() + sum(x)
+        return output_image.refine_names("B", "C", "H", "W")
+
+
 class NaturalImage(ImageParameterization):
     r"""Outputs an optimizable input image.
 
