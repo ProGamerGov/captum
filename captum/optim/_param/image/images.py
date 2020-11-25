@@ -45,7 +45,7 @@ class ImageTensor(torch.Tensor):
         return f"ImageTensor(value={self._t})"
 
     def show(self, scale: float = 255.0) -> None:
-        if self.size(1) == 4:
+        if self.dim() == 4 and self.size(1) == 4:
             self = blend_alpha(self)
         if len(self.shape) == 3:
             numpy_thing = self.cpu().detach().numpy().transpose(1, 2, 0) * scale
