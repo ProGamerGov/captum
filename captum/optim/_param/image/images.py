@@ -12,7 +12,7 @@ try:
 except (ImportError, AssertionError):
     print("The Pillow/PIL library is required to use Captum's Optim library")
 
-from captum.optim._param.image.transform import ToRGB
+from captum.optim._param.image.transform import ToRGB, blend_alpha
 from captum.optim._utils.typing import InitSize, SquashFunc
 
 
