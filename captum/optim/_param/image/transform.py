@@ -11,9 +11,22 @@ from captum.optim._utils.typing import TransformSize, TransformVal, TransformVal
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
+def blend_alpha(
+    x: torch.Tensor, background: Optional[torch.Tensor] = None
+) -> torch.Tensor:
+    """
+    Functional version of BlendAlpha
+    """
+
+    assert x.size(1) == 4 and x.dim() == 4
+    rgb, alpha = x[:, :3, ...], x[:, 3:4, ...]
+    background = background or torch.rand_like(rgb)
+    blended = alpha * rgb + (1 - alpha) * background
+    return blended
+
+
 class BlendAlpha(nn.Module):
     r"""Blends a 4 channel input parameterization into an RGB image.
-
     You can specify a fixed background, or a random one will be used by default.
     """
 
@@ -22,11 +35,7 @@ class BlendAlpha(nn.Module):
         self.background = background
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        assert x.size(1) == 4
-        rgb, alpha = x[:, :3, ...], x[:, 3:4, ...]
-        background = self.background or torch.rand_like(rgb)
-        blended = alpha * rgb + (1 - alpha) * background
-        return blended
+        return blend_alpha(x, self.background)
 
 
 class IgnoreAlpha(nn.Module):
