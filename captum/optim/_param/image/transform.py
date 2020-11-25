@@ -13,6 +13,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class BlendAlpha(nn.Module):
     r"""Blends a 4 channel input parameterization into an RGB image.
+
     You can specify a fixed background, or a random one will be used by default.
     """
 
