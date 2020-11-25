@@ -12,7 +12,7 @@ try:
 except (ImportError, AssertionError):
     print("The Pillow/PIL library is required to use Captum's Optim library")
 
-from captum.optim._param.image.transform import ToRGB, blend_alpha
+from captum.optim._param.image.transform import ToRGB
 from captum.optim._utils.typing import InitSize, SquashFunc
 
 
@@ -45,8 +45,6 @@ class ImageTensor(torch.Tensor):
         return f"ImageTensor(value={self._t})"
 
     def show(self, scale: float = 255.0) -> None:
-        if self.dim() == 4 and self.size(1) == 4:
-            self = blend_alpha(self)
         if len(self.shape) == 3:
             numpy_thing = self.cpu().detach().numpy().transpose(1, 2, 0) * scale
         elif len(self.shape) == 4:
