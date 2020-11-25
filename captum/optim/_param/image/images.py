@@ -342,7 +342,11 @@ class LaplacianImage(ImageParameterization):
 
 
 class SharedImage(ImageParameterization):
-    """Share some image parameters across the batch"""
+    """
+    Share some image parameters across the batch.
+    Mordvintsev, et al., "Differentiable Image Parameterizations", Distill, 2018.
+    https://distill.pub/2018/differentiable-parameterizations/
+    """
 
     def __init__(
         self,
@@ -365,8 +369,7 @@ class SharedImage(ImageParameterization):
             F.interpolate(shared_tensor, size=self.output_size, mode="bilinear")
             for shared_tensor in self.shared_init
         ]
-        output_image = self.parameterization() + sum(x)
-        return output_image.refine_names("B", "C", "H", "W")
+        return (self.parameterization() + sum(x)).refine_names("B", "C", "H", "W")
 
 
 class NaturalImage(ImageParameterization):
