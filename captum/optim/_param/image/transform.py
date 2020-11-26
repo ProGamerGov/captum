@@ -17,11 +17,11 @@ class BlendAlpha(nn.Module):
     You can specify a fixed background, or a random one will be used by default.
     """
 
-    def __init__(self, background: torch.Tensor = None):
+    def __init__(self, background: Optional[torch.Tensor] = None) -> None:
         super().__init__()
         self.background = background
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         assert x.size(1) == 4
         rgb, alpha = x[:, :3, ...], x[:, 3:4, ...]
         background = (
@@ -115,7 +115,7 @@ class CenterCrop(torch.nn.Module):
         size (int, sequence) or (int): Number of pixels to center crop away.
     """
 
-    def __init__(self, size=0):
+    def __init__(self, size: TransformSize = 0) -> None:
         super(CenterCrop, self).__init__()
         if type(size) is list or type(size) is tuple:
             assert (
