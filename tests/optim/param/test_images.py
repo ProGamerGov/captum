@@ -38,7 +38,7 @@ class TestPixelImage(BaseTest):
         size = (224, 224)
         channels = 3
         image_param = images.PixelImage(size=size, channels=channels)
-        assert image_param.image.dim() == 3
+        assert image_param.image.dim() == 4
         assert image_param.image.size(0) == channels
         assert image_param.image.size(1) == size[0]
         assert image_param.image.size(2) == size[1]
@@ -52,7 +52,7 @@ class TestPixelImage(BaseTest):
         channels = 3
         init_tensor = torch.randn(3, 224, 224)
         image_param = images.PixelImage(size=size, channels=channels, init=init_tensor)
-        assert image_param.image.dim() == 3
+        assert image_param.image.dim() == 4
         assert image_param.image.size(0) == channels
         assert image_param.image.size(1) == size[0]
         assert image_param.image.size(2) == size[1]
