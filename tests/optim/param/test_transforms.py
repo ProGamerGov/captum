@@ -170,28 +170,27 @@ class TestIgnoreAlpha(BaseTest):
 
 
 class TestToRGB(BaseTest):
+    def get_matrix(self, matrix: str = "klt") -> torch.tensor:
+        if matrix == "klt":
+            KLT = [[0.26, 0.09, 0.02], [0.27, 0.00, -0.05], [0.27, -0.09, 0.03]]
+            transform = torch.Tensor(KLT).float()
+            transform = transform / torch.max(torch.norm(transform, dim=0))
+            return transform
+        elif matrix == "i1i2i3":
+            i1i2i3_matrix = [
+                [1 / 3, 1 / 3, 1 / 3],
+                [1 / 2, 0, -1 / 2],
+                [-1 / 4, 1 / 2, -1 / 4],
+            ]
+            return torch.Tensor(i1i2i3_matrix)    
+
     def test_to_rgb_i1i2i3(self) -> None:
         to_rgb = transform.ToRGB(transform_name="i1i2i3")
-        assert torch.all(
-            to_rgb.transform.eq(
-                torch.tensor(
-                    [
-                        [1 / 3, 1 / 3, 1 / 3],
-                        [1 / 2, 0, -1 / 2],
-                        [-1 / 4, 1 / 2, -1 / 4],
-                    ]
-                )
-            )
-        )
+        assert torch.all(to_rgb.transform.eq(self.get_matrix("i1i2i3")))
 
     def test_to_rgb_klt(self) -> None:
         to_rgb = transform.ToRGB(transform_name="klt")
-
-        klt_expected = torch.Tensor(
-            [[0.26, 0.09, 0.02], [0.27, 0.00, -0.05], [0.27, -0.09, 0.03]]
-        )
-        klt_expected = klt_expected / torch.max(torch.norm(klt_expected, dim=0))
-        assert torch.all(to_rgb.transform.eq(klt_expected))
+        assert torch.all(to_rgb.transform.eq(self.get_matrix("klt")))
 
     def test_to_rgb(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -206,20 +205,18 @@ class TestToRGB(BaseTest):
         r = torch.ones(4).repeat(4, 1) * 0.8009
         b = torch.ones(4).repeat(4, 1) * 0.4762
         g = torch.ones(4).repeat(4, 1) * 0.4546
-        expected_rgb = torch.stack([r, b, g]).unsqueeze(0)
+        expected_rgb = torch.stack([r, b, g])
 
-        diff_rgb = rgb_tensor - expected_rgb
+        diff_rgb = rgb_tensor.clone() - expected_rgb
         assert diff_rgb.max() < 4.8340e-05 and diff_rgb.min() > -7.7189e-06
 
-        inverse_tensor = to_rgb(rgb_tensor, inverse=True)
+        inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
 
-        r_i = torch.ones(4).repeat(4, 1) * 0.9948
-        b_i = torch.ones(4).repeat(4, 1) * 0.0675
-        g_i = torch.ones(4).repeat(4, 1) * 0.0127
-        expected_inverse = torch.stack([r_i, b_i, g_i]).unsqueeze(0)
-
-        diff_inverse = inverse_tensor - expected_inverse
-        assert diff_inverse.max() < 4.5310e-05 and diff_inverse.min() > -4.7711e-05
+        h, w = rgb_tensor.size("H"), rgb_tensor.size("W")
+        rgb_flat = rgb_tensor.flatten(("H", "W"), "spatials")
+        rgb_correct = torch.inverse(self.get_matrix("klt")) @ rgb_flat
+        rgb_output = rgb_correct.unflatten("spatials", (("H", h), ("W", w)))
+        assert torch.all(inverse_tensor.eq(rgb_output)) 
 
     def test_to_rgb_alpha(self) -> None:
         if torch.__version__ == "1.2.0":
