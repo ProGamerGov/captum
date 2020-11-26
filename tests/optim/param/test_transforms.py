@@ -199,14 +199,14 @@ class TestToRGB(BaseTest):
                 "Skipping ToRGB forward due to insufficient Torch version."
             )
         to_rgb = transform.ToRGB(transform_name="klt")
-        test_tensor = torch.ones(3, 4, 4).refine_names("C", "H", "W")
+        test_tensor = torch.ones(3, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
 
         rgb_tensor = to_rgb(test_tensor)
 
         r = torch.ones(4).repeat(4, 1) * 0.8009
         b = torch.ones(4).repeat(4, 1) * 0.4762
         g = torch.ones(4).repeat(4, 1) * 0.4546
-        expected_rgb = torch.stack([r, b, g])
+        expected_rgb = torch.stack([r, b, g]).unsqueeze(0)
 
         diff_rgb = rgb_tensor - expected_rgb
         assert diff_rgb.max() < 4.8340e-05 and diff_rgb.min() > -7.7189e-06
@@ -216,7 +216,7 @@ class TestToRGB(BaseTest):
         r_i = torch.ones(4).repeat(4, 1) * 0.9948
         b_i = torch.ones(4).repeat(4, 1) * 0.0675
         g_i = torch.ones(4).repeat(4, 1) * 0.0127
-        expected_inverse = torch.stack([r_i, b_i, g_i])
+        expected_inverse = torch.stack([r_i, b_i, g_i]).unsqueeze(0)
 
         diff_inverse = inverse_tensor - expected_inverse
         assert diff_inverse.max() < 4.5310e-05 and diff_inverse.min() > -4.7711e-05
@@ -227,7 +227,7 @@ class TestToRGB(BaseTest):
                 "Skipping ToRGB with Alpha forward due to insufficient Torch version."
             )
         to_rgb = transform.ToRGB(transform_name="klt")
-        test_tensor = torch.ones(4, 4, 4).refine_names("C", "H", "W")
+        test_tensor = torch.ones(4, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
         alpha = torch.ones(4).repeat(4, 1)
 
         rgb_tensor = to_rgb(test_tensor)
@@ -235,7 +235,7 @@ class TestToRGB(BaseTest):
         r = torch.ones(4).repeat(4, 1) * 0.8009
         b = torch.ones(4).repeat(4, 1) * 0.4762
         g = torch.ones(4).repeat(4, 1) * 0.4546
-        expected_rgb = torch.stack([r, b, g, alpha])
+        expected_rgb = torch.stack([r, b, g, alpha]).unsqueeze(0)
 
         diff_rgb = rgb_tensor - expected_rgb
         assert diff_rgb.max() < 4.8340e-05 and diff_rgb.min() > -7.7189e-06
@@ -245,7 +245,7 @@ class TestToRGB(BaseTest):
         r_i = torch.ones(4).repeat(4, 1) * 0.9948
         b_i = torch.ones(4).repeat(4, 1) * 0.0675
         g_i = torch.ones(4).repeat(4, 1) * 0.0127
-        expected_inverse = torch.stack([r_i, b_i, g_i, alpha])
+        expected_inverse = torch.stack([r_i, b_i, g_i, alpha]).unsqueeze(0)
 
         diff_inverse = inverse_tensor - expected_inverse
         assert diff_inverse.max() < 4.5310e-05 and diff_inverse.min() > -4.7711e-05
