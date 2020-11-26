@@ -182,7 +182,7 @@ class TestToRGB(BaseTest):
                 [1 / 2, 0, -1 / 2],
                 [-1 / 4, 1 / 2, -1 / 4],
             ]
-            return torch.Tensor(i1i2i3_matrix)    
+            return torch.Tensor(i1i2i3_matrix)
 
     def test_to_rgb_i1i2i3(self) -> None:
         to_rgb = transform.ToRGB(transform_name="i1i2i3")
@@ -216,7 +216,7 @@ class TestToRGB(BaseTest):
         rgb_flat = rgb_tensor.flatten(("H", "W"), "spatials")
         rgb_correct = torch.inverse(self.get_matrix("klt")) @ rgb_flat
         rgb_output = rgb_correct.unflatten("spatials", (("H", h), ("W", w)))
-        assert torch.all(inverse_tensor.eq(rgb_output)) 
+        assert torch.all(inverse_tensor.eq(rgb_output))
 
     def test_to_rgb_alpha(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -225,10 +225,10 @@ class TestToRGB(BaseTest):
             )
         to_rgb = transform.ToRGB(transform_name="klt")
         test_tensor = torch.ones(4, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
-        alpha = torch.ones(4).repeat(4, 1)
 
         rgb_tensor = to_rgb(test_tensor)
 
+        alpha = torch.ones(4).repeat(4, 1)
         r = torch.ones(4).repeat(4, 1) * 0.8009
         b = torch.ones(4).repeat(4, 1) * 0.4762
         g = torch.ones(4).repeat(4, 1) * 0.4546
@@ -239,13 +239,13 @@ class TestToRGB(BaseTest):
 
         inverse_tensor = to_rgb(rgb_tensor, inverse=True)
 
-        r_i = torch.ones(4).repeat(4, 1) * 0.9948
-        b_i = torch.ones(4).repeat(4, 1) * 0.0675
-        g_i = torch.ones(4).repeat(4, 1) * 0.0127
-        expected_inverse = torch.stack([r_i, b_i, g_i, alpha]).unsqueeze(0)
-
-        diff_inverse = inverse_tensor - expected_inverse
-        assert diff_inverse.max() < 4.5310e-05 and diff_inverse.min() > -4.7711e-05
+        rgb_only, alpha_channel = rgb_tensor[:, :3], rgb_tensor[:, 3:]
+        h, w = rgb_only.size("H"), rgb_only.size("W")
+        rgb_flat = rgb_only.flatten(("H", "W"), "spatials")
+        rgb_correct = torch.inverse(self.get_matrix("klt")) @ rgb_flat
+        rgb_output = rgb_correct.unflatten("spatials", (("H", h), ("W", w)))
+        rgb_output = torch.cat([rgb_output, alpha_channel], 1)
+        assert torch.all(inverse_tensor.eq(rgb_output))
 
 
 class TestGaussianSmoothing(BaseTest):
