@@ -17,14 +17,16 @@ class BlendAlpha(nn.Module):
     You can specify a fixed background, or a random one will be used by default.
     """
 
-    def __init__(self, background: Optional[torch.Tensor] = None) -> None:
+    def __init__(self, background: torch.Tensor = None):
         super().__init__()
         self.background = background
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x):
         assert x.size(1) == 4
         rgb, alpha = x[:, :3, ...], x[:, 3:4, ...]
-        background = self.background or torch.rand_like(rgb)
+        background = (
+            self.background if self.background is not None else torch.rand_like(rgb)
+        )
         blended = alpha * rgb + (1 - alpha) * background
         return blended
 
@@ -113,9 +115,15 @@ class CenterCrop(torch.nn.Module):
         size (int, sequence) or (int): Number of pixels to center crop away.
     """
 
-    def __init__(self, size: TransformSize = 0) -> None:
+    def __init__(self, size=0):
         super(CenterCrop, self).__init__()
-        self.crop_val = [size] * 2 if size is not list and size is not tuple else size
+        if type(size) is list or type(size) is tuple:
+            assert (
+                len(size) == 2
+            ), "CenterCrop requires a single integer or a tuple of integers."
+            self.crop_val = size
+        else:
+            self.crop_val = [size] * 2
 
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         assert (
