@@ -352,53 +352,68 @@ class SharedImage(ImageParameterization):
         self,
         shared_size: Union[InitSize, Tuple[InitSize]] = None,
         output_size: InitSize = None,
-        shared_channels: int = 3,
+        shared_channels: TransformSize = 3,
         output_channels: int = 3,
         batch: int = 1,
         parameterization=None,
     ) -> None:
         super().__init__()
+        if type(shared_channels) is tuple or type(shared_channels) is list:
+            assert len(shared_channels) == batch
+        else:
+            shared_channels = [shared_channels] * batch
+
         if type(shared_size[0]) is not tuple:
-            shared_init = torch.randn(
-                [batch, shared_channels, shared_size[0], shared_size[1]]
-            )
+            A = []
+            out_size = []
+            for s_channel in shared_channels:
+                A.append(
+                    torch.nn.Parameter(
+                        torch.randn([1, s_channel, shared_size[0], shared_size[1]])
+                    )
+                )
+
+                if s_channel != output_channels:
+                    out_size.append((output_channels, output_size[0], output_size[1]))
+                else:
+                    out_size.append((output_size[0], output_size[1]))
+                print(s_channel, shared_size[0], shared_size[1])
+            shared_init = torch.nn.ParameterList(A)
         else:
             assert len(shared_size) == batch
+            out_size = []
             A = []
-            for s in shared_size:
-                if len(s) == 2:
-                    c, sh, sw = shared_channels, s[0], s[1]
-                elif len(s) == 3:
-                    c, sh, sw = s[0], s[1], s[2]
-                else:
-                    raise ValueError("Only (C,H,W), or (H,W) sizes are supported.")
-                A.append(torch.randn([c, sh, sw]))
-            shared_init = torch.stack(A)
+            for s_channel, s_size in zip(shared_channels, shared_size):
+                A.append(
+                    torch.nn.Parameter(
+                        torch.randn([1, s_channel, s_size[0], s_size[1]])
+                    )
+                )
 
-        self.shared_init = torch.nn.ParameterList(
-            [torch.nn.Parameter(shared_init.clone()) for b in range(batch)]
-        )
-        output_size = (
-            (output_channels, output_size[0], output_size[1])
-            if output_channels != shared_channels
-            else output_size
-        )
-        self.output_size = output_size
+                if s_channel != output_channels:
+                    out_size.append((output_channels, output_size[0], output_size[1]))
+                else:
+                    out_size.append((output_size[0], output_size[1]))
+            shared_init = torch.nn.ParameterList(A)
+
+        self.shared_init = shared_init
+        self.output_size = out_size
         self.parameterization = parameterization
 
-    def interpolate_tensor(self, x: torch.Tensor) -> torch.Tensor:
-        if len(self.output_size) == 2:
+    def interpolate_tensor(self, x: torch.Tensor, size) -> torch.Tensor:
+        if len(size) == 2:
             mode = "bilinear"
         else:
             mode = "trilinear"
             x = x.unsqueeze(0)
-        x = F.interpolate(x, size=self.output_size, mode=mode)
-        x = x.squeeze(0) if len(self.output_size) == 3 else x
+        x = F.interpolate(x, size=size, mode=mode)
+        x = x.squeeze(0) if len(size) == 3 else x
         return x
 
     def forward(self) -> torch.Tensor:
         x = [
-            self.interpolate_tensor(shared_tensor) for shared_tensor in self.shared_init
+            self.interpolate_tensor(shared_tensor, size)
+            for shared_tensor, size in zip(self.shared_init, self.output_size)
         ]
         return (self.parameterization() + sum(x)).refine_names("B", "C", "H", "W")
 
