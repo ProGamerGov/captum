@@ -399,7 +399,7 @@ class SharedImage(ImageParameterization):
         self.output_size = out_size
         self.parameterization = parameterization
 
-    def interpolate_tensor(self, x: torch.Tensor, size: List[int, int]) -> torch.Tensor:
+    def interpolate_tensor(self, x: torch.Tensor, size: List[int]) -> torch.Tensor:
         if len(size) == 2:
             mode = "bilinear"
         else:
