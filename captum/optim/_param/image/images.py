@@ -377,7 +377,6 @@ class SharedImage(ImageParameterization):
                     out_size.append((output_channels, output_size[0], output_size[1]))
                 else:
                     out_size.append((output_size[0], output_size[1]))
-                print(s_channel, shared_size[0], shared_size[1])
             shared_init = torch.nn.ParameterList(A)
         else:
             assert len(shared_size) == batch
