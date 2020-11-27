@@ -371,12 +371,13 @@ class SharedImage(ImageParameterization):
             A = []
             out_size = []
             for s_batch, s_channel in zip(shared_channels, shared_batch):
-                for b in range(s_batch):
-                    A.append(
-                        torch.nn.Parameter(
-                            torch.randn([sb, s_channel, shared_size[0], shared_size[1]])
+                A.append(
+                    torch.nn.Parameter(
+                        torch.randn(
+                            [s_batch, s_channel, shared_size[0], shared_size[1]]
                         )
                     )
+                )
 
                 if s_channel != output_channels:
                     out_size.append((output_channels, output_size[0], output_size[1]))
@@ -390,12 +391,11 @@ class SharedImage(ImageParameterization):
             for s_channel, s_size, s_batch in zip(
                 shared_channels, shared_size, shared_batch
             ):
-                for b in range(s_batch):
-                    A.append(
-                        torch.nn.Parameter(
-                            torch.randn([1, s_channel, s_size[0], s_size[1]])
-                        )
+                A.append(
+                    torch.nn.Parameter(
+                        torch.randn([s_batch, s_channel, s_size[0], s_size[1]])
                     )
+                )
 
                 if s_channel != output_channels:
                     out_size.append((output_channels, output_size[0], output_size[1]))
@@ -407,7 +407,7 @@ class SharedImage(ImageParameterization):
         self.output_size = out_size
         self.parameterization = parameterization
 
-    def interpolate_tensor(self, x: torch.Tensor, size: List[int]) -> torch.Tensor:
+    def interpolate_tensor(self, x: torch.Tensor, size) -> torch.Tensor:
         if len(size) == 2:
             mode = "bilinear"
         else:
@@ -415,6 +415,12 @@ class SharedImage(ImageParameterization):
             x = x.unsqueeze(0)
         x = F.interpolate(x, size=size, mode=mode)
         x = x.squeeze(0) if len(size) == 3 else x
+        if x.size(0) > 1:
+            x = x.permute(1, 0, 2, 3)
+            x = F.interpolate(
+                x.unsqueeze(0), size=(1, x.size(2), x.size(3)), mode="trilinear"
+            ).squeeze(0)
+            x = x.permute(1, 0, 2, 3)
         return x
 
     def forward(self) -> torch.Tensor:
