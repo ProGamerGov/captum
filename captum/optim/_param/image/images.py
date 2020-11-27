@@ -352,30 +352,53 @@ class SharedImage(ImageParameterization):
         self,
         shared_size: Union[InitSize, Tuple[InitSize]] = None,
         output_size: InitSize = None,
-        channels: int = 3,
+        shared_channels: int = 3,
+        output_channels: int = 3,
         batch: int = 1,
         parameterization=None,
     ) -> None:
         super().__init__()
         if type(shared_size[0]) is not tuple:
-            shared_init = torch.randn([batch, channels, shared_size[0], shared_size[1]])
+            shared_init = torch.randn(
+                [batch, shared_channels, shared_size[0], shared_size[1]]
+            )
         else:
             assert len(shared_size) == batch
             A = []
             for s in shared_size:
-                A.append(torch.randn([channels, s[0], s[1]]))
+                if len(s) == 2:
+                    c, sh, sw = shared_channels, s[0], s[1]
+                elif len(s) == 3:
+                    c, sh, sw = s[0], s[1], s[2]
+                else:
+                    raise ValueError("Only (C,H,W), or (H,W) sizes are supported.")
+                A.append(torch.randn([c, sh, sw]))
             shared_init = torch.stack(A)
 
         self.shared_init = torch.nn.ParameterList(
             [torch.nn.Parameter(shared_init.clone()) for b in range(batch)]
         )
+        output_size = (
+            (output_channels, output_size[0], output_size[1])
+            if output_channels != shared_channels
+            else output_size
+        )
         self.output_size = output_size
         self.parameterization = parameterization
 
+    def interpolate_tensor(self, x: torch.Tensor) -> torch.Tensor:
+        if len(self.output_size) == 2:
+            mode = "bilinear"
+        else:
+            mode = "trilinear"
+            x = x.unsqueeze(0)
+        x = F.interpolate(x, size=self.output_size, mode=mode)
+        x = x.squeeze(0) if len(self.output_size) == 3 else x
+        return x
+
     def forward(self) -> torch.Tensor:
         x = [
-            F.interpolate(shared_tensor, size=self.output_size, mode="bilinear")
-            for shared_tensor in self.shared_init
+            self.interpolate_tensor(shared_tensor) for shared_tensor in self.shared_init
         ]
         return (self.parameterization() + sum(x)).refine_names("B", "C", "H", "W")
 
