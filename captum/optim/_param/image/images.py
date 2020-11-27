@@ -354,24 +354,29 @@ class SharedImage(ImageParameterization):
         output_size: InitSize = None,
         shared_channels: TransformSize = 3,
         output_channels: int = 3,
-        batch: int = 1,
+        batch: TransformSize = 1,
         parameterization=None,
     ) -> None:
         super().__init__()
-        if type(shared_channels) is tuple or type(shared_channels) is list:
-            assert len(shared_channels) == batch
+        if type(batch) is tuple or type(batch) is list:
+            shared_batch = batch
         else:
-            shared_channels = [shared_channels] * batch
+            shared_batch = [batch] * batch
+        if type(shared_channels) is tuple or type(shared_channels) is list:
+            assert len(shared_channels) == len(shared_batch)
+        else:
+            shared_channels = [shared_channels] * len(shared_batch)
 
         if type(shared_size[0]) is not tuple:
             A = []
             out_size = []
-            for s_channel in shared_channels:
-                A.append(
-                    torch.nn.Parameter(
-                        torch.randn([1, s_channel, shared_size[0], shared_size[1]])
+            for s_batch, s_channel in zip(shared_channels, shared_batch):
+                for b in range(s_batch):
+                    A.append(
+                        torch.nn.Parameter(
+                            torch.randn([sb, s_channel, shared_size[0], shared_size[1]])
+                        )
                     )
-                )
 
                 if s_channel != output_channels:
                     out_size.append((output_channels, output_size[0], output_size[1]))
@@ -379,15 +384,18 @@ class SharedImage(ImageParameterization):
                     out_size.append((output_size[0], output_size[1]))
             shared_init = torch.nn.ParameterList(A)
         else:
-            assert len(shared_size) == batch
+            assert len(shared_size) == len(shared_batch)
             out_size = []
             A = []
-            for s_channel, s_size in zip(shared_channels, shared_size):
-                A.append(
-                    torch.nn.Parameter(
-                        torch.randn([1, s_channel, s_size[0], s_size[1]])
+            for s_channel, s_size, s_batch in zip(
+                shared_channels, shared_size, shared_batch
+            ):
+                for b in range(s_batch):
+                    A.append(
+                        torch.nn.Parameter(
+                            torch.randn([1, s_channel, s_size[0], s_size[1]])
+                        )
                     )
-                )
 
                 if s_channel != output_channels:
                     out_size.append((output_channels, output_size[0], output_size[1]))
