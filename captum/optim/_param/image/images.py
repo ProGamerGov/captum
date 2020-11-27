@@ -407,7 +407,9 @@ class SharedImage(ImageParameterization):
         self.output_size = out_size
         self.parameterization = parameterization
 
-    def interpolate_tensor(self, x: torch.Tensor, size) -> torch.Tensor:
+    def interpolate_tensor(
+        self, x: torch.Tensor, size: TransformSize, b: int
+    ) -> torch.Tensor:
         if len(size) == 2:
             mode = "bilinear"
         else:
@@ -415,20 +417,21 @@ class SharedImage(ImageParameterization):
             x = x.unsqueeze(0)
         x = F.interpolate(x, size=size, mode=mode)
         x = x.squeeze(0) if len(size) == 3 else x
-        if x.size(0) > 1:
+        if x.size(0) != b:
             x = x.permute(1, 0, 2, 3)
             x = F.interpolate(
-                x.unsqueeze(0), size=(1, x.size(2), x.size(3)), mode="trilinear"
+                x.unsqueeze(0), size=(b, x.size(2), x.size(3)), mode="trilinear"
             ).squeeze(0)
             x = x.permute(1, 0, 2, 3)
         return x
 
     def forward(self) -> torch.Tensor:
+        image = self.parameterization()
         x = [
-            self.interpolate_tensor(shared_tensor, size)
+            self.interpolate_tensor(shared_tensor, size, image.size(0))
             for shared_tensor, size in zip(self.shared_init, self.output_size)
         ]
-        return (self.parameterization() + sum(x)).refine_names("B", "C", "H", "W")
+        return (image + sum(x)).refine_names("B", "C", "H", "W")
 
 
 class NaturalImage(ImageParameterization):
