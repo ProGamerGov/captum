@@ -351,9 +351,7 @@ class SharedImage(ImageParameterization):
     def __init__(
         self,
         shared_size: Union[InitSize, Tuple[InitSize]] = None,
-        output_size: InitSize = None,
         shared_channels: TransformSize = 3,
-        output_channels: int = 3,
         shared_batch: TransformSize = 1,
         parameterization=None,
     ) -> None:
@@ -365,7 +363,7 @@ class SharedImage(ImageParameterization):
         else:
             shared_channels = [shared_channels] * len(shared_batch)
 
-        A, out_size = [], []
+        A = []
         if type(shared_size[0]) is not tuple:
             for s_batch, s_channel in zip(shared_batch, shared_channels):
                 A.append(
@@ -375,11 +373,6 @@ class SharedImage(ImageParameterization):
                         )
                     )
                 )
-
-                if s_channel != output_channels:
-                    out_size.append((output_channels, output_size[0], output_size[1]))
-                else:
-                    out_size.append((output_size[0], output_size[1]))
         else:
             assert len(shared_size) == len(shared_batch)
             for s_channel, s_size, s_batch in zip(
@@ -391,33 +384,30 @@ class SharedImage(ImageParameterization):
                     )
                 )
 
-                if s_channel != output_channels:
-                    out_size.append((output_channels, output_size[0], output_size[1]))
-                else:
-                    out_size.append((output_size[0], output_size[1]))
-
         self.shared_init = torch.nn.ParameterList(A)
-        self.output_size = out_size
         self.parameterization = parameterization
 
     def interpolate_tensor(
-        self, x: torch.Tensor, size: TransformSize, b: int
+        self, x: torch.Tensor, size: InitSize, batch: int, channels: int
     ) -> torch.Tensor:
         """
         Linear interpolation for 4D, 5D, and 6D tensors.
         """
 
-        if len(size) == 2:
+        if x.size(1) == channels:
             mode = "bilinear"
         else:
             mode = "trilinear"
             x = x.unsqueeze(0)
+            size = (channels, size[0], size[1])
         x = F.interpolate(x, size=size, mode=mode)
         x = x.squeeze(0) if len(size) == 3 else x
-        if x.size(0) != b:
+        if x.size(0) != batch:
             x = x.permute(1, 0, 2, 3)
             x = F.interpolate(
-                x.unsqueeze(0), size=(b, x.size(2), x.size(3)), mode="trilinear"
+                x.unsqueeze(0),
+                size=(batch, x.size(2), x.size(3)),
+                mode="trilinear",
             ).squeeze(0)
             x = x.permute(1, 0, 2, 3)
         return x
@@ -425,8 +415,13 @@ class SharedImage(ImageParameterization):
     def forward(self) -> torch.Tensor:
         image = self.parameterization()
         x = [
-            self.interpolate_tensor(shared_tensor, size, image.size(0))
-            for shared_tensor, size in zip(self.shared_init, self.output_size)
+            self.interpolate_tensor(
+                shared_tensor,
+                (image.size(2), image.size(3)),
+                image.size(0),
+                image.size(1),
+            )
+            for shared_tensor in self.shared_init
         ]
         return (image + sum(x)).refine_names("B", "C", "H", "W")
 
