@@ -354,14 +354,12 @@ class SharedImage(ImageParameterization):
         output_size: InitSize = None,
         shared_channels: TransformSize = 3,
         output_channels: int = 3,
-        batch: TransformSize = 1,
+        shared_batch: TransformSize = 1,
         parameterization=None,
     ) -> None:
         super().__init__()
-        if type(batch) is tuple or type(batch) is list:
-            shared_batch = batch
-        else:
-            shared_batch = [batch] * batch
+        if type(shared_batch) is not tuple and type(shared_batch) is not list:
+            shared_batch = [shared_batch] * shared_batch
         if type(shared_channels) is tuple or type(shared_channels) is list:
             assert len(shared_channels) == len(shared_batch)
         else:
