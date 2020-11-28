@@ -397,13 +397,8 @@ class SharedImage(ImageParameterization):
                     out_size.append((output_channels, output_size[0], output_size[1]))
                 else:
                     out_size.append((output_size[0], output_size[1]))
-        shared_init = torch.nn.ParameterList(A)
 
-        self.shared_init = shared_init
-        self.output_size = out_size
-        self.parameterization = parameterization
-
-        self.shared_init = shared_init
+        self.shared_init = torch.nn.ParameterList(A)
         self.output_size = out_size
         self.parameterization = parameterization
 
