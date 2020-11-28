@@ -359,10 +359,7 @@ class SharedImage(ImageParameterization):
         num_tensors = self.calc_num_tensors(shared_size, shared_channels, shared_batch)
         shared_batch = self.setup_shared(shared_batch, num_tensors)
         shared_channels = self.setup_shared(shared_channels, num_tensors)
-        if type(shared_size[0]) is not tuple:
-            shared_size = [shared_size] * len(num_tensors)
-        else:
-            assert len(shared_size) == len(num_tensors)
+        shared_channels = self.setup_shared(shared_size, num_tensors)
 
         A = []
         for s_channel, s_size, s_batch in zip(
@@ -378,7 +375,8 @@ class SharedImage(ImageParameterization):
         self.parameterization = parameterization
 
     def setup_shared(self, l: TransformSize, n: int) -> Union[List, Tuple]:
-        if type(l) is tuple or type(l) is list:
+        l_type = type(l[0]) if type(l[0]) is not tuple else type(l)
+        if l_type is tuple or l_type is list:
             assert len(l) == len(n)
         else:
             l = [l] * len(n)
@@ -394,17 +392,15 @@ class SharedImage(ImageParameterization):
         count = [1]
 
         def check_count(l: TransformSize) -> None:
-            if type(l) is not tuple and type(l) is not list:
+            l_type = type(l[0]) if type(l[0]) is not tuple else type(l)
+            if l_type is not tuple and l_type is not list:
                 count[0] = count[0]
             elif len(b) > count[0]:
                 count[0] = len(l)
 
         check_count(b)
         check_count(c)
-        if type(s[0]) is not tuple:
-            count[0] = count[0]
-        elif len(s) > count:
-            count[0] = len(s)
+        check_count(s)
         return count[0]
 
     def interpolate_tensor(
