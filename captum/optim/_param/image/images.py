@@ -13,7 +13,7 @@ except (ImportError, AssertionError):
     print("The Pillow/PIL library is required to use Captum's Optim library")
 
 from captum.optim._param.image.transform import ToRGB
-from captum.optim._utils.typing import InitSize, SquashFunc, TransformSize
+from captum.optim._utils.typing import InitSize, SquashFunc
 
 
 class ImageTensor(torch.Tensor):
@@ -350,52 +350,24 @@ class SharedImage(ImageParameterization):
 
     def __init__(
         self,
-        shared_size: Union[InitSize, Tuple[InitSize]] = None,
-        shared_channels: TransformSize = 3,
-        shared_batch: TransformSize = 1,
+        shared_shapes: Union[Tuple[Tuple[int]], Tuple[int]] = None,
         parameterization=None,
     ) -> None:
         super().__init__()
-        num_tensors = self.calc_num_tensors(shared_size, shared_channels, shared_batch)
-        shared_batch = self.setup_shared(shared_batch, num_tensors)
-        shared_channels = self.setup_shared(shared_channels, num_tensors)
-        shared_size = self.setup_shared(shared_size, num_tensors)
-
         A = []
-        for s_channel, s_size, s_batch in zip(
-            shared_channels, shared_size, shared_batch
-        ):
-            A.append(
-                torch.nn.Parameter(
-                    torch.randn([s_batch, s_channel, s_size[0], s_size[1]])
-                )
-            )
-
+        shared_shapes = (
+            [shared_shapes] if shared_shapes[0] is not tuple else shared_shapes
+        )
+        for shape in shared_shapes:
+            assert len(shape) >= 2 and len(shape) <= 4
+            if len(shape) == 2:
+                shape = (1, 1, shape[0], shape[1])
+            if len(shape) == 3:
+                shape = (1, shape[0], shape[1], shape[2])
+            batch, channels, height, width = shape[0], shape[1], shape[2], shape[3]
+            A.append(torch.nn.Parameter(torch.randn([batch, channels, height, width])))
         self.shared_init = torch.nn.ParameterList(A)
         self.parameterization = parameterization
-
-    def setup_shared(self, l: TransformSize, n: int) -> Union[List, Tuple]:
-        l_type = type(l[0]) if type(l[0]) is tuple else type(l)
-        if l_type is tuple or l_type is list:
-            assert len(l) == len(n)
-        else:
-            l = [l] * len(n)
-        return l
-
-    def calc_num_tensors(
-        self, s: Union[InitSize, Tuple[InitSize]], c: TransformSize, b: TransformSize
-    ) -> int:
-        count = [1]
-
-        def check_count(l: TransformSize) -> None:
-            l_type = type(l[0]) if type(l[0]) is tuple else type(l)
-            if l_type is not tuple and l_type is not list:
-                count[0] = count[0]
-            elif len(b) > count[0]:
-                count[0] = len(l)
-
-        check_count(b), check_count(c), check_count(s)
-        return count[0]
 
     def interpolate_tensor(
         self, x: torch.Tensor, size: InitSize, batch: int, channels: int
