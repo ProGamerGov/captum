@@ -200,6 +200,30 @@ class RandomSpatialJitter(torch.nn.Module):
         return self.translate_tensor(input, insets)
 
 
+class RangeChange(nn.Module):
+    """
+    Multiplies input by specified a multiplier for models with input ranges other than
+    0,1.
+    """
+
+    def __init__(self, multiplier: float = 1.0) -> None:
+        super().__init__()
+        self.multiplier = multiplier
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return x * self.multiplier
+
+
+class RGBToBGR(nn.Module):
+    """
+    Converts RGB images to BGR by switching the red and blue channels.
+    """
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        assert x.dim() == 4
+        return x[:, [2, 1, 0]]
+
+
 # class TransformationRobustness(nn.Module):
 #     def __init__(self, jitter=False, scale=False):
 #         super().__init__()
