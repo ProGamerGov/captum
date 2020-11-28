@@ -356,7 +356,7 @@ class SharedImage(ImageParameterization):
         super().__init__()
         A = []
         shared_shapes = (
-            [shared_shapes] if shared_shapes[0] is not tuple else shared_shapes
+            [shared_shapes] if type(shared_shapes[0]) is not tuple else shared_shapes
         )
         for shape in shared_shapes:
             assert len(shape) >= 2 and len(shape) <= 4
