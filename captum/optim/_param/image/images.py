@@ -385,10 +385,6 @@ class SharedImage(ImageParameterization):
     def calc_num_tensors(
         self, s: Union[InitSize, Tuple[InitSize]], c: TransformSize, b: TransformSize
     ) -> int:
-        """
-        Determine number of shared tensors to create.
-        """
-
         count = [1]
 
         def check_count(l: TransformSize) -> None:
