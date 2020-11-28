@@ -202,8 +202,8 @@ class RandomSpatialJitter(torch.nn.Module):
 
 class RangeChange(nn.Module):
     """
-    Multiplies input by specified a multiplier for models with input ranges other than
-    0,1.
+    Multiplies the input by a specified multiplier for models with input ranges other
+    than 0,1.
     """
 
     def __init__(self, multiplier: float = 1.0) -> None:
