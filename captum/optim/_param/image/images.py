@@ -364,6 +364,8 @@ class SharedImage(ImageParameterization):
             shared_channels = [shared_channels] * len(shared_batch)
         if type(shared_size[0]) is not tuple:
             shared_size = [shared_size] * len(shared_batch)
+        else:
+            assert len(shared_size) == len(shared_batch)
 
         A = []
         for s_channel, s_size, s_batch in zip(
