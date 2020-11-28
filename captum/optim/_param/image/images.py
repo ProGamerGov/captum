@@ -367,10 +367,9 @@ class SharedImage(ImageParameterization):
         else:
             shared_channels = [shared_channels] * len(shared_batch)
 
+        A, out_size = [], []
         if type(shared_size[0]) is not tuple:
-            A = []
-            out_size = []
-            for s_batch, s_channel in zip(shared_channels, shared_batch):
+            for s_batch, s_channel in zip(shared_batch, shared_channels):
                 A.append(
                     torch.nn.Parameter(
                         torch.randn(
@@ -383,11 +382,8 @@ class SharedImage(ImageParameterization):
                     out_size.append((output_channels, output_size[0], output_size[1]))
                 else:
                     out_size.append((output_size[0], output_size[1]))
-            shared_init = torch.nn.ParameterList(A)
         else:
             assert len(shared_size) == len(shared_batch)
-            out_size = []
-            A = []
             for s_channel, s_size, s_batch in zip(
                 shared_channels, shared_size, shared_batch
             ):
@@ -401,7 +397,11 @@ class SharedImage(ImageParameterization):
                     out_size.append((output_channels, output_size[0], output_size[1]))
                 else:
                     out_size.append((output_size[0], output_size[1]))
-            shared_init = torch.nn.ParameterList(A)
+        shared_init = torch.nn.ParameterList(A)
+
+        self.shared_init = shared_init
+        self.output_size = out_size
+        self.parameterization = parameterization
 
         self.shared_init = shared_init
         self.output_size = out_size
