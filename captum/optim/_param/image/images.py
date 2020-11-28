@@ -375,7 +375,7 @@ class SharedImage(ImageParameterization):
         self.parameterization = parameterization
 
     def setup_shared(self, l: TransformSize, n: int) -> Union[List, Tuple]:
-        l_type = type(l[0]) if type(l[0]) is not tuple else type(l)
+        l_type = type(l[0]) if type(l[0]) is tuple else type(l)
         if l_type is tuple or l_type is list:
             assert len(l) == len(n)
         else:
@@ -392,7 +392,7 @@ class SharedImage(ImageParameterization):
         count = [1]
 
         def check_count(l: TransformSize) -> None:
-            l_type = type(l[0]) if type(l[0]) is not tuple else type(l)
+            l_type = type(l[0]) if type(l[0]) is tuple else type(l)
             if l_type is not tuple and l_type is not list:
                 count[0] = count[0]
             elif len(b) > count[0]:
