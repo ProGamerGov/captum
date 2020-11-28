@@ -356,16 +356,17 @@ class SharedImage(ImageParameterization):
         parameterization=None,
     ) -> None:
         super().__init__()
+        num_tensors = calc_num_tensors(shared_size, shared_channels, shared_batch)
         if type(shared_batch) is not tuple and type(shared_batch) is not list:
-            shared_batch = [shared_batch] * shared_batch
+            shared_batch = [shared_batch] * num_tensors
         if type(shared_channels) is tuple or type(shared_channels) is list:
-            assert len(shared_channels) == len(shared_batch)
+            assert len(shared_channels) == len(num_tensors)
         else:
-            shared_channels = [shared_channels] * len(shared_batch)
+            shared_channels = [shared_channels] * len(num_tensors)
         if type(shared_size[0]) is not tuple:
-            shared_size = [shared_size] * len(shared_batch)
+            shared_size = [shared_size] * len(num_tensors)
         else:
-            assert len(shared_size) == len(shared_batch)
+            assert len(shared_size) == len(num_tensors)
 
         A = []
         for s_channel, s_size, s_batch in zip(
@@ -379,6 +380,29 @@ class SharedImage(ImageParameterization):
 
         self.shared_init = torch.nn.ParameterList(A)
         self.parameterization = parameterization
+
+    def calc_num_tensors(
+        self, s: Union[InitSize, Tuple[InitSize]], c: TransformSize, b: TransformSize
+    ) -> int:
+        """
+        Determine number of shared tensors to create.
+        """
+
+        count = [1]
+
+        def check_count(l: TransformSize) -> None:
+            if type(l) is not tuple and type(l) is not list:
+                count[0] = count[0]
+            elif len(b) > count[0]:
+                count[0] = len(l)
+
+        check_count(b)
+        check_count(c)
+        if type(s[0]) is not tuple:
+            count[0] = count[0]
+        elif len(s) > count:
+            count[0] = len(s)
+        return count[0]
 
     def interpolate_tensor(
         self, x: torch.Tensor, size: InitSize, batch: int, channels: int
