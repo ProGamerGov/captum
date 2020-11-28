@@ -200,7 +200,7 @@ class RandomSpatialJitter(torch.nn.Module):
         return self.translate_tensor(input, insets)
 
 
-class RangeChange(nn.Module):
+class ScaleInputRange(nn.Module):
     """
     Multiplies the input by a specified multiplier for models with input ranges other
     than 0,1.
