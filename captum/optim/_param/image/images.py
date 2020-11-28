@@ -438,7 +438,8 @@ class NaturalImage(ImageParameterization):
     uncorrelated image parameterization. :-)
 
     If a model requires a normalization step, such as normalizing imagenet RGB values,
-    or rescaling to [0,255], it has to perform that step inside its computation.
+    or rescaling to [0,255], it can perform those steps with the provided transforms or
+    inside its computation.
     For example, our GoogleNet factory function has a `transform_input=True` argument.
     """
 
