@@ -403,6 +403,10 @@ class SharedImage(ImageParameterization):
     def interpolate_tensor(
         self, x: torch.Tensor, size: TransformSize, b: int
     ) -> torch.Tensor:
+        """
+        Linear interpolation for 4D, 5D, and 6D tensors.
+        """
+
         if len(size) == 2:
             mode = "bilinear"
         else:
