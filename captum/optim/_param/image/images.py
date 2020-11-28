@@ -359,7 +359,7 @@ class SharedImage(ImageParameterization):
         num_tensors = self.calc_num_tensors(shared_size, shared_channels, shared_batch)
         shared_batch = self.setup_shared(shared_batch, num_tensors)
         shared_channels = self.setup_shared(shared_channels, num_tensors)
-        shared_channels = self.setup_shared(shared_size, num_tensors)
+        shared_size = self.setup_shared(shared_size, num_tensors)
 
         A = []
         for s_channel, s_size, s_batch in zip(
