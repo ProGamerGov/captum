@@ -356,13 +356,9 @@ class SharedImage(ImageParameterization):
         parameterization=None,
     ) -> None:
         super().__init__()
-        num_tensors = calc_num_tensors(shared_size, shared_channels, shared_batch)
-        if type(shared_batch) is not tuple and type(shared_batch) is not list:
-            shared_batch = [shared_batch] * num_tensors
-        if type(shared_channels) is tuple or type(shared_channels) is list:
-            assert len(shared_channels) == len(num_tensors)
-        else:
-            shared_channels = [shared_channels] * len(num_tensors)
+        num_tensors = self.calc_num_tensors(shared_size, shared_channels, shared_batch)
+        shared_batch = self.setup_shared(shared_batch, num_tensors)
+        shared_channels = self.setup_shared(shared_channels, num_tensors)
         if type(shared_size[0]) is not tuple:
             shared_size = [shared_size] * len(num_tensors)
         else:
@@ -380,6 +376,13 @@ class SharedImage(ImageParameterization):
 
         self.shared_init = torch.nn.ParameterList(A)
         self.parameterization = parameterization
+
+    def setup_shared(self, l: TransformSize, n: int) -> Union[List, Tuple]:
+        if type(l) is tuple or type(l) is list:
+            assert len(l) == len(n)
+        else:
+            l = [l] * len(n)
+        return l
 
     def calc_num_tensors(
         self, s: Union[InitSize, Tuple[InitSize]], c: TransformSize, b: TransformSize
