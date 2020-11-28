@@ -398,9 +398,7 @@ class SharedImage(ImageParameterization):
             elif len(b) > count[0]:
                 count[0] = len(l)
 
-        check_count(b)
-        check_count(c)
-        check_count(s)
+        check_count(b), check_count(c), check_count(s)
         return count[0]
 
     def interpolate_tensor(
