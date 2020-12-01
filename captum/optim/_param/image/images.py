@@ -353,7 +353,7 @@ class SharedImage(ImageParameterization):
         self,
         shared_shapes: Union[Tuple[Tuple[int]], Tuple[int]] = None,
         parameterization=None,
-        offset: Optional[int, Tuple[Union[int]]] = None,
+        offset: Optional[int, Tuple[int]] = None,
     ) -> None:
         super().__init__()
         A = []
@@ -369,7 +369,7 @@ class SharedImage(ImageParameterization):
         self.parameterization = parameterization
         self.offset = self.get_offset(offset, len(A)) if offset is not None else None
 
-    def get_offset(self, offset: Optional[int, Tuple[Union[int]]], n: int):
+    def get_offset(self, offset: Union[int, Tuple[int]], n: int):
         if type(offset) is tuple or type(offset) is list:
             if type(offset[0]) is tuple or type(offset[0]) is list:
                 assert len(offset) == n and all(
