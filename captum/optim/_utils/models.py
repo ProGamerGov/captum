@@ -28,6 +28,7 @@ def get_model_layers(model) -> List[str]:
 class RedirectedReLU(torch.autograd.Function):
     """
     A workaround when there is no gradient flow from an initial random input.
+    See https://github.com/tensorflow/lucid/blob/master/lucid/misc/redirected_relu_grad.py
     """
 
     @staticmethod
