@@ -214,7 +214,7 @@ class TestCenterCrop(BaseTest):
         test_array = np.pad(
             np.pad(np.ones((2, 2)), pad_width=1), pad_width=1, constant_values=(1)
         )[None, None, :]
-        test_array = center_crop_numpy(input=test_array, crop_val=crop_vals)
+        test_array = self.center_crop_numpy(input=test_array, crop_val=crop_vals)
 
         assertArraysAlmostEqual(test_tensor[0].numpy(), test_array[0], 0)
         assertArraysAlmostEqual(test_tensor[1].numpy(), test_array[0], 0)
@@ -271,7 +271,7 @@ class TestBlendAlpha(BaseTest):
         test_array = np.concatenate([rgb_array, alpha_array])[None, :]
 
         background_array = np.ones(rgb_array.shape) * 5
-        test_array = blend_alpha_numpy(test_array, background_array)
+        test_array = self.blend_alpha_numpy(test_array, background_array)
 
         assertArraysAlmostEqual(test_tensor.numpy(), test_array, 0)
 
