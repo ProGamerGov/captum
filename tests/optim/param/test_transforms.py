@@ -260,7 +260,7 @@ class TestBlendAlpha(BaseTest):
 
         background_tensor = torch.ones_like(rgb_tensor) * 5
         blend_alpha_pytorch = transform.BlendAlpha(background=background_tensor)
-        test_tensor = blend_alpha_pytorch(test_tensor).squeeze(0)
+        test_tensor = blend_alpha_pytorch(test_tensor)
 
         rgb_array = np.ones((3, 3, 3))
         alpha_array = (np.add(np.eye(3, 3), np.flip(np.eye(3, 3), 1)) / 2)[None, :]
