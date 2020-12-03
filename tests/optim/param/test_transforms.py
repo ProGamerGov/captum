@@ -122,7 +122,7 @@ class TestRandomSpatialJitter(BaseTest):
         pad_range = 3
         test_insets = [2, 3]
 
-        spatial_mod = RandomSpatialJitter(pad_range)
+        spatial_mod = transform.RandomSpatialJitter(pad_range)
         test_tensor = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
         test_tensor = spatial_mod.translate_tensor(
             test_tensor, torch.tensor(test_insets)
