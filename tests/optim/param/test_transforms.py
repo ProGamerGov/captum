@@ -241,6 +241,36 @@ class TestBlendAlpha(BaseTest):
             0,
         )
 
+    def blend_alpha_numpy(
+        x: np.ndarray, background: Optional[np.ndarray]
+    ) -> np.ndarray:
+        assert x.shape[1] == 4
+        assert x.ndim == 4
+        rgb, alpha = x[:, :3, ...], x[:, 3:4, ...]
+        background = (
+            background if background is not None else np.random.randn(*rgb.shape)
+        )
+        blended = alpha * rgb + (1 - alpha) * background
+        return blended
+
+    def test_blend_alpha_numpy(self) -> None:
+        rgb_tensor = torch.ones(3, 3, 3)
+        alpha_tensor = ((torch.eye(3, 3) + torch.eye(3, 3).flip(1)) / 2).repeat(1, 1, 1)
+        test_tensor = torch.cat([rgb_tensor, alpha_tensor]).unsqueeze(0)
+
+        background_tensor = torch.ones_like(rgb_tensor) * 5
+        blend_alpha_pytorch = transform.BlendAlpha(background=background_tensor)
+        test_tensor = blend_alpha_pytorch(test_tensor).squeeze(0)
+
+        rgb_array = np.ones((3, 3, 3))
+        alpha_array = (np.add(np.eye(3, 3), np.flip(np.eye(3, 3), 1)) / 2)[None, :]
+        test_array = np.concatenate([rgb_array, alpha_array])[None, :]
+
+        background_array = np.ones(rgb_array.shape) * 5
+        test_array = blend_alpha_numpy(test_array, background_array)
+
+        assertArraysAlmostEqual(test_tensor.numpy(), test_array, 0)
+
 
 class TestIgnoreAlpha(BaseTest):
     def test_ignore_alpha(self) -> None:
