@@ -197,7 +197,7 @@ class TestCenterCrop(BaseTest):
 
     def test_random_crop_numpy(self) -> None:
         crop_vals = 3
-        crop_mod = CenterCrop(crop_vals)
+        crop_mod = transform.CenterCrop(crop_vals)
 
         pad = (1, 1, 1, 1)
         test_tensor = (
