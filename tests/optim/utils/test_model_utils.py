@@ -43,19 +43,19 @@ class TestRedirectedReluLayer(BaseTest):
         assertTensorAlmostEqual(self, layer(x), F.relu(x), 0)
 
     def test_backward_redirected_relu_layer(self) -> None:
-        t_grad_input, t_grad_output = None, None
+        t_grad_input, t_grad_output = [], []
 
         def check_grad(self, grad_input, grad_output):
             t_grad_input = grad_input[0].clone().detach()
             t_grad_output = grad_output[0].clone().detach()
 
         rr_layer = model_utils.RedirectedReluLayer()
-        x = (torch.randn(1, 3, 4, 4, requires_grad=True) - 5).clamp(0, 1)
+        x = torch.zeros(1, 3, 4, 4, requires_grad=True)
         rr_layer.register_backward_hook(check_grad)
         rr_loss = rr_layer(x * 1).mean()
         rr_loss.backward()
 
-        assertTensorAlmostEqual(self, t_grad_input, t_grad_output, 0)
+        assertTensorAlmostEqual(self, t_grad_input[0], t_grad_output[0], 0)
 
 
 class TestReplaceLayers(BaseTest):
