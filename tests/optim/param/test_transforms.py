@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 import unittest
 
+import numpy as np
 import torch
 import torch.nn.functional as F
 
 from captum.optim._param.image import transform
-from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
+from tests.helpers.basic import BaseTest, assertArraysAlmostEqual, assertTensorAlmostEqual
 
 
 class TestRandSelect(BaseTest):
