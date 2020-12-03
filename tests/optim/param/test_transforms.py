@@ -176,6 +176,46 @@ class TestCenterCrop(BaseTest):
             0,
         )
 
+    def center_crop_numpy(
+        self, input: np.ndarray, crop_val: Union[int, Tuple[int]]
+    ) -> np.ndarray:
+        crop_val = (
+            [crop_val] * 2
+            if type(crop_val) is not list and type(crop_val) is not tuple
+            else crop_val
+        )
+        assert len(crop_val) == 2
+        assert input.ndim == 3 or input.ndim == 4
+        if input.ndim == 4:
+            h, w = input.shape[2], input.shape[3]
+        elif input.ndim == 3:
+            h, w = input.shape[1], input.shape[2]
+        h_crop = h - crop_val[0]
+        w_crop = w - crop_val[1]
+        sw, sh = w // 2 - (w_crop // 2), h // 2 - (h_crop // 2)
+        return input[..., sh : sh + h_crop, sw : sw + w_crop]
+
+    def test_random_crop_numpy(self) -> None:
+        crop_vals = 3
+        crop_mod = CenterCrop(crop_vals)
+
+        pad = (1, 1, 1, 1)
+        test_tensor = (
+            F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1)
+            .repeat(3, 1, 1)
+            .unsqueeze(0)
+        )
+        test_tensor_cropped = crop_mod(test_tensor).squeeze(0)
+
+        test_array = np.pad(
+            np.pad(np.ones((2, 2)), pad_width=1), pad_width=1, constant_values=(1)
+        )[None, None, :]
+        test_array = center_crop_numpy(input=test_array, crop_val=crop_vals)
+
+        assertArraysAlmostEqual(test_tensor[0].numpy(), test_array[0], 0)
+        assertArraysAlmostEqual(test_tensor[1].numpy(), test_array[0], 0)
+        assertArraysAlmostEqual(test_tensor[2].numpy(), test_array[0], 0)
+
 
 class TestBlendAlpha(BaseTest):
     def test_blend_alpha(self) -> None:
