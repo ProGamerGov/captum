@@ -105,6 +105,34 @@ class TestRandomSpatialJitter(BaseTest):
             0,
         )
 
+    def numpy_spatialjitter(
+        self, x: np.ndarray, pad_range: int, insets: List[int]
+    ) -> np.ndarray:
+        h, w = x.shape
+        x = np.pad(x, (pad_range, pad_range), "reflect")
+
+        x = np.roll(x, -(pad_range - insets[0]), axis=0)
+        x = np.roll(x, -(pad_range - insets[1]), axis=1)
+
+        x = x[:h, :w]
+        return x
+
+    def test_random_spatial_jitter_numpy(self) -> None:
+        pad_range = 3
+        test_insets = [2, 3]
+
+        spatial_mod = RandomSpatialJitter(pad_range)
+        test_tensor = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
+        test_tensor = spatial_mod.translate_tensor(
+            test_tensor, torch.tensor(test_insets)
+        ).squeeze(0)
+
+        test_array = self.numpy_spatialjitter(np.eye(4, 4), pad_range + 1, test_insets)
+
+        assertArraysAlmostEqual(test_tensor[0].numpy(), test_array, 0)
+        assertArraysAlmostEqual(test_tensor[1].numpy(), test_array, 0)
+        assertArraysAlmostEqual(test_tensor[2].numpy(), test_array, 0)
+
 
 class TestCenterCrop(BaseTest):
     def test_center_crop(self) -> None:
