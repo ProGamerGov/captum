@@ -6,7 +6,11 @@ import torch
 import torch.nn.functional as F
 
 from captum.optim._param.image import transform
-from tests.helpers.basic import BaseTest, assertArraysAlmostEqual, assertTensorAlmostEqual
+from tests.helpers.basic import (
+    BaseTest,
+    assertArraysAlmostEqual,
+    assertTensorAlmostEqual,
+)
 
 
 class TestRandSelect(BaseTest):
