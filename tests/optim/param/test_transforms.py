@@ -85,9 +85,9 @@ class TestRandomSpatialJitter(BaseTest):
         spatial_mod_np = numpy_transforms.RandomSpatialJitter(t_val)
         jittered_array = spatial_mod_np.translate_array(np.eye(4, 4), translate_vals)
 
-        assertArraysAlmostEqual(jittered_tensor[0].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[1].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[2].numpy(), jittered_array, 0)
+        assertArraysAlmostEqual(self, jittered_tensor[0].numpy(), jittered_array, 0)
+        assertArraysAlmostEqual(self, jittered_tensor[1].numpy(), jittered_array, 0)
+        assertArraysAlmostEqual(self, jittered_tensor[2].numpy(), jittered_array, 0)
 
     def test_random_spatial_jitter_w(self) -> None:
         translate_vals = [0, 3]
@@ -102,9 +102,9 @@ class TestRandomSpatialJitter(BaseTest):
         spatial_mod_np = numpy_transforms.RandomSpatialJitter(t_val)
         jittered_array = spatial_mod_np.translate_array(np.eye(4, 4), translate_vals)
 
-        assertArraysAlmostEqual(jittered_tensor[0].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[1].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[2].numpy(), jittered_array, 0)
+        assertArraysAlmostEqual(self, jittered_tensor[0].numpy(), jittered_array, 0)
+        assertArraysAlmostEqual(self, jittered_tensor[1].numpy(), jittered_array, 0)
+        assertArraysAlmostEqual(self, jittered_tensor[2].numpy(), jittered_array, 0)
 
     def test_random_spatial_jitter_h(self) -> None:
         translate_vals = [3, 0]
@@ -119,9 +119,9 @@ class TestRandomSpatialJitter(BaseTest):
         spatial_mod_np = numpy_transforms.RandomSpatialJitter(t_val)
         jittered_array = spatial_mod_np.translate_array(np.eye(4, 4), translate_vals)
 
-        assertArraysAlmostEqual(jittered_tensor[0].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[1].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[2].numpy(), jittered_array, 0)
+        assertArraysAlmostEqual(self, jittered_tensor[0].numpy(), jittered_array, 0)
+        assertArraysAlmostEqual(self, jittered_tensor[1].numpy(), jittered_array, 0)
+        assertArraysAlmostEqual(self, jittered_tensor[2].numpy(), jittered_array, 0)
 
 
 class TestCenterCrop(BaseTest):
@@ -144,7 +144,7 @@ class TestCenterCrop(BaseTest):
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals)
         cropped_array = crop_mod_np.crop(test_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertArraysAlmostEqual(self, cropped_tensor.numpy(), cropped_array, 0)
 
     def test_center_crop_two_numbers(self) -> None:
         pad = (1, 1, 1, 1)
@@ -165,7 +165,7 @@ class TestCenterCrop(BaseTest):
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals)
         cropped_array = crop_mod_np.crop(test_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertArraysAlmostEqual(self, cropped_tensor.numpy(), cropped_array, 0)
 
 
 class TestBlendAlpha(BaseTest):
@@ -186,7 +186,7 @@ class TestBlendAlpha(BaseTest):
         blend_alpha_np = numpy_transforms.BlendAlpha(background=background_array)
         blended_array = blend_alpha_np.blend_alpha(test_array)
 
-        assertArraysAlmostEqual(blended_tensor.numpy(), blended_array, 0)
+        assertArraysAlmostEqual(self, blended_tensor.numpy(), blended_array, 0)
 
 
 class TestIgnoreAlpha(BaseTest):
