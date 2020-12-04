@@ -1,27 +1,29 @@
 #!/usr/bin/env python3
 import unittest
 
+import numpy as np
 import torch
-
 from captum.optim._param.image import images
-from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
+from tests.helpers.basic import (
+    BaseTest,
+    assertArraysAlmostEqual,
+    assertTensorAlmostEqual,
+)
+from tests.optim.helpers import numpy_image
 
 
 class TestFFTImage(BaseTest):
     def test_pytorch_fftfreq(self) -> None:
-        assertTensorAlmostEqual(
-            self,
-            images.FFTImage.pytorch_fftfreq(4, 4),
-            torch.tensor([0.0000, 0.0625, -0.1250, -0.0625]),
-            0,
+        assertArraysAlmostEqual(
+            images.FFTImage.pytorch_fftfreq(4, 4).numpy(), np.fft.fftfreq(4, 4)
         )
 
     def test_rfft2d_freqs(self) -> None:
-        assertTensorAlmostEqual(
-            self,
-            images.FFTImage.rfft2d_freqs(height=2, width=3),
-            torch.tensor([[0.0000, 0.3333, 0.3333], [0.5000, 0.6009, 0.6009]]),
-            delta=0.0002,
+        height = 2
+        width = 3
+        assertArraysAlmostEqual(
+            images.FFTImage.rfft2d_freqs(height, width).numpy(),
+            numpy_image.rfft2d_freqs(height, width),
         )
 
 
