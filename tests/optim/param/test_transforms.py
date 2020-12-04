@@ -201,12 +201,12 @@ class TestToRGB(BaseTest):
     def test_to_rgb_i1i2i3(self) -> None:
         to_rgb = transform.ToRGB(transform_name="i1i2i3")
         to_rgb_np = numpy_transforms.ToRGB(transform_name="i1i2i3")
-        assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform, 0)
+        assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
 
     def test_to_rgb_klt(self) -> None:
         to_rgb = transform.ToRGB(transform_name="klt")
         to_rgb_np = numpy_transforms.ToRGB(transform_name="klt")
-        assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform, 0)
+        assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
 
     def test_to_rgb_klt_forward(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -221,12 +221,12 @@ class TestToRGB(BaseTest):
         test_array = np.ones((1, 3, 4, 4))
         rgb_array = to_rgb_np.to_rgb(test_array)
 
-        assertArraysAlmostEqual(rgb_tensor.numpy(), rgb_array, 0)
+        assertArraysAlmostEqual(rgb_tensor.numpy(), rgb_array)
 
         inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
         inverse_array = to_rgb_np.to_rgb(rgb_array, inverse=True)
 
-        assertArraysAlmostEqual(inverse_tensor.numpy(), inverse_array, 0)
+        assertArraysAlmostEqual(inverse_tensor.numpy(), inverse_array)
 
     def test_to_rgb_alpha_klt_forward(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -241,12 +241,12 @@ class TestToRGB(BaseTest):
         test_array = np.ones((1, 4, 4, 4))
         rgb_array = to_rgb_np.to_rgb(test_array)
 
-        assertArraysAlmostEqual(rgb_tensor.numpy(), rgb_array, 0)
+        assertArraysAlmostEqual(rgb_tensor.numpy(), rgb_array)
 
         inverse_tensor = to_rgb(rgb_tensor, inverse=True)
         inverse_array = to_rgb_np.to_rgb(rgb_array, inverse=True)
 
-        assertArraysAlmostEqual(inverse_tensor.numpy(), inverse_array, 0)
+        assertArraysAlmostEqual(inverse_tensor.numpy(), inverse_array)
 
     def test_to_rgb_i1i2i3_forward(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -261,12 +261,12 @@ class TestToRGB(BaseTest):
         test_array = np.ones((1, 3, 4, 4))
         rgb_array = to_rgb_np.to_rgb(test_array)
 
-        assertArraysAlmostEqual(rgb_tensor.numpy(), rgb_array, 0)
+        assertArraysAlmostEqual(rgb_tensor.numpy(), rgb_array)
 
         inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
         inverse_array = to_rgb_np.to_rgb(rgb_array, inverse=True)
 
-        assertArraysAlmostEqual(inverse_tensor.numpy(), inverse_array, 0)
+        assertArraysAlmostEqual(inverse_tensor.numpy(), inverse_array)
 
     def test_to_rgb_alpha_i1i2i3_forward(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -281,12 +281,12 @@ class TestToRGB(BaseTest):
         test_array = np.ones((1, 4, 4, 4))
         rgb_array = to_rgb_np.to_rgb(test_array)
 
-        assertArraysAlmostEqual(rgb_tensor.numpy(), rgb_array, 0)
+        assertArraysAlmostEqual(rgb_tensor.numpy(), rgb_array)
 
         inverse_tensor = to_rgb(rgb_tensor, inverse=True)
         inverse_array = to_rgb_np.to_rgb(rgb_array, inverse=True)
 
-        assertArraysAlmostEqual(inverse_tensor.numpy(), inverse_array, 0)
+        assertArraysAlmostEqual(inverse_tensor.numpy(), inverse_array)
 
 
 class TestGaussianSmoothing(BaseTest):
