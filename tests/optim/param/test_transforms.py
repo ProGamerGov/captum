@@ -80,7 +80,7 @@ class TestRandomSpatialJitter(BaseTest):
         test_input = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
         jittered_tensor = spatialjitter.translate_tensor(
             test_input, torch.tensor(translate_vals)
-        )
+        ).squeeze(0)
 
         spatial_mod_np = numpy_transforms.RandomSpatialJitter(t_val)
         jittered_array = spatial_mod_np.translate_array(np.eye(4, 4), translate_vals)
@@ -97,7 +97,7 @@ class TestRandomSpatialJitter(BaseTest):
         test_input = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
         jittered_tensor = spatialjitter.translate_tensor(
             test_input, torch.tensor(translate_vals)
-        )
+        ).squeeze(0)
 
         spatial_mod_np = numpy_transforms.RandomSpatialJitter(t_val)
         jittered_array = spatial_mod_np.translate_array(np.eye(4, 4), translate_vals)
@@ -114,7 +114,7 @@ class TestRandomSpatialJitter(BaseTest):
         test_input = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
         jittered_tensor = spatialjitter.translate_tensor(
             test_input, torch.tensor(translate_vals)
-        )
+        ).squeeze(0)
 
         spatial_mod_np = numpy_transforms.RandomSpatialJitter(t_val)
         jittered_array = spatial_mod_np.translate_array(np.eye(4, 4), translate_vals)
