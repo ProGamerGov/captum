@@ -34,7 +34,7 @@ class RandomSpatialJitter(object):
         super().__init__()
         self.pad_range = translate
 
-    def translate_array(self, x: np.ndarray, insets: List[int]) -> np.ndarray:
+    def translate_array(self, x: np.ndarray, insets) -> np.ndarray:
         x = np.pad(x, (self.pad_range, self.pad_range), "reflect")
         x = np.roll(x, (self.pad_range - insets[1]), axis=0)
         x = np.roll(x, (self.pad_range - insets[0]), axis=1)
