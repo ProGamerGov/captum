@@ -124,9 +124,9 @@ class ToRGB(object):
             has_alpha = x.shape[1] == 4
             h, w = x.shape[2], x.shape[3]
         if has_alpha:
-            if x.dim() == 3:
+            if x.ndim == 3:
                 x, alpha_channel = x[:3], x[3:]
-            elif x.dim() == 4:
+            elif x.ndim == 4:
                 x, alpha_channel = x[:, :3], x[:, 3:]
             assert x.ndim == alpha_channel.ndim  # ensure we "keep_dim"
 
