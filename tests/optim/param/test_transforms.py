@@ -144,7 +144,7 @@ class TestCenterCrop(BaseTest):
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals)
         cropped_array = crop_mod_np.crop(test_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), test_array, 0)
+        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
 
     def test_center_crop_two_numbers(self) -> None:
         pad = (1, 1, 1, 1)
@@ -165,7 +165,7 @@ class TestCenterCrop(BaseTest):
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals)
         cropped_array = crop_mod_np.crop(test_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), test_array, 0)
+        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
 
 
 class TestBlendAlpha(BaseTest):
