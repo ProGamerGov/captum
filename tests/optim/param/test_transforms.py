@@ -196,7 +196,7 @@ class TestCenterCrop(BaseTest):
         sw, sh = w // 2 - (w_crop // 2), h // 2 - (h_crop // 2)
         return input[..., sh : sh + h_crop, sw : sw + w_crop]
 
-    def test_random_crop_numpy(self) -> None:
+    def test_center_crop_numpy(self) -> None:
         crop_vals = (3, 3)
         crop_mod = transform.CenterCrop(crop_vals)
 
