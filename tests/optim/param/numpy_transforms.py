@@ -107,9 +107,9 @@ class ToRGB(object):
         super().__init__()
 
         if transform_name == "klt":
-            self.transform = ToRGBNumPy.klt_transform()
+            self.transform = ToRGB.klt_transform()
         elif transform_name == "i1i2i3":
-            self.transform = ToRGBNumPy.i1i2i3_transform()
+            self.transform = ToRGB.i1i2i3_transform()
         else:
             raise ValueError("transform_name has to be either 'klt' or 'i1i2i3'")
 
