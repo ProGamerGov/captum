@@ -11,7 +11,7 @@ from tests.helpers.basic import (
     assertArraysAlmostEqual,
     assertTensorAlmostEqual,
 )
-from tests.optim.param import numpy_transforms
+from tests.optim.helpers import numpy_transforms
 
 
 class TestRandSelect(BaseTest):
