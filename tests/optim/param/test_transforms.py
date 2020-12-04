@@ -210,7 +210,7 @@ class TestToRGB(BaseTest):
         to_rgb_np = numpy_transforms.ToRGB(transform_name="klt")
         assertArraysAlmostEqual(self, to_rgb.transform.numpy(), to_rgb_np.transform, 0)
 
-    def test_to_rgb_klt(self) -> None:
+    def test_to_rgb_klt_forward(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
                 "Skipping ToRGB forward due to insufficient Torch version."
@@ -230,7 +230,7 @@ class TestToRGB(BaseTest):
 
         assertArraysAlmostEqual(self, inverse_tensor.numpy(), inverse_array, 0)
 
-    def test_to_rgb_alpha_klt(self) -> None:
+    def test_to_rgb_alpha_klt_forward(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
                 "Skipping ToRGB with Alpha forward due to insufficient Torch version."
@@ -250,7 +250,7 @@ class TestToRGB(BaseTest):
 
         assertArraysAlmostEqual(self, inverse_tensor.numpy(), inverse_array, 0)
 
-    def test_to_rgb_i1i2i3(self) -> None:
+    def test_to_rgb_i1i2i3_forward(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
                 "Skipping ToRGB forward due to insufficient Torch version."
@@ -270,7 +270,7 @@ class TestToRGB(BaseTest):
 
         assertArraysAlmostEqual(self, inverse_tensor.numpy(), inverse_array, 0)
 
-    def test_to_rgb_alpha_i1i2i3(self) -> None:
+    def test_to_rgb_alpha_i1i2i3_forward(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
                 "Skipping ToRGB with Alpha forward due to insufficient Torch version."
