@@ -1,7 +1,7 @@
 import torch
 
 
-def rgb_cov(tensor: torch.Tensor) -> torch.Tensor:
+def image_cov(tensor: torch.Tensor) -> torch.Tensor:
     """
     Calculate a tensor's RGB covariance matrix
     """
@@ -23,7 +23,7 @@ def dataset_color_correlation_matrix(
     cov_mtx = 0
     for images, _ in loader:
         for b in range(images.size(0)):
-            cov_mtx += rgb_cov(images[b].permute(1, 2, 0))
+            cov_mtx += image_cov(images[b].permute(1, 2, 0))
 
     cov_mtx = cov_mtx / len(loader.dataset)
 
