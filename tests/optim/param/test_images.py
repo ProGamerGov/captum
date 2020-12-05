@@ -119,6 +119,7 @@ class TestFFTImage(BaseTest):
         fftimage_array = fftimage_np.forward()
 
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
+        assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array)
 
     def test_fftimage_forward_init_bchw(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -136,6 +137,7 @@ class TestFFTImage(BaseTest):
         fftimage_array = fftimage_np.forward()
 
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
+        assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array)
 
     def test_fftimage_forward_init_batch(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -154,6 +156,7 @@ class TestFFTImage(BaseTest):
         fftimage_array = fftimage_np.forward()
 
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
+        assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array)
 
 
 class TestPixelImage(BaseTest):
