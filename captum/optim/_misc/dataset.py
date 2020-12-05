@@ -12,7 +12,7 @@ def rgb_cov(tensor: torch.Tensor) -> torch.Tensor:
 
 
 def dataset_color_correlation_matrix(
-    loader: torch.utils.data.DataLoader,
+    loader: torch.utils.data.DataLoader, normalize=False
 ) -> torch.Tensor:
     """
     Calculate the color correlation matrix for a dataset.
@@ -30,4 +30,6 @@ def dataset_color_correlation_matrix(
     U, S, V = torch.svd(cov_mtx)
     epsilon = 1e-10
     svd_sqrt = U @ torch.diag(torch.sqrt(S + epsilon))
+    if normalize:
+        svd_sqrt / torch.max(torch.norm(svd_sqrt, dim=0))
     return svd_sqrt
