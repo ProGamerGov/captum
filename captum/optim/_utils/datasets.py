@@ -16,12 +16,13 @@ def dataset_cov_matrix(loader: torch.utils.data.DataLoader) -> torch.Tensor:
     Calculate the covariance matrix for an image dataset.
     """
 
-    cov_mtx = 0.0
+    cov_mtx = torch.zeros(3, 3)
     for images, _ in loader:
         assert images.dim() == 4
         for b in range(images.size(0)):
             cov_mtx = cov_mtx + image_cov(images[b].permute(1, 2, 0))
-    return cov_mtx / len(loader.dataset)  # type: ignore
+    cov_mtx = cov_mtx / len(loader.dataset)  # type: ignore
+    return cov_mtx
 
 
 def cov_matrix_to_klt(
@@ -49,4 +50,4 @@ def dataset_klt_matrix(
     """
 
     cov_mtx = dataset_cov_matrix(loader)
-    return dataset_cov_to_klt(cov_mtx, normalize)
+    return cov_matrix_to_klt(cov_mtx, normalize)
