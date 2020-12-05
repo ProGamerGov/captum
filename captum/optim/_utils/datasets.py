@@ -12,7 +12,7 @@ def image_cov(tensor: torch.Tensor) -> torch.Tensor:
 
 
 def dataset_color_correlation_matrix(
-    loader: torch.utils.data.DataLoader, normalize=False
+    loader: torch.utils.data.DataLoader, normalize: bool = False
 ) -> torch.Tensor:
     """
     Calculate the color correlation matrix for a dataset.
