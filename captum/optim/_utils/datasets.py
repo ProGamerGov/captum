@@ -21,10 +21,10 @@ def dataset_cov_matrix(loader: torch.utils.data.DataLoader) -> torch.Tensor:
         assert images.dim() == 4
         for b in range(images.size(0)):
             cov_mtx = cov_mtx + image_cov(images[b].permute(1, 2, 0))
-    return cov_mtx
+    return cov_mtx / len(loader.dataset)  # type: ignore
 
 
-def dataset_cov_to_klt(
+def cov_matrix_to_klt(
     cov_mtx: torch.Tensor, normalize: bool = False, epsilon: float = 1e-10
 ) -> torch.Tensor:
     """
@@ -49,5 +49,4 @@ def dataset_klt_matrix(
     """
 
     cov_mtx = dataset_cov_matrix(loader)
-    cov_mtx = cov_mtx / len(loader.dataset)  # type: ignore
     return dataset_cov_to_klt(cov_mtx, normalize)
