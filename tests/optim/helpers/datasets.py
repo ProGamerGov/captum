@@ -11,7 +11,7 @@ class ImageTestDataset(torch.utils.data.Dataset):
         self.tensors = tensors
 
     def __getitem__(self, idx: int) -> torch.Tensor:
-        return self.tensors[idx]
+        return self.tensors[idx], 0
 
     def __len__(self) -> int:
         return len(self.tensors)
