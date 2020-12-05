@@ -76,7 +76,6 @@ class FFTImage(object):
     def forward(self) -> np.ndarray:
         h, w = self.size
         scaled_spectrum = self.fourier_coeffs * self.spectrum_scale
-        output = np.fft.irfft(scaled_spectrum, axis=3)[:, :, :h, :w]
         output = torch.irfft(torch.from_numpy(scaled_spectrum), signal_ndim=2)[
             :, :, :h, :w
         ]
