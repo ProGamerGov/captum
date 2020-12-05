@@ -190,5 +190,23 @@ class TestPixelImage(BaseTest):
         assertTensorAlmostEqual(self, image_param.image, init_tensor, 0)
 
 
+class TestLaplacianImage(BaseTest):
+    def test_laplacianimage_random(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage random due to insufficient Torch version."
+            )
+        size = (224, 224)
+        channels = 3
+        image_param = images.LaplacianImage(size=size, channels=channels)
+        test_tensor = image_param.forward()
+
+        self.assertEqual(test_tensor.dim(), 4)
+        self.assertEqual(test_tensor.size(0), 1)
+        self.assertEqual(test_tensor.size(1), channels)
+        self.assertEqual(test_tensor.size(2), size[0])
+        self.assertEqual(test_tensor.size(3), size[1])
+
+
 if __name__ == "__main__":
     unittest.main()
