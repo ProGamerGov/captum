@@ -11,11 +11,12 @@ def image_cov(tensor: torch.Tensor) -> torch.Tensor:
     return 1 / (tensor.size(0) - 1) * tensor.T @ tensor
 
 
-def dataset_color_correlation_matrix(
+def dataset_klt_matrix(
     loader: torch.utils.data.DataLoader, normalize: bool = False
 ) -> torch.Tensor:
     """
-    Calculate the color correlation matrix for a dataset.
+    Calculate the color correlation matrix, also known as
+    a Karhunen-Loève transform (KLT), for a dataset.
     The color correlation matrix can then used in color decorrelation
     transforms for models trained on the dataset.
     """
