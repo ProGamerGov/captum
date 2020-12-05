@@ -70,7 +70,7 @@ class FFTImage(object):
         return np.sqrt((fx * fx) + (fy * fy))
 
     def set_image(self, correlated_image: np.ndarray) -> None:
-        coeffs = np.fft.rfft(correlated_image, axis=2)
+        coeffs = torch.rfft(torch.from_numpy(correlated_image), signal_ndim=2).numpy()
         self.fourier_coeffs = coeffs / self.spectrum_scale
 
     def forward(self) -> np.ndarray:
