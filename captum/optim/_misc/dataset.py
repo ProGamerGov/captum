@@ -3,7 +3,7 @@ import torch
 
 def rgb_cov(tensor: torch.Tensor) -> torch.Tensor:
     """
-    Calculate RGB covariance matrix
+    Calculate a tensor's RGB covariance matrix
     """
 
     tensor = tensor.reshape(-1, tensor.size(1))
