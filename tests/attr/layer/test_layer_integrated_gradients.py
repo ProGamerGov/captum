@@ -6,6 +6,7 @@ import torch
 from torch import Tensor
 from torch.nn import Module
 
+from captum._utils.typing import ModuleOrModuleList
 from captum.attr._core.integrated_gradients import IntegratedGradients
 from captum.attr._core.layer.layer_activation import LayerActivation
 from captum.attr._core.layer.layer_conductance import LayerConductance
@@ -258,7 +259,7 @@ class Test(BaseTest):
     ):
         model = BasicEmbeddingModel(nested_second_embedding=True)
 
-        emb_layers = (
+        emb_layers: ModuleOrModuleList = (
             [model.embedding1, model.embedding2] if multiple_emb else model.embedding1
         )
         lig = LayerIntegratedGradients(
