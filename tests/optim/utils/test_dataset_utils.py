@@ -45,7 +45,7 @@ class TestDatasetCovMatrix(BaseTest):
         dataset_tensors = [create_tensor() for x in range(num_tensors)]
         test_dataset = dataset_helpers.ImageTestDataset(dataset_tensors)
         dataset_loader = torch.utils.data.DataLoader(
-            test_dataset, batch_size=2, num_workers=0, shuffle=False
+            test_dataset, batch_size=10, num_workers=0, shuffle=False
         )
         output_mtx = dataset_utils.dataset_cov_matrix(dataset_loader)
         expected_mtx = torch.tensor(
@@ -89,7 +89,7 @@ class TestDatasetKLTMatrix(BaseTest):
         dataset_tensors = [create_tensor() for x in range(num_tensors)]
         test_dataset = dataset_helpers.ImageTestDataset(dataset_tensors)
         dataset_loader = torch.utils.data.DataLoader(
-            test_dataset, batch_size=2, num_workers=0, shuffle=False
+            test_dataset, batch_size=10, num_workers=0, shuffle=False
         )
 
         klt_transform = dataset_utils.dataset_klt_matrix(dataset_loader)
