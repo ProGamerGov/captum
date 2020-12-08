@@ -202,9 +202,11 @@ class FFTImage(ImageParameterization):
                 if init.dim() == 3
                 else (init.size(2), init.size(3))
             )
-        self.torch_rfft, self.torch_irfft = self.get_fft_funcs()
+        self.torch_rfft, self.torch_irfft, new_fft = self.get_fft_funcs()
 
-        frequencies = FFTImage.rfft2d_freqs(*self.size)
+        frequencies = FFTImage.rfft2d_freqs(
+            *self.size, new_fft=new_fft and init is not None
+        )
         scale = 1.0 / torch.max(
             frequencies,
             torch.full_like(frequencies, 1.0 / (max(self.size[0], self.size[1]))),
@@ -226,12 +228,16 @@ class FFTImage(ImageParameterization):
         self.fourier_coeffs = nn.Parameter(fourier_coeffs)
 
     @staticmethod
-    def rfft2d_freqs(height: int, width: int) -> torch.Tensor:
+    def rfft2d_freqs(height: int, width: int, new_fft: bool = False) -> torch.Tensor:
         """Computes 2D spectrum frequencies."""
         fy = FFTImage.pytorch_fftfreq(height)[:, None]
-        # on odd input dimensions we need to keep one additional frequency
-        wadd = 2 if width % 2 == 1 else 1
-        fx = FFTImage.pytorch_fftfreq(width)[: width // 2 + wadd]
+        if new_fft:
+            nwidth = width
+        else:
+            # on odd input dimensions we need to keep one additional frequency
+            wadd = 2 if width % 2 == 1 else 1
+            nwidth = width // 2 + wadd
+        fx = FFTImage.pytorch_fftfreq(width)[:nwidth]
         return torch.sqrt((fx * fx) + (fy * fy))
 
     @staticmethod
@@ -247,7 +253,7 @@ class FFTImage(ImageParameterization):
         coeffs = self.torch_rfft(correlated_image)
         self.fourier_coeffs = coeffs / self.spectrum_scale
 
-    def get_fft_funcs(self) -> Tuple[Callable, Callable]:
+    def get_fft_funcs(self) -> Tuple[Callable, Callable, bool]:
         """Support older versions of PyTorch"""
         try:
             import torch.fft
@@ -256,15 +262,19 @@ class FFTImage(ImageParameterization):
             torch_irfft = lambda x: torch.fft.irfftn(  # type: ignore  # noqa: E731
                 torch.view_as_complex(x), s=self.size  # noqa: E731
             )  # noqa: E731
+            new_fft = True
         except (ImportError, AssertionError):
             torch_rfft = lambda x: torch.rfft(x, signal_ndim=2)  # noqa: E731
-            torch_irfft = lambda x: torch.irfft(x, signal_ndim=2)  # noqa: E731
-        return torch_rfft, torch_irfft
+            torch_irfft = lambda x: torch.irfft(x, signal_ndim=2)[  # noqa: E731
+                :, :, : self.size[0], : self.size[1]  # noqa: E731
+            ]  # noqa: E731
+            new_fft = False
+        return torch_rfft, torch_irfft, new_fft
 
     def forward(self) -> torch.Tensor:
         h, w = self.size
         scaled_spectrum = self.fourier_coeffs * self.spectrum_scale
-        output = self.torch_irfft(scaled_spectrum)[:, :, :h, :w]
+        output = self.torch_irfft(scaled_spectrum)
         return output.refine_names("B", "C", "H", "W")
 
 
