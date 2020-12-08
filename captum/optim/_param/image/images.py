@@ -252,7 +252,7 @@ class FFTImage(ImageParameterization):
         try:
             import torch.fft
 
-            torch_rfft = lambda x: torch.fft.rfftn(x, s=self.size)  # type: ignore  # noqa: E731
+            torch_rfft = lambda x: torch.fft.rfftn(x, s=self.size)  # type: ignore  # noqa: E731 E501
             torch_irfft = lambda x: torch.fft.irfftn(  # type: ignore  # noqa: E731
                 torch.view_as_complex(x), s=self.size  # noqa: E731
             )  # noqa: E731
