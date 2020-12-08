@@ -181,6 +181,14 @@ class ImageParameterization(InputParameterization):
         ...
 
 
+try:
+    torch_rfft = torch.fft.rfftn
+    torch_irfft = torch.fft.irfftn
+except AttributeError:
+    torch_rfft = torch.rfft
+    torch_irfft = torch.irfft
+
+
 class FFTImage(ImageParameterization):
     """Parameterize an image using inverse real 2D FFT"""
 
@@ -219,7 +227,7 @@ class FFTImage(ImageParameterization):
             )  # names=["C", "H_f", "W_f", "complex"]
             fourier_coeffs = random_coeffs / 50
         else:
-            fourier_coeffs = torch.rfft(init, signal_ndim=2) / spectrum_scale
+            fourier_coeffs = torch_rfft(init, 2) / spectrum_scale
 
         fourier_coeffs = self.setup_batch(fourier_coeffs, batch, 4)
         self.fourier_coeffs = nn.Parameter(fourier_coeffs)
@@ -243,13 +251,13 @@ class FFTImage(ImageParameterization):
         return results * (1.0 / (v * d))
 
     def set_image(self, correlated_image: torch.Tensor) -> None:
-        coeffs = torch.rfft(correlated_image, signal_ndim=2)
+        coeffs = torch_rfft(correlated_image, 2)
         self.fourier_coeffs = coeffs / self.spectrum_scale
 
     def forward(self) -> torch.Tensor:
         h, w = self.size
         scaled_spectrum = self.fourier_coeffs * self.spectrum_scale
-        output = torch.irfft(scaled_spectrum, signal_ndim=2)[:, :, :h, :w]
+        output = torch_irfft(scaled_spectrum, 2)[:, :, :h, :w]
         return output.refine_names("B", "C", "H", "W")
 
 
