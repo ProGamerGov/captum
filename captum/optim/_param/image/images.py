@@ -244,7 +244,7 @@ class FFTImage(ImageParameterization):
         return results * (1.0 / (v * d))
 
     def set_image(self, correlated_image: torch.Tensor) -> None:
-        coeffs = self.torch_rfft(correlated_image, self.s)
+        coeffs = self.torch_rfft(correlated_image)
         self.fourier_coeffs = coeffs / self.spectrum_scale
 
     def get_fft_funcs(self) -> Tuple[Callable, Callable]:
