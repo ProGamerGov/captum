@@ -1,5 +1,4 @@
 import numpy as np
-import torch
 
 
 def setup_batch(x: np.ndarray, batch: int = 1, dim: int = 3) -> np.ndarray:
