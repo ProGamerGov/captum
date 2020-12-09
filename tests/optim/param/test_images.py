@@ -257,7 +257,7 @@ class TestSharedImage(BaseTest):
 
         offset = image_param.get_offset(4, 3)
 
-        self.assertEqual(len(offset), 4)
+        self.assertEqual(len(offset), 3)
         self.assertEqual(offset, [[4, 4, 4, 4]] * 3)
 
     def test_sharedimage_get_offset_exact(self) -> None:
@@ -274,7 +274,7 @@ class TestSharedImage(BaseTest):
         offset_vals = ((1, 2, 3, 4), (4, 3, 2, 1), (1, 2, 3, 4))
         offset = image_param.get_offset(offset_vals, 3)
 
-        self.assertEqual(len(offset), 4)
+        self.assertEqual(len(offset), 3)
         self.assertEqual(offset, [[int(o) for o in v] for v in offset_vals])
 
     def test_sharedimage_apply_offset_single_set_four_numbers(self) -> None:
@@ -288,11 +288,11 @@ class TestSharedImage(BaseTest):
             shared_shapes=shared_shapes, parameterization=test_param
         )
 
-        offset_vals = [(1, 2, 3, 4)]
+        offset_vals = (1, 2, 3, 4)
         offset = image_param.get_offset(offset_vals, 3)
 
-        self.assertEqual(len(offset), 4)
-        self.assertEqual(offset, [[int(o) for o in v] for v in offset_vals * 3])
+        self.assertEqual(len(offset), 3)
+        self.assertEqual(offset, [list(offset_vals)] * 3)
 
     def test_sharedimage_apply_offset_single_set_three_numbers(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -305,11 +305,11 @@ class TestSharedImage(BaseTest):
             shared_shapes=shared_shapes, parameterization=test_param
         )
 
-        offset_vals = [(2, 3, 4)]
+        offset_vals = (2, 3, 4)
         offset = image_param.get_offset(offset_vals, 3)
 
-        self.assertEqual(len(offset), 4)
-        self.assertEqual(offset, [[0] + [int(o) for o in v] for v in offset_vals * 3])
+        self.assertEqual(len(offset), 3)
+        self.assertEqual(offset, [[0] + list(offset_vals)] * 3)
 
     def test_sharedimage_apply_offset_single_set_two_numbers(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -322,13 +322,11 @@ class TestSharedImage(BaseTest):
             shared_shapes=shared_shapes, parameterization=test_param
         )
 
-        offset_vals = [(3, 4)]
+        offset_vals = (3, 4)
         offset = image_param.get_offset(offset_vals, 3)
 
-        self.assertEqual(len(offset), 4)
-        self.assertEqual(
-            offset, [[0, 0] + [int(o) for o in v] for v in offset_vals * 3]
-        )
+        self.assertEqual(len(offset), 3)
+        self.assertEqual(offset, [[0, 0] + list(offset_vals)] * 3)
 
     def test_apply_offset(self):
         if torch.__version__ == "1.2.0":
@@ -400,7 +398,7 @@ class TestSharedImage(BaseTest):
         test_tensor = image_param.forward()
 
         self.assertEqual(test_tensor.dim(), 4)
-        self.assertEqual(test_tensor.size(0), 1)
+        self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])
@@ -422,7 +420,7 @@ class TestSharedImage(BaseTest):
         test_tensor = image_param.forward()
 
         self.assertEqual(test_tensor.dim(), 4)
-        self.assertEqual(test_tensor.size(0), 1)
+        self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])
@@ -444,7 +442,7 @@ class TestSharedImage(BaseTest):
         test_tensor = image_param.forward()
 
         self.assertEqual(test_tensor.dim(), 4)
-        self.assertEqual(test_tensor.size(0), 1)
+        self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])

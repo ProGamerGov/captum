@@ -394,9 +394,7 @@ class SharedImage(ImageParameterization):
     def get_offset(self, offset: Union[int, Tuple[int]], n: int) -> List[List[int]]:
         if type(offset) is tuple or type(offset) is list:
             if type(offset[0]) is tuple or type(offset[0]) is list:
-                assert len(offset) == n and all(
-                    [len(o) == 4 for o in t] for t in offset
-                )
+                assert len(offset) == n and all(len(t) == 4 for t in offset)
             else:
                 assert len(offset) >= 1 and len(offset) <= 4
                 offset = [([0] * (4 - len(offset))) + list(offset)] * n
