@@ -50,7 +50,6 @@ class FFTImage(object):
                 *coeffs_shape
             )  # names=["C", "H_f", "W_f", "complex"]
             fourier_coeffs = random_coeffs / 50
-            print(fourier_coeffs.shape)
         else:
             fourier_coeffs = np.fft.rfftn(init, s=self.size) / spectrum_scale
             fourier_coeffs = fourier_coeffs / spectrum_scale
