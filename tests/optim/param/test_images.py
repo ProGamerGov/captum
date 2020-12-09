@@ -400,7 +400,7 @@ class TestSharedImage(BaseTest):
         test_tensor = image_param.forward()
 
         self.assertEqual(test_tensor.dim(), 4)
-        self.assertEqual(test_tensor.size(0), 1)
+        self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])
@@ -422,7 +422,7 @@ class TestSharedImage(BaseTest):
         test_tensor = image_param.forward()
 
         self.assertEqual(test_tensor.dim(), 4)
-        self.assertEqual(test_tensor.size(0), 1)
+        self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])
@@ -444,7 +444,7 @@ class TestSharedImage(BaseTest):
         test_tensor = image_param.forward()
 
         self.assertEqual(test_tensor.dim(), 4)
-        self.assertEqual(test_tensor.size(0), 1)
+        self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])
