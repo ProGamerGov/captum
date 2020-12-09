@@ -288,11 +288,11 @@ class TestSharedImage(BaseTest):
             shared_shapes=shared_shapes, parameterization=test_param
         )
 
-        offset_vals = [(1, 2, 3, 4)]
+        offset_vals = (1, 2, 3, 4)
         offset = image_param.get_offset(offset_vals, 3)
 
         self.assertEqual(len(offset), 3)
-        self.assertEqual(offset, [[int(o) for o in v] for v in offset_vals * 3])
+        self.assertEqual(offset, [list(offset_vals)] * 3)
 
     def test_sharedimage_apply_offset_single_set_three_numbers(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -305,11 +305,11 @@ class TestSharedImage(BaseTest):
             shared_shapes=shared_shapes, parameterization=test_param
         )
 
-        offset_vals = [(2, 3, 4)]
+        offset_vals = (2, 3, 4)
         offset = image_param.get_offset(offset_vals, 3)
 
         self.assertEqual(len(offset), 3)
-        self.assertEqual(offset, [[0] + [int(o) for o in v] for v in offset_vals * 3])
+        self.assertEqual(offset, [[0] + list(offset_vals)] * 3)
 
     def test_sharedimage_apply_offset_single_set_two_numbers(self) -> None:
         if torch.__version__ == "1.2.0":
@@ -322,12 +322,12 @@ class TestSharedImage(BaseTest):
             shared_shapes=shared_shapes, parameterization=test_param
         )
 
-        offset_vals = [(3, 4)]
+        offset_vals = (3, 4)
         offset = image_param.get_offset(offset_vals, 3)
 
         self.assertEqual(len(offset), 3)
         self.assertEqual(
-            offset, [[0, 0] + [int(o) for o in v] for v in offset_vals * 3]
+            offset, [[0, 0] + list(offset_vals)] * 3
         )
 
     def test_apply_offset(self):
