@@ -157,6 +157,92 @@ class TestFFTImage(BaseTest):
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
 
 
+class TestPixelImage(BaseTest):
+    def test_pixelimage_random(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage random due to insufficient Torch version."
+            )
+        size = (224, 224)
+        channels = 3
+        image_param = images.PixelImage(size=size, channels=channels)
+
+        self.assertEqual(image_param.image.dim(), 4)
+        self.assertEqual(image_param.image.size(0), 1)
+        self.assertEqual(image_param.image.size(1), channels)
+        self.assertEqual(image_param.image.size(2), size[0])
+        self.assertEqual(image_param.image.size(3), size[1])
+
+    def test_pixelimage_init(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage init due to insufficient Torch version."
+            )
+        size = (224, 224)
+        channels = 3
+        init_tensor = torch.randn(3, 224, 224)
+        image_param = images.PixelImage(size=size, channels=channels, init=init_tensor)
+
+        self.assertEqual(image_param.image.dim(), 4)
+        self.assertEqual(image_param.image.size(0), 1)
+        self.assertEqual(image_param.image.size(1), channels)
+        self.assertEqual(image_param.image.size(2), size[0])
+        self.assertEqual(image_param.image.size(3), size[1])
+        assertTensorAlmostEqual(self, image_param.image, init_tensor, 0)
+
+    def test_pixelimage_random_forward(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage random due to insufficient Torch version."
+            )
+        size = (224, 224)
+        channels = 3
+        image_param = images.PixelImage(size=size, channels=channels)
+        test_tensor = image_param.forward().rename(None)
+
+        self.assertEqual(test_tensor.dim(), 4)
+        self.assertEqual(test_tensor.size(0), 1)
+        self.assertEqual(test_tensor.size(1), channels)
+        self.assertEqual(test_tensor.size(2), size[0])
+        self.assertEqual(test_tensor.size(3), size[1])
+
+    def test_pixelimage_init_forward(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage init due to insufficient Torch version."
+            )
+        size = (224, 224)
+        channels = 3
+        init_tensor = torch.randn(3, 224, 224)
+        image_param = images.PixelImage(size=size, channels=channels, init=init_tensor)
+        test_tensor = image_param.forward().rename(None)
+
+        self.assertEqual(test_tensor.dim(), 4)
+        self.assertEqual(test_tensor.size(0), 1)
+        self.assertEqual(test_tensor.size(1), channels)
+        self.assertEqual(test_tensor.size(2), size[0])
+        self.assertEqual(test_tensor.size(3), size[1])
+        assertTensorAlmostEqual(self, test_tensor, init_tensor.squeeze(0), 0)
+
+
+class TestLaplacianImage(BaseTest):
+    def test_laplacianimage_random_forward(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping LaplacianImage random due to insufficient Torch version."
+            )
+        size = (224, 224)
+        channels = 3
+        image_param = images.LaplacianImage(size=size, channels=channels)
+        test_tensor = image_param.forward()
+
+        self.assertEqual(test_tensor.dim(), 4)
+        self.assertEqual(test_tensor.size(0), 1)
+        self.assertEqual(test_tensor.size(1), channels)
+        self.assertEqual(test_tensor.size(2), size[0])
+        self.assertEqual(test_tensor.size(3), size[1])
+
+
 class TestSharedImage(BaseTest):
     def test_sharedimage_get_offset_single_number(self) -> None:
         if torch.__version__ == "1.2.0":
