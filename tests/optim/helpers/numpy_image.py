@@ -51,7 +51,9 @@ class FFTImage(object):
             )  # names=["C", "H_f", "W_f", "complex"]
             fourier_coeffs = random_coeffs / 50
         else:
-            fourier_coeffs = np.fft.rfftn(init, s=self.size) / spectrum_scale
+            fourier_coeffs = (
+                np.fft.rfftn(init, s=self.size).view("(2,)float") / spectrum_scale
+            )
             fourier_coeffs = fourier_coeffs / spectrum_scale
 
         fourier_coeffs = setup_batch(fourier_coeffs, batch, 4)
@@ -67,7 +69,7 @@ class FFTImage(object):
         return np.sqrt((fx * fx) + (fy * fy))
 
     def set_image(self, correlated_image: np.ndarray) -> None:
-        coeffs = np.fft.rfftn(correlated_image, s=self.size)
+        coeffs = np.fft.rfftn(correlated_image, s=self.size).view("(2,)float")
         self.fourier_coeffs = coeffs / self.spectrum_scale
 
     def forward(self) -> np.ndarray:
