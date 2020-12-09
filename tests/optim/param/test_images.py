@@ -274,7 +274,7 @@ class TestSharedImage(BaseTest):
         offset_vals = ((1, 2, 3, 4), (4, 3, 2, 1), (1, 2, 3, 4))
         offset = image_param.get_offset(offset_vals, 3)
 
-        self.assertEqual(len(offset), 4)
+        self.assertEqual(len(offset), 3)
         self.assertEqual(offset, [[int(o) for o in v] for v in offset_vals])
 
     def test_sharedimage_apply_offset_single_set_four_numbers(self) -> None:
@@ -291,7 +291,7 @@ class TestSharedImage(BaseTest):
         offset_vals = [(1, 2, 3, 4)]
         offset = image_param.get_offset(offset_vals, 3)
 
-        self.assertEqual(len(offset), 4)
+        self.assertEqual(len(offset), 3)
         self.assertEqual(offset, [[int(o) for o in v] for v in offset_vals * 3])
 
     def test_sharedimage_apply_offset_single_set_three_numbers(self) -> None:
@@ -308,7 +308,7 @@ class TestSharedImage(BaseTest):
         offset_vals = [(2, 3, 4)]
         offset = image_param.get_offset(offset_vals, 3)
 
-        self.assertEqual(len(offset), 4)
+        self.assertEqual(len(offset), 3)
         self.assertEqual(offset, [[0] + [int(o) for o in v] for v in offset_vals * 3])
 
     def test_sharedimage_apply_offset_single_set_two_numbers(self) -> None:
@@ -325,7 +325,7 @@ class TestSharedImage(BaseTest):
         offset_vals = [(3, 4)]
         offset = image_param.get_offset(offset_vals, 3)
 
-        self.assertEqual(len(offset), 4)
+        self.assertEqual(len(offset), 3)
         self.assertEqual(
             offset, [[0, 0] + [int(o) for o in v] for v in offset_vals * 3]
         )
