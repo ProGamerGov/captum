@@ -53,7 +53,6 @@ class FFTImage(object):
             fourier_coeffs = (
                 np.fft.rfftn(init, s=self.size).view("(2,)float") / spectrum_scale
             )
-            fourier_coeffs = fourier_coeffs / spectrum_scale
 
         fourier_coeffs = setup_batch(fourier_coeffs, batch, 4)
         self.fourier_coeffs = fourier_coeffs
