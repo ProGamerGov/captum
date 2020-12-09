@@ -3,6 +3,7 @@ import unittest
 
 import numpy as np
 import torch
+import torch.nn.functional as F
 
 from captum.optim._param.image import images
 from tests.helpers.basic import (
