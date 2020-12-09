@@ -258,13 +258,14 @@ class FFTImage(ImageParameterization):
             def torch_irfft(x: torch.Tensor) -> torch.Tensor:
                 if type(x) is not torch.complex64:
                     x = torch.view_as_complex(x)
-                return torch.fft.irfftn(x, s=self.size)
+                return torch.fft.irfftn(x, s=self.size)  # type: ignore
 
         except (ImportError, AssertionError):
             torch_rfft = lambda x: torch.rfft(x, signal_ndim=2)  # noqa: E731
             torch_irfft = lambda x: torch.irfft(x, signal_ndim=2)[  # noqa: E731
                 :, :, : self.size[0], : self.size[1]  # noqa: E731
             ]  # noqa: E731
+        return torch_rfft, torch_irfft
 
     def forward(self) -> torch.Tensor:
         h, w = self.size
