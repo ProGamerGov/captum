@@ -249,7 +249,7 @@ class TestSharedImage(BaseTest):
                 "Skipping SharedImage test due to insufficient Torch version."
             )
         shared_shapes = (128 // 2, 128 // 2)
-        test_param = lambda: torch.ones(3, 3, 224, 224)
+        test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param
         )
@@ -265,7 +265,7 @@ class TestSharedImage(BaseTest):
                 "Skipping SharedImage test due to insufficient Torch version."
             )
         shared_shapes = (128 // 2, 128 // 2)
-        test_param = lambda: torch.ones(3, 3, 224, 224)
+        test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param
         )
@@ -282,7 +282,7 @@ class TestSharedImage(BaseTest):
                 "Skipping SharedImage test due to insufficient Torch version."
             )
         shared_shapes = (128 // 2, 128 // 2)
-        test_param = lambda: torch.ones(3, 3, 224, 224)
+        test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param
         )
@@ -299,7 +299,7 @@ class TestSharedImage(BaseTest):
                 "Skipping SharedImage test due to insufficient Torch version."
             )
         shared_shapes = (128 // 2, 128 // 2)
-        test_param = lambda: torch.ones(3, 3, 224, 224)
+        test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param
         )
@@ -316,7 +316,7 @@ class TestSharedImage(BaseTest):
                 "Skipping SharedImage test due to insufficient Torch version."
             )
         shared_shapes = (128 // 2, 128 // 2)
-        test_param = lambda: torch.ones(3, 3, 224, 224)
+        test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param
         )
@@ -337,7 +337,7 @@ class TestSharedImage(BaseTest):
         size = (4, 3, 224, 224)
         shared_shapes = (128 // 2, 128 // 2)
         offset_vals = (2, 3, 4, 5)
-        test_param = lambda: torch.ones(*size)
+        test_param = lambda: torch.ones(*size)  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param, offset=offset_vals
         )
@@ -362,7 +362,7 @@ class TestSharedImage(BaseTest):
                 "Skipping SharedImage test due to insufficient Torch version."
             )
         shared_shapes = (128 // 2, 128 // 2)
-        test_param = lambda: torch.ones(3, 3, 224, 224)
+        test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param
         )
@@ -392,7 +392,7 @@ class TestSharedImage(BaseTest):
         batch = 6
         channels = 3
         size = (224, 224)
-        test_param = lambda: torch.ones(batch, channels, size[0], size[1])
+        test_param = lambda: torch.ones(batch, channels, size[0], size[1])  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param
         )
@@ -414,7 +414,7 @@ class TestSharedImage(BaseTest):
         batch = 6
         channels = 3
         size = (224, 224)
-        test_param = lambda: torch.ones(batch, channels, size[0], size[1])
+        test_param = lambda: torch.ones(batch, channels, size[0], size[1])  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param
         )
@@ -436,7 +436,7 @@ class TestSharedImage(BaseTest):
         batch = 6
         channels = 3
         size = (224, 224)
-        test_param = lambda: torch.ones(batch, channels, size[0], size[1])
+        test_param = lambda: torch.ones(batch, channels, size[0], size[1])  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param
         )
@@ -465,7 +465,7 @@ class TestSharedImage(BaseTest):
         batch = 6
         channels = 3
         size = (224, 224)
-        test_param = lambda: torch.ones(batch, channels, size[0], size[1])
+        test_param = lambda: torch.ones(batch, channels, size[0], size[1])  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param
         )
@@ -494,7 +494,7 @@ class TestSharedImage(BaseTest):
         batch = 6
         channels = 3
         size = (224, 224)
-        test_param = lambda: torch.ones(batch, channels, size[0], size[1])
+        test_param = lambda: torch.ones(batch, channels, size[0], size[1])  # noqa: E731
         image_param = images.SharedImage(
             shared_shapes=shared_shapes, parameterization=test_param
         )
