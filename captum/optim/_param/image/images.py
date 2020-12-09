@@ -231,8 +231,7 @@ class FFTImage(ImageParameterization):
         fy = FFTImage.pytorch_fftfreq(height)[:, None]
         # on odd input dimensions we need to keep one additional frequency
         wadd = 2 if width % 2 == 1 else 1
-        nwidth = width // 2 + wadd
-        fx = FFTImage.pytorch_fftfreq(width)[:nwidth]
+        fx = FFTImage.pytorch_fftfreq(width)[:width // 2 + wadd]
         return torch.sqrt((fx * fx) + (fy * fy))
 
     @staticmethod
