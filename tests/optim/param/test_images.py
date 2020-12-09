@@ -257,7 +257,7 @@ class TestSharedImage(BaseTest):
 
         offset = image_param.get_offset(4, 3)
 
-        self.assertEqual(len(offset), 4)
+        self.assertEqual(len(offset), 3)
         self.assertEqual(offset, [[4, 4, 4, 4]] * 3)
 
     def test_sharedimage_get_offset_exact(self) -> None:
