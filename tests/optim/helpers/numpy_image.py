@@ -73,5 +73,6 @@ class FFTImage(object):
     def forward(self) -> np.ndarray:
         h, w = self.size
         scaled_spectrum = self.fourier_coeffs * self.spectrum_scale
+        scaled_spectrum = scaled_spectrum.astype(complex)
         output = np.fft.irfftn(scaled_spectrum, s=self.size)
         return output.view(dtype=np.complex128)[..., 0].real
