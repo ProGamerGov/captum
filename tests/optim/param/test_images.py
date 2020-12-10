@@ -252,7 +252,7 @@ class TestSharedImage(BaseTest):
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param
+            shapes=shared_shapes, parameterization=test_param
         )
 
         offset = image_param.get_offset(4, 3)
@@ -268,7 +268,7 @@ class TestSharedImage(BaseTest):
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param
+            shapes=shared_shapes, parameterization=test_param
         )
 
         offset_vals = ((1, 2, 3, 4), (4, 3, 2, 1), (1, 2, 3, 4))
@@ -285,7 +285,7 @@ class TestSharedImage(BaseTest):
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param
+            shapes=shared_shapes, parameterization=test_param
         )
 
         offset_vals = (1, 2, 3, 4)
@@ -302,7 +302,7 @@ class TestSharedImage(BaseTest):
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param
+            shapes=shared_shapes, parameterization=test_param
         )
 
         offset_vals = (2, 3, 4)
@@ -319,7 +319,7 @@ class TestSharedImage(BaseTest):
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param
+            shapes=shared_shapes, parameterization=test_param
         )
 
         offset_vals = (3, 4)
@@ -338,7 +338,7 @@ class TestSharedImage(BaseTest):
         offset_vals = (2, 3, 4, 5)
         test_param = lambda: torch.ones(*size)  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param, offset=offset_vals
+            shapes=shared_shapes, parameterization=test_param, offset=offset_vals
         )
 
         test_x_list = [torch.ones(*size) for x in range(size[0])]
@@ -363,7 +363,7 @@ class TestSharedImage(BaseTest):
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param
+            shapes=shared_shapes, parameterization=test_param
         )
 
         size = (224, 224)
@@ -393,7 +393,7 @@ class TestSharedImage(BaseTest):
         size = (224, 224)
         test_param = lambda: torch.ones(batch, channels, size[0], size[1])  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param
+            shapes=shared_shapes, parameterization=test_param
         )
         test_tensor = image_param.forward()
 
@@ -415,7 +415,7 @@ class TestSharedImage(BaseTest):
         size = (224, 224)
         test_param = lambda: torch.ones(batch, channels, size[0], size[1])  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param
+            shapes=shared_shapes, parameterization=test_param
         )
         test_tensor = image_param.forward()
 
@@ -437,7 +437,7 @@ class TestSharedImage(BaseTest):
         size = (224, 224)
         test_param = lambda: torch.ones(batch, channels, size[0], size[1])  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param
+            shapes=shared_shapes, parameterization=test_param
         )
         test_tensor = image_param.forward()
 
@@ -466,7 +466,7 @@ class TestSharedImage(BaseTest):
         size = (224, 224)
         test_param = lambda: torch.ones(batch, channels, size[0], size[1])  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param
+            shapes=shared_shapes, parameterization=test_param
         )
         test_tensor = image_param.forward()
 
@@ -495,7 +495,7 @@ class TestSharedImage(BaseTest):
         size = (224, 224)
         test_param = lambda: torch.ones(batch, channels, size[0], size[1])  # noqa: E731
         image_param = images.SharedImage(
-            shared_shapes=shared_shapes, parameterization=test_param
+            shapes=shared_shapes, parameterization=test_param
         )
         test_tensor = image_param.forward()
 
