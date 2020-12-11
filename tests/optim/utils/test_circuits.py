@@ -10,6 +10,10 @@ from tests.helpers.basic import BaseTest
 
 class TestReplaceLayers(BaseTest):
     def test_activation_catcher(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping ActivationCatcher test due to insufficient Torch version."
+            )
         model = googlenet(pretrained=True)
         try:
             catch_activ = circuits.ActivationCatcher(targets=[model.mixed4d])
@@ -23,6 +27,10 @@ class TestReplaceLayers(BaseTest):
 
 class TestMax2AvgPool(BaseTest):
     def test_max2avg_pool(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping Max2AvgPool test due to insufficient Torch version."
+            )
         model = googlenet(pretrained=True)
         circuits.max2avg_pool(model)
         check_is_not_instance(self, model, torch.nn.MaxPool2d)
@@ -30,6 +38,10 @@ class TestMax2AvgPool(BaseTest):
 
 class TestGetExpandedWeights(BaseTest):
     def test_get_expanded_weights(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping get_expanded_weights test due to insufficient Torch version."
+            )
         model = googlenet(pretrained=True)
         output_tensor = circuits.get_expanded_weights(
             model, model.mixed4c, model.mixed4d
