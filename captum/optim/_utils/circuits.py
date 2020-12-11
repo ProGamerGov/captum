@@ -1,6 +1,5 @@
 from contextlib import suppress
-from copy import deepcopy
-from typing import Dict, List, Union
+from typing import List, Union
 
 import torch
 import torch.nn as nn
