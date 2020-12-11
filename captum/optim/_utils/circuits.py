@@ -9,6 +9,10 @@ from captum.optim._utils.typing import ModuleOutputMapping
 
 
 def max2avg_pool(model) -> None:
+    """
+    Convert MaxPool2d layers to their AvgPool2d equivalents.
+    """
+
     for name, child in model._modules.items():
         if isinstance(child, nn.MaxPool2d):
             new_layer = nn.AvgPool2d(
@@ -23,6 +27,10 @@ def max2avg_pool(model) -> None:
 
 
 class ActivationCatcher(object):
+    """
+    Simple module for collecting activations from model targets.
+    """
+
     def __init__(self, targets: Union[nn.Module, List[nn.Module]]) -> None:
         super(ActivationCatcher, self).__init__()
         self.layers = ModuleOutputsHook(targets)
