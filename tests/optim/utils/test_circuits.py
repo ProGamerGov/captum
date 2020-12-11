@@ -14,6 +14,7 @@ class TestReplaceLayers(BaseTest):
         try:
             catch_activ = circuits.ActivationCatcher(targets=[model.mixed4d])
             activ_out = catch_activ(model, torch.zeros(1, 3, 224, 224))
+            self.assertIsInstance(activ_out, dict)
             test = True
         except Exception:
             test = False
@@ -30,14 +31,10 @@ class TestMax2AvgPool(BaseTest):
 class TestGetExpandedWeights(BaseTest):
     def test_get_expanded_weights(self) -> None:
         model = googlenet(pretrained=True)
-        try:
-            output_tensor = circuits.get_expanded_weights(
-                model, model.mixed4c, model.mixed4d
-            )
-            test = True
-        except Exception:
-            test = False
-        self.assertTrue(test)
+        output_tensor = circuits.get_expanded_weights(
+            model, model.mixed4c, model.mixed4d
+        )
+        self.assertTrue(torch.is_tensor(output_tensor))
 
 
 def check_is_not_instance(self, model, layer) -> None:
@@ -45,3 +42,7 @@ def check_is_not_instance(self, model, layer) -> None:
         if child is not None:
             self.assertNotIsInstance(child, layer)
             check_is_not_instance(self, child, layer)
+
+
+if __name__ == "__main__":
+    unittest.main()
