@@ -42,3 +42,7 @@ def check_is_not_instance(self, model, layer) -> None:
         if child is not None:
             self.assertNotIsInstance(child, layer)
             check_is_not_instance(self, child, layer)
+
+
+if __name__ == "__main__":
+    unittest.main()
