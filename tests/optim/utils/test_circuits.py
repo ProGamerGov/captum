@@ -29,7 +29,7 @@ class TestMax2AvgPool(BaseTest):
     def test_max2avg_pool(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
-                "Skipping Max2AvgPool test due to insufficient Torch version."
+                "Skipping max2avg_pool test due to insufficient Torch version."
             )
         model = googlenet(pretrained=True)
         circuits.max2avg_pool(model)
