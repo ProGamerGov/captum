@@ -44,6 +44,10 @@ class ActivationCatcher(object):
 def get_expanded_weights(
     model, target1: nn.Module, target2: nn.Module, width: int = 5
 ) -> torch.Tensor:
+    """
+    See: https://distill.pub/2020/circuits-visualizing-weights/
+    """
+
     def get_activations(
         model, targets: Union[nn.Module, List[nn.Module]]
     ) -> ModuleOutputMapping:
