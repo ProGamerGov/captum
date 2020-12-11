@@ -6,7 +6,6 @@ import torch
 import torch.nn as nn
 
 from captum.optim._core.output_hook import AbortForwardException, ModuleOutputsHook
-from captum.optim._utils.models import replace_layers
 from captum.optim._utils.typing import ModuleOutputMapping
 
 
