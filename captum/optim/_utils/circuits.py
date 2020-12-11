@@ -41,9 +41,7 @@ class ActivationCatcher(object):
             raise e
 
 
-def get_expanded_weights(
-    model, target1: nn.Module, target2: nn.Module, width: int = 5
-) -> torch.Tensor:
+def get_expanded_weights(model, target1: nn.Module, target2: nn.Module) -> torch.Tensor:
     """
     See: https://distill.pub/2020/circuits-visualizing-weights/
     """
@@ -70,8 +68,6 @@ def get_expanded_weights(
             grad_outputs=torch.ones_like(t_center[i]),
             retain_graph=True,
         )[0]
-        x = x.permute(0, 2, 3, 1)[:, :width, :width]
         A.append(x)
 
-    x_out = torch.stack(A)
-    return x_out
+    return torch.stack(A)
