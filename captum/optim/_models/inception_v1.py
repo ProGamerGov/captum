@@ -255,14 +255,14 @@ class InceptionModule(nn.Module):
 
         c3x3 = self.conv_3x3_reduce(x)
         c3x3 = self.conv_3x3_reduce_relu(c3x3)
-        c3x3 = self.conv_3x3(c3x3)
-        c3x3 = F.pad(c3x3, (1, 1, 1, 1))        
+        c3x3 = self.conv_3x3(c3x3)      
         c3x3 = self.conv_3x3_relu(c3x3)
+        c3x3 = F.pad(c3x3, (1, 1, 1, 1))  
 
         c5x5 = self.conv_5x5_reduce(x)
         c5x5 = self.conv_5x5_reduce_relu(c5x5)
-        c5x5 = self.conv_5x5(c5x5)
         c5x5 = F.pad(c5x5, (2, 2, 2, 2))
+        c5x5 = self.conv_5x5(c5x5)
         c5x5 = self.conv_5x5_relu(c5x5)
 
         px = self.pool_proj(x)
