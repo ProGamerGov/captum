@@ -8,24 +8,6 @@ from captum.optim._core.output_hook import AbortForwardException, ModuleOutputsH
 from captum.optim._utils.typing import ModuleOutputMapping
 
 
-def max2avg_pool(model) -> None:
-    """
-    Convert MaxPool2d layers to their AvgPool2d equivalents.
-    """
-
-    for name, child in model._modules.items():
-        if isinstance(child, nn.MaxPool2d):
-            new_layer = nn.AvgPool2d(
-                kernel_size=child.kernel_size,
-                stride=child.stride,
-                padding=child.padding,
-                ceil_mode=child.ceil_mode,
-            )
-            setattr(model, name, new_layer)
-        elif child is not None:
-            max2avg_pool(child)
-
-
 class ActivationCatcher(object):
     """
     Simple module for collecting activations from model targets.
