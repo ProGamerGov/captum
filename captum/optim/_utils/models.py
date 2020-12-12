@@ -5,6 +5,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from captum.optim._core.output_hook import AbortForwardException, ModuleOutputsHook
+from captum.optim._utils.typing import ModuleOutputMapping
+
 
 def get_model_layers(model) -> List[str]:
     """
@@ -169,3 +172,24 @@ class Conv2dSame(nn.Conv2d):
             self.dilation,
             self.groups,
         )
+
+
+class ActivationCatcher(object):
+    """
+    Simple module for collecting activations from model targets.
+    """
+
+    def __init__(self, targets: Union[nn.Module, List[nn.Module]]) -> None:
+        super(ActivationCatcher, self).__init__()
+        self.layers = ModuleOutputsHook(targets)
+
+    def __call__(self, model, input_t: torch.Tensor) -> ModuleOutputMapping:
+        try:
+            with suppress(AbortForwardException):
+                model(input_t)
+            activations = self.layers.consume_outputs()
+            self.layers.remove_hooks()
+            return activations
+        except (Exception, BaseException) as e:
+            self.layers.remove_hooks()
+            raise e
