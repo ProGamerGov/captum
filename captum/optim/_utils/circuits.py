@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 
 from captum.optim._utils.typing import ModuleOutputMapping
+from captum.optim._utils.circuits import ActivationCatcher
 
 
 def get_expanded_weights(model, target1: nn.Module, target2: nn.Module) -> torch.Tensor:
