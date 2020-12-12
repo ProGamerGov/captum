@@ -104,6 +104,13 @@ class TestReplaceLayers(BaseTest):
         self.assertIsInstance(toy_model.relu2.relu, new_layer)
 
 
+def check_is_not_instance(self, model, layer) -> None:
+    for name, child in model._modules.items():
+        if child is not None:
+            self.assertNotIsInstance(child, layer)
+            check_is_not_instance(self, child, layer)
+
+
 class TestMax2AvgPool(BaseTest):
     def test_max2avg_pool(self) -> None:
         if torch.__version__ == "1.2.0":
