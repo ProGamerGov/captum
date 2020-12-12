@@ -62,13 +62,11 @@ class InceptionV1(nn.Module):
         self.transform_input = transform_input
         lrn_vals = (9, 9.99999974738e-05, 0.5, 1.0)
 
-
         self.conv1 = nn.Conv2d(
             in_channels=3,
             out_channels=64,
             kernel_size=(7, 7),
             stride=(2, 2),
-            padding=(3, 3),
             groups=1,
             bias=True,
         )
@@ -133,6 +131,7 @@ class InceptionV1(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self._transform_input(x)
+        x = F.pad(x, (2, 3, 2, 3))
         x = self.conv1(x)
         x = self.conv1_relu(x)
         x = F.pad(x, (0, 1, 0, 1), value=float("-inf"))
