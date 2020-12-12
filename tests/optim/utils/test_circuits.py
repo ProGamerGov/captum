@@ -38,12 +38,5 @@ class TestGetExpandedWeights(BaseTest):
         self.assertTrue(torch.is_tensor(output_tensor))
 
 
-def check_is_not_instance(self, model, layer) -> None:
-    for name, child in model._modules.items():
-        if child is not None:
-            self.assertNotIsInstance(child, layer)
-            check_is_not_instance(self, child, layer)
-
-
 if __name__ == "__main__":
     unittest.main()
