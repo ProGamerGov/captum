@@ -14,7 +14,7 @@ def get_expanded_weights(model, target1: nn.Module, target2: nn.Module) -> torch
     represented in a single weight tensor.
 
     Schubert, et al., "Visualizing Weights", Distill, 2020.
-    See: https://distill.pub/2020/circuits-visualizing-weights/
+    See: https://distill.pub/2020/circuits/visualizing-weights/
     """
 
     def get_activations(
