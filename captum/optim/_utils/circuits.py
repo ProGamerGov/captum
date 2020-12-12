@@ -7,7 +7,7 @@ from captum.optim._utils.models import ActivationCatcher
 from captum.optim._utils.typing import ModuleOutputMapping
 
 
-def get_expanded_weights(model, target1: nn.Module, target2: nn.Module) -> torch.Tensor:
+def get_expanded_weights(model, target1: nn.Module, target2: nn.Module, input: torch.Tensor = torch.zeros(1, 3, 224, 224)) -> torch.Tensor:
     """
     Extract meaningful weight interactions from between neurons which aren’t
     literally adjacent in a neural network, or where the weights aren’t directly
@@ -21,7 +21,7 @@ def get_expanded_weights(model, target1: nn.Module, target2: nn.Module) -> torch
         model, targets: Union[nn.Module, List[nn.Module]]
     ) -> ModuleOutputMapping:
         catch_activ = ActivationCatcher(targets)
-        activ_out = catch_activ(model, torch.zeros(1, 3, 224, 224))
+        activ_out = catch_activ(model, input)
         return activ_out
 
     activations = get_activations(model, [target1, target2])
