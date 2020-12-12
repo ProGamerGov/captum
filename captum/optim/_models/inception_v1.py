@@ -139,8 +139,8 @@ class InceptionV1(nn.Module):
 
         x = self.conv2(x)
         x = self.conv2_relu(x)
-        x = self.conv3(x)
         x = F.pad(x, (1, 1, 1, 1)) 
+        x = self.conv3(x)
         x = self.conv3_relu(x)
         x = self.localresponsenorm2(x)
 
