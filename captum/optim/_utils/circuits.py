@@ -37,9 +37,9 @@ def get_expanded_weights(model, target1: nn.Module, target2: nn.Module) -> torch
     A = []
     for i in range(activ2.size(1)):
         x = torch.autograd.grad(
-            outputs=t_center[i],
+            outputs=t_center[:, i],
             inputs=[activ1],
-            grad_outputs=torch.ones_like(t_center[i]),
+            grad_outputs=torch.ones_like(t_center[:, i]),
             retain_graph=True,
         )[0]
         A.append(x)
