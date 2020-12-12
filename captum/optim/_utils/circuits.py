@@ -41,4 +41,4 @@ def get_expanded_weights(model, target1: nn.Module, target2: nn.Module) -> torch
         )[0]
         A.append(x)
 
-    return torch.stack(A)
+    return torch.cat(A, dim=0)
