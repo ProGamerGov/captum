@@ -88,7 +88,6 @@ class InceptionV1(nn.Module):
             out_channels=192,
             kernel_size=(3, 3),
             stride=(1, 1),
-            padding=(1, 1),
             groups=1,
             bias=True,
         )
@@ -141,6 +140,7 @@ class InceptionV1(nn.Module):
         x = self.conv2(x)
         x = self.conv2_relu(x)
         x = self.conv3(x)
+        x = F.pad(x, (1, 1, 1, 1)) 
         x = self.conv3_relu(x)
         x = self.localresponsenorm2(x)
 
