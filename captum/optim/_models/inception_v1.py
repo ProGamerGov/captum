@@ -214,7 +214,6 @@ class InceptionModule(nn.Module):
             out_channels=c3x3,
             kernel_size=(3, 3),
             stride=(1, 1),
-            padding=(1, 1),
             groups=1,
             bias=True,
         )
@@ -234,7 +233,6 @@ class InceptionModule(nn.Module):
             out_channels=c5x5,
             kernel_size=(5, 5),
             stride=(1, 1),
-            padding=(2, 2),
             groups=1,
             bias=True,
         )
@@ -258,11 +256,13 @@ class InceptionModule(nn.Module):
         c3x3 = self.conv_3x3_reduce(x)
         c3x3 = self.conv_3x3_reduce_relu(c3x3)
         c3x3 = self.conv_3x3(c3x3)
+        c3x3 = F.pad(c3x3, (1, 1, 1, 1))        
         c3x3 = self.conv_3x3_relu(c3x3)
 
         c5x5 = self.conv_5x5_reduce(x)
         c5x5 = self.conv_5x5_reduce_relu(c5x5)
         c5x5 = self.conv_5x5(c5x5)
+        c5x5 = F.pad(c5x5, (2, 2, 2, 2))
         c5x5 = self.conv_5x5_relu(c5x5)
 
         px = self.pool_proj(x)
