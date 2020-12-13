@@ -17,6 +17,7 @@ def get_expanded_weights(
     Extract meaningful weight interactions from between neurons which aren’t
     literally adjacent in a neural network, or where the weights aren’t directly
     represented in a single weight tensor.
+
     Schubert, et al., "Visualizing Weights", Distill, 2020.
     See: https://distill.pub/2020/circuits/visualizing-weights/
     """
