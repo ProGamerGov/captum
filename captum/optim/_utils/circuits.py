@@ -11,7 +11,7 @@ def get_expanded_weights(
     model,
     target1: nn.Module,
     target2: nn.Module,
-    model_input: torch.Tensor = torch.ones(1, 3, 224, 224),
+    model_input: torch.Tensor = torch.zeros(1, 3, 224, 224),
 ) -> torch.Tensor:
     """
     Extract meaningful weight interactions from between neurons which aren’t
