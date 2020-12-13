@@ -44,8 +44,8 @@ def get_expanded_weights(
         x = torch.autograd.grad(
             outputs=t_center[:, i],
             inputs=[activ1],
-            retain_graph=True,
             grad_outputs=torch.ones_like(t_center[:, i]),
+            retain_graph=True,
         )[0]
         A.append(x)
     return torch.stack(A, -1)[0]
