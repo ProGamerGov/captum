@@ -8,7 +8,7 @@ try:
 except (ImportError, AssertionError):
     print(
         "The sklearn library is required to use Captum's ChannelReducer"
-        + "unless you supply your own reduction algorithm."
+        + " unless you supply your own reduction algorithm."
     )
 import torch
 
