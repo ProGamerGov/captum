@@ -35,7 +35,8 @@ class ChannelReducer(object):
                     reduction_alg = algorithm_map[reduction_alg]
                 else:
                     raise ValueError(
-                        "Unknown dimensionality reduction method '%s'." % reduction_alg
+                        "Unknown sklearn dimensionality reduction method '%s'."
+                        % reduction_alg
                     )
 
         self.n_components = n_components
@@ -50,8 +51,7 @@ class ChannelReducer(object):
         self, x: Union[torch.Tensor, np.ndarray], reshape: bool = True
     ) -> Union[torch.Tensor, np.ndarray]:
         """
-        Move channels to channels last NumPy format
-        Assume first dimension is batch size except for shape CHW
+        Perform dimensionality reduction on an input tensor or NumPy array.
         """
 
         is_tensor = torch.is_tensor(x)
