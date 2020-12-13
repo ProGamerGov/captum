@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-import captum.optim._utils.models as model_utils
+import model_utils
 
 GS_SAVED_WEIGHTS_URL = (
     "https://github.com/pytorch/captum/raw/"
@@ -255,9 +255,9 @@ class InceptionModule(nn.Module):
 
         c3x3 = self.conv_3x3_reduce(x)
         c3x3 = self.conv_3x3_reduce_relu(c3x3)
+        c3x3 = F.pad(c3x3, (1, 1, 1, 1))  
         c3x3 = self.conv_3x3(c3x3)      
         c3x3 = self.conv_3x3_relu(c3x3)
-        c3x3 = F.pad(c3x3, (1, 1, 1, 1))  
 
         c5x5 = self.conv_5x5_reduce(x)
         c5x5 = self.conv_5x5_reduce_relu(c5x5)
