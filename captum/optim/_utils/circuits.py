@@ -40,7 +40,7 @@ def get_expanded_weights(
 
     A = []
     for i in range(activ2.size(1)):
-        x = autograd.grad(
+        x = torch.autograd.grad(
             outputs=t_center[:, i],
             inputs=[activ1],
             retain_graph=True,
