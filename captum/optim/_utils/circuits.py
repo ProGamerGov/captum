@@ -11,13 +11,12 @@ def get_expanded_weights(
     model,
     target1: nn.Module,
     target2: nn.Module,
-    input: torch.Tensor = torch.zeros(1, 3, 224, 224),
+    model_input: torch.Tensor = torch.ones(1, 3, 224, 224),
 ) -> torch.Tensor:
     """
     Extract meaningful weight interactions from between neurons which aren’t
     literally adjacent in a neural network, or where the weights aren’t directly
     represented in a single weight tensor.
-
     Schubert, et al., "Visualizing Weights", Distill, 2020.
     See: https://distill.pub/2020/circuits/visualizing-weights/
     """
@@ -26,7 +25,7 @@ def get_expanded_weights(
         model, targets: Union[nn.Module, List[nn.Module]]
     ) -> ModuleOutputMapping:
         catch_activ = ActivationCatcher(targets)
-        activ_out = catch_activ(model, input)
+        activ_out = catch_activ(model, model_input)
         return activ_out
 
     activations = get_activations(model, [target1, target2])
@@ -41,12 +40,11 @@ def get_expanded_weights(
 
     A = []
     for i in range(activ2.size(1)):
-        x = torch.autograd.grad(
+        x = autograd.grad(
             outputs=t_center[:, i],
             inputs=[activ1],
-            grad_outputs=torch.ones_like(t_center[:, i]),
             retain_graph=True,
+            grad_outputs=torch.ones_like(t_center[:, i]),
         )[0]
         A.append(x)
-
-    return torch.cat(A, dim=0)
+    return torch.stack(A, -1)[0]
