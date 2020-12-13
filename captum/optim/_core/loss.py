@@ -69,7 +69,7 @@ class NeuronActivation(Loss):
         # ensure channel_index will be valid
         assert self.channel_index < self.target.out_channels
 
-    def _call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
+    def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
         assert activations is not None
         assert len(activations.shape) == 4  # assume NCHW
