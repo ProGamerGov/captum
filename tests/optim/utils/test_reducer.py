@@ -8,19 +8,80 @@ from tests.helpers.basic import BaseTest
 
 
 class TestChannelReducer(BaseTest):
-    def test_channelreducer(self) -> None:
+    def test_channelreducer_pytorch(self) -> None:
         try:
             import sklearn  # noqa: F401
 
         except (ImportError, AssertionError):
             raise unittest.SkipTest(
-                "Module sklearn not found, skipping ChannelReducer test"
+                "Module sklearn not found, skipping ChannelReducer"
+                + " PyTorch reshape test"
             )
 
         test_input = torch.randn(1, 32, 224, 224).abs()
         c_reducer = ChannelReducer(n_components=3, max_iter=100)
-        test_output = c_reducer.fit_transform(test_input)
+        test_output = c_reducer.fit_transform(test_input, reshape=True)
         self.assertEquals(test_output.size(1), 3)
+
+    def test_channelreducer_pytorch_pca(self) -> None:
+        try:
+            import sklearn  # noqa: F401
+
+        except (ImportError, AssertionError):
+            raise unittest.SkipTest(
+                "Module sklearn not found, skipping ChannelReducer"
+                + " PyTorch reshape test"
+            )
+
+        test_input = torch.randn(1, 32, 224, 224).abs()
+        c_reducer = ChannelReducer(n_components=3, reduction_alg="PCA", max_iter=100)
+        test_output = c_reducer.fit_transform(test_input, reshape=True)
+        self.assertEquals(test_output.size(1), 3)
+
+    def test_channelreducer_numpy(self) -> None:
+        try:
+            import sklearn  # noqa: F401
+
+        except (ImportError, AssertionError):
+            raise unittest.SkipTest(
+                "Module sklearn not found, skipping ChannelReducer"
+                + " NumPy reshape test"
+            )
+
+        test_input = torch.randn(1, 32, 224, 224).abs().numpy()
+        c_reducer = ChannelReducer(n_components=3, max_iter=100)
+        test_output = c_reducer.fit_transform(test_input, reshape=True)
+        self.assertEquals(test_output.shape[1], 3)
+
+    def test_channelreducer_noreshape_pytorch(self) -> None:
+        try:
+            import sklearn  # noqa: F401
+
+        except (ImportError, AssertionError):
+            raise unittest.SkipTest(
+                "Module sklearn not found, skipping ChannelReducer"
+                + " PyTorch no reshape test"
+            )
+
+        test_input = torch.randn(1, 224, 224, 32).abs()
+        c_reducer = ChannelReducer(n_components=3, max_iter=100)
+        test_output = c_reducer.fit_transform(test_input, reshape=False)
+        self.assertEquals(test_output.size(3), 3)
+
+    def test_channelreducer_noreshape_numpy(self) -> None:
+        try:
+            import sklearn  # noqa: F401
+
+        except (ImportError, AssertionError):
+            raise unittest.SkipTest(
+                "Module sklearn not found, skipping ChannelReducer"
+                + " NumPy no reshape test"
+            )
+
+        test_input = torch.randn(1, 224, 224, 32).abs().numpy()
+        c_reducer = ChannelReducer(n_components=3, max_iter=100)
+        test_output = c_reducer.fit_transform(test_input, reshape=False)
+        self.assertEquals(test_output.shape[3], 3)
 
 
 if __name__ == "__main__":
