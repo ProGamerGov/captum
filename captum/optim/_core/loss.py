@@ -248,7 +248,7 @@ def dot_cossim(
     """
 
     def tensor_dot(x, y):
-        return (x * y, -1).sum()
+        return torch.sum(x * y, dim=-1)
 
     xy_dot = tensor_dot(x, y)
     if cossim_pow == 0:
