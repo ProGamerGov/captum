@@ -38,6 +38,24 @@ class TestChannelReducer(BaseTest):
         test_output = c_reducer.fit_transform(test_input, reshape=True)
         self.assertEquals(test_output.size(1), 3)
 
+    def test_channelreducer_pytorch_custom_alg(self) -> None:
+        try:
+            import sklearn  # noqa: F401
+
+        except (ImportError, AssertionError):
+            raise unittest.SkipTest(
+                "Module sklearn not found, skipping ChannelReducer"
+                + " PyTorch reshape test"
+            )
+
+        test_input = torch.randn(1, 32, 224, 224).abs()
+        reduction_alg = sklearn.decomposition.NMF
+        c_reducer = ChannelReducer(
+            n_components=3, reduction_alg=reduction_alg, max_iter=100
+        )
+        test_output = c_reducer.fit_transform(test_input, reshape=True)
+        self.assertEquals(test_output.size(1), 3)
+
     def test_channelreducer_numpy(self) -> None:
         try:
             import sklearn  # noqa: F401
