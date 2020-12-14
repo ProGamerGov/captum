@@ -21,13 +21,5 @@ class TestGetExpandedWeights(BaseTest):
         self.assertTrue(torch.is_tensor(output_tensor))
 
 
-class TestPosNeg(BaseTest):
-    def test_posneg(self) -> None:
-        x = torch.ones(1, 3, 224, 224) - 2
-        self.assertGreater(
-            torch.sum(circuits.posneg(x) >= 0).item(), torch.sum(x >= 0).item()
-        )
-
-
 if __name__ == "__main__":
     unittest.main()
