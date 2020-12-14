@@ -94,3 +94,15 @@ class ChannelReducer(object):
                 x_out = x_out.transpose(*permute_vals)
 
         return x_out
+
+
+def posneg(x: torch.Tensor, dim: int = 0) -> torch.Tensor:
+    """
+    Hack that makes a matrix positive by concatination in order to simulate
+    one-sided NMF with regular NMF
+    """
+
+    return torch.cat(
+        [torch.max(x, torch.full_like(x, 0)), torch.max(-x, torch.full_like(x, 0))],
+        dim=dim,
+    )
