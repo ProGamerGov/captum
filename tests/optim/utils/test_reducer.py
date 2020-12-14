@@ -18,7 +18,8 @@ class TestReductionAlgorithm(object):
         self.n_components = n_components
 
     def fit_transform(self, x: Union[torch.Tensor, np.ndarray]) -> np.ndarray:
-        return x[..., 0:3].numpy()
+        x = x.numpy() if torch.is_tensor(x) else x
+        return x[..., 0:3]
 
 
 class TestChannelReducer(BaseTest):
@@ -44,7 +45,7 @@ class TestChannelReducer(BaseTest):
         except (ImportError, AssertionError):
             raise unittest.SkipTest(
                 "Module sklearn not found, skipping ChannelReducer"
-                + " PyTorch reshape test"
+                + " PyTorch reshape PCA test"
             )
 
         test_input = torch.randn(1, 32, 224, 224).abs()
