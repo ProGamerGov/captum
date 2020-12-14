@@ -240,26 +240,6 @@ class Alignment(Loss):
         return sum_tensor
 
 
-def dot_cossim(
-    x: torch.Tensor, y: torch.Tensor, cossim_pow: float = 0, eps: float = 1e-4
-) -> torch.Tensor:
-    """
-    Dot Cossim Similarity for Direction objectives
-    """
-
-    def tensor_dot(x, y):
-        return torch.sum(x * y, dim=-1)
-
-    xy_dot = tensor_dot(x, y)
-    if cossim_pow == 0:
-        return xy_dot.mean()
-    x_mags = torch.sqrt(tensor_dot(x, x))
-    y_mags = torch.sqrt(tensor_dot(y, y))
-    cossims = xy_dot / (eps + x_mags) / (eps + y_mags)
-    floored_cossims = torch.max(torch.full_like(cossims, 0.1), cossims)
-    return (xy_dot * floored_cossims ** cossim_pow).mean()
-
-
 class Direction(Loss):
     """
     Visualize a general direction vector.
@@ -275,7 +255,7 @@ class Direction(Loss):
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
         assert activations.size(1) == self.direction.size(1)
-        return dot_cossim(self.direction, activations)
+        return torch.cosine_similarity(self.direction, activations)
 
 
 class DirectionNeuron(Loss):
@@ -309,7 +289,7 @@ class DirectionNeuron(Loss):
             activations.size(2), activations.size(3), self.x, self.y
         )
         activations = activations[:, self.channel_index, _x, _y]
-        return dot_cossim(self.direction, activations[None, None, None])
+        return torch.cosine_similarity(self.direction, activations[None, None, None])
 
 
 class TensorDirection(Loss):
@@ -336,7 +316,7 @@ class TensorDirection(Loss):
         W = (W_activ - W_direction) // 2
 
         activations = activations[:, :, H : H + H_direction, W : W + W_direction]
-        return dot_cossim(self.direction, activations)
+        return torch.cosine_similarity(self.direction, activations)
 
 
 class ActivationWeights(Loss):
