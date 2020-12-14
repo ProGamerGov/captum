@@ -45,7 +45,7 @@ class TestChannelReducer(BaseTest):
         except (ImportError, AssertionError):
             raise unittest.SkipTest(
                 "Module sklearn not found, skipping ChannelReducer"
-                + " PyTorch reshape test"
+                + " PyTorch custom algorithm test"
             )
 
         test_input = torch.randn(1, 32, 224, 224).abs()
