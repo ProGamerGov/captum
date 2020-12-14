@@ -127,7 +127,7 @@ class TestPosNeg(BaseTest):
     def test_posneg(self) -> None:
         x = torch.ones(1, 3, 224, 224) - 2
         self.assertGreater(
-            torch.sum(reducer.circuits.posneg(x) >= 0).item(), torch.sum(x >= 0).item()
+            torch.sum(reducer.posneg(x) >= 0).item(), torch.sum(x >= 0).item()
         )
 
 
