@@ -58,6 +58,6 @@ def posneg(x: torch.Tensor, dim: int = 0) -> torch.Tensor:
     """
 
     return torch.cat(
-        [torch.max(x, torch.full_like(W_, 0)), torch.max(-x, torch.full_like(W_, 0))],
+        [torch.max(x, torch.full_like(x, 0)), torch.max(-x, torch.full_like(x, 0))],
         dim=dim,
     )
