@@ -10,7 +10,10 @@ import torch.optim as optim
 try:
     from tqdm.auto import tqdm
 except (ImportError, AssertionError):
-    print("The tqdm package is required to use Captum's Optim library")
+    print(
+        "The tqdm package is required to use captum.optim's"
+        + " n_steps stop criteria with progress bar"
+    )
 
 from captum.optim._core.output_hook import AbortForwardException, ModuleOutputsHook
 from captum.optim._param.image.images import InputParameterization, NaturalImage
@@ -155,16 +158,23 @@ def n_steps(n: int, hidebar: bool = False) -> StopCriteria:
     Returns:
         *StopCriteria* callable
     """
-    pbar = tqdm(total=n, unit="step", disable=hidebar)
+
+    if not hidebar:
+        pbar = tqdm(total=n, unit="step")
 
     def continue_while(step, obj, history, optim) -> bool:
         if len(history) > 0:
-            pbar.set_postfix({"Objective": f"{history[-1].mean():.1f}"}, refresh=False)
+            if not hidebar:
+                pbar.set_postfix(
+                    {"Objective": f"{history[-1].mean():.1f}"}, refresh=False
+                )
         if step < n:
-            pbar.update()
+            if not hidebar:
+                pbar.update()
             return True
         else:
-            pbar.close()
+            if not hidebar:
+                pbar.close()
             return False
 
     return continue_while
