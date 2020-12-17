@@ -177,9 +177,6 @@ class ImageParameterization(InputParameterization):
         )
         return x
 
-    def set_image(self, x: torch.Tensor):
-        ...
-
 
 class FFTImage(ImageParameterization):
     """Parameterize an image using inverse real 2D FFT"""
