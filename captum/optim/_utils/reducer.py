@@ -100,7 +100,7 @@ class ChannelReducer(object):
             out = self.__dict__[name]
         elif name + "_" in self._reducer.__dict__:
             out = self._reducer.__dict__[name + "_"]
-        if isinstance(type(out), np.ndarray):
+        if type(out) == np.ndarray:
             out = torch.as_tensor(out)
         return out
 
