@@ -37,6 +37,7 @@ class TestChannelReducer(BaseTest):
         c_reducer = reducer.ChannelReducer(n_components=3, max_iter=100)
         test_output = c_reducer.fit_transform(test_input, reshape=True)
         self.assertEquals(test_output.size(1), 3)
+        self.assertTrue(torch.is_tensor(c_reducer.components))
 
     def test_channelreducer_pytorch_pca(self) -> None:
         try:
