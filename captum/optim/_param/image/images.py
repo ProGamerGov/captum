@@ -243,10 +243,6 @@ class FFTImage(ImageParameterization):
         results[s:] = torch.arange(-(v // 2), 0)
         return results * (1.0 / (v * d))
 
-    def set_image(self, correlated_image: torch.Tensor) -> None:
-        coeffs = self.torch_rfft(correlated_image)
-        self.fourier_coeffs = coeffs / self.spectrum_scale
-
     def get_fft_funcs(self) -> Tuple[Callable, Callable]:
         """Support older versions of PyTorch"""
         try:
@@ -294,9 +290,6 @@ class PixelImage(ImageParameterization):
 
     def forward(self) -> torch.Tensor:
         return self.image.refine_names("B", "C", "H", "W")
-
-    def set_image(self, correlated_image: torch.Tensor) -> None:
-        self.image = nn.Parameter(correlated_image)
 
 
 class LaplacianImage(ImageParameterization):
@@ -503,8 +496,3 @@ class NaturalImage(ImageParameterization):
         image = self.decorrelate(image)
         image = image.rename(None)  # TODO: the world is not yet ready
         return CudaImageTensor(self.squash_func(image))
-
-    def set_image(self, image: torch.Tensor) -> None:
-        logits = logit(image, epsilon=1e-4)
-        correlated = self.decorrelate(logits, inverse=True)
-        self.parameterization.set_image(correlated)
