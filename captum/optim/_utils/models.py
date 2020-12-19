@@ -157,7 +157,7 @@ class Conv2dSame(nn.Conv2d):
         )
 
 
-def pad_reflective_5d(x: torch.Tensor, padding: List[int]) -> torch.Tensor:
+def pad_reflective_a4d(x: torch.Tensor, padding: List[int]) -> torch.Tensor:
     """
     Reflective padding for all 4 dimensions of an NCHW tensor
     """
