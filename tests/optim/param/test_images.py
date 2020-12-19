@@ -377,7 +377,7 @@ class TestSharedImage(BaseTest):
 
         test_tensor = torch.ones(6, 4, 128, 128)
         output_tensor = image_param.interpolate_tensor(
-            test_tensor, size[0], size[1], batch, channels
+            test_tensor, batch, channels, size[0], size[1]
         )
 
         self.assertEqual(output_tensor.dim(), 4)
