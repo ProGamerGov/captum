@@ -236,6 +236,7 @@ class RGBToBGR(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         assert x.dim() == 4
+        assert x.size(1) == 3
         return x[:, [2, 1, 0]]
 
 
