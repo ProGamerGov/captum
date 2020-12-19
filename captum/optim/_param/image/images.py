@@ -374,7 +374,7 @@ class SharedImage(ImageParameterization):
         for shape in shared_shapes:
             assert len(shape) >= 2 and len(shape) <= 4
             shape = ([1] * (4 - len(shape))) + list(shape)
-            batch, channels, height, width = shape[0], shape[1], shape[2], shape[3]
+            batch, channels, height, width = shape
             A.append(torch.nn.Parameter(torch.randn([batch, channels, height, width])))
         self.shared_init = torch.nn.ParameterList(A)
         self.parameterization = parameterization
