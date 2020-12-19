@@ -13,8 +13,8 @@ except (ImportError, AssertionError):
     print("The Pillow/PIL library is required to use Captum's Optim library")
 
 from captum.optim._param.image.transform import ToRGB
-from captum.optim._utils.typing import InitSize, SquashFunc
 from captum.optim._utils.models import pad_reflective_a4d
+from captum.optim._utils.typing import InitSize, SquashFunc
 
 
 class ImageTensor(torch.Tensor):
