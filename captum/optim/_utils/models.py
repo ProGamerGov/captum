@@ -157,7 +157,7 @@ class Conv2dSame(nn.Conv2d):
         )
 
 
-def pad_reflective_a4d(x: torch.Tensor, padding: List[int]) -> torch.Tensor:
+def pad_reflective_5d(x: torch.Tensor, padding: List[int]) -> torch.Tensor:
     """
     Reflective padding for all 4 dimensions of an NCHW tensor
     """
@@ -166,20 +166,28 @@ def pad_reflective_a4d(x: torch.Tensor, padding: List[int]) -> torch.Tensor:
     assert len(padding) == 8
 
     # Pad width
-    x = torch.cat([x, x.flip([3])[..., 0 : padding[-2]]], dim=3)
-    x = torch.cat([x.flip([3])[..., -padding[-2] :], x], dim=3)
+    if padding[0] != 0:
+        x = torch.cat([x, x.flip([3])[..., 0 : padding[0]]], dim=3)
+    if padding[1] != 0:
+        x = torch.cat([x.flip([3])[..., -padding[1] :], x], dim=3)
 
     # Pad height
-    x = torch.cat([x, x.flip([2])[..., 0 : padding[-3], :]], dim=2)
-    x = torch.cat([x.flip([2])[..., -padding[-4] :, :], x], dim=2)
+    if padding[2] != 0:
+        x = torch.cat([x, x.flip([2])[..., 0 : padding[2], :]], dim=2)
+    if padding[3] != 0:
+        x = torch.cat([x.flip([2])[..., -padding[3] :, :], x], dim=2)
 
     # Pad channels
-    x = torch.cat([x, x.flip([1])[:, 0 : padding[-5]]], dim=1)
-    x = torch.cat([x.flip([1])[:, -padding[-6] :], x], dim=1)
+    if padding[4] != 0:
+        x = torch.cat([x, x.flip([1])[:, 0 : padding[4]]], dim=1)
+    if padding[5] != 0:
+        x = torch.cat([x.flip([1])[:, -padding[5] :], x], dim=1)
 
     # Pad batch
-    x = torch.cat([x, x.flip([0])[0 : padding[-7]]], dim=0)
-    x = torch.cat([x.flip([0])[-padding[-8] :], x], dim=0)
+    if padding[6] != 0:
+        x = torch.cat([x, x.flip([0])[0 : padding[6]]], dim=0)
+    if padding[7] != 0:
+        x = torch.cat([x.flip([0])[-padding[7] :], x], dim=0)
     return x
 
 
