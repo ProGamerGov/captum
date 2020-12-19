@@ -280,7 +280,7 @@ class TestSharedImage(BaseTest):
         self.assertEqual(len(offset), 3)
         self.assertEqual(offset, [[int(o) for o in v] for v in offset_vals])
 
-    def test_sharedimage_apply_offset_single_set_four_numbers(self) -> None:
+    def test_sharedimage_get_offset_single_set_four_numbers(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
                 "Skipping SharedImage test due to insufficient Torch version."
@@ -297,7 +297,7 @@ class TestSharedImage(BaseTest):
         self.assertEqual(len(offset), 3)
         self.assertEqual(offset, [list(offset_vals)] * 3)
 
-    def test_sharedimage_apply_offset_single_set_three_numbers(self) -> None:
+    def test_sharedimage_get_offset_single_set_three_numbers(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
                 "Skipping SharedImage test due to insufficient Torch version."
@@ -314,7 +314,7 @@ class TestSharedImage(BaseTest):
         self.assertEqual(len(offset), 3)
         self.assertEqual(offset, [[0] + list(offset_vals)] * 3)
 
-    def test_sharedimage_apply_offset_single_set_two_numbers(self) -> None:
+    def test_sharedimage_get_offset_single_set_two_numbers(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
                 "Skipping SharedImage test due to insufficient Torch version."
@@ -345,7 +345,7 @@ class TestSharedImage(BaseTest):
         )
 
         test_x_list = [torch.ones(*size) for x in range(size[0])]
-        output_A = image_param.apply_offset(test_x_list, size)
+        output_A = image_param.apply_offset(test_x_list)
 
         x_list = [torch.ones(*size) for x in range(size[0])]
         self.assertEqual(image_param.offset, [list(offset_vals)])
