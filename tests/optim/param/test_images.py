@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import unittest
+from typing import List
 
 import numpy as np
 import torch
@@ -369,7 +370,7 @@ class TestSharedImage(BaseTest):
         self.assertEqual(image_param.offset, [list(offset_vals)])
 
         offset_list = image_param.offset
-        expected_A = apply_offset_compare(x_list, offset_list)
+        expected_A = self.apply_offset_compare(x_list, offset_list)
 
         for t_expected, t_output in zip(expected_A, output_A):
             assertTensorAlmostEqual(self, t_expected, t_output)
