@@ -231,7 +231,7 @@ class ScaleInputRange(nn.Module):
 
 class RGBToBGR(nn.Module):
     """
-    Converts RGB images to BGR by switching the red and blue channels.
+    Converts an NCHW RGB image tensor to BGR by switching the red and blue channels.
     """
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
