@@ -368,6 +368,7 @@ class SharedImage(ImageParameterization):
         offset: Union[int, Tuple[int], Tuple[Tuple[int]], None] = None,
     ) -> None:
         super().__init__()
+        assert shapes is not None
         A = []
         shared_shapes = [shapes] if type(shapes[0]) is not tuple else shapes
         for shape in shared_shapes:
