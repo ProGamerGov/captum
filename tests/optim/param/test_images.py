@@ -348,6 +348,8 @@ class TestSharedImage(BaseTest):
         output_A = image_param.apply_offset(test_x_list, size)
 
         x_list = [torch.ones(*size) for x in range(size[0])]
+        self.assertEqual(image_param.offset, [list(offset_vals)])
+
         offset_list = image_param.offset
         expected_A = []
         for x, offset in zip(x_list, offset_list):
@@ -375,7 +377,7 @@ class TestSharedImage(BaseTest):
 
         test_tensor = torch.ones(6, 4, 128, 128)
         output_tensor = image_param.interpolate_tensor(
-            test_tensor, size, batch, channels
+            test_tensor, batch, channels, size[0], size[1]
         )
 
         self.assertEqual(output_tensor.dim(), 4)
@@ -400,6 +402,7 @@ class TestSharedImage(BaseTest):
         )
         test_tensor = image_param.forward()
 
+        self.assertIsNone(image_param.offset)
         self.assertEqual(image_param.shared_init.dim(), 4)
         self.assertEqual(image_param.shared_init.shape, (1, 1, 128 // 2, 128 // 2))
         self.assertEqual(test_tensor.dim(), 4)
@@ -424,6 +427,7 @@ class TestSharedImage(BaseTest):
         )
         test_tensor = image_param.forward()
 
+        self.assertIsNone(image_param.offset)
         self.assertEqual(image_param.shared_init.dim(), 4)
         self.assertEqual(image_param.shared_init.shape, (1, 1, 128 // 2, 128 // 2))
         self.assertEqual(test_tensor.dim(), 4)
@@ -448,6 +452,7 @@ class TestSharedImage(BaseTest):
         )
         test_tensor = image_param.forward()
 
+        self.assertIsNone(image_param.offset)
         self.assertEqual(image_param.shared_init.dim(), 4)
         self.assertEqual(image_param.shared_init.shape, (1, 1, 128 // 2, 128 // 2))
         self.assertEqual(test_tensor.dim(), 4)
@@ -479,6 +484,7 @@ class TestSharedImage(BaseTest):
         )
         test_tensor = image_param.forward()
 
+        self.assertIsNone(image_param.offset)
         self.assertEqual(image_param.shared_init.dim(), 4)
         self.assertEqual(image_param.shared_init.shape, (1, 1, 128 // 2, 128 // 2))
         self.assertEqual(test_tensor.dim(), 4)
@@ -510,6 +516,7 @@ class TestSharedImage(BaseTest):
         )
         test_tensor = image_param.forward()
 
+        self.assertIsNone(image_param.offset)
         self.assertEqual(image_param.shared_init.dim(), 4)
         self.assertEqual(image_param.shared_init.shape, (1, 1, 128 // 2, 128 // 2))
         self.assertEqual(test_tensor.dim(), 4)
