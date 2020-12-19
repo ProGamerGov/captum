@@ -408,6 +408,8 @@ class SharedImage(ImageParameterization):
     ) -> torch.Tensor:
         """
         Linear interpolation for 4D, 5D, and 6D tensors.
+        If the batch dimension needs to be resized, 
+        we move it's location temporarily for F.interpolate.
         """
 
         if x.size(1) == channels:
