@@ -404,7 +404,7 @@ class SharedImage(ImageParameterization):
         return A
 
     def interpolate_tensor(
-        self, x: torch.Tensor, size: InitSize, batch: int, channels: int
+        self, x: torch.Tensor, batch: int, channels: int, height: int, width: int
     ) -> torch.Tensor:
         """
         Linear interpolation for 4D, 5D, and 6D tensors.
@@ -415,8 +415,8 @@ class SharedImage(ImageParameterization):
         else:
             mode = "trilinear"
             x = x.unsqueeze(0)
-            size = (channels, size[0], size[1])
-        x = F.interpolate(x, size=size, mode=mode)
+            size = (channels, height, width)
+        x = F.interpolate(x, size=(height, width), mode=mode)
         x = x.squeeze(0) if len(size) == 3 else x
         if x.size(0) != batch:
             x = x.permute(1, 0, 2, 3)
@@ -433,9 +433,10 @@ class SharedImage(ImageParameterization):
         x = [
             self.interpolate_tensor(
                 shared_tensor,
-                (image.size(2), image.size(3)),
                 image.size(0),
                 image.size(1),
+                image.size(2),
+                image.size(3)),
             )
             for shared_tensor in self.shared_init
         ]
