@@ -338,7 +338,8 @@ class TestSharedImage(BaseTest):
         A = []
         for x, offset in zip(x_list, offset_list):
             size = list(x.size())
-            offset_t, offset_pad = [], offset.copy()
+            offset_t: List = []
+            offset_pad = offset.copy()
             offset_pad.reverse()
             [offset_t + [abs(o), abs(o)] for o in offset_pad]
             x = F.pad(x.unsqueeze(0), offset_t, "constant").squeeze(0)
@@ -419,7 +420,9 @@ class TestSharedImage(BaseTest):
 
         self.assertIsNone(image_param.offset)
         self.assertEqual(image_param.shared_init[0].dim(), 4)
-        self.assertEqual(image_param.shared_init[0].shape, [1, 1] + list(shared_shapes))
+        self.assertEqual(
+            list(image_param.shared_init[0].shape), [1, 1] + list(shared_shapes)
+        )
         self.assertEqual(test_tensor.dim(), 4)
         self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
@@ -444,7 +447,9 @@ class TestSharedImage(BaseTest):
 
         self.assertIsNone(image_param.offset)
         self.assertEqual(image_param.shared_init[0].dim(), 4)
-        self.assertEqual(image_param.shared_init[0].shape, [1] + list(shared_shapes))
+        self.assertEqual(
+            list(image_param.shared_init[0].shape), [1] + list(shared_shapes)
+        )
         self.assertEqual(test_tensor.dim(), 4)
         self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
@@ -469,7 +474,7 @@ class TestSharedImage(BaseTest):
 
         self.assertIsNone(image_param.offset)
         self.assertEqual(image_param.shared_init[0].dim(), 4)
-        self.assertEqual(image_param.shared_init[0].shape, list(shared_shapes))
+        self.assertEqual(list(image_param.shared_init[0].shape), list(shared_shapes))
         self.assertEqual(test_tensor.dim(), 4)
         self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
@@ -502,7 +507,9 @@ class TestSharedImage(BaseTest):
         self.assertIsNone(image_param.offset)
         for i in range(len(shared_shapes)):
             self.assertEqual(image_param.shared_init[i].dim(), 4)
-            self.assertEqual(image_param.shared_init[i].shape, list(shared_shapes[i]))
+            self.assertEqual(
+                list(image_param.shared_init[i].shape), list(shared_shapes[i])
+            )
         self.assertEqual(test_tensor.dim(), 4)
         self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
@@ -535,7 +542,10 @@ class TestSharedImage(BaseTest):
         self.assertIsNone(image_param.offset)
         for i in range(len(shared_shapes)):
             self.assertEqual(image_param.shared_init[i].dim(), 4)
-            self.assertEqual(image_param.shared_init[i].shape, list(shared_shapes[i]))
+            shape = list(image_param.shared_init[i].shape)
+            shape = ([1] * (4 - len(shape))) + list(shape)
+            self.assertEqual(shape, list(shared_shapes[i]))
+
         self.assertEqual(test_tensor.dim(), 4)
         self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
