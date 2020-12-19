@@ -356,7 +356,13 @@ class LaplacianImage(ImageParameterization):
 
 class SharedImage(ImageParameterization):
     """
-    Share some image parameters across the batch.
+    Share some image parameters across the batch to increase spatial alignment,
+    by using interpolated lower resolution tensors.
+    This is sort of like a laplacian pyramid but more general.
+
+    Offsets are similar to phase in Fourier transforms, and can be applied to
+    any dimension.
+
     Mordvintsev, et al., "Differentiable Image Parameterizations", Distill, 2018.
     https://distill.pub/2018/differentiable-parameterizations/
     """
