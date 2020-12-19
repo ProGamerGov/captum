@@ -356,7 +356,13 @@ class LaplacianImage(ImageParameterization):
 
 class SharedImage(ImageParameterization):
     """
-    Share some image parameters across the batch.
+    Share some image parameters across the batch to increase spatial alignment,
+    by using interpolated lower resolution tensors.
+    This is sort of like a laplacian pyramid but more general.
+
+    Offsets are similar to phase in Fourier transforms, and can be applied to
+    any dimension.
+
     Mordvintsev, et al., "Differentiable Image Parameterizations", Distill, 2018.
     https://distill.pub/2018/differentiable-parameterizations/
     """
@@ -393,13 +399,20 @@ class SharedImage(ImageParameterization):
         assert all([all([type(o) is int for o in v]) for v in offset])
         return offset
 
-    def apply_offset(
-        self, x_list: List[torch.Tensor], size: Tuple[int]
-    ) -> List[torch.Tensor]:
-        assert len(size) == 4
+    def apply_offset(self, x_list: List[torch.Tensor]) -> List[torch.Tensor]:
         A = []
         for x, offset in zip(x_list, self.offset):
-            x = F.pad(x, offset, "reflect")
+            size = list(x.size())
+            assert len(size) == 4
+
+            offset_t, offset_pad = [], offset.copy()
+            offset_pad.reverse()
+            [offset_t + [abs(o), abs(o)] for o in offset_pad]
+            x = F.pad(x.unsqueeze(0), offset_t, "constant").squeeze(0)
+
+            for o, s in zip(offset, range(x.dim())):
+                x = torch.roll(x, shifts=o, dims=s)
+
             x = x[: size[0], : size[1], : size[2], : size[3]]
             A.append(x)
         return A
@@ -445,7 +458,7 @@ class SharedImage(ImageParameterization):
             for shared_tensor in self.shared_init
         ]
         if self.offset is not None:
-            x = self.apply_offset(x, tuple(image.size()))
+            x = self.apply_offset(x)
         return (image + sum(x)).refine_names("B", "C", "H", "W")
 
 
