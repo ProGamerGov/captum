@@ -364,7 +364,7 @@ class SharedImage(ImageParameterization):
     def __init__(
         self,
         shapes: Union[Tuple[Tuple[int]], Tuple[int]] = None,
-        parameterization=None,
+        parameterization: ImageParameterization = None,
         offset: Union[int, Tuple[int], Tuple[Tuple[int]], None] = None,
     ) -> None:
         super().__init__()
@@ -462,7 +462,7 @@ class NaturalImage(ImageParameterization):
         size: InitSize = None,
         channels: int = 3,
         batch: int = 1,
-        parameterization=FFTImage,
+        parameterization: ImageParameterization = FFTImage,
         init: Optional[torch.Tensor] = None,
         decorrelate_init: bool = True,
         squash_func: Optional[SquashFunc] = None,
