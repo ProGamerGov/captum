@@ -4,7 +4,6 @@ from typing import List
 
 import numpy as np
 import torch
-import torch.nn.functional as F
 
 from captum.optim._param.image import images
 from captum.optim._utils.models import pad_reflective_a4d
