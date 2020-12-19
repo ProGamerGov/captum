@@ -414,11 +414,12 @@ class SharedImage(ImageParameterization):
 
         if x.size(1) == channels:
             mode = "bilinear"
+            size = (height, width)
         else:
             mode = "trilinear"
             x = x.unsqueeze(0)
             size = (channels, height, width)
-        x = F.interpolate(x, size=(height, width), mode=mode)
+        x = F.interpolate(x, size=size, mode=mode)
         x = x.squeeze(0) if len(size) == 3 else x
         if x.size(0) != batch:
             x = x.permute(1, 0, 2, 3)
