@@ -403,13 +403,18 @@ class SharedImage(ImageParameterization):
     def apply_offset(self, x_list: List[torch.Tensor]) -> List[torch.Tensor]:
         A = []
         for x, offset in zip(x_list, self.offset):
+            assert x.dim() == 4
             size = list(x.size())
-            assert len(size) == 4
 
-            offset_t, offset_pad = [], offset.copy()
+            offset_pad = (
+                [abs(offset[0])] * 2
+                + [abs(offset[1])] * 2
+                + [abs(offset[2])] * 2
+                + [abs(offset[3])] * 2
+            )
             offset_pad.reverse()
-            [offset_t + [abs(o), abs(o)] for o in offset_pad]
-            x = pad_reflective_a4d(x, offset_t)
+
+            x = pad_reflective_a4d(x, offset_pad)
 
             for o, s in zip(offset, range(x.dim())):
                 x = torch.roll(x, shifts=o, dims=s)
