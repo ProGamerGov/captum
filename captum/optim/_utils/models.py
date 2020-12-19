@@ -157,6 +157,32 @@ class Conv2dSame(nn.Conv2d):
         )
 
 
+def pad_reflective_a4d(x: torch.Tensor, padding: List[int]) -> torch.Tensor:
+    """
+    Reflective padding for all 4 dimensions of an NCHW tensor
+    """
+
+    assert x.dim() == 4
+    assert len(padding) == 8
+
+    # Pad width
+    x = torch.cat([x, x.flip([3])[..., 0 : padding[-2]]], dim=3)
+    x = torch.cat([x.flip([3])[..., -padding[-2] :], x], dim=3)
+
+    # Pad height
+    x = torch.cat([x, x.flip([2])[..., 0 : padding[-3], :]], dim=2)
+    x = torch.cat([x.flip([2])[..., -padding[-4] :, :], x], dim=2)
+
+    # Pad channels
+    x = torch.cat([x, x.flip([1])[:, 0 : padding[-5]]], dim=1)
+    x = torch.cat([x.flip([1])[:, -padding[-6] :], x], dim=1)
+
+    # Pad batch
+    x = torch.cat([x, x.flip([0])[0 : padding[-7]]], dim=0)
+    x = torch.cat([x.flip([0])[-padding[-8] :], x], dim=0)
+    return x
+
+
 def collect_activations(
     model,
     targets: Union[nn.Module, List[nn.Module]],
