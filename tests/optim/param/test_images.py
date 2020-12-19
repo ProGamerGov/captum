@@ -7,6 +7,7 @@ import torch
 import torch.nn.functional as F
 
 from captum.optim._param.image import images
+from captum.optim._utils.models import pad_reflective_a4d
 from tests.helpers.basic import (
     BaseTest,
     assertArraysAlmostEqual,
@@ -342,7 +343,7 @@ class TestSharedImage(BaseTest):
             offset_pad = offset.copy()
             offset_pad.reverse()
             [offset_t + [abs(o), abs(o)] for o in offset_pad]
-            x = F.pad(x.unsqueeze(0), offset_t, "constant").squeeze(0)
+            x = pad_reflective_a4d(x, offset_t)
 
             for o, s in zip(offset, range(x.dim())):
                 x = torch.roll(x, shifts=o, dims=s)
