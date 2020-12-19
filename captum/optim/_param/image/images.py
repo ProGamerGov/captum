@@ -395,7 +395,7 @@ class SharedImage(ImageParameterization):
                 offset = [([0] * (4 - len(offset))) + list(offset)] * n
         else:
             offset = [[offset] * 4] * n
-        offset = [list(v) for v in offset_vals]
+        offset = [list(v) for v in offset]
         assert all([all([type(o) is int for o in v]) for v in offset])
         return offset
 
