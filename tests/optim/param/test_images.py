@@ -338,11 +338,15 @@ class TestSharedImage(BaseTest):
         A = []
         for x, offset in zip(x_list, offset_list):
             size = list(x.size())
-            offset_t: List = []
-            offset_pad = offset.copy()
+            offset_pad = (
+                [abs(offset[0])] * 2
+                + [abs(offset[1])] * 2
+                + [abs(offset[2])] * 2
+                + [abs(offset[3])] * 2
+            )
             offset_pad.reverse()
-            [offset_t + [abs(o), abs(o)] for o in offset_pad]
-            x = pad_reflective_a4d(x, offset_t)
+
+            x = pad_reflective_a4d(x, offset_pad)
 
             for o, s in zip(offset, range(x.dim())):
                 x = torch.roll(x, shifts=o, dims=s)
