@@ -331,6 +331,24 @@ class TestSharedImage(BaseTest):
         self.assertEqual(len(offset), 3)
         self.assertEqual(offset, [[0, 0] + list(offset_vals)] * 3)
 
+    def apply_offset_compare(
+        self, x_list: List[torch.Tensor], offset_list: List[List[int]]
+    ) -> List[torch.Tensor]:
+        A = []
+        for x, offset in zip(x_list, offset_list):
+            size = list(x.size())
+            offset_t, offset_pad = [], offset.copy()
+            offset_pad.reverse()
+            [offset_t + [abs(o), abs(o)] for o in offset_pad]
+            x = F.pad(x.unsqueeze(0), offset_t, "constant").squeeze(0)
+
+            for o, s in zip(offset, range(x.dim())):
+                x = torch.roll(x, shifts=o, dims=s)
+
+            x = x[: size[0], : size[1], : size[2], : size[3]]
+            A.append(x)
+        return A
+
     def test_apply_offset(self):
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
@@ -351,11 +369,7 @@ class TestSharedImage(BaseTest):
         self.assertEqual(image_param.offset, [list(offset_vals)])
 
         offset_list = image_param.offset
-        expected_A = []
-        for x, offset in zip(x_list, offset_list):
-            x = F.pad(x, offset, "reflect")
-            x = x[: size[0], : size[1], : size[2], : size[3]]
-            expected_A.append(x)
+        expected_A = apply_offset_compare(x_list, offset_list)
 
         for t_expected, t_output in zip(expected_A, output_A):
             assertTensorAlmostEqual(self, t_expected, t_output)
