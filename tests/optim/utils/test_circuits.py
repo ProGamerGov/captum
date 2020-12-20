@@ -22,10 +22,22 @@ class TestGetExpandedWeights(BaseTest):
 
 
 class TestRemoveConstantPad(BaseTest):
-    def test_remove_constant_pad(self) -> None:
+    def test_remove_constant_pad_center(self) -> None:
+        x = torch.randn(4, 4, 4)
+        x_padded = torch.nn.functional.pad(x, (2, 2, 2, 2), "constant", value=1.2)
+        x_out = remove_constant_pad(x_padded, True)
+        assertTensorAlmostEqual(self, x_out, x)
+
+    def test_remove_constant_pad_odd(self) -> None:
+        x = torch.randn(4, 5, 5)
+        x_padded = torch.nn.functional.pad(x, (2, 3, 2, 3), "constant", value=1.2)
+        x_out = remove_constant_pad(x_padded)
+        aassertTensorAlmostEqual(self, x_out, x)
+
+    def test_remove_constant_pad_odd_batch(self) -> None:
         x = torch.randn(1, 4, 5, 5)
-        x_padded = torch.nn.functional.pad(a, (4, 4, 4, 4), "constant", value=1.2)
-        x_out = circuits.remove_constant_pad(x)
+        x_padded = torch.nn.functional.pad(x, (2, 3, 2, 3), "constant", value=1.2)
+        x_out = remove_constant_pad(x_padded)
         assertTensorAlmostEqual(self, x_out, x)
 
 
