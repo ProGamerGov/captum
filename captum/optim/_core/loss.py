@@ -269,14 +269,12 @@ class DirectionNeuron(Loss):
         self,
         target: nn.Module,
         vec: torch.Tensor,
-        channel_index: int,
         x: Optional[int] = None,
         y: Optional[int] = None,
     ) -> None:
         super(Loss, self).__init__()
         self.target = target
         self.direction = vec.reshape((1, -1, 1, 1))
-        self.channel_index = channel_index
         self.x = x
         self.y = y
 
@@ -288,8 +286,8 @@ class DirectionNeuron(Loss):
         _x, _y = get_neuron_pos(
             activations.size(2), activations.size(3), self.x, self.y
         )
-        activations = activations[:, self.channel_index, _x, _y]
-        return torch.cosine_similarity(self.direction, activations[None, None, None])
+        activations = activations[:, :, _x : _x + 1, _y : _y + 1]
+        return torch.cosine_similarity(self.direction, activations)
 
 
 class TensorDirection(Loss):
