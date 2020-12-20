@@ -45,7 +45,6 @@ def remove_constant_pad(x: torch.Tensor, center: bool = False) -> torch.Tensor:
     """
     Remove constant padding from an NCHW or CHW tensor's H & W dimensions.
 
-
     Designed to automatically crop outputs from get_expanded_weights()
     """
 
