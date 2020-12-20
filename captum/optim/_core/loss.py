@@ -75,7 +75,7 @@ class NeuronActivation(Loss):
             activations.size(2), activations.size(3), self.x, self.y
         )
 
-        return activations[:, self.channel_index, _x, _y]
+        return activations[:, self.channel_index, _x : _x + 1, _y : _y + 1]
 
 
 class DeepDream(Loss):
