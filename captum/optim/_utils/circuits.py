@@ -43,20 +43,25 @@ def get_expanded_weights(
 
 def remove_constant_pad(x: torch.Tensor) -> torch.Tensor:
     """
-    Remove constant padding from an NCHW tensor's H & W dimensions.
+    Remove constant padding from an NCHW or CHW tensor's H & W dimensions.
 
 
     Designed to automatically crop outputs from get_expanded_weights()
     """
 
     assert x.dim() == 3 or x.dim() == 4
-    x = x.unsqueeze(0) if x.dim() == 3 else x
 
-    pad = torch.where(x[0, 0] - x[0, 0, 0, 0] != 0)[0][0]
+    if x.dim() == 4:
+        pad = torch.where(x[0, 0] - x[0, 0, 0, 0] != 0)[0][0]
+        h, w = x.size(2), x.size(3)
+    elif x.dim() == 3:
+        pad = torch.where(x[0] - x[0, 0, 0] != 0)[0][0]
+        h, w = x.size(1), x.size(2)
 
     x_pad, y_pad = 0, 0
-    if (x.size(3) % 2) == 0:
+    if (w % 2) == 0:
         x_pad = 1
-    if (x.size(2) % 2) == 0:
+    if (h % 2) == 0:
         y_pad = 1
-    return x[:, :, pad : -(pad + y_pad), pad : -(pad + x_pad)]
+
+    return x[..., pad : -(pad + y_pad), pad : -(pad + x_pad)]
