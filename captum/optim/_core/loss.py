@@ -271,12 +271,14 @@ class DirectionNeuron(Loss):
         vec: torch.Tensor,
         x: Optional[int] = None,
         y: Optional[int] = None,
+        channel_index: Optional[int] = None,
     ) -> None:
         super(Loss, self).__init__()
         self.target = target
         self.direction = vec.reshape((1, -1, 1, 1))
         self.x = x
         self.y = y
+        self.channel_index = channel_index
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
@@ -287,6 +289,8 @@ class DirectionNeuron(Loss):
             activations.size(2), activations.size(3), self.x, self.y
         )
         activations = activations[:, :, _x : _x + 1, _y : _y + 1]
+        if self.channel_index is not None:
+            activations = activations[:, self.channel_index, ...][:, None, ...]
         return torch.cosine_similarity(self.direction, activations)
 
 
@@ -357,7 +361,9 @@ class ActivationWeights(Loss):
                 _x, _y = get_neuron_pos(
                     activations.size(2), activations.size(3), self.x, self.y
                 )
-                activations = activations[..., _x, _y].squeeze() * self.weights
+                activations = (
+                    activations[..., _x : _x + 1, _y : _y + 1].squeeze() * self.weights
+                )
             else:
                 activations = activations[
                     ..., self.y : self.y + self.wy, self.x : self.x + self.wx
