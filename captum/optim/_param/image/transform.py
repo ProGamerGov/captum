@@ -1,6 +1,6 @@
 import math
 import numbers
-from typing import Optional, Sequence, Union
+from typing import List, Optional, Sequence, Union
 
 import torch
 import torch.nn as nn
