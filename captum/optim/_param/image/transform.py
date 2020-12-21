@@ -146,6 +146,33 @@ class CenterCrop(torch.nn.Module):
         return input[..., sh : sh + h_crop, sw : sw + w_crop]
 
 
+def center_crop_shape(
+    input: torch.Tensor, output_size: List[int], square: bool = True
+) -> torch.Tensor:
+    """
+    Crop NCHW & CHW outputs by specifying the desired output shape.
+    
+    Optionally ensure the output is a perfect square if visualizing weights.
+    """
+
+    assert input.dim() == 4 or input.dim() == 3
+    assert len(output_size) == 1 or len(output_size) == 2
+    output_size = output_size * 2 if len(output_size) == 1 else output_size
+
+    if input.dim() == 4:
+        h, w = input.size(2), input.size(3)
+    if input.dim() == 3:
+        h, w = input.size(1), input.size(2)
+    if square:
+        h, w = min(h, w), min(h, w)
+    h_crop = h - int(round((h - output_size[0]) / 2.0))
+    w_crop = w - int(round((w - output_size[1]) / 2.0))
+    print(h_crop - output_size[0], h_crop, w_crop - output_size[1], w_crop)
+    return input[
+        ..., h_crop - output_size[0] : h_crop, w_crop - output_size[1] : w_crop
+    ]
+
+
 def rand_select(transform_values: TransformValList) -> TransformVal:
     """
     Randomly return a value from the provided tuple or list
