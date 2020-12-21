@@ -3,7 +3,7 @@ from typing import Optional
 import torch
 import torch.nn as nn
 
-from captum.optim._param.image.images import center_crop_shape
+from captum.optim._param.image.transform import center_crop_shape
 from captum.optim._utils.models import collect_activations
 from captum.optim._utils.typing import TransformSize
 
