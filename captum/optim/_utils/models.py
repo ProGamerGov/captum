@@ -165,6 +165,10 @@ def pad_reflective_a4d(x: torch.Tensor, padding: List[int]) -> torch.Tensor:
     assert x.dim() == 4
     assert len(padding) == 8
 
+    if x.size(0) == 2:
+        assert sum(padding[6:]) == 0
+    if x.size(1) == 2:
+        assert sum(padding[4:6]) == 0
 
     # Pad batch
     if x.size(0) > 2:
@@ -172,38 +176,17 @@ def pad_reflective_a4d(x: torch.Tensor, padding: List[int]) -> torch.Tensor:
             x = torch.cat([x, x.flip([0])[1 : (padding[6] + 1)]], dim=0)
         if padding[7] != 0:
             x = torch.cat([x.flip([0])[-(padding[7] + 1) : -1], x], dim=0)
-    elif x.size(0) == 2:
-        P = []
-        if padding[4] != 0:
-            P.append(
-                torch.cat(
-                    [
-                        x if i + 1 != padding[6] else x[1 : (padding[6] + 1) - 4]
-                        for i in range(padding[6])
-                    ]
-                )
-            )
-        P.append(x)
-        if padding[5] != 0:
-            P.append(
-                torch.cat(
-                    [
-                        x if i + 1 != padding[7] else x[-(padding[7] + 1) : -2]
-                        for i in range(padding[7])
-                    ]
-                )
-            )
-        x = torch.cat(P)
+
     elif x.size(0) == 1:
         P = []
-        if padding[4] != 0:
+        if padding[6] != 0:
             P.append(
                 torch.cat(
                     [x if (i + 1) % 2 == 0 else x.flip([0]) for i in range(padding[6])]
                 )
             )
         P.append(x)
-        if padding[5] != 0:
+        if padding[7] != 0:
             P.append(
                 torch.cat(
                     [x if (i + 1) % 2 == 0 else x.flip([0]) for i in range(padding[7])]
@@ -217,31 +200,6 @@ def pad_reflective_a4d(x: torch.Tensor, padding: List[int]) -> torch.Tensor:
             x = torch.cat([x, x.flip([1])[:, 1 : (padding[4] + 1)]], dim=1)
         if padding[5] != 0:
             x = torch.cat([x.flip([1])[:, -(padding[5] + 1) : -1], x], dim=1)
-
-    elif x.size(1) == 2:
-        P = []
-        if padding[4] != 0:
-            P.append(
-                torch.cat(
-                    [
-                        x if i + 1 != padding[4] else x[:, 1 : (padding[4] + 1) - 4]
-                        for i in range(padding[4])
-                    ],
-                    dim=1,
-                )
-            )
-        P.append(x)
-        if padding[5] != 0:
-            P.append(
-                torch.cat(
-                    [
-                        x if i + 1 != padding[5] else x[:, -(padding[5] + 1) : -2]
-                        for i in range(padding[5])
-                    ],
-                    dim=1,
-                )
-            )
-        x = torch.cat(P, dim=1)
 
     elif x.size(1) == 1:
         P = []
