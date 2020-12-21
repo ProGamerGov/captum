@@ -22,6 +22,17 @@ class TestPadReflectiveA4D(BaseTest):
 
         assertTensorAlmostEqual(self, x_out, x_out_np)
 
+    def test_pad_reflective_a4d_b2_c2(self) -> None:
+        b = 2
+        c = 2
+        x = torch.arange(0, b * c * 4 * 4).view(b, c, 4, 4).float()
+        padding = [2] * 8
+
+        x_out = model_utils.pad_reflective_a4d(x, padding)
+        x_out_np = torch.as_tensor(np.pad(x.numpy(), (2), mode="reflect"))
+
+        assertTensorAlmostEqual(self, x_out, x_out_np)
+
     def test_pad_reflective_a4d_b3_c3(self) -> None:
         b = 3
         c = 3
