@@ -37,5 +37,5 @@ def get_expanded_weights(
             grad_outputs=torch.ones_like(t_center[:, i]),
             retain_graph=True,
         )[0]
-        A.append(x)
-    return torch.stack(A, -1)[0]
+        A.append(x.squeeze(0))
+    return torch.stack(A, 0)
