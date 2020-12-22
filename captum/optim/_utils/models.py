@@ -237,24 +237,3 @@ def collect_activations(
     catch_activ = ActivationCatcher(targets)
     activ_out = catch_activ(model, model_input)
     return activ_out
-
-
-class ActivationCatcher(object):
-    """
-    Simple module for collecting activations from model targets.
-    """
-
-    def __init__(self, targets: Union[nn.Module, List[nn.Module]]) -> None:
-        super(ActivationCatcher, self).__init__()
-        self.layers = ModuleOutputsHook(targets)
-
-    def __call__(self, model, input_t: torch.Tensor) -> ModuleOutputMapping:
-        try:
-            with suppress(AbortForwardException):
-                model(input_t)
-            activations = self.layers.consume_outputs()
-            self.layers.remove_hooks()
-            return activations
-        except (Exception, BaseException) as e:
-            self.layers.remove_hooks()
-            raise e
