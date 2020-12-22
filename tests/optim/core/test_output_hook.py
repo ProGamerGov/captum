@@ -7,16 +7,16 @@ import captum.optim._core.output_hook as output_hook
 from tests.helpers.basic import BaseTest
 
 
-class TestActivationCatcher(BaseTest):
-    def test_activation_catcher(self) -> None:
+class TestActivationFetcher(BaseTest):
+    def test_activation_fetcher(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
-                "Skipping ActivationCatcher test due to insufficient Torch version."
+                "Skipping ActivationFetcher test due to insufficient Torch version."
             )
         model = googlenet(pretrained=True)
         try:
-            catch_activ = output_hook.ActivationFetcher(targets=[model.mixed4d])
-            activ_out = catch_activ(model, torch.zeros(1, 3, 224, 224))
+            catch_activ = output_hook.ActivationFetcher(model, targets=[model.mixed4d])
+            activ_out = catch_activ(torch.zeros(1, 3, 224, 224))
             self.assertIsInstance(activ_out, dict)
             test = True
         except Exception:
