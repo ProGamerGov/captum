@@ -18,9 +18,7 @@ def array_heatmap(
         def hex2base10(x: str) -> float:
             return int(x, 16) / 255.0
 
-        return np.array(
-            [hex2base10(x[0:2]), hex2base10(x[2:4]), hex2base10(x[4:6])]
-        )
+        return np.array([hex2base10(x[0:2]), hex2base10(x[2:4]), hex2base10(x[4:6])])
 
     def color_scale(x: np.ndarray) -> np.ndarray:
         if x < 0:
@@ -39,6 +37,6 @@ def array_heatmap(
                 x = (x - 0.5) * 2
                 return (1 - x) * get_color(colors[3]) + x * get_color(colors[4])
 
-    return np.stack(
-        [np.stack([color_scale(x) for x in a]) for a in array]
-    ).transpose(2, 0, 1)
+    return np.stack([np.stack([color_scale(x) for x in a]) for a in array]).transpose(
+        2, 0, 1
+    )
