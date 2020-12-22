@@ -1,5 +1,5 @@
-from typing import Iterable, List, Union
 from contextlib import suppress
+from typing import Iterable, List, Union
 from warnings import warn
 
 import torch.nn as nn
