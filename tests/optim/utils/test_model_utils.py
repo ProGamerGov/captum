@@ -346,6 +346,10 @@ class TestCollectActivations(BaseTest):
                 model, [model.mixed4d], torch.zeros(1, 3, 224, 224)
             )
             self.assertIsInstance(activ_out, dict)
+
+            m4d_activ = activ_out[model.mixed4d]
+            self.assertEqual(list(m4d_activ.shape) , [1, 528, 14, 14])
+
             test = True
         except Exception:
             test = False
