@@ -69,6 +69,9 @@ def tensor_heatmap(
 ) -> torch.Tensor:
     """
     Create a color heatmap of an input weight tensor.
+    By default red represents excitatory values,
+    blue represents inhibitory values, and white represents
+    no excitation or inhibition.
     """
 
     assert tensor.dim() == 2
