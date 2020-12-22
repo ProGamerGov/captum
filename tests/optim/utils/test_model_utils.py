@@ -348,7 +348,7 @@ class TestCollectActivations(BaseTest):
 
         self.assertIsInstance(activ_out, dict)
         m4d_activ = activ_out[model.mixed4d]
-        self.assertEqual(list(m4d_activ.shape), [1, 528, 14, 14])
+        self.assertEqual(list(cast(m4d_activ, torch.Tensor).shape), [1, 528, 14, 14])
 
 
 if __name__ == "__main__":
