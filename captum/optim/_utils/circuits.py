@@ -12,7 +12,7 @@ def get_expanded_weights(
     model,
     target1: nn.Module,
     target2: nn.Module,
-    crop_shape: Optional[TransformSize] = None,
+    crop_shape: Optional[Union[Tuple[int, int], TransformSize]] = None,
     model_input: ModelInputType = torch.zeros(1, 3, 224, 224),
 ) -> torch.Tensor:
     """
