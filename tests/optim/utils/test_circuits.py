@@ -5,7 +5,8 @@ import torch
 
 import captum.optim._utils.circuits as circuits
 from captum.optim._models.inception_v1 import googlenet
-from tests.helpers.basic import BaseTest
+from tests.helpers.basic import BaseTest, assertArraysAlmostEqual
+from tests.optim.helpers import numpy_circuits
 
 
 class TestGetExpandedWeights(BaseTest):
@@ -44,6 +45,19 @@ class TestGetExpandedWeights(BaseTest):
             model, model.mixed3a, model.mixed3b, (5, 5)
         )
         self.assertEqual(list(output_tensor.shape), [480, 256, 5, 5])
+
+
+class TestHeatMap(BaseTest):
+    def test_heatmap(self) -> None:
+        x = torch.ones(4, 4)
+        x[0:1, 0:4] = 0.2
+        x[1:2, 0:4] = 0.8
+        x[2:3, 0:4] = -0.2
+        x[3:4, 0:4] = -0.8
+
+        x_out = circuits.tensor_heatmap(x)
+        x_out_np = numpy_circuits.array_heatmap(x.numpy())
+        assertArraysAlmostEqual(x_out, x_out_np, 0.005)
 
 
 if __name__ == "__main__":
