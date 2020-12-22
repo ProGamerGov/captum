@@ -4,6 +4,7 @@ from warnings import warn
 import torch.nn as nn
 
 # from clarity.pytorch import ModuleOutputMapping
+from captum.optim._utils.typing import ModelInputType
 
 
 class AbortForwardException(Exception):
@@ -90,22 +91,21 @@ class ModuleOutputsHook:
         self.remove_hooks()
 
 
-class ActivationCatcher(object):
+class ActivationFetcher:
     """
     Simple module for collecting activations from model targets.
     """
 
-    def __init__(self, targets: Union[nn.Module, List[nn.Module]]) -> None:
+    def __init__(self, model, targets: Union[nn.Module, List[nn.Module]]) -> None:
         super(ActivationCatcher, self).__init__()
+        self.model = model
         self.layers = ModuleOutputsHook(targets)
 
-    def __call__(self, model, input_t: torch.Tensor) -> ModuleOutputMapping:
+    def __call__(self, input_t: ModelInputType) -> ModuleOutputMapping:
         try:
             with suppress(AbortForwardException):
-                model(input_t)
+                self.model(input_t)
             activations = self.layers.consume_outputs()
+        finally:
             self.layers.remove_hooks()
-            return activations
-        except (Exception, BaseException) as e:
-            self.layers.remove_hooks()
-            raise e
+        return activations
