@@ -5,7 +5,7 @@ import torch
 
 import captum.optim._utils.circuits as circuits
 from captum.optim._models.inception_v1 import googlenet
-from tests.helpers.basic import BaseTest, assertArraysAlmostEqual
+from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 from tests.optim.helpers import numpy_circuits
 
 
@@ -58,7 +58,7 @@ class TestHeatMap(BaseTest):
 
         x_out = circuits.tensor_heatmap(x)
         x_out_np = numpy_circuits.array_heatmap(x.numpy())
-        assertArraysAlmostEqual(x_out, x_out_np, 0.005)
+        assertTensorAlmostEqual(self, x_out, torch.as_tensor(x_out_np))
 
 
 if __name__ == "__main__":
