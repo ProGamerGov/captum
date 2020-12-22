@@ -8,7 +8,10 @@ def array_heatmap(
     colors: List[str] = ["0571b0", "92c5de", "f7f7f7", "f4a582", "ca0020"],
 ) -> np.ndarray:
     """
-    Create a color heatmap of a weight array.
+    Create a color heatmap of an input weight array.
+    By default red represents excitatory values,
+    blue represents inhibitory values, and white represents
+    no excitation or inhibition.
     """
 
     assert array.ndim == 2
