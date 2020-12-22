@@ -5,7 +5,7 @@ import torch.nn as nn
 
 from captum.optim._param.image.transform import center_crop_shape
 from captum.optim._utils.models import collect_activations
-from captum.optim._utils.typing import TransformSize
+from captum.optim._utils.typing import ModelInputType, TransformSize
 
 
 def get_expanded_weights(
@@ -13,7 +13,7 @@ def get_expanded_weights(
     target1: nn.Module,
     target2: nn.Module,
     crop_shape: Optional[TransformSize] = None,
-    model_input: torch.Tensor = torch.zeros(1, 3, 224, 224),
+    model_input: ModelInputType  = torch.zeros(1, 3, 224, 224),
 ) -> torch.Tensor:
     """
     Extract meaningful weight interactions from between neurons which aren’t
