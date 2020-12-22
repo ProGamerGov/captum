@@ -6,8 +6,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from captum.optim._core.output_hook import AbortForwardException, ModuleOutputsHook
-from captum.optim._utils.typing import ModuleOutputMapping
+from captum.optim._core.output_hook import ActivationFetcher
+from captum.optim._utils.typing import ModelInputType, ModuleOutputMapping
 
 
 def get_model_layers(model) -> List[str]:
@@ -228,12 +228,12 @@ def pad_reflective_a4d(x: torch.Tensor, padding: List[int]) -> torch.Tensor:
 def collect_activations(
     model,
     targets: Union[nn.Module, List[nn.Module]],
-    model_input: torch.Tensor = torch.zeros(1, 3, 224, 224),
+    model_input: ModelInputType = torch.zeros(1, 3, 224, 224),
 ) -> ModuleOutputMapping:
     """
     Collect target activations for a model.
     """
 
-    catch_activ = ActivationCatcher(targets)
-    activ_out = catch_activ(model, model_input)
+    catch_activ = ActivationCatcher(model, targets)
+    activ_out = catch_activ(model_input)
     return activ_out
