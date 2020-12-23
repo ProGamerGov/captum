@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 import unittest
 
+import torch
+
 import captum.optim._utils.image.common as common
+from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
+from tests.optim.helpers import numpy_common
 
 
 class TestGetNeuronPos(unittest.TestCase):
@@ -32,6 +36,20 @@ class TestGetNeuronPos(unittest.TestCase):
 
         self.assertEqual(x, W // 2)
         self.assertEqual(y, 5)
+
+
+class TestHeatMap(BaseTest):
+    def test_heatmap(self) -> None:
+        x = torch.ones(5, 4)
+        x[0:1, 0:4] = x[0:1, 0:4] * 0.2
+        x[1:2, 0:4] = x[1:2, 0:4] * 0.8
+        x[2:3, 0:4] = x[2:3, 0:4] * 0.0
+        x[3:4, 0:4] = x[3:4, 0:4] * -0.2
+        x[4:5, 0:4] = x[4:5, 0:4] * -0.8
+
+        x_out = common.tensor_heatmap(x)
+        x_out_np = numpy_common.array_heatmap(x.numpy())
+        assertTensorAlmostEqual(self, x_out, torch.as_tensor(x_out_np).float())
 
 
 if __name__ == "__main__":
