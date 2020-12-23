@@ -38,6 +38,18 @@ class TestGetNeuronPos(unittest.TestCase):
         self.assertEqual(y, 5)
 
 
+class TestNChannelsToRGB(BaseTest):
+    def test_nchannels_to_rgb_collapse(self) -> None:
+        test_input = torch.randn(1, 6, 224, 224)
+        test_output = common.nchannels_to_rgb(test_input)
+        self.assertEqual(list(test_output.size()), [1, 3, 224, 224])
+
+    def test_nchannels_to_rgb_increase(self) -> None:
+        test_input = torch.randn(1, 2, 224, 224)
+        test_output = common.nchannels_to_rgb(test_input)
+        self.assertEqual(list(test_output.size()), [1, 3, 224, 224])
+
+
 class TestHeatMap(BaseTest):
     def test_heatmap(self) -> None:
         x = torch.ones(5, 4)
