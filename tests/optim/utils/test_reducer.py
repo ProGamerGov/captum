@@ -31,7 +31,7 @@ class TestChannelReducer(BaseTest):
         except (ImportError, AssertionError):
             raise unittest.SkipTest(
                 "Module sklearn not found, skipping ChannelReducer"
-                + " PyTorch reshape test"
+                + " PyTorch swap_2nd_and_last_dims test"
             )
 
         test_input = torch.randn(1, 32, 224, 224).abs()
@@ -49,7 +49,7 @@ class TestChannelReducer(BaseTest):
         except (ImportError, AssertionError):
             raise unittest.SkipTest(
                 "Module sklearn not found, skipping ChannelReducer"
-                + " PyTorch reshape test"
+                + " PyTorch swap_2nd_and_last_dims test"
             )
 
         test_input = torch.randn(32, 224, 224).abs()
@@ -66,7 +66,7 @@ class TestChannelReducer(BaseTest):
         except (ImportError, AssertionError):
             raise unittest.SkipTest(
                 "Module sklearn not found, skipping ChannelReducer"
-                + " PyTorch reshape PCA test"
+                + " PyTorch swap_2nd_and_last_dims PCA test"
             )
 
         test_input = torch.randn(1, 32, 224, 224).abs()
@@ -106,12 +106,12 @@ class TestChannelReducer(BaseTest):
         except (ImportError, AssertionError):
             raise unittest.SkipTest(
                 "Module sklearn not found, skipping ChannelReducer"
-                + " PyTorch reshape test"
+                + " PyTorch swap_2nd_and_last_dims test"
             )
 
         test_input = torch.randn(1, 32, 224, 224).abs()
         c_reducer = reducer.ChannelReducer(n_components=3, max_iter=100)
-        test_output = c_reducer.fit_transform(test_input, reshape=True)
+        test_output = c_reducer.fit_transform(test_input)
         components = c_reducer.components
         self.assertTrue(torch.is_tensor(components))
         self.assertTrue(torch.is_tensor(test_output))
@@ -128,7 +128,7 @@ class TestChannelReducer(BaseTest):
 
         test_input = torch.randn(1, 224, 224, 32).abs()
         c_reducer = reducer.ChannelReducer(n_components=3, max_iter=100)
-        test_output = c_reducer.fit_transform(test_input, reshape=False)
+        test_output = c_reducer.fit_transform(test_input, swap_2nd_and_last_dims=False)
         self.assertEquals(test_output.size(0), 1)
         self.assertEquals(test_output.size(1), 224)
         self.assertEquals(test_output.size(2), 224)
