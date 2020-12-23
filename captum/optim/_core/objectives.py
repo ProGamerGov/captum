@@ -43,7 +43,6 @@ class InputOptimization(Objective, Parameterized):
         model: nn.Module,
         input_param: Optional[InputParameterization],
         transform: Optional[nn.Module],
-        target_modules: Iterable[nn.Module],
         loss_function: LossFunction,
         lr: float = 0.025,
     ) -> None:
@@ -54,14 +53,16 @@ class InputOptimization(Objective, Parameterized):
                         consumed by the model.
             transform (nn.Module, optional):  A module that transforms or preprocesses
                         the input before being passed to the model.
-            target_modules (iterable of nn.Module):  A list of targets, objectives that
-                        are used to compute the loss function.
             loss_function (callable): The loss function to minimize during optimization
                         optimization.
             lr (float): The learning rate to use with the Adam optimizer.
         """
         self.model = model
-        self.hooks = ModuleOutputsHook(target_modules)
+        # Grab targets from loss_function
+        if hasattr(loss_function.target, "__iter__"):
+            self.hooks = ModuleOutputsHook(loss_function.target)
+        else:
+            self.hooks = ModuleOutputsHook([loss_function.target])
         self.input_param = input_param or NaturalImage((224, 224))
         self.transform = transform or torch.nn.Sequential(
             RandomScale(scale=(1, 0.975, 1.025, 0.95, 1.05)), RandomSpatialJitter(16)
@@ -76,17 +77,17 @@ class InputOptimization(Objective, Parameterized):
             - **loss** (*tensor*):
                         Size of the tensor corresponds to the targets passed.
         """
-        image = (
+        input_t = (
             self.input_param()._t[None, ...]
             if self.input_param()._t.dim() == 3
             else self.input_param()._t
         )
 
         if self.transform:
-            image = self.transform(image)
+            input_t = self.transform(input_t)
 
         with suppress(AbortForwardException):
-            _unreachable = self.model(image)  # noqa: F841
+            _unreachable = self.model(input_t)  # noqa: F841
 
         # consume_outputs return the captured values and resets the hook's state
         module_outputs = self.hooks.consume_outputs()
