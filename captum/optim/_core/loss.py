@@ -8,9 +8,17 @@ from captum.optim._utils.image.common import get_neuron_pos
 from captum.optim._utils.typing import ModuleOutputMapping
 
 
+def _make_arg_str(arg):
+    arg = str(arg)
+    too_big = len(arg) > 15 or "\n" in arg
+    return "..." if too_big else arg
+
+
 class Loss(ABC):
     """
     Abstract Class to describe loss.
+    Note: All Loss classes should expose self.target for hooking by
+    InputOptimization
     """
 
     def __init__(self, target: nn.Module) -> None:
@@ -18,10 +26,101 @@ class Loss(ABC):
         self.target = target
 
     @abstractmethod
-    def __call__(self, targets_to_values: ModuleOutputMapping):
+    def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         pass
 
+    def __repr__(self):
+        return self.__name__
 
+    def __add__(self, other):
+        if isinstance(other, (int, float)):
+
+            def loss_fn(module):
+                return other + self(module)
+
+            name = self.__name__
+            target = self.target
+        else:
+            # We take the mean of the output tensor to resolve shape mismatches
+            def loss_fn(module):
+                return torch.mean(self(module)) + torch.mean(other(module))
+
+            name = f"Compose({', '.join([self.__name__, other.__name__])})"
+            target = (
+                self.target if hasattr(self.target, "__iter__") else [self.target]
+            ) + (other.target if hasattr(other.target, "__iter__") else [other.target])
+        return CompositeLoss(loss_fn, name=name, target=target)
+
+    def __neg__(self):
+        return -1 * self
+
+    def __sub__(self, other):
+        return self + (-1 * other)
+
+    def __mul__(self, other):
+        if isinstance(other, (int, float)):
+
+            def loss_fn(module):
+                return other * self(module)
+
+            return CompositeLoss(loss_fn, name=self.__name__, target=self.target)
+        else:
+            raise TypeError(
+                "Can only multiply by int or float. Received type " + str(type(other))
+            )
+
+    def __truediv__(self, other):
+        if isinstance(other, (int, float)):
+            return self.__mul__(1 / other)
+        else:
+            raise TypeError(
+                "Can only divide by int or float. Received type " + str(type(other))
+            )
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+    def __pow__(self, other):
+        if isinstance(other, (int, float)):
+
+            def loss_fn(module):
+                return self(module) ** other
+
+            return CompositeLoss(loss_fn, name=self.__name__, target=self.target)
+        else:
+            raise TypeError(
+                "Can only take to the power of int or float. Received type "
+                + str(type(other))
+            )
+
+
+class CompositeLoss(Loss):
+    def __init__(self, loss_fn: Callable, name: str = "", target: nn.Module = []):
+        super(Loss, self).__init__()
+        self.__name__ = name
+        self.loss_fn = loss_fn
+        self.target = target
+
+    def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
+        return self.loss_fn(targets_to_values)
+
+
+def loss_wrapper(cls):
+    """
+    Primarily for naming purposes.
+    """
+
+    @functools.wraps(cls)
+    def wrapper(*args, **kwargs):
+        obj = cls(*args, **kwargs)
+        args_str = " [" + ", ".join([_make_arg_str(arg) for arg in args]) + "]"
+        obj.__name__ = cls.__name__ + args_str
+        return obj
+
+    return wrapper
 class LayerActivation(Loss):
     """
     Maximize activations at the target layer.
