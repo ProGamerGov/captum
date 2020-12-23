@@ -408,7 +408,7 @@ class TestSymmetricPadding(BaseTest):
             def forward(
                 self, x: torch.Tensor, padding: List[List[int]]
             ) -> torch.Tensor:
-                return SymmetricPadding.apply(x_pt, padding)
+                return transform.SymmetricPadding.apply(x_pt, padding)
 
         sym_pad = SymmetricPaddingLayer()
         sym_pad.register_backward_hook(check_grad)
