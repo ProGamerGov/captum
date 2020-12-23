@@ -141,7 +141,7 @@ class InputOptimization(Objective, Parameterized):
                 optimizer.zero_grad()
                 loss_value = self.loss()
                 history.append(loss_value.cpu().detach().numpy())
-                (-1 * loss_value.mean()).backward()
+                loss_value.backward()
                 optimizer.step()
                 step += 1
         except (Exception, BaseException) as e:
