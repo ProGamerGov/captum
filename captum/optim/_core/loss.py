@@ -44,7 +44,7 @@ class Loss(ABC):
         else:
             # We take the mean of the output tensor to resolve shape mismatches
             def loss_fn(module):
-                return torch.mean(self(module)) + torch.mean(other(module))
+                return torch.sum(self(module)) + torch.sum(other(module))
 
             name = f"Compose({', '.join([self.__name__, other.__name__])})"
             target = (
