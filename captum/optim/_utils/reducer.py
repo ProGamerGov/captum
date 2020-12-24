@@ -107,6 +107,13 @@ def posneg(x: torch.Tensor, dim: int = 0) -> torch.Tensor:
     """
     Hack that makes a matrix positive by concatination in order to simulate
     one-sided NMF with regular NMF
+
+    Args:
+        x (tensor):  A tensor to make positive.
+        dim (int):  The dimension to concatinate the two tensor halves at.
+
+    Returns:
+        *tensor*:  A positive tensor for one-sided dimensionality reduction.
     """
 
     return torch.cat([F.relu(x), F.relu(-x)], dim=dim)
