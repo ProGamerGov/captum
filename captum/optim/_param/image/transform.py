@@ -156,7 +156,9 @@ def center_crop(
         *tensor*:  A center cropped tensor.
     """
 
-    def center_crop_check(crop_vals: List[int]) -> Union[Tuple[int, int], List[int]]:
+    def center_crop_check(
+        crop_vals: Union[Tuple[int, int], List[int]]
+    ) -> Union[Tuple[int, int], List[int]]:
         crop_vals = [crop_vals] if not hasattr(crop_vals, "__iter__") else crop_vals
         assert len(crop_vals) == 1 or len(crop_vals) == 2
         crop_vals = crop_vals * 2 if len(crop_vals) == 1 else crop_vals
