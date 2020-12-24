@@ -175,7 +175,6 @@ def collect_activations(
     """
     Collect target activations for a model.
 
-
     Args:
         model (nn.Module):  The reference to PyTorch model instance.
         targets (nn.module or list of nn.module):  The target layers to
