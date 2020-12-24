@@ -59,5 +59,5 @@ def get_expanded_weights(
     exapnded_weights = torch.stack(A, 0)
 
     if crop_shape is not None:
-        exapnded_weights = center_crop_shape(exapnded_weights, crop_shape, False)
+        exapnded_weights = center_crop(exapnded_weights, crop_shape, False)
     return exapnded_weights
