@@ -358,6 +358,7 @@ class Direction(Loss):
         return torch.cosine_similarity(self.direction, activations)
 
 
+@loss_wrapper
 class NeuronDirection(Loss):
     """
     Visualize a single (x, y) position for a direction vector.
