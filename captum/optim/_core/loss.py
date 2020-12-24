@@ -392,7 +392,7 @@ class NeuronDirection(Loss):
         activations = activations[:, :, _x : _x + 1, _y : _y + 1]
         if self.channel_index is not None:
             activations = activations[:, self.channel_index, ...][:, None, ...]
-        return torch.cosine_similarity(self.direction, activations)
+        return -torch.cosine_similarity(self.direction, activations).mean()
 
 
 class TensorDirection(Loss):
