@@ -301,7 +301,7 @@ class FFTImage(ImageParameterization):
 
 class PixelImage(ImageParameterization):
     """
-    Parameterize with a simple image tensor.
+    Parameterize a simple image tensor.
 
     Arguments:
         size (list of int): The H & W dimensions to use for creating
@@ -334,7 +334,7 @@ class PixelImage(ImageParameterization):
 
 class LaplacianImage(ImageParameterization):
     """
-    Parameterize with a laplacian pyramid.
+    Parameterize an image with a laplacian pyramid.
 
     Arguments:
         size (list of int): The H & W dimensions to use for creating
