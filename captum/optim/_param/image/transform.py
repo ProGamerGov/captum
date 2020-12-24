@@ -188,9 +188,9 @@ def center_crop(
 
     crop_vals = center_crop_check(crop_vals)
     if pixels_from_edges:
-        x = center_crop_pixel(input, self.crop_vals, h, w)
+        x = center_crop_pixel(input, crop_vals, h, w)
     else:
-        x = center_crop_shape(input, self.crop_vals, h, w)
+        x = center_crop_shape(input, crop_vals, h, w)
     return x
 
 
