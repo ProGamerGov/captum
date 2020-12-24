@@ -23,7 +23,12 @@ class ImageTestDataset(torch.utils.data.Dataset):
 
 def image_cov_np(array: np.ndarray) -> np.ndarray:
     """
-    Calculate an array's RGB covariance matrix
+    Calculate an array's RGB covariance matrix.
+
+    Args:
+        array (array):  An NCHW image array.
+    Returns:
+        *array*:  An RGB covariance matrix for the specified array.
     """
 
     array = array.reshape(-1, 3)
@@ -36,6 +41,13 @@ def cov_matrix_to_klt_np(
 ) -> np.ndarray:
     """
     Convert a cov matrix to a klt matrix.
+
+    Args:
+        cov_mtx (array):  A 3 by 3 covariance matrix generated from a dataset.
+        normalize (bool):  Whether or not to normalize the resulting KLT matrix.
+        epsilon (float):
+    Returns:
+        *array*:  A KLT matrix for the specified covariance matrix.
     """
 
     U, S, V = np.linalg.svd(cov_mtx)
