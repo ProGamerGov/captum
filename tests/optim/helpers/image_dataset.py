@@ -5,6 +5,14 @@ import torch
 
 
 class ImageTestDataset(torch.utils.data.Dataset):
+    """
+    Create a simple tensor dataset for testing image dataset classes
+    and functions.
+
+    Args:
+        tensors (list):  A list of tensors to use in the dataset.
+    """
+
     def __init__(self, tensors: List[torch.Tensor]) -> None:
         assert all(t.size(0) == 1 for t in tensors if t.dim() == 4)
 
