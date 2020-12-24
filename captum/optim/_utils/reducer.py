@@ -17,9 +17,16 @@ import torch
 class ChannelReducer:
     """
     Dimensionality reduction for the channel dimension of an input.
-
     Olah, et al., "The Building Blocks of Interpretability", Distill, 2018.
     See: https://distill.pub/2018/building-blocks/
+
+    Args:
+        n_components (int):  The number of channels to reduce the target
+            dimension to.
+        reduction_alg (str or callable):  The desired dimensionality
+            reduction algorithm to use.
+        **kwargs: Arbitrary keyword arguments used by the specified reduction_alg.
+
     """
 
     def __init__(
