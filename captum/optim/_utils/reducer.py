@@ -26,7 +26,6 @@ class ChannelReducer:
         reduction_alg (str or callable):  The desired dimensionality
             reduction algorithm to use.
         **kwargs: Arbitrary keyword arguments used by the specified reduction_alg.
-
     """
 
     def __init__(
