@@ -425,8 +425,8 @@ class SharedImage(ImageParameterization):
         shapes (list of int or list of list of ints): The shapes of the shared tensors
             to use for creating the nn.Parameter tensors.
         parameterization (ImageParameterization):  An image parameterization instance.
-        offset (list of int or list of list of ints): The offsets to use for the shared
-            tensors.
+        offset (int or list of int or list of list of ints): The offsets to use for the
+            shared tensors.
     """
 
     def __init__(
