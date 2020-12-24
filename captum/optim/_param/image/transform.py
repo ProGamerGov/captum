@@ -160,7 +160,6 @@ def center_crop(
         crop_vals = [crop_vals] if not hasattr(crop_vals, "__iter__") else crop_vals
         assert len(crop_vals) == 1 or len(crop_vals) == 2
         crop_vals = crop_vals * 2 if len(crop_vals) == 1 else crop_vals
-        assert crop_vals[0] is int and crop_vals[1] is int
         return crop_vals
 
     def center_crop_pixel(
