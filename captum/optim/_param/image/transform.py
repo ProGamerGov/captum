@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from captum.optim._utils.image.common import nchannels_to_rgb, center_crop
+from captum.optim._utils.image.common import nchannels_to_rgb
 from captum.optim._utils.typing import TransformSize, TransformVal, TransformValList
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -140,6 +140,61 @@ class CenterCrop(torch.nn.Module):
         """
 
         return center_crop(input, self.crop_vals, self.pixels_from_edges)
+
+
+def center_crop(
+    input: torch.Tensor, crop_vals: List[int], pixels_from_edges: bool = True
+):
+    """
+    Center crop a specified amount from a tensor
+    Arguments:
+        input (tensor):  A CHW or NCHW image tensor to center crop.
+        size (int, sequence) or (int): Number of pixels to center crop away.
+        pixels_from_edges (bool): Whether to treat crop size values as the number
+           of pixels from the tensor's edge, or an exact shape in the center.
+    Returns:
+        *tensor*:  A center cropped tensor.
+    """
+
+    def center_crop_check(crop_vals: List[int]) -> torch.Tensor:
+        crop_vals = [crop_vals] if not hasattr(crop_vals, "__iter__") else crop_vals
+        assert len(crop_vals) == 1 or len(crop_vals) == 2
+        crop_vals = crop_vals * 2 if len(crop_vals) == 1 else crop_vals
+        assert crop_vals[0] is int and crop_vals[1] is int
+        return crop_vals
+
+    def center_crop_pixel(
+        input: torch.Tensor, crop_vals: List[int], h: int, w: int
+    ) -> torch.Tensor:
+        h_crop = h - crop_vals[0]
+        w_crop = w - crop_vals[1]
+        sw, sh = w // 2 - (w_crop // 2), h // 2 - (h_crop // 2)
+        return input[..., sh : sh + h_crop, sw : sw + w_crop]
+
+    def center_crop_shape(
+        input: torch.Tensor, output_size: List[int], h: int, w: int
+    ) -> torch.Tensor:
+
+        h_crop = h - int(round((h - output_size[0]) / 2.0))
+        w_crop = w - int(round((w - output_size[1]) / 2.0))
+
+        return input[
+            ..., h_crop - output_size[0] : h_crop, w_crop - output_size[1] : w_crop
+        ]
+
+    assert input.dim() == 3 or input.dim() == 4
+
+    if input.dim() == 4:
+        h, w = input.size(2), input.size(3)
+    if input.dim() == 3:
+        h, w = input.size(1), input.size(2)
+
+    crop_vals = center_crop_check(crop_vals)
+    if pixels_from_edges:
+        x = center_crop_pixel(input, self.crop_vals, h, w)
+    else:
+        x = center_crop_shape(input, self.crop_vals, h, w)
+    return x
 
 
 def rand_select(transform_values: TransformValList) -> TransformVal:
