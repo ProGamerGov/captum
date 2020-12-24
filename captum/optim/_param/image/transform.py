@@ -174,10 +174,8 @@ def center_crop(
     def center_crop_shape(
         input: torch.Tensor, output_size: List[int], h: int, w: int
     ) -> torch.Tensor:
-
         h_crop = h - int(round((h - output_size[0]) / 2.0))
         w_crop = w - int(round((w - output_size[1]) / 2.0))
-
         return input[
             ..., h_crop - output_size[0] : h_crop, w_crop - output_size[1] : w_crop
         ]
