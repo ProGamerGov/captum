@@ -144,7 +144,7 @@ class CenterCrop(torch.nn.Module):
 
 def center_crop(
     input: torch.Tensor, crop_vals: List[int], pixels_from_edges: bool = True
-):
+) -> torch.Tensor
     """
     Center crop a specified amount from a tensor
     Arguments:
@@ -156,7 +156,7 @@ def center_crop(
         *tensor*:  A center cropped tensor.
     """
 
-    def center_crop_check(crop_vals: List[int]) -> torch.Tensor:
+    def center_crop_check(crop_vals: List[int]) -> Union[Tuple[int, int], List[int]]:
         crop_vals = [crop_vals] if not hasattr(crop_vals, "__iter__") else crop_vals
         assert len(crop_vals) == 1 or len(crop_vals) == 2
         crop_vals = crop_vals * 2 if len(crop_vals) == 1 else crop_vals
