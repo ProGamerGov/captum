@@ -93,11 +93,12 @@ def center_crop(
         *array*:  A center cropped array.
     """
 
-    def center_crop_check(crop_vals: List[int]) -> Union[Tuple[int, int], List[int]]:
+    def center_crop_check(
+        crop_vals: Union[Tuple[int, int], List[int]]
+    ) -> Union[Tuple[int, int], List[int]]:
         crop_vals = [crop_vals] if not hasattr(crop_vals, "__iter__") else crop_vals
         assert len(crop_vals) == 1 or len(crop_vals) == 2
         crop_vals = crop_vals * 2 if len(crop_vals) == 1 else crop_vals
-        assert crop_vals[0] is int and crop_vals[1] is int
         return crop_vals
 
     def center_crop_pixel(
@@ -126,9 +127,9 @@ def center_crop(
 
     crop_vals = center_crop_check(crop_vals)
     if pixels_from_edges:
-        x = center_crop_pixel(input, self.crop_vals, h, w)
+        x = center_crop_pixel(input, crop_vals, h, w)
     else:
-        x = center_crop_shape(input, self.crop_vals, h, w)
+        x = center_crop_shape(input, crop_vals, h, w)
     return x
 
 
