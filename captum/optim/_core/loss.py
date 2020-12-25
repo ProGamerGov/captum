@@ -142,9 +142,15 @@ def wrap_batch(cls):
     @functools.wraps(cls)
     def wrapper(*args, **kwargs):
         #args = (args[0], slice_batch(args[1], args[0]._batch))
-        print('args', args)
-        print('kwargs', kwargs)
-        obj = cls(*args, **kwargs)
+        #print('args', args)
+        #print('kwargs', kwargs)
+        new_args = ()
+        for activ in args:
+            key_list = activ.keys()
+            if activ[key_list[0]]._batch is not None:
+                activ[key_list[1]] = slice_batch(activ[key_list[1]], activ[key_list[0]]._batch))
+        new_args.append(activ)
+        obj = cls(*new_args, **kwargs)
         return obj
 
     return wrapper
