@@ -135,7 +135,7 @@ def slice_batch(x, batch):
     if batch is None:
         return x
     else:
-        return x[batch : batch + 1].unsqueeze(0)
+        return x[batch : batch + 1]
 
 
 def wrap_batch(cls):
