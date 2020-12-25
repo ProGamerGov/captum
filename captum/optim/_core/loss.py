@@ -131,6 +131,7 @@ class LayerActivation(Loss):
         return targets_to_values[self.target]
 
 
+@loss_wrapper
 class ChannelActivation(Loss):
     """
     Maximize activations at the target layer and target channel.
