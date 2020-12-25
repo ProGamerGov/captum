@@ -144,7 +144,7 @@ def wrap_batch(cls):
         #args = (args[0], slice_batch(args[1], args[0]._batch))
         #print('args', args)
         #print('kwargs', kwargs)
-        new_args = ()
+        new_args = []
         for activ in args:
             print(activ)
             #key_list = activ[1].keys()
