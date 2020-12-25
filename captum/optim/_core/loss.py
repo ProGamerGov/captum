@@ -116,12 +116,40 @@ def loss_wrapper(cls):
 
     @functools.wraps(cls)
     def wrapper(*args, **kwargs):
+        if "batch" not in kwargs:
+            batch = None
+        else:
+            batch = kwargs["batch"]
+            del kwargs["batch"]
+
         obj = cls(*args, **kwargs)
+        obj._batch = batch
         args_str = " [" + ", ".join([_make_arg_str(arg) for arg in args]) + "]"
         obj.__name__ = cls.__name__ + args_str
         return obj
 
     return wrapper
+
+
+def slice_batch(x, batch):
+    if batch is None:
+        return x
+    else:
+        return x[batch : batch + 1].unsqueeze(0)
+
+
+def wrap_batch(cls):
+    @functools.wraps(cls)
+    def wrapper(*args, **kwargs):
+        #args = (args[0], slice_batch(args[1], args[0]._batch))
+        print('args', args)
+        print('kwargs', kwargs)
+        obj = cls(*args, **kwargs)
+        return obj
+
+    return wrapper
+
+
 class LayerActivation(Loss):
     """
     Maximize activations at the target layer.
@@ -142,6 +170,7 @@ class ChannelActivation(Loss):
         self.target = target
         self.channel_index = channel_index
 
+    @wrap_batch
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
         assert activations is not None
