@@ -148,7 +148,7 @@ def wrap_batch(cls):
         for activ in args:
             key_list = activ.keys()
             if activ[key_list[0]]._batch is not None:
-                activ[key_list[1]] = slice_batch(activ[key_list[1]], activ[key_list[0]]._batch))
+                activ[key_list[1]] = slice_batch(activ[key_list[1]], activ[key_list[0]]._batch)
         new_args.append(activ)
         obj = cls(*new_args, **kwargs)
         return obj
