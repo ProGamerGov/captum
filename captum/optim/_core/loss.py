@@ -186,7 +186,7 @@ class ChannelActivation(Loss):
         # assume NCHW
         # NOTE: not necessarily true e.g. for Linear layers
         # assert len(activations.shape) == 4
-        return activations[:, self.channel_index, ...]
+        return activations[:, self.channel_index, ...].mean()
 
 
 class NeuronActivation(Loss):
