@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 
@@ -154,15 +154,20 @@ class ToRGB(object):
         ]
         return np.array(i1i2i3_matrix, dtype=float)
 
-    def __init__(self, transform_name: str = "klt") -> None:
+    def __init__(self, transform_matrix: Union[str, np.ndarray] = "klt") -> None:
         super().__init__()
 
-        if transform_name == "klt":
+        if transform_matrix == "klt":
             self.transform = ToRGB.klt_transform()
-        elif transform_name == "i1i2i3":
+        elif transform_matrix == "i1i2i3":
             self.transform = ToRGB.i1i2i3_transform()
+        elif isinstance(transform_matrix, np.ndarray):
+            self.transform = transform_matrix
         else:
-            raise ValueError("transform_name has to be either 'klt' or 'i1i2i3'")
+            raise ValueError(
+                "transform_matrix has to be either 'klt', 'i1i2i3',"
+                + " or a matrix array."
+            )
 
     def to_rgb(self, x: np.ndarray, inverse: bool = False) -> np.ndarray:
         assert x.ndim == 3 or x.ndim == 4
