@@ -189,6 +189,7 @@ class ChannelActivation(Loss):
         return activations[:, self.channel_index, ...].mean()
 
 
+@loss_wrapper
 class NeuronActivation(Loss):
     def __init__(
         self,
@@ -203,6 +204,7 @@ class NeuronActivation(Loss):
         self.x = x
         self.y = y
 
+    @wrap_batch
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
         assert activations is not None
@@ -212,7 +214,7 @@ class NeuronActivation(Loss):
             activations.size(2), activations.size(3), self.x, self.y
         )
 
-        return activations[:, self.channel_index, _x : _x + 1, _y : _y + 1]
+        return activations[:, self.channel_index, _x : _x + 1, _y : _y + 1].mean()
 
 
 class DeepDream(Loss):
