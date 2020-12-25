@@ -495,7 +495,7 @@ class NaturalImage(ImageParameterization):
         self.decorrelate = decorrelation_module
         if init is not None:
             assert init.dim() == 3 or init.dim() == 4
-            if decorrelate_init:
+            if decorrelate_init and self.decorrelate is not None:
                 init = (
                     init.refine_names("B", "C", "H", "W")
                     if init.dim() == 4
