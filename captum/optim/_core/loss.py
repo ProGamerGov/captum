@@ -417,7 +417,6 @@ class NeuronDirection(Loss):
         self.x = x
         self.y = y
         self.channel_index = channel_index
-        self.target_batch = target_batch
 
     @wrap_batch
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
