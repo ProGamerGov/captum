@@ -373,6 +373,7 @@ class NeuronDirection(Loss):
         x: Optional[int] = None,
         y: Optional[int] = None,
         channel_index: Optional[int] = None,
+        target_batch: Optional[int] = None,
     ) -> None:
         super(Loss, self).__init__()
         self.target = target
@@ -380,6 +381,7 @@ class NeuronDirection(Loss):
         self.x = x
         self.y = y
         self.channel_index = channel_index
+        self.target_batch = target_batch
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
@@ -389,6 +391,8 @@ class NeuronDirection(Loss):
         _x, _y = get_neuron_pos(
             activations.size(2), activations.size(3), self.x, self.y
         )
+        if self.target_batch is not None:
+            activations = activations[self.target_batch : self.target_batch + 1, ...]
         activations = activations[:, :, _x : _x + 1, _y : _y + 1]
         if self.channel_index is not None:
             activations = activations[:, self.channel_index, ...][:, None, ...]
