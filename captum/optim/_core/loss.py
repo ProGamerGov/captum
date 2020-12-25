@@ -145,8 +145,11 @@ def wrap_batch(cls):
         #print('args', args)
         #print('kwargs', kwargs)
         new_args = []
-        for activ in args:
-            print(activ)
+        for i, activ in enumerate(args):
+            if isinstance(activ, dict):
+                 if args[i-1]._batch is not None:
+                     key_list = activ.keys()
+                     activ[key_list[1]] = slice_batch(activ[key_list[1]], activ[i-1]._batch)
             #key_list = activ[1].keys()
             #if activ[0]._batch is not None:
             #    #activ[key_list[1]] = slice_batch(activ[key_list[1]], activ[0]._batch)
