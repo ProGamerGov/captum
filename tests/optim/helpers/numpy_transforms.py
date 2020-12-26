@@ -141,14 +141,13 @@ class ToRGB(object):
 
     def __init__(self, transform_matrix: Union[str, np.ndarray] = "klt") -> None:
         super().__init__()
-
-        if transform_matrix == "klt":
+        if isinstance(transform_matrix, np.ndarray):
+            assert list(transform_matrix.shape) == [3, 3]
+            self.transform = transform_matrix
+        elif transform_matrix == "klt":
             self.transform = ToRGB.klt_transform()
         elif transform_matrix == "i1i2i3":
             self.transform = ToRGB.i1i2i3_transform()
-        elif isinstance(transform_matrix, np.ndarray):
-            assert list(transform_matrix.shape) == [3, 3]
-            self.transform = transform_matrix
         else:
             raise ValueError(
                 "transform_matrix has to be either 'klt', 'i1i2i3',"
