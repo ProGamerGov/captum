@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import unittest
-from typing import List
+from typing import cast, List
 
 import numpy as np
 import torch
@@ -135,11 +135,11 @@ class TestCenterCrop(BaseTest):
         )
         crop_vals = 3
 
-        crop_tensor = transform.CenterCrop(size=crop_vals)
+        crop_tensor = transform.CenterCrop(crop_vals)
         cropped_tensor = crop_tensor(test_tensor)
 
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals)
-        cropped_array = crop_mod_np.crop(test_tensor.numpy())
+        cropped_array = crop_mod_np.forward(test_tensor.numpy())
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
 
@@ -156,7 +156,7 @@ class TestCenterCrop(BaseTest):
         cropped_tensor = crop_tensor(test_tensor)
 
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals)
-        cropped_array = crop_mod_np.crop(test_tensor.numpy())
+        cropped_array = crop_mod_np.forward(test_tensor.numpy())
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
 
@@ -174,7 +174,7 @@ class TestCenterCrop(BaseTest):
         cropped_tensor = crop_tensor(test_tensor)
 
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals, False)
-        cropped_array = crop_mod_np.crop(test_tensor.numpy())
+        cropped_array = crop_mod_np.forward(test_tensor.numpy())
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
 
@@ -192,7 +192,7 @@ class TestCenterCrop(BaseTest):
         cropped_tensor = crop_tensor(test_tensor)
 
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals, False)
-        cropped_array = crop_mod_np.crop(test_tensor.numpy())
+        cropped_array = crop_mod_np.forward(test_tensor.numpy())
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
 
