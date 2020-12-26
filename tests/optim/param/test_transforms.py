@@ -393,7 +393,7 @@ class TestToRGB(BaseTest):
         test_tensor = torch.ones(3, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
 
-        to_rgb_np = numpy_transforms.ToRGB(transform_matrix=matrix)
+        to_rgb_np = numpy_transforms.ToRGB(transform_matrix=matrix.numpy())
         test_array = np.ones((1, 3, 4, 4))
         rgb_array = to_rgb_np.to_rgb(test_array)
 
