@@ -138,9 +138,11 @@ class ToRGB(object):
             [-1 / 4, 1 / 2, -1 / 4],
         ]
         return np.array(i1i2i3_matrix, dtype=float)
-
     def __init__(self, transform_matrix: Union[str, np.ndarray] = "klt") -> None:
         super().__init__()
+        assert isinstance(transform_matrix, str) or isinstance(
+            transform_matrix, np.ndarray
+        )
         if isinstance(transform_matrix, np.ndarray):
             assert list(transform_matrix.shape) == [3, 3]
             self.transform = transform_matrix
