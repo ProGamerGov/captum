@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import unittest
-from typing import cast, List
+from typing import List
 
 import numpy as np
 import torch
@@ -208,7 +208,7 @@ class TestCenterCropFunction(BaseTest):
         crop_vals = 3
 
         cropped_tensor = transform.crop_tensor(test_tensor, crop_vals, True)
-        cropped_array = numpy_transforms.crop_tensor(
+        cropped_array = numpy_transforms.crop_array(
             test_tensor.numpy(), crop_vals, True
         )
 
@@ -224,7 +224,7 @@ class TestCenterCropFunction(BaseTest):
         crop_vals = (4, 2)
 
         cropped_tensor = transform.crop_tensor(test_tensor, crop_vals, True)
-        cropped_array = numpy_transforms.crop_tensor(
+        cropped_array = numpy_transforms.crop_array(
             test_tensor.numpy(), crop_vals, True
         )
 
@@ -241,7 +241,7 @@ class TestCenterCropFunction(BaseTest):
         crop_vals = 5
 
         cropped_tensor = transform.crop_tensor(test_tensor, crop_vals, False)
-        cropped_array = numpy_transforms.crop_tensor(
+        cropped_array = numpy_transforms.crop_array(
             test_tensor.numpy(), crop_vals, False
         )
 
@@ -258,7 +258,7 @@ class TestCenterCropFunction(BaseTest):
         crop_vals = (4, 2)
 
         cropped_tensor = transform.crop_tensor(test_tensor, crop_vals, False)
-        cropped_array = numpy_transforms.crop_tensor(
+        cropped_array = numpy_transforms.crop_array(
             test_tensor.numpy(), crop_vals, False
         )
 
