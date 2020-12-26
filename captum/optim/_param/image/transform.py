@@ -149,7 +149,7 @@ class CenterCrop(torch.nn.Module):
 
 
 def center_crop(
-    input: torch.Tensor, crop_vals: List[int], pixels_from_edges: bool = True
+    input: torch.Tensor, crop_vals: TransformSize, pixels_from_edges: bool = True
 ) -> torch.Tensor:
     """
     Center crop a specified amount from a tensor
