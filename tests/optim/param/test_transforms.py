@@ -207,8 +207,8 @@ class TestCenterCropFunction(BaseTest):
         )
         crop_vals = 3
 
-        cropped_tensor = transform.crop_tensor(test_tensor, crop_vals, True)
-        cropped_array = numpy_transforms.crop_array(
+        cropped_tensor = transform.center_crop(test_tensor, crop_vals, True)
+        cropped_array = numpy_transforms.center_crop(
             test_tensor.numpy(), crop_vals, True
         )
 
@@ -223,8 +223,8 @@ class TestCenterCropFunction(BaseTest):
         )
         crop_vals = (4, 2)
 
-        cropped_tensor = transform.crop_tensor(test_tensor, crop_vals, True)
-        cropped_array = numpy_transforms.crop_array(
+        cropped_tensor = transform.center_crop(test_tensor, crop_vals, True)
+        cropped_array = numpy_transforms.center_crop(
             test_tensor.numpy(), crop_vals, True
         )
 
@@ -240,8 +240,8 @@ class TestCenterCropFunction(BaseTest):
 
         crop_vals = 5
 
-        cropped_tensor = transform.crop_tensor(test_tensor, crop_vals, False)
-        cropped_array = numpy_transforms.crop_array(
+        cropped_tensor = transform.center_crop(test_tensor, crop_vals, False)
+        cropped_array = numpy_transforms.center_crop(
             test_tensor.numpy(), crop_vals, False
         )
 
@@ -257,8 +257,8 @@ class TestCenterCropFunction(BaseTest):
 
         crop_vals = (4, 2)
 
-        cropped_tensor = transform.crop_tensor(test_tensor, crop_vals, False)
-        cropped_array = numpy_transforms.crop_array(
+        cropped_tensor = transform.center_crop(test_tensor, crop_vals, False)
+        cropped_array = numpy_transforms.center_crop(
             test_tensor.numpy(), crop_vals, False
         )
 
