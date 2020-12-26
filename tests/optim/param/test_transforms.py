@@ -288,13 +288,13 @@ class TestIgnoreAlpha(BaseTest):
 
 class TestToRGB(BaseTest):
     def test_to_rgb_i1i2i3(self) -> None:
-        to_rgb = transform.ToRGB(transform_name="i1i2i3")
-        to_rgb_np = numpy_transforms.ToRGB(transform_name="i1i2i3")
+        to_rgb = transform.ToRGB(transform_matrix="i1i2i3")
+        to_rgb_np = numpy_transforms.ToRGB(transform_matrix="i1i2i3")
         assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
 
     def test_to_rgb_klt(self) -> None:
-        to_rgb = transform.ToRGB(transform_name="klt")
-        to_rgb_np = numpy_transforms.ToRGB(transform_name="klt")
+        to_rgb = transform.ToRGB(transform_matrix="klt")
+        to_rgb_np = numpy_transforms.ToRGB(transform_matrix="klt")
         assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
 
     def test_to_rgb_klt_forward(self) -> None:
@@ -302,11 +302,11 @@ class TestToRGB(BaseTest):
             raise unittest.SkipTest(
                 "Skipping ToRGB forward due to insufficient Torch version."
             )
-        to_rgb = transform.ToRGB(transform_name="klt")
+        to_rgb = transform.ToRGB(transform_matrix="klt")
         test_tensor = torch.ones(3, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
 
-        to_rgb_np = numpy_transforms.ToRGB(transform_name="klt")
+        to_rgb_np = numpy_transforms.ToRGB(transform_matrix="klt")
         test_array = np.ones((1, 3, 4, 4))
         rgb_array = to_rgb_np.to_rgb(test_array)
 
@@ -322,11 +322,11 @@ class TestToRGB(BaseTest):
             raise unittest.SkipTest(
                 "Skipping ToRGB with Alpha forward due to insufficient Torch version."
             )
-        to_rgb = transform.ToRGB(transform_name="klt")
+        to_rgb = transform.ToRGB(transform_matrix="klt")
         test_tensor = torch.ones(4, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
 
-        to_rgb_np = numpy_transforms.ToRGB(transform_name="klt")
+        to_rgb_np = numpy_transforms.ToRGB(transform_matrix="klt")
         test_array = np.ones((1, 4, 4, 4))
         rgb_array = to_rgb_np.to_rgb(test_array)
 
@@ -342,11 +342,11 @@ class TestToRGB(BaseTest):
             raise unittest.SkipTest(
                 "Skipping ToRGB forward due to insufficient Torch version."
             )
-        to_rgb = transform.ToRGB(transform_name="i1i2i3")
+        to_rgb = transform.ToRGB(transform_matrix="i1i2i3")
         test_tensor = torch.ones(3, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
 
-        to_rgb_np = numpy_transforms.ToRGB(transform_name="i1i2i3")
+        to_rgb_np = numpy_transforms.ToRGB(transform_matrix="i1i2i3")
         test_array = np.ones((1, 3, 4, 4))
         rgb_array = to_rgb_np.to_rgb(test_array)
 
@@ -362,11 +362,11 @@ class TestToRGB(BaseTest):
             raise unittest.SkipTest(
                 "Skipping ToRGB with Alpha forward due to insufficient Torch version."
             )
-        to_rgb = transform.ToRGB(transform_name="i1i2i3")
+        to_rgb = transform.ToRGB(transform_matrix="i1i2i3")
         test_tensor = torch.ones(4, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
 
-        to_rgb_np = numpy_transforms.ToRGB(transform_name="i1i2i3")
+        to_rgb_np = numpy_transforms.ToRGB(transform_matrix="i1i2i3")
         test_array = np.ones((1, 4, 4, 4))
         rgb_array = to_rgb_np.to_rgb(test_array)
 
