@@ -297,6 +297,12 @@ class TestToRGB(BaseTest):
         to_rgb_np = numpy_transforms.ToRGB(transform_matrix="klt")
         assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
 
+    def test_to_rgb_custom(self) -> None:
+        matrix = torch.eye(3, 3)
+        to_rgb = transform.ToRGB(transform_matrix=matrix)
+        to_rgb_np = numpy_transforms.ToRGB(transform_matrix=matrix.numpy())
+        assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
+
     def test_to_rgb_klt_forward(self) -> None:
         if torch.__version__ == "1.2.0":
             raise unittest.SkipTest(
@@ -376,6 +382,25 @@ class TestToRGB(BaseTest):
         inverse_array = to_rgb_np.to_rgb(rgb_array, inverse=True)
 
         assertArraysAlmostEqual(inverse_tensor.numpy(), inverse_array)
+
+    def test_to_rgb_custom_forward(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping ToRGB forward due to insufficient Torch version."
+            )
+        matrix = torch.eye(3, 3)
+        to_rgb = transform.ToRGB(transform_matrix=matrix)
+        test_tensor = torch.ones(3, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
+        rgb_tensor = to_rgb(test_tensor)
+
+        to_rgb_np = numpy_transforms.ToRGB(transform_matrix=matrix)
+        test_array = np.ones((1, 3, 4, 4))
+        rgb_array = to_rgb_np.to_rgb(test_array)
+
+        assertArraysAlmostEqual(rgb_tensor.numpy(), rgb_array)
+
+        inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
+        inverse_array = to_rgb_np.to_rgb(rgb_array, inverse=True)
 
 
 class TestGaussianSmoothing(BaseTest):
