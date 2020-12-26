@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import List, Optional, Tuple, Union, cast
 
 import numpy as np
 
@@ -97,6 +97,7 @@ def center_crop(
 
     assert input.ndim == 3 or input.ndim == 4
     crop_vals = [crop_vals] if not hasattr(crop_vals, "__iter__") else crop_vals
+    crop_vals = cast(Union[List[int], Tuple[int], Tuple[int, int]], crop_vals)
     assert len(crop_vals) == 1 or len(crop_vals) == 2
     crop_vals = crop_vals * 2 if len(crop_vals) == 1 else crop_vals
 
