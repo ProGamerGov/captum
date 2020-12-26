@@ -2,6 +2,8 @@ from typing import Optional, Union
 
 import numpy as np
 
+from captum.optim._utils.typing import TransformSize
+
 
 class BlendAlpha(object):
     """
@@ -80,7 +82,7 @@ class CenterCrop:
 
 
 def center_crop(
-    input: np.ndarray, crop_vals: List[int], pixels_from_edges: bool = True
+    input: np.ndarray, crop_vals: TransformSize, pixels_from_edges: bool = True
 ) -> np.ndarray:
     """
     Center crop a specified amount from a array.
