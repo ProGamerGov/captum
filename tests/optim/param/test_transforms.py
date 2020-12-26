@@ -410,6 +410,8 @@ class TestToRGB(BaseTest):
         inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
         inverse_array = to_rgb_np.to_rgb(rgb_array, inverse=True)
 
+        assertArraysAlmostEqual(inverse_tensor.numpy(), inverse_array)
+
 
 class TestGaussianSmoothing(BaseTest):
     def test_gaussian_smoothing_1d(self) -> None:
