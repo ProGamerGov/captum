@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, Union
+from typing import Any, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
@@ -66,7 +66,6 @@ def get_expanded_weights(
 def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
     """
     Convert MaxPool2d layers to their AvgPool2d equivalents.
-
     Args:
         model (nn.Module): A PyTorch model instance.
         value (Any): Used to return any inf padding back to zero.
@@ -98,7 +97,7 @@ def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
 
     for name, child in model._modules.items():
         if isinstance(child, torch.nn.MaxPool2d):
-            new_layer = AvgPool2d(
+            new_layer = AvgPool2dInf(
                 kernel_size=child.kernel_size,
                 stride=child.stride,
                 padding=child.padding,
