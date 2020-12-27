@@ -63,49 +63,38 @@ def get_expanded_weights(
     return exapnded_weights
 
 
-class AvgPool2dInf(torch.nn.Module):
-    """
-    A wrapper for AveragePool2d that converts -inf to zero like in MaxPool2d.
-    This is used to remove the non-linearities caused by max pooling.
-
-    Args:
-        kernel_size (PoolParam): The size of the window to average.
-        stride (PoolParam, optional): The stride of the window.
-        padding (PoolParam): The amount of zero padding to be added to both sides.
-    """
-
-    def __init__(
-        self,
-        kernel_size: PoolParam = 2,
-        stride: Optional[PoolParam] = 2,
-        padding: PoolParam = 0,
-    ) -> None:
-        super().__init__()
-        self.avgpool = torch.nn.AvgPool2d(
-            kernel_size=kernel_size,
-            stride=stride,
-            padding=padding,
-        )
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Args:
-            x (tensor): The tensor to apply average pooling to.
-        Returns:
-            tensor (tensor): An average pooled tensor.
-        """
-        x = self.avgpool(x)
-        x[x == float("-inf")] = 0.0
-        return x
-
-
-def max2avg_pool2d(model) -> None:
+def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
     """
     Convert MaxPool2d layers to their AvgPool2d equivalents.
 
     Args:
         model (nn.Module): A PyTorch model instance.
+        value (Any): Used to return any inf padding back to zero.
     """
+
+    class AvgPool2dInf(torch.nn.Module):
+        def __init__(
+            self,
+            kernel_size: PoolParam = 2,
+            stride: Optional[PoolParam] = 2,
+            padding: PoolParam = 0,
+            ceil_mode: bool = False,
+            value: Optional[Any] = None,
+        ) -> None:
+            super().__init__()
+            self.avgpool = torch.nn.AvgPool2d(
+                kernel_size=kernel_size,
+                stride=stride,
+                padding=padding,
+                ceil_mode=ceil_mode,
+            )
+            self.value = value
+
+        def forward(self, x: torch.Tensor) -> torch.Tensor:
+            x = self.avgpool(x)
+            if self.value is not None:
+                x[x == self.value] = 0.0
+            return x
 
     for name, child in model._modules.items():
         if isinstance(child, torch.nn.MaxPool2d):
@@ -113,6 +102,8 @@ def max2avg_pool2d(model) -> None:
                 kernel_size=child.kernel_size,
                 stride=child.stride,
                 padding=child.padding,
+                ceil_mode=child.ceil_mode,
+                value=value,
             )
             setattr(model, name, new_layer)
         elif child is not None:
