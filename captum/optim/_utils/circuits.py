@@ -70,7 +70,8 @@ def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
 
     Args:
         model (nn.Module): A PyTorch model instance.
-        value (Any): Used to return any inf padding back to zero.
+        value (Any): Used to return any padding that's meant to be ignored by
+            pooling layers back to zero.
     """
 
     class AvgPool2dInf(torch.nn.Module):
