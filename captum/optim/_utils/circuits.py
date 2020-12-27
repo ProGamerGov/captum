@@ -5,7 +5,7 @@ import torch.nn as nn
 
 from captum.optim._param.image.transform import center_crop_shape
 from captum.optim._utils.models import collect_activations
-from captum.optim._utils.typing import ModelInputType, TransformSize
+from captum.optim._utils.typing import ModelInputType, PoolParam, TransformSize
 
 
 def get_expanded_weights(
@@ -61,3 +61,59 @@ def get_expanded_weights(
     if crop_shape is not None:
         exapnded_weights = center_crop_shape(exapnded_weights, crop_shape)
     return exapnded_weights
+
+
+class AvgPool2dInf(torch.nn.Module):
+    """
+    A wrapper for AveragePool2d that converts -inf to zero like in MaxPool2d.
+    This is used to remove the non-linearities caused by max pooling.
+
+    Args:
+        kernel_size (PoolParam): The size of the window to average.
+        stride (PoolParam, optional): The stride of the window.
+        padding (PoolParam): The amount of zero padding to be added to both sides.
+    """
+
+    def __init__(
+        self,
+        kernel_size: PoolParam = 2,
+        stride: Optional[PoolParam] = 2,
+        padding: PoolParam = 0,
+    ) -> None:
+        super().__init__()
+        self.avgpool = torch.nn.AvgPool2d(
+            kernel_size=kernel_size,
+            stride=stride,
+            padding=padding,
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+            x (tensor): The tensor to apply average pooling to.
+        Returns:
+            tensor (tensor): An average pooled tensor.
+        """
+        x = self.avgpool(x)
+        x[x == float("-inf")] = 0.0
+        return x
+
+
+def max2avg_pool2d(model) -> None:
+    """
+    Convert MaxPool2d layers to their AvgPool2d equivalents.
+
+    Args:
+        model (nn.Module): A PyTorch model instance.
+    """
+
+    for name, child in model._modules.items():
+        if isinstance(child, torch.nn.MaxPool2d):
+            new_layer = AvgPool2d(
+                kernel_size=child.kernel_size,
+                stride=child.stride,
+                padding=child.padding,
+            )
+            setattr(model, name, new_layer)
+        elif child is not None:
+            max2avg_pool(child)
