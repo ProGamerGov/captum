@@ -108,4 +108,4 @@ def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
             )
             setattr(model, name, new_layer)
         elif child is not None:
-            max2avg_pool(child)
+            max2avg_pool2d(child)
