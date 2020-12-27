@@ -56,16 +56,18 @@ def get_expanded_weights(
             retain_graph=True,
         )[0]
         A.append(x.squeeze(0))
-    exapnded_weights = torch.stack(A, 0)
+    expanded_weights = torch.stack(A, 0)
 
     if crop_shape is not None:
-        exapnded_weights = center_crop_shape(exapnded_weights, crop_shape)
-    return exapnded_weights
+        expanded_weights = center_crop_shape(expanded_weights, crop_shape)
+    return expanded_weights
 
 
 def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
     """
-    Convert MaxPool2d layers to their AvgPool2d equivalents.
+    Replace all non-linear MaxPool2d layers with their linear AvgPool2d equivalents.
+    This allows us to ignore non-linear when calculating expanded weights.
+
     Args:
         model (nn.Module): A PyTorch model instance.
         value (Any): Used to return any inf padding back to zero.
