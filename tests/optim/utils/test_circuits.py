@@ -2,6 +2,7 @@
 import unittest
 
 import torch
+import torch.nn.functional as F
 
 import captum.optim._utils.circuits as circuits
 from captum.optim._models.inception_v1 import googlenet
