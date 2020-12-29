@@ -93,5 +93,14 @@ class TestMax2AvgPool2d(BaseTest):
         assertTensorAlmostEqual(self, out_tensor, expected_tensor, 0)
 
 
+class TestIgnoreLayer(BaseTest):
+    def test_ignore_layer(self) -> None:
+        model = torch.nn.Sequential(torch.nn.ReLU())
+        x = torch.randn(1, 3, 4, 4)
+        circuits.ignore_layer(model, torch.nn.ReLU)
+        output_tensor = model(x)
+        assertTensorAlmostEqual(self, x, output_tensor, 0)
+
+
 if __name__ == "__main__":
     unittest.main()
