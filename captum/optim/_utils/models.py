@@ -65,7 +65,7 @@ class RedirectedReluLayer(nn.Module):
             return RedirectedReLU.apply(input)
 
 
-class ReluLayer(nn.ReLU):
+class ReluLayer(nn.Module):
     """
     Basic Hookable & Replaceable ReLU layer.
     """
