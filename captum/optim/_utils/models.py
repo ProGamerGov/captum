@@ -65,7 +65,7 @@ class RedirectedReluLayer(nn.Module):
             return RedirectedReLU.apply(input)
 
 
-class ReluLayer(nn.ReLU):
+class ReluLayer(nn.Module):
     """
     Basic Hookable & Replaceable ReLU layer.
     """
@@ -91,7 +91,7 @@ def replace_layers(model, old_layer=ReluLayer, new_layer=RedirectedReluLayer) ->
             replace_layers(child, old_layer, new_layer)
 
 
-class LocalResponseNormLayer(nn.LocalResponseNorm):
+class LocalResponseNormLayer(nn.Module):
     """
     Basic Hookable Local Response Norm layer.
     """
