@@ -112,7 +112,7 @@ def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
             max2avg_pool2d(child)
 
 
-def ignore_layer(model, layer: torch.nn.Module = torch.nn.ReLU) -> None:
+def ignore_layer(model, layer: torch.nn.Module) -> None:
     """
     Replace target layers with layers that do nothing.
     This is useful for removing the nonlinear ReLU
@@ -132,4 +132,4 @@ def ignore_layer(model, layer: torch.nn.Module = torch.nn.ReLU) -> None:
             new_layer = IgnoreLayer()
             setattr(model, name, new_layer)
         elif child is not None:
-            ignore_layer(child)
+            ignore_layer(child, layer)
