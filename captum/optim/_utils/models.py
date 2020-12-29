@@ -103,7 +103,7 @@ class LocalResponseNormLayer(nn.LocalResponseNorm):
         beta: float = 0.5,
         k: float = 1.0,
     ) -> None:
-        super(self).__init__()
+        super(LocalResponseNormLayer).__init__()
         self.size = size
         self.alpha = alpha
         self.beta = beta
