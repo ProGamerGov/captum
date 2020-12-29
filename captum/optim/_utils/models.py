@@ -65,12 +65,13 @@ class RedirectedReluLayer(nn.Module):
             return RedirectedReLU.apply(input)
 
 
-class ReluLayer(nn.Module):
+class ReluLayer(nn.ReLU):
     """
     Basic Hookable & Replaceable ReLU layer.
     """
 
     def __init__(self, inplace: bool = True) -> None:
+        super(ReluLayer, self).__init__()
         self.inplace = inplace
 
     def forward(self, input: torch.Tensor) -> torch.Tensor:
@@ -103,7 +104,7 @@ class LocalResponseNormLayer(nn.Module):
         beta: float = 0.5,
         k: float = 1.0,
     ) -> None:
-        super(LocalResponseNormLayer).__init__()
+        super(LocalResponseNormLayer, self).__init__()
         self.size = size
         self.alpha = alpha
         self.beta = beta
