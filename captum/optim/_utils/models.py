@@ -70,8 +70,11 @@ class ReluLayer(nn.ReLU):
     Basic Hookable & Replaceable ReLU layer.
     """
 
+    def __init__(self, inplace: bool = True) -> None:
+        self.inplace = inplace
+
     def forward(self, input: torch.Tensor) -> torch.Tensor:
-        return F.relu(input, inplace=True)
+        return F.relu(input, inplace=self.inplace)
 
 
 def replace_layers(model, old_layer=ReluLayer, new_layer=RedirectedReluLayer) -> None:
@@ -100,7 +103,7 @@ class LocalResponseNormLayer(nn.LocalResponseNorm):
         beta: float = 0.5,
         k: float = 1.0,
     ) -> None:
-        super(LocalResponseNormLayer, self).__init__()
+        super(self).__init__()
         self.size = size
         self.alpha = alpha
         self.beta = beta
