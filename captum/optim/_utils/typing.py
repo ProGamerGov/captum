@@ -33,7 +33,6 @@ StopCriteria = Callable[[int, Objective, Optimizer], bool]
 LossFunction = Callable[[ModuleOutputMapping], Tensor]
 SingleTargetLossFunction = Callable[[Tensor], Tensor]
 
-InitSize = Tuple[int, int]
 SquashFunc = Callable[[Tensor], Tensor]
 TransformValList = Union[Sequence[int], Sequence[float], Tensor]
 TransformVal = Union[int, float, Tensor]
