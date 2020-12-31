@@ -8,7 +8,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from captum.optim._utils.image.common import nchannels_to_rgb
-from captum.optim._utils.typing import IntSeqOrIntType, NumOrTensorType, NumSeqOrTensorType
+from captum.optim._utils.typing import (
+    IntSeqOrIntType,
+    NumOrTensorType,
+    NumSeqOrTensorType,
+)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -56,8 +60,8 @@ class ToRGB(nn.Module):
     https://www.sciencedirect.com/science/article/pii/0146664X80900477
 
     Arguments:
-        transform (str or tensor):  Either a string for one of the precalculated 
-            transform matrices, or a 3x3 matrix for the 3 RGB channels of input 
+        transform (str or tensor):  Either a string for one of the precalculated
+            transform matrices, or a 3x3 matrix for the 3 RGB channels of input
             tensors.
     """
 
@@ -82,6 +86,7 @@ class ToRGB(nn.Module):
         super().__init__()
         assert isinstance(transform, str) or torch.is_tensor(transform)
         if torch.is_tensor(transform):
+            transform = cast(torch.Tensor, transform)
             assert list(transform.shape) == [3, 3]
             self.register_buffer("transform", transform)
         elif transform == "klt":
@@ -90,8 +95,7 @@ class ToRGB(nn.Module):
             self.register_buffer("transform", ToRGB.i1i2i3_transform())
         else:
             raise ValueError(
-                "transform has to be either 'klt', 'i1i2i3',"
-                + " or a matrix tensor."
+                "transform has to be either 'klt', 'i1i2i3'," + " or a matrix tensor."
             )
 
     def forward(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
@@ -132,11 +136,14 @@ class CenterCrop(torch.nn.Module):
     Center crop a specified amount from a tensor.
     Arguments:
         size (int, sequence, int): Number of pixels to center crop away.
-        pixels_from_edges (bool, optional): Whether to treat crop size values as the number
-           of pixels from the tensor's edge, or an exact shape in the center.
+        pixels_from_edges (bool, optional): Whether to treat crop size
+            values as the number of pixels from the tensor's edge, or an
+            exact shape in the center.
     """
 
-    def __init__(self, size: IntSeqOrIntType = 0, pixels_from_edges: bool = True) -> None:
+    def __init__(
+        self, size: IntSeqOrIntType = 0, pixels_from_edges: bool = False
+    ) -> None:
         super(CenterCrop, self).__init__()
         self.crop_vals = size
         self.pixels_from_edges = pixels_from_edges
@@ -154,15 +161,16 @@ class CenterCrop(torch.nn.Module):
 
 
 def center_crop(
-    input: torch.Tensor, crop_vals: IntSeqOrIntType, pixels_from_edges: bool = True
+    input: torch.Tensor, crop_vals: IntSeqOrIntType, pixels_from_edges: bool = False
 ) -> torch.Tensor:
     """
     Center crop a specified amount from a tensor.
     Arguments:
         input (tensor):  A CHW or NCHW image tensor to center crop.
         size (int, sequence, int): Number of pixels to center crop away.
-        pixels_from_edges (bool, optional): Whether to treat crop size values as the number
-           of pixels from the tensor's edge, or an exact shape in the center.
+        pixels_from_edges (bool, optional): Whether to treat crop size
+            values as the number of pixels from the tensor's edge, or an
+            exact shape in the center.
     Returns:
         *tensor*:  A center cropped tensor.
     """
@@ -210,7 +218,7 @@ class RandomScale(nn.Module):
         self.scale = scale
 
     def get_scale_mat(
-        self, m: TransformVal, device: torch.device, dtype: torch.dtype
+        self, m: IntSeqOrIntType, device: torch.device, dtype: torch.dtype
     ) -> torch.Tensor:
         scale_mat = torch.tensor(
             [[m, 0.0, 0.0], [0.0, m, 0.0]], device=device, dtype=dtype
