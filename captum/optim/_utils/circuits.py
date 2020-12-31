@@ -62,5 +62,5 @@ def get_expanded_weights(
     expanded_weights = torch.stack(A, 0)
 
     if crop_shape is not None and crop_func is not None:
-        expanded_weights = crop_func(expanded_weights, crop_shape, False)
+        expanded_weights = crop_func(expanded_weights, crop_shape)
     return expanded_weights
