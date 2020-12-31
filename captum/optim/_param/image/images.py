@@ -470,21 +470,20 @@ class NaturalImage(ImageParameterization):
     r"""Outputs an optimizable input image.
 
     By convention, single images are CHW and float32s in [0,1].
-    The underlying parameterization is decorrelated via a ToRGB transform.
+    The underlying parameterization can be decorrelated via a ToRGB transform.
     When used with the (default) FFT parameterization, this results in a fully
     uncorrelated image parameterization. :-)
 
     If a model requires a normalization step, such as normalizing imagenet RGB values,
     or rescaling to [0,255], it can perform those steps with the provided transforms or
     inside its computation.
-    For example, our GoogleNet factory function has a `transform_input=True` argument.
 
     Arguments:
         size (Tuple[int, int]): The height and width to use for the nn.Parameter image
             tensor.
         channels (int): The number of channels to use when creating the
             nn.Parameter tensor.
-        batch (list of int): The number of channels to use when creating the
+        batch (int): The number of channels to use when creating the
             nn.Parameter tensor, or stacking init images.
         parameterization (ImageParameterization): An image parameterization class.
         squash_func (SquashFunc): The squash function to use after
