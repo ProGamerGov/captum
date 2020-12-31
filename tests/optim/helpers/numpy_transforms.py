@@ -59,8 +59,8 @@ class CenterCrop:
     """
     Center crop a specified amount from a tensor.
     Arguments:
-        size (int, sequence) or (int): Number of pixels to center crop away.
-        pixels_from_edges (bool): Whether to treat crop size values as the number
+        size (int, sequence, int): Number of pixels to center crop away.
+        pixels_from_edges (bool, optional): Whether to treat crop size values as the number
            of pixels from the tensor's edge, or an exact shape in the center.
     """
 
@@ -88,8 +88,8 @@ def center_crop(
     Center crop a specified amount from a array.
     Arguments:
         input (array):  A CHW or NCHW image array to center crop.
-        size (int, sequence) or (int): Number of pixels to center crop away.
-        pixels_from_edges (bool): Whether to treat crop size values as the number
+        size (int, sequence, int): Number of pixels to center crop away.
+        pixels_from_edges (bool, optional): Whether to treat crop size values as the number
            of pixels from the array's edge, or an exact shape in the center.
     Returns:
         *array*:  A center cropped array.
