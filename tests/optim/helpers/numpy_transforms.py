@@ -5,7 +5,7 @@ import numpy as np
 from captum.optim._utils.typing import IntSeqOrIntType
 
 
-class BlendAlpha(object):
+class BlendAlpha:
     """
     NumPy version of the BlendAlpha transform
     """
@@ -27,7 +27,7 @@ class BlendAlpha(object):
         return blended
 
 
-class RandomSpatialJitter(object):
+class RandomSpatialJitter:
     """
     NumPy version of the RandomSpatialJitter transform
     """
@@ -118,7 +118,7 @@ def center_crop(
     return x
 
 
-class ToRGB(object):
+class ToRGB:
     """
     NumPy version of the ToRGB transform
     """
