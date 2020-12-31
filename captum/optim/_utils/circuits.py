@@ -1,11 +1,11 @@
-from typing import Any, Optional, Tuple, Union
+from typing import Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
 
 from captum.optim._param.image.transform import center_crop_shape
 from captum.optim._utils.models import collect_activations
-from captum.optim._utils.typing import ModelInputType, PoolParam, TransformSize
+from captum.optim._utils.typing import ModelInputType, TransformSize
 
 
 def get_expanded_weights(
