@@ -1,12 +1,12 @@
 import math
-from typing import List, Tuple, Union
+from typing import Any, List, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 from captum.optim._core.output_hook import ActivationFetcher
-from captum.optim._utils.typing import ModelInputType, ModuleOutputMapping
+from captum.optim._utils.typing import ModelInputType, ModuleOutputMapping, PoolParam
 
 
 def get_model_layers(model) -> List[str]:
