@@ -486,7 +486,7 @@ class NaturalImage(ImageParameterization):
         batch (int): The number of channels to use when creating the
             nn.Parameter tensor, or stacking init images.
         parameterization (ImageParameterization): An image parameterization class.
-        squash_func (SquashFunc): The squash function to use after
+        squash_func (SquashFuncType): The squash function to use after
             color recorrelation. A funtion or lambda function.
         decorrelation_module (nn.Module): A ToRGB instance.
         decorrelate_init (bool): Whether or not to apply color decorrelation to the
