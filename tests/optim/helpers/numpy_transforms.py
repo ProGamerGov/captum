@@ -66,7 +66,7 @@ class CenterCrop:
     """
 
     def __init__(
-        self, size: IntSeqOrIntType = 0, pixels_from_edges: bool = True
+        self, size: IntSeqOrIntType = 0, pixels_from_edges: bool = False
     ) -> None:
         super(CenterCrop, self).__init__()
         self.crop_vals = size
@@ -85,7 +85,7 @@ class CenterCrop:
 
 
 def center_crop(
-    input: np.ndarray, crop_vals: IntSeqOrIntType, pixels_from_edges: bool = True
+    input: np.ndarray, crop_vals: IntSeqOrIntType, pixels_from_edges: bool = False
 ) -> np.ndarray:
     """
     Center crop a specified amount from a array.
