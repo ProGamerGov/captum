@@ -126,7 +126,7 @@ class CenterCrop(torch.nn.Module):
     """
     Center crop a specified amount from a tensor.
     Arguments:
-        size (int, sequence) or (int): Number of pixels to center crop away.
+        size (int, sequence, int): Number of pixels to center crop away.
         pixels_from_edges (bool, optional): Whether to treat crop size values as the number
            of pixels from the tensor's edge, or an exact shape in the center.
     """
@@ -155,7 +155,7 @@ def center_crop(
     Center crop a specified amount from a tensor.
     Arguments:
         input (tensor):  A CHW or NCHW image tensor to center crop.
-        size (int, sequence) or (int): Number of pixels to center crop away.
+        size (int, sequence, int): Number of pixels to center crop away.
         pixels_from_edges (bool, optional): Whether to treat crop size values as the number
            of pixels from the tensor's edge, or an exact shape in the center.
     Returns:
