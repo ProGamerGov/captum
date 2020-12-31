@@ -74,7 +74,7 @@ def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
             pooling layers back to zero.
     """
 
-    class AvgPool2dInf(torch.nn.Module):
+    class AvgPool2dLayer(torch.nn.Module):
         def __init__(
             self,
             kernel_size: PoolParam = 2,
@@ -100,7 +100,7 @@ def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
 
     for name, child in model._modules.items():
         if isinstance(child, torch.nn.MaxPool2d):
-            new_layer = AvgPool2dInf(
+            new_layer = AvgPool2dLayer(
                 kernel_size=child.kernel_size,
                 stride=child.stride,
                 padding=child.padding,
