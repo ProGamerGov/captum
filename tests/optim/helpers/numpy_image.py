@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 
@@ -19,7 +19,7 @@ class FFTImage:
 
     def __init__(
         self,
-        size: Tuple[int, int] = None,
+        size=None,
         channels: int = 3,
         batch: int = 1,
         init: Optional = None,
