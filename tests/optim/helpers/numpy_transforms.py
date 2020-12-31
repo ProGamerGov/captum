@@ -2,7 +2,7 @@ from typing import List, Optional, Tuple, Union, cast
 
 import numpy as np
 
-from captum.optim._utils.typing import TransformSize
+from captum.optim._utils.typing import IntSeqOrIntType
 
 
 class BlendAlpha(object):
@@ -64,7 +64,7 @@ class CenterCrop:
            of pixels from the tensor's edge, or an exact shape in the center.
     """
 
-    def __init__(self, size: TransformSize = 0, pixels_from_edges: bool = True) -> None:
+    def __init__(self, size: IntSeqOrIntType = 0, pixels_from_edges: bool = True) -> None:
         super(CenterCrop, self).__init__()
         self.crop_vals = size
         self.pixels_from_edges = pixels_from_edges
@@ -82,7 +82,7 @@ class CenterCrop:
 
 
 def center_crop(
-    input: np.ndarray, crop_vals: TransformSize, pixels_from_edges: bool = True
+    input: np.ndarray, crop_vals: IntSeqOrIntType, pixels_from_edges: bool = True
 ) -> np.ndarray:
     """
     Center crop a specified amount from a array.
@@ -139,21 +139,21 @@ class ToRGB(object):
         ]
         return np.array(i1i2i3_matrix, dtype=float)
 
-    def __init__(self, transform_matrix: Union[str, np.ndarray] = "klt") -> None:
+    def __init__(self, transform: Union[str, np.ndarray] = "klt") -> None:
         super().__init__()
-        assert isinstance(transform_matrix, str) or isinstance(
-            transform_matrix, np.ndarray
+        assert isinstance(transform, str) or isinstance(
+            transform, np.ndarray
         )
-        if isinstance(transform_matrix, np.ndarray):
-            assert list(transform_matrix.shape) == [3, 3]
-            self.transform = transform_matrix
-        elif transform_matrix == "klt":
+        if isinstance(transform, np.ndarray):
+            assert list(transform.shape) == [3, 3]
+            self.transform = transform
+        elif transform == "klt":
             self.transform = ToRGB.klt_transform()
-        elif transform_matrix == "i1i2i3":
+        elif transform == "i1i2i3":
             self.transform = ToRGB.i1i2i3_transform()
         else:
             raise ValueError(
-                "transform_matrix has to be either 'klt', 'i1i2i3',"
+                "transform has to be either 'klt', 'i1i2i3',"
                 + " or a matrix array."
             )
 
