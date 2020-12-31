@@ -155,7 +155,7 @@ class ToRGB:
             self.transform = ToRGB.i1i2i3_transform()
         else:
             raise ValueError(
-                "transform has to be either 'klt', 'i1i2i3'," + " or a matrix array."
+                "transform has to be either 'klt', 'i1i2i3', or a matrix array."
             )
 
     def to_rgb(self, x: np.ndarray, inverse: bool = False) -> np.ndarray:
