@@ -164,7 +164,7 @@ class TestCenterCrop(BaseTest):
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
         expected_tensor = torch.stack(
-            [torch.stack([torch.tensor([1.0, 0.0, 1.0, 1.0, 0.0, 1.0])] * 2)] * 3
+            [torch.stack([torch.tensor([0.0, 1.0, 1.0, 0.0])] * 2)] * 3
         ).unsqueeze(0)
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
@@ -222,7 +222,7 @@ class TestCenterCrop(BaseTest):
         expected_tensor = torch.stack(
             [torch.tensor([[0.0, 0.0], [1.0, 1.0], [1.0, 1.0], [0.0, 0.0]])] * 3
         ).unsqueeze(0)
-        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0.002)
 
 
 class TestCenterCropFunction(BaseTest):
@@ -262,7 +262,7 @@ class TestCenterCropFunction(BaseTest):
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
         expected_tensor = torch.stack(
-            [torch.stack([torch.tensor([1.0, 0.0, 1.0, 1.0, 0.0, 1.0])] * 2)] * 3
+            [torch.stack([torch.tensor([0.0, 1.0, 1.0, 0.0])] * 2)] * 3
         ).unsqueeze(0)
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
@@ -380,7 +380,7 @@ class TestToRGB(BaseTest):
         b = torch.ones(4, 4) * 0.4546
         expected_rgb_tensor = torch.stack([r, g, b]).unsqueeze(0)
 
-        assertTensorAlmostEqual(self, rgb_tensor, expected_rgb_tensor)
+        assertTensorAlmostEqual(self, rgb_tensor, expected_rgb_tensor, 0.002)
 
         inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
         assertTensorAlmostEqual(self, inverse_tensor, torch.ones_like(inverse_tensor))
@@ -400,7 +400,7 @@ class TestToRGB(BaseTest):
         a = torch.ones(4, 4)
         expected_rgb_tensor = torch.stack([r, g, b, a]).unsqueeze(0)
 
-        assertTensorAlmostEqual(self, rgb_tensor, expected_rgb_tensor)
+        assertTensorAlmostEqual(self, rgb_tensor, expected_rgb_tensor, 0.002)
 
         inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
         assertTensorAlmostEqual(self, inverse_tensor, torch.ones_like(inverse_tensor))
