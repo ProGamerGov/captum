@@ -46,14 +46,19 @@ class IgnoreAlpha(nn.Module):
 
 class ToRGB(nn.Module):
     """Transforms arbitrary channels to RGB. We use this to ensure our
-    image parameteriaztion itself can be decorrelated. So this goes between
-    the image parameterization and the normalization/sigmoid step.
+    image parametrization itself can be decorrelated. So this goes between
+    the image parametrization and the normalization/sigmoid step.
     We offer two precalculated transforms: Karhunen-Loève (KLT) and I1I2I3.
     KLT corresponds to the empirically measured channel correlations on imagenet.
-    I1I2I3 corresponds to an aproximation for natural images from Ohta et al.[0]
+    I1I2I3 corresponds to an approximation for natural images from Ohta et al.[0]
     [0] Y. Ohta, T. Kanade, and T. Sakai, "Color information for region segmentation,"
     Computer Graphics and Image Processing, vol. 13, no. 3, pp. 222–241, 1980
     https://www.sciencedirect.com/science/article/pii/0146664X80900477
+
+    Arguments:
+        transform (str or tensor):  Either a string for one of the precalculated 
+            transform matrices, or a 3x3 matrix for the 3 RGB channels of input 
+            tensors.
     """
 
     @staticmethod
