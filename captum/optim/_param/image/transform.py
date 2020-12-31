@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from captum.optim._utils.image.common import nchannels_to_rgb
-from captum.optim._utils.typing import TransformSize, TransformVal, TransformValList
+from captum.optim._utils.typing import IntSeqOrIntType, TransformVal, TransformValList
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -131,7 +131,7 @@ class CenterCrop(torch.nn.Module):
            of pixels from the tensor's edge, or an exact shape in the center.
     """
 
-    def __init__(self, size: TransformSize = 0, pixels_from_edges: bool = True) -> None:
+    def __init__(self, size: IntSeqOrIntType = 0, pixels_from_edges: bool = True) -> None:
         super(CenterCrop, self).__init__()
         self.crop_vals = size
         self.pixels_from_edges = pixels_from_edges
@@ -149,7 +149,7 @@ class CenterCrop(torch.nn.Module):
 
 
 def center_crop(
-    input: torch.Tensor, crop_vals: TransformSize, pixels_from_edges: bool = True
+    input: torch.Tensor, crop_vals: IntSeqOrIntType, pixels_from_edges: bool = True
 ) -> torch.Tensor:
     """
     Center crop a specified amount from a tensor
