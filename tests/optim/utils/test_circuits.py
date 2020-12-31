@@ -2,12 +2,11 @@
 import unittest
 
 import torch
-import torch.nn.functional as F
 
 import captum.optim._utils.circuits as circuits
 from captum.optim._models.inception_v1 import googlenet
 from captum.optim._utils.models import RedirectedReluLayer, ignore_layer, max2avg_pool2d
-from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
+from tests.helpers.basic import BaseTest
 
 
 class TestGetExpandedWeights(BaseTest):
