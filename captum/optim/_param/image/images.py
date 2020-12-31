@@ -13,7 +13,7 @@ except (ImportError, AssertionError):
     print("The Pillow/PIL library is required to use Captum's Optim library")
 
 from captum.optim._param.image.transform import SymmetricPadding, ToRGB
-from captum.optim._utils.typing import InitSize, SquashFunc
+from captum.optim._utils.typing import SquashFunc
 
 
 class ImageTensor(torch.Tensor):
@@ -183,7 +183,7 @@ class FFTImage(ImageParameterization):
 
     def __init__(
         self,
-        size: InitSize = None,
+        size: Tuple[int, int] = None,
         channels: int = 3,
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
@@ -271,7 +271,7 @@ class FFTImage(ImageParameterization):
 class PixelImage(ImageParameterization):
     def __init__(
         self,
-        size: InitSize = None,
+        size: Tuple[int, int] = None,
         channels: int = 3,
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
@@ -292,7 +292,7 @@ class PixelImage(ImageParameterization):
 class LaplacianImage(ImageParameterization):
     def __init__(
         self,
-        size: InitSize = None,
+        size: Tuple[int, int] = None,
         channels: int = 3,
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
@@ -480,8 +480,9 @@ class NaturalImage(ImageParameterization):
     For example, our GoogleNet factory function has a `transform_input=True` argument.
 
     Arguments:
-        size (list of int): The height and width to use for the nn.Parameter tensor.
-        channels (list of int): The number of channels to use when creating the
+        size (Tuple[int, int]): The height and width to use for the nn.Parameter image
+            tensor.
+        channels (int): The number of channels to use when creating the
             nn.Parameter tensor.
         batch (list of int): The number of channels to use when creating the
             nn.Parameter tensor, or stacking init images.
@@ -495,13 +496,13 @@ class NaturalImage(ImageParameterization):
 
     def __init__(
         self,
-        size: InitSize = None,
+        size: Tuple[int, int] = None,
         channels: int = 3,
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
         parameterization: ImageParameterization = FFTImage,
         squash_func: Optional[SquashFunc] = None,
-        decorrelation_module: nn.Module = ToRGB(transform_matrix="klt"),
+        decorrelation_module: Optional[nn.Module] = ToRGB(transform="klt"),
         decorrelate_init: bool = True,
     ) -> None:
         super().__init__()
