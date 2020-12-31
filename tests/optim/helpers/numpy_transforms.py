@@ -60,11 +60,14 @@ class CenterCrop:
     Center crop a specified amount from a tensor.
     Arguments:
         size (int, sequence, int): Number of pixels to center crop away.
-        pixels_from_edges (bool, optional): Whether to treat crop size values as the number
-           of pixels from the tensor's edge, or an exact shape in the center.
+        pixels_from_edges (bool, optional): Whether to treat crop size values
+            as the number of pixels from the tensor's edge, or an exact shape
+            in the center.
     """
 
-    def __init__(self, size: IntSeqOrIntType = 0, pixels_from_edges: bool = True) -> None:
+    def __init__(
+        self, size: IntSeqOrIntType = 0, pixels_from_edges: bool = True
+    ) -> None:
         super(CenterCrop, self).__init__()
         self.crop_vals = size
         self.pixels_from_edges = pixels_from_edges
@@ -89,8 +92,9 @@ def center_crop(
     Arguments:
         input (array):  A CHW or NCHW image array to center crop.
         size (int, sequence, int): Number of pixels to center crop away.
-        pixels_from_edges (bool, optional): Whether to treat crop size values as the number
-           of pixels from the array's edge, or an exact shape in the center.
+        pixels_from_edges (bool, optional): Whether to treat crop size values
+            as the number of pixels from the array's edge, or an exact shape
+            in the center.
     Returns:
         *array*:  A center cropped array.
     """
@@ -141,9 +145,7 @@ class ToRGB:
 
     def __init__(self, transform: Union[str, np.ndarray] = "klt") -> None:
         super().__init__()
-        assert isinstance(transform, str) or isinstance(
-            transform, np.ndarray
-        )
+        assert isinstance(transform, str) or isinstance(transform, np.ndarray)
         if isinstance(transform, np.ndarray):
             assert list(transform.shape) == [3, 3]
             self.transform = transform
@@ -153,8 +155,7 @@ class ToRGB:
             self.transform = ToRGB.i1i2i3_transform()
         else:
             raise ValueError(
-                "transform has to be either 'klt', 'i1i2i3',"
-                + " or a matrix array."
+                "transform has to be either 'klt', 'i1i2i3'," + " or a matrix array."
             )
 
     def to_rgb(self, x: np.ndarray, inverse: bool = False) -> np.ndarray:
