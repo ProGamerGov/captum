@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 import captum.optim._utils.circuits as circuits
 from captum.optim._models.inception_v1 import googlenet
-from captum.optim._utils.models import RedirectedReluLayer
+from captum.optim._utils.models import RedirectedReluLayer, ignore_layer, max2avg_pool2d
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 
@@ -59,8 +59,8 @@ class TestGetExpandedWeights(BaseTest):
         else:
             norm_func = torch.linalg.norm
         model = googlenet(pretrained=True)
-        circuits.max2avg_pool2d(model)
-        circuits.ignore_layer(model, RedirectedReluLayer)
+        max2avg_pool2d(model)
+        ignore_layer(model, RedirectedReluLayer)
         output_tensor = circuits.get_expanded_weights(
             model, model.pool3, model.mixed4a, 5
         )
