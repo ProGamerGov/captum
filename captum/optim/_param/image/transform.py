@@ -48,7 +48,7 @@ class ToRGB(nn.Module):
     """Transforms arbitrary channels to RGB. We use this to ensure our
     image parameteriaztion itself can be decorrelated. So this goes between
     the image parameterization and the normalization/sigmoid step.
-    We offer two transforms: Karhunen-Loève (KLT) and I1I2I3.
+    We offer two precalculated transforms: Karhunen-Loève (KLT) and I1I2I3.
     KLT corresponds to the empirically measured channel correlations on imagenet.
     I1I2I3 corresponds to an aproximation for natural images from Ohta et al.[0]
     [0] Y. Ohta, T. Kanade, and T. Sakai, "Color information for region segmentation,"
