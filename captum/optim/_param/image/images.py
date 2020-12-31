@@ -13,6 +13,7 @@ except (ImportError, AssertionError):
     print("The Pillow/PIL library is required to use Captum's Optim library")
 
 from captum.optim._param.image.transform import SymmetricPadding, ToRGB
+from captum.optim._utils.typing import SquashFuncType
 
 
 class ImageTensor(torch.Tensor):
@@ -317,7 +318,7 @@ class LaplacianImage(ImageParameterization):
 
     def setup_input(
         self,
-        size: InitSize,
+        size: Tuple[int, int],
         channels: int,
         power: float = 0.1,
         init: Optional[torch.Tensor] = None,
@@ -499,7 +500,7 @@ class NaturalImage(ImageParameterization):
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
         parameterization: ImageParameterization = FFTImage,
-        squash_func: Optional[Callable[[Tensor], Tensor]] = None,
+        squash_func: Optional[SquashFuncType] = None,
         decorrelation_module: Optional[nn.Module] = ToRGB(transform="klt"),
         decorrelate_init: bool = True,
     ) -> None:
@@ -516,10 +517,10 @@ class NaturalImage(ImageParameterization):
                 )
                 init = self.decorrelate(init, inverse=True).rename(None)
             if squash_func is None:
-                squash_func: SquashFunc = lambda x: x.clamp(0, 1)
+                squash_func: SquashFuncType = lambda x: x.clamp(0, 1)
         else:
             if squash_func is None:
-                squash_func: SquashFunc = lambda x: torch.sigmoid(x)
+                squash_func: SquashFuncType = lambda x: torch.sigmoid(x)
         self.squash_func = squash_func
         self.parameterization = parameterization(
             size=size, channels=channels, batch=batch, init=init
