@@ -35,6 +35,6 @@ SingleTargetLossFunction = Callable[[Tensor], Tensor]
 
 SquashFunc = Callable[[Tensor], Tensor]
 NumSeqOrTensorType = Union[Sequence[int], Sequence[float], Tensor]
-TransformVal = Union[int, float, Tensor]
+NumOrTensorType = Union[int, float, Tensor]
 IntSeqOrIntType = Union[List[int], Tuple[int], Tuple[int, int], int]
 ModelInputType = Union[Tuple[Tensor], Tensor]
