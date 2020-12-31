@@ -73,19 +73,19 @@ class ToRGB(nn.Module):
         ]
         return torch.Tensor(i1i2i3_matrix)
 
-    def __init__(self, transform_matrix: Union[str, torch.Tensor] = "klt") -> None:
+    def __init__(self, transform: Union[str, torch.Tensor] = "klt") -> None:
         super().__init__()
-        assert isinstance(transform_matrix, str) or torch.is_tensor(transform_matrix)
-        if torch.is_tensor(transform_matrix):
-            assert list(transform_matrix.shape) == [3, 3]
-            self.register_buffer("transform", transform_matrix)
-        elif transform_matrix == "klt":
+        assert isinstance(transform, str) or torch.is_tensor(transform)
+        if torch.is_tensor(transform):
+            assert list(transform.shape) == [3, 3]
+            self.register_buffer("transform", transform)
+        elif transform == "klt":
             self.register_buffer("transform", ToRGB.klt_transform())
-        elif transform_matrix == "i1i2i3":
+        elif transform == "i1i2i3":
             self.register_buffer("transform", ToRGB.i1i2i3_transform())
         else:
             raise ValueError(
-                "transform_matrix has to be either 'klt', 'i1i2i3',"
+                "transform has to be either 'klt', 'i1i2i3',"
                 + " or a matrix tensor."
             )
 
