@@ -1,3 +1,5 @@
+from typing import Optional, Tuple
+
 import numpy as np
 
 
@@ -17,10 +19,10 @@ class FFTImage:
 
     def __init__(
         self,
-        size=None,
+        size: Tuple[int, int] = None,
         channels: int = 3,
         batch: int = 1,
-        init=None,
+        init: Optional = None,
     ) -> None:
         super().__init__()
         if init is None:
