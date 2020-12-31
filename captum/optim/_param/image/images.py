@@ -13,7 +13,6 @@ except (ImportError, AssertionError):
     print("The Pillow/PIL library is required to use Captum's Optim library")
 
 from captum.optim._param.image.transform import SymmetricPadding, ToRGB
-from captum.optim._utils.typing import SquashFuncType
 
 
 class ImageTensor(torch.Tensor):
@@ -500,7 +499,7 @@ class NaturalImage(ImageParameterization):
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
         parameterization: ImageParameterization = FFTImage,
-        squash_func: Optional[SquashFuncType] = None,
+        squash_func: Optional[Callable[[Tensor], Tensor]] = None,
         decorrelation_module: Optional[nn.Module] = ToRGB(transform="klt"),
         decorrelate_init: bool = True,
     ) -> None:
