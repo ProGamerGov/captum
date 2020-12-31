@@ -135,13 +135,17 @@ class TestCenterCrop(BaseTest):
         )
         crop_vals = 3
 
-        crop_tensor = transform.CenterCrop(crop_vals)
+        crop_tensor = transform.CenterCrop(crop_vals, True)
         cropped_tensor = crop_tensor(test_tensor)
 
-        crop_mod_np = numpy_transforms.CenterCrop(crop_vals)
+        crop_mod_np = numpy_transforms.CenterCrop(crop_vals, True)
         cropped_array = crop_mod_np.forward(test_tensor.numpy())
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        expected_tensor = torch.stack(
+            [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
     def test_center_crop_two_numbers(self) -> None:
         pad = (1, 1, 1, 1)
@@ -152,13 +156,17 @@ class TestCenterCrop(BaseTest):
         )
         crop_vals = (4, 0)
 
-        crop_tensor = transform.CenterCrop(size=crop_vals)
+        crop_tensor = transform.CenterCrop(crop_vals, True)
         cropped_tensor = crop_tensor(test_tensor)
 
-        crop_mod_np = numpy_transforms.CenterCrop(crop_vals)
+        crop_mod_np = numpy_transforms.CenterCrop(crop_vals, True)
         cropped_array = crop_mod_np.forward(test_tensor.numpy())
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        expected_tensor = torch.stack(
+            [torch.stack([torch.tensor([1.0, 0.0, 1.0, 1.0, 0.0, 1.0])] * 2)] * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
     def test_center_crop_one_number_exact(self) -> None:
         pad = (1, 1, 1, 1)
@@ -177,6 +185,21 @@ class TestCenterCrop(BaseTest):
         cropped_array = crop_mod_np.forward(test_tensor.numpy())
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        expected_tensor = torch.stack(
+            [
+                torch.tensor(
+                    [
+                        [0.0, 0.0, 0.0, 0.0, 1.0],
+                        [0.0, 1.0, 1.0, 0.0, 1.0],
+                        [0.0, 1.0, 1.0, 0.0, 1.0],
+                        [0.0, 0.0, 0.0, 0.0, 1.0],
+                        [1.0, 1.0, 1.0, 1.0, 1.0],
+                    ]
+                )
+            ]
+            * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
     def test_center_crop_two_numbers_exact(self) -> None:
         pad = (1, 1, 1, 1)
@@ -195,6 +218,11 @@ class TestCenterCrop(BaseTest):
         cropped_array = crop_mod_np.forward(test_tensor.numpy())
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+
+        expected_tensor = torch.stack(
+            [torch.tensor([[0.0, 0.0], [1.0, 1.0], [1.0, 1.0], [0.0, 0.0]])] * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
 
 class TestCenterCropFunction(BaseTest):
@@ -213,6 +241,10 @@ class TestCenterCropFunction(BaseTest):
         )
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        expected_tensor = torch.stack(
+            [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
     def test_center_crop_two_numbers(self) -> None:
         pad = (1, 1, 1, 1)
@@ -229,6 +261,10 @@ class TestCenterCropFunction(BaseTest):
         )
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        expected_tensor = torch.stack(
+            [torch.stack([torch.tensor([1.0, 0.0, 1.0, 1.0, 0.0, 1.0])] * 2)] * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
     def test_center_crop_one_number_exact(self) -> None:
         pad = (1, 1, 1, 1)
@@ -246,6 +282,21 @@ class TestCenterCropFunction(BaseTest):
         )
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        expected_tensor = torch.stack(
+            [
+                torch.tensor(
+                    [
+                        [0.0, 0.0, 0.0, 0.0, 1.0],
+                        [0.0, 1.0, 1.0, 0.0, 1.0],
+                        [0.0, 1.0, 1.0, 0.0, 1.0],
+                        [0.0, 0.0, 0.0, 0.0, 1.0],
+                        [1.0, 1.0, 1.0, 1.0, 1.0],
+                    ]
+                )
+            ]
+            * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
     def test_center_crop_two_numbers_exact(self) -> None:
         pad = (1, 1, 1, 1)
@@ -263,6 +314,10 @@ class TestCenterCropFunction(BaseTest):
         )
 
         assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        expected_tensor = torch.stack(
+            [torch.tensor([[0.0, 0.0], [1.0, 1.0], [1.0, 1.0], [0.0, 0.0]])] * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
 
 class TestBlendAlpha(BaseTest):
