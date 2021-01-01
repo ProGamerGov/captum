@@ -1,4 +1,9 @@
+from typing import List
+
 import torch
+
+from captum.optim._utils.models import collect_activations
+from captum.optim._utils.typing import ModuleOutputMapping
 
 
 def image_cov(tensor: torch.Tensor) -> torch.Tensor:
@@ -51,3 +56,31 @@ def dataset_klt_matrix(
 
     cov_mtx = dataset_cov_matrix(loader)
     return cov_matrix_to_klt(cov_mtx, normalize)
+
+
+def capture_activation_samples(
+    loader: torch.utils.data.DataLoader, model, targets: List[torch.nn.Module]
+) -> ModuleOutputMapping:
+    """
+    Create a dict of randomly sampled activations for an image dataset.
+    """
+
+    def random_sample(activations: torch.Tensor, h: int, w: int) -> torch.Tensor:
+        rnd_samples = []
+        for b in range(activations.size(0)):
+            y = torch.randint(low=1, high=h, size=[1])
+            x = torch.randint(low=1, high=w, size=[1])
+            rnd_samples.append(activations[b, :, y, x])
+        return torch.cat(rnd_samples, 1).permute(1, 0)
+
+    activation_dict = {k: [] for k in dict.fromkeys(targets).keys()}
+    with torch.no_grad():
+        for inputs, _ in loader:
+            target_activ_dict = collect_activations(model, targets, inputs)
+            for t in target_activ_dict.keys():
+                h, w = target_activ_dict[t].shape[2:]
+                target_activ_dict[t] = [random_sample(target_activ_dict[t], h, w)]
+            activation_dict = {
+                k: activation_dict[k] + target_activ_dict[k] for k in activation_dict
+            }
+    return {k: torch.cat(activation_dict[k]) for k in activation_dict}
