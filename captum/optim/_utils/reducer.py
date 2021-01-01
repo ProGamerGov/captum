@@ -46,7 +46,9 @@ class ChannelReducer:
     @classmethod
     def _apply_flat(cls, func: Callable, x: torch.Tensor) -> torch.Tensor:
         orig_shape = x.shape
-        return func(x.reshape([-1, x.shape[-1]])).reshape(list(orig_shape[:-1]) + [-1])
+        return func(x.reshape([-1, x.shape[-1]]).cpu()).reshape(
+            list(orig_shape[:-1]) + [-1]
+        )
 
     def fit_transform(
         self, x: torch.Tensor, swap_2nd_and_last_dims: bool = True
