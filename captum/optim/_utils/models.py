@@ -238,9 +238,4 @@ def ignore_layer(model, layer) -> None:
         def forward(self, x: torch.Tensor) -> torch.Tensor:
             return x
 
-    for name, child in model._modules.items():
-        if isinstance(child, layer):
-            new_layer = IgnoreLayer()
-            setattr(model, name, new_layer)
-        elif child is not None:
-            ignore_layer(child, layer)
+    replace_layers(model, layer, IgnoreLayer)
