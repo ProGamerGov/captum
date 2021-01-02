@@ -59,7 +59,7 @@ class CenterCrop:
     """
     Center crop a specified amount from a tensor.
     Arguments:
-        size (int, sequence, int): Number of pixels to center crop away.
+        size (int or sequence of int): Number of pixels to center crop away.
         pixels_from_edges (bool, optional): Whether to treat crop size values
             as the number of pixels from the tensor's edge, or an exact shape
             in the center.
