@@ -485,11 +485,11 @@ class NaturalImage(ImageParameterization):
             nn.Parameter tensor.
         batch (int): The number of channels to use when creating the
             nn.Parameter tensor, or stacking init images.
-        parameterization (ImageParameterization): An image parameterization class.
-        squash_func (SquashFuncType): The squash function to use after
-            color recorrelation. A funtion or lambda function.
-        decorrelation_module (nn.Module): A ToRGB instance.
-        decorrelate_init (bool): Whether or not to apply color decorrelation to the
+        parameterization (ImageParameterization, optional): An image parameterization class.
+        squash_func (Callable[[torch.Tensor], torch.Tensor]], optional): The squash function to
+            use after color recorrelation. A funtion or lambda function.
+        decorrelation_module (nn.Module, optional): A ToRGB instance.
+        decorrelate_init (bool, optional): Whether or not to apply color decorrelation to the
             init tensor input.
     """
 
