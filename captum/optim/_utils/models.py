@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from captum.optim._core.output_hook import ActivationFetcher
-from captum.optim._utils.typing import TupleOfTensorsOrTensorType, ModuleOutputMapping
+from captum.optim._utils.typing import ModuleOutputMapping, TupleOfTensorsOrTensorType
 
 
 def get_model_layers(model) -> List[str]:
