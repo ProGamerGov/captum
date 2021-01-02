@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from captum.optim._core.output_hook import ActivationFetcher
-from captum.optim._utils.typing import ModelInputType, ModuleOutputMapping, PoolParam
+from captum.optim._utils.typing import ModelInputType, ModuleOutputMapping
 
 
 def get_model_layers(model) -> List[str]:
@@ -188,9 +188,9 @@ def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
     class AvgPool2dLayer(torch.nn.Module):
         def __init__(
             self,
-            kernel_size: PoolParam = 2,
-            stride: Optional[PoolParam] = 2,
-            padding: PoolParam = 0,
+            kernel_size: Union[int, Tuple[int, ...]] = 2,
+            stride: Optional[Union[int, Tuple[int, ...]]] = 2,
+            padding: Union[int, Tuple[int, ...]] = 0,
             ceil_mode: bool = False,
             value: Optional[Any] = None,
         ) -> None:
