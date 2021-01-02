@@ -63,14 +63,31 @@ def capture_activation_samples(
 ) -> ModuleOutputMapping:
     """
     Create a dict of randomly sampled activations for an image dataset.
+    Args:
+        loader (torch.utils.data.DataLoader): A torch.utils.data.DataLoader
+            instance for an image dataset.
+        model (nn.Module): A PyTorch model instance.
+        targets (list of nn.Module): A list of layers to sample activations from.
+    Returns:
+        activation_dict (dict of tensor): A dictionary containing the sampled
+            dataset activations, with the targets as the keys.
     """
 
-    def random_sample(activations: torch.Tensor, h: int, w: int) -> torch.Tensor:
+    def random_sample(activations: torch.Tensor) -> torch.Tensor:
+        """
+        Randomly sample H & W dimensions of activations with 4 dimensions.
+        """
+
         rnd_samples = []
         for b in range(activations.size(0)):
-            y = torch.randint(low=1, high=h, size=[1])
-            x = torch.randint(low=1, high=w, size=[1])
-            rnd_samples.append(activations[b, :, y, x])
+            if activations.dim() == 4:
+                h, w = activations.shape[2:]
+                y = torch.randint(low=1, high=h, size=[1])
+                x = torch.randint(low=1, high=w, size=[1])
+                activ = activations[b, :, y, x]
+            elif activations.dim() == 2:
+                activ = activations[b].unsqueeze(1)
+            rnd_samples.append(activ)
         return torch.cat(rnd_samples, 1).permute(1, 0)
 
     activation_dict = {k: [] for k in dict.fromkeys(targets).keys()}
@@ -78,8 +95,7 @@ def capture_activation_samples(
         for inputs, _ in loader:
             target_activ_dict = collect_activations(model, targets, inputs)
             for t in target_activ_dict.keys():
-                h, w = target_activ_dict[t].shape[2:]
-                target_activ_dict[t] = [random_sample(target_activ_dict[t], h, w)]
+                target_activ_dict[t] = [random_sample(target_activ_dict[t])]
             activation_dict = {
                 k: activation_dict[k] + target_activ_dict[k] for k in activation_dict
             }
