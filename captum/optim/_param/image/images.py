@@ -500,7 +500,7 @@ class NaturalImage(ImageParameterization):
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
         parameterization: ImageParameterization = FFTImage,
-        squash_func: Optional[SquashFuncType] = None,
+        squash_func: Optional[Callable[[torch.Tensor], torch.Tensor]] = None,
         decorrelation_module: Optional[nn.Module] = ToRGB(transform="klt"),
         decorrelate_init: bool = True,
     ) -> None:
@@ -517,10 +517,10 @@ class NaturalImage(ImageParameterization):
                 )
                 init = self.decorrelate(init, inverse=True).rename(None)
             if squash_func is None:
-                squash_func: SquashFuncType = lambda x: x.clamp(0, 1)
+                squash_func: Callable[[torch.Tensor], torch.Tensor] = lambda x: x.clamp(0, 1)
         else:
             if squash_func is None:
-                squash_func: SquashFuncType = lambda x: torch.sigmoid(x)
+                squash_func: Callable[[torch.Tensor], torch.Tensor] = lambda x: torch.sigmoid(x)
         self.squash_func = squash_func
         self.parameterization = parameterization(
             size=size, channels=channels, batch=batch, init=init
