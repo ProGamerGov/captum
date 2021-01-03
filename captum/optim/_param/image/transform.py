@@ -280,7 +280,7 @@ class RandomRotation(nn.Module):
         return x
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        rotate_angle = rand_select(self.rotate)
+        rotate_angle = rand_select(self.degrees)
         return self.rotate_tensor(x, rotate_angle)
 
 
