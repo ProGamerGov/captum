@@ -82,7 +82,7 @@ def create_atlas_vectors(
     normalize: bool = True,
 ) -> Tuple[torch.Tensor, List[Tuple[int, int]]]:
     """
-    Create direction vectors by  splitting an irregular grid into cells.
+    Create direction vectors by splitting an irregular grid into cells.
     """
 
     assert tensor.dim() == 2 and tensor.size(1) == 2
