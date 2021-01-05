@@ -96,7 +96,7 @@ def create_atlas_vectors(
 def create_atlas(
     cells: torch.Tensor, coords: List[Tuple[int, int]], grid_size: Tuple[int, int]
 ) -> torch.Tensor:
-    cell_h, cell_w = cells[0].shape[:2]
+    cell_h, cell_w = cells[0].shape[2:]
     canvas = torch.ones((1, 3, cell_h * grid_size[0], cell_w * grid_size[1]))
     for i, img in enumerate(cells):
         y = int(coords[i][0])
