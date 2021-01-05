@@ -91,3 +91,19 @@ def create_atlas_vectors(
     indices = grid_indices(tensor, size)
     grid_vecs, vec_coords = extract_grid_vectors(indices, activations, size, min_density)
     return grid_vecs, vec_coords
+
+
+def create_atlas(
+    cells: torch.Tensor, coords: List[Tuple[int, int]], grid_size: Tuple[int, int]
+) -> torch.Tensor:
+    cell_h, cell_w = cells[0].shape[:2]
+    canvas = torch.ones((1, 3, cell_h * grid_size[0], cell_w * grid_size[1]))
+    for i, img in enumerate(cells):
+        y = int(coords[i][0])
+        x = int(coords[i][1])
+        canvas[
+            ...,
+            (grid_size[0] - x - 1) * cell_h : (grid_size[0] - x) * cell_h,
+            y * cell_w : (y + 1) * cell_w,
+        ] = img
+    return canvas
