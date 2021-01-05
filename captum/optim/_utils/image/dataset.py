@@ -59,15 +59,18 @@ def dataset_klt_matrix(
 
 
 def capture_activation_samples(
-    loader: torch.utils.data.DataLoader, model, targets: List[torch.nn.Module]
+    loader: torch.utils.data.DataLoader, model, targets: List[torch.nn.Module], num_samples: Optional[int] = None, input_device: torch.device = "cpu"
 ) -> ModuleOutputMapping:
     """
     Create a dict of randomly sampled activations for an image dataset.
+
     Args:
         loader (torch.utils.data.DataLoader): A torch.utils.data.DataLoader
             instance for an image dataset.
         model (nn.Module): A PyTorch model instance.
         targets (list of nn.Module): A list of layers to sample activations from.
+        num_samples (int): How many samples to collect. Default is to collect all samples.
+        input_device (torch.device): The device to use for model inputs.
     Returns:
         activation_dict (dict of tensor): A dictionary containing the sampled
             dataset activations, with the targets as the keys.
@@ -90,7 +93,7 @@ def capture_activation_samples(
             rnd_samples.append(activ)
         return torch.cat(rnd_samples, 1).permute(1, 0)
 
-    num_samples = 0
+    sample_count = 0
     activation_dict = {k: [] for k in dict.fromkeys(targets).keys()}
     with torch.no_grad():
         for inputs, _ in loader:
@@ -100,4 +103,8 @@ def capture_activation_samples(
             activation_dict = {
                 k: activation_dict[k] + target_activ_dict[k] for k in activation_dict
             }
+            sample_count += inputs.size(0)
+            if num_samples is not None:
+                if sample_count > num_samples:
+                    return {k: torch.cat(activation_dict[k]) for k in activation_dict}
     return {k: torch.cat(activation_dict[k]) for k in activation_dict}
