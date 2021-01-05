@@ -105,5 +105,24 @@ class TestDatasetKLTMatrix(BaseTest):
         assertTensorAlmostEqual(self, klt_transform, expected_mtx)
 
 
+class TestCaptureActivationSamplesBaseTest):
+    def test_capture_activation_samples(self) -> None:
+        if torch.__version__ == "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping test due to insufficient Torch version."
+            )
+
+        num_tensors = 100
+        dataset_tensors = [torch.ones(3, 224, 224) for x in range(num_tensors)]
+        test_dataset = dataset_helpers.ImageTestDataset(dataset_tensors)
+        dataset_loader = torch.utils.data.DataLoader(
+            test_dataset, batch_size=10, num_workers=0, shuffle=False
+        )
+        model = googlenet(pretrained=True)
+        targets = [model.mixed4c]
+        activation_dict = capture_activation_samples(data_loader, model, targets)
+        self.AssertEqual(activation_dict[listmodel.mixed4c].shape), [100, 512])
+
+
 if __name__ == "__main__":
     unittest.main()
