@@ -90,6 +90,7 @@ def capture_activation_samples(
             rnd_samples.append(activ)
         return torch.cat(rnd_samples, 1).permute(1, 0)
 
+    num_samples = 0
     activation_dict = {k: [] for k in dict.fromkeys(targets).keys()}
     with torch.no_grad():
         for inputs, _ in loader:
