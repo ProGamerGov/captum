@@ -79,12 +79,15 @@ def create_atlas_vectors(
     activations: torch.Tensor,
     size: Tuple[int, int] = (8, 8),
     min_density: int = 8,
+    normalize: bool = True,
 ) -> Tuple[torch.Tensor, List[Tuple[int, int]]]:
     """
     Create direction vectors by  splitting an irregular grid into cells.
     """
+
     assert tensor.dim() == 2 and tensor.size(1) == 2
-    tensor = normalize_grid(tensor)
-    grid = grid_indices(tensor)
-    grid_vecs, vec_coords = extract_grid_vectors(grid, activations, size, min_density)
+    if normalize:
+        tensor = normalize_grid(tensor)
+    indices = grid_indices(tensor, size)
+    grid_vecs, vec_coords = extract_grid_vectors(indices, activations, size, min_density)
     return grid_vecs, vec_coords
