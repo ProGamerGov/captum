@@ -74,10 +74,11 @@ class TestRandomScale(BaseTest):
 
 class TestRandomRotation(BaseTest):
     def test_random_rotation_degrees(self) -> None:
-        rot_mod = RandomRotation([0.0, 1.0, 2.0, 3.0, 4.0])
+        test_degrees = [0.0, 1.0, 2.0, 3.0, 4.0]
+        rot_mod = RandomRotation(test_degrees)
         degrees = rot_mod.degrees
         self.assertTrue(hasattr(degrees, "__iter__"))
-        self.assertEqual(len(degrees), 5)
+        self.assertEqual(degrees, test_degrees)
 
     def test_random_rotation_matrix(self) -> None:
         theta = 25.1
