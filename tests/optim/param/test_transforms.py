@@ -74,7 +74,7 @@ class TestRandomScale(BaseTest):
 
 class TestRandomRotation(BaseTest):
     def test_random_rotation_degrees(self) -> None:
-        rot_mod = RandomRotation([0, 1, 2, 3, 4])
+        rot_mod = RandomRotation([0.0, 1.0, 2.0, 3.0, 4.0])
         degrees = rot_mod.degrees
         self.assertTrue(hasattr(degrees, "__iter__"))
         self.assertEqual(len(degrees), 5)
