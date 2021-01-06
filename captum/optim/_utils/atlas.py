@@ -138,6 +138,7 @@ def create_atlas_vectors(
 
     assert tensor.dim() == 2 and tensor.size(1) == 2
     assert activations.dim() == 2
+    assert activations.shape[0] == tensor.shape[0]
 
     if normalize:
         tensor = normalize_grid(tensor)
