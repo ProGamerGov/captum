@@ -11,6 +11,16 @@ def grid_indices(
 ) -> List[List[torch.Tensor]]:
     """
     Create grid cells of a specified size for an irregular grid.
+
+    Args:
+         tensor (torch.tensor): xy coordinate tensor to extract grid
+            indices from.
+         size (Tuple[int, int]): The size of grid cells to use.
+         x_extent (Tuple[float, float]): The x extent to use.
+         y_extent (Tuple[float, float]): The y extent to use.
+    Returns:
+       indices (list of list of tensor): Grid cell indices for the
+           irregular grid.
     """
 
     assert tensor.dim() == 2 and tensor.size(1) == 2
@@ -38,7 +48,18 @@ def normalize_grid(
     relative_margin: float = 0.1,
 ) -> torch.Tensor:
     """
-    Remove outliers and rescale grid to [0,1].
+    Remove outliers and rescale tensor to [0,1].
+
+    Args:
+        x (torch.tensor): Tensor to normalize.
+        min_percentile (float): The minamum percentile to
+            use when normalizing the tensor.
+        max_percentile (float): The maximum percentile to
+            use when normalizing the tensor.
+        relative_margin (float): The relative margin to use
+            when normalizing the tensor.
+    Returns:
+        clipped (torch.tensor): A normalized tensor.
     """
 
     assert x.dim() == 2 and x.size(1) == 2
@@ -62,7 +83,21 @@ def extract_grid_vectors(
 ) -> Tuple[torch.Tensor, List[Tuple[int, int]]]:
     """
     Create direction vectors.
+    Carter, et al., "Activation Atlas", Distill, 2019.
+    https://distill.pub/2019/activation-atlas/
+
+    Args:
+        grid (torch.tensor): List of lists of grid indices to use.
+        activations (torch.tensor): Raw activation samples.
+        size (Tuple[int, int]): The size of grid cells to use.
+        min_density (int): The minamum number of points for a cell to counted.
+    Returns:
+        cells (torch.tensor): A tensor containing all the direction vector
+            that were created.
+        cell_coords (List[Tuple[int, int]]): List of coordinates for each of
+            the direction vectors.
     """
+    assert activations.dim() == 2
 
     cell_coords = []
     average_activations = []
@@ -84,9 +119,26 @@ def create_atlas_vectors(
 ) -> Tuple[torch.Tensor, List[Tuple[int, int]]]:
     """
     Create direction vectors by splitting an irregular grid into cells.
+    Carter, et al., "Activation Atlas", Distill, 2019.
+    https://distill.pub/2019/activation-atlas/
+
+    Args:
+        tensor (torch.tensor): The dimensionality reduced activation samples.
+        activations (torch.tensor): Raw activation samples.
+        size (Tuple[int, int]): The size of grid cells to use.
+        min_density (int): The minamum number of points for a cell to counted.
+        normalize (bool, optional): Whether to normalize the dimensionality
+            reduced activation samples to between [0,1] & to remove outliers.
+    Returns:
+        grid_vecs (torch.tensor): A tensor containing all the direction vector
+            that were created.
+        vec_coords (List[Tuple[int, int]]): List of coordinates for each of
+            the direction vectors.
     """
 
     assert tensor.dim() == 2 and tensor.size(1) == 2
+    assert activations.dim() == 2
+
     if normalize:
         tensor = normalize_grid(tensor)
     indices = grid_indices(tensor, size)
@@ -101,6 +153,23 @@ def create_atlas(
     coords: List[Tuple[int, int]],
     grid_size: Tuple[int, int] = (8, 8),
 ) -> torch.Tensor:
+    """
+    Create atlas grid with coordinates.
+
+    Args:
+        cells (list of tensor): A list of visualizations made using atlas
+            direction vectors.
+        coords (list of Tuple[int, int]): A list of coordinates to use for
+            the visualizations.
+        grid_size (Tuple[int, int]): The size of grid cells used to create
+            the visualization direction vectors.
+    Returns:
+        canvas (torch.tensor): The full activation atlas visualization.
+    """
+
+    assert sum([c.dim() for c in cells]) == 4 * len(cells)
+    assert len(cells) == len(coords)
+
     cell_h, cell_w = cells[0].shape[2:]
     canvas = torch.ones(1, 3, cell_h * grid_size[0], cell_w * grid_size[1])
     for i, img in enumerate(cells):
