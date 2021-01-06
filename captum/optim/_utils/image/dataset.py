@@ -117,5 +117,5 @@ def capture_activation_samples(
             sample_count += inputs.size(0)
             if num_samples is not None:
                 if sample_count > num_samples:
-                    activation_dict = {k: torch.cat(activation_dict[k]) for k in activation_dict}
-    activation_dict = {k: torch.cat(activation_dict[k]) for k in activation_dict}
+                    return {k: torch.cat(activation_dict[k]) for k in activation_dict}
+    return {k: torch.cat(activation_dict[k]) for k in activation_dict}
