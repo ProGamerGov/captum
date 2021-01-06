@@ -66,7 +66,6 @@ def normalize_grid(
     mins = torch.quantile(x, min_percentile, dim=0)
     maxs = torch.quantile(x, max_percentile, dim=0)
 
-    # add margins
     mins = mins - relative_margin * (maxs - mins)
     maxs = maxs + relative_margin * (maxs - mins)
 
