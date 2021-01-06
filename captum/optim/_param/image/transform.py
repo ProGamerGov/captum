@@ -255,7 +255,10 @@ class RandomRotation(nn.Module):
         self.degrees = degrees
 
     def get_rot_mat(
-        self, theta: torch.Tensor, device: torch.device, dtype: torch.dtype
+        self,
+        theta: Union[int, float, torch.Tensor],
+        device: torch.device,
+        dtype: torch.dtype,
     ) -> torch.Tensor:
         theta = torch.tensor(theta, device=device, dtype=dtype)
         rot_mat = torch.tensor(
