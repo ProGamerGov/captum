@@ -35,7 +35,7 @@ def normalize_grid(
     x: torch.Tensor,
     min_percentile: float = 0.01,
     max_percentile: float = 0.99,
-    relative_margin: float = 0.001,
+    relative_margin: float = 0.1,
 ) -> torch.Tensor:
     """
     Remove outliers and rescale grid to [0,1].
@@ -50,7 +50,8 @@ def normalize_grid(
     maxs = maxs + relative_margin * (maxs - mins)
 
     clipped = torch.max(torch.min(x, maxs), mins)
-    return (clipped - clipped.min(0)[0].flip(0)) / clipped.max(dim=0)[0].flip(0)
+    clipped = clipped - clipped.min(0)[0]
+    return clipped / clipped.max(0)[0]
 
 
 def extract_grid_vectors(
