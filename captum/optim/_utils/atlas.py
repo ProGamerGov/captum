@@ -8,7 +8,7 @@ def grid_indices(
     size: Tuple[int, int] = (8, 8),
     x_extent: Tuple[float, float] = (0.0, 1.0),
     y_extent: Tuple[float, float] = (0.0, 1.0),
-) -> List[List[int]]:
+) -> List[List[torch.Tensor]]:
     """
     Create grid cells of a specified size for an irregular grid.
     """
@@ -55,7 +55,7 @@ def normalize_grid(
 
 
 def extract_grid_vectors(
-    grid: List[List[float]],
+    grid: List[List[torch.Tensor]],
     activations: torch.Tensor,
     size: Tuple[int, int] = (8, 8),
     min_density: int = 8,
@@ -90,12 +90,16 @@ def create_atlas_vectors(
     if normalize:
         tensor = normalize_grid(tensor)
     indices = grid_indices(tensor, size)
-    grid_vecs, vec_coords = extract_grid_vectors(indices, activations, size, min_density)
+    grid_vecs, vec_coords = extract_grid_vectors(
+        indices, activations, size, min_density
+    )
     return grid_vecs, vec_coords
 
 
 def create_atlas(
-    cells: List[torch.Tensor], coords: List[Tuple[int, int]], grid_size: Tuple[int, int]
+    cells: List[torch.Tensor],
+    coords: List[List[torch.Tensor]],
+    grid_size: Tuple[int, int] = (8, 8),
 ) -> torch.Tensor:
     cell_h, cell_w = cells[0].shape[2:]
     canvas = torch.ones(1, 3, cell_h * grid_size[0], cell_w * grid_size[1])
