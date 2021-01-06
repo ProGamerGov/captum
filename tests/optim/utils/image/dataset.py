@@ -122,10 +122,11 @@ class TestCaptureActivationSamples(BaseTest):
         )
         model = googlenet(pretrained=True)
         targets = [model.mixed4c]
+        target_names = ["mixed4c"]
         activation_dict = dataset_utils.capture_activation_samples(
-            dataset_loader, model, targets
+            dataset_loader, model, targets, target_names
         )
-        self.assertEqual(list(activation_dict[model.mixed4c].shape), [num_tensors, 512])
+        self.assertEqual(list(activation_dict["mixed4c"].shape), [num_tensors, 512])
 
 
 if __name__ == "__main__":
