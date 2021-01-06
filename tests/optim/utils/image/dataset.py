@@ -4,6 +4,7 @@ import unittest
 import torch
 
 import captum.optim._utils.image.dataset as dataset_utils
+from captum.optim._models.inception_v1 import googlenet
 from tests.helpers.basic import (
     BaseTest,
     assertArraysAlmostEqual,
@@ -121,7 +122,9 @@ class TestCaptureActivationSamples(BaseTest):
         )
         model = googlenet(pretrained=True)
         targets = [model.mixed4c]
-        activation_dict = capture_activation_samples(data_loader, model, targets)
+        activation_dict = dataset_utils.capture_activation_samples(
+            dataset_loader, model, targets
+        )
         self.assertEqual(list(activation_dict[model.mixed4c].shape), [num_tensors, 512])
 
 
