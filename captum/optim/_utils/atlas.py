@@ -168,6 +168,7 @@ def create_atlas(
     """
 
     assert sum([c.dim() for c in cells]) == 4 * len(cells)
+    assert all([c.shape == cells[0].shape for c in cells])
     assert len(cells) == len(coords)
 
     cell_h, cell_w = cells[0].shape[2:]
