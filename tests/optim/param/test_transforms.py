@@ -228,7 +228,7 @@ class TestCenterCrop(BaseTest):
         crop_mod = transform.CenterCrop(
             [5, 5], pixels_from_edges=False, offset_left=True
         )
-        x = torch.ones(5, 5)
+        x = torch.ones(1, 3, 5, 5)
         px = F.pad(x, (5, 4, 5, 4), value=float("-inf"))
         cropped_tensor = crop_mod(px)
         assertTensorAlmostEqual(self, x, cropped_tensor)
@@ -237,7 +237,7 @@ class TestCenterCrop(BaseTest):
         crop_mod = transform.CenterCrop(
             [5, 5], pixels_from_edges=False, offset_left=True
         )
-        x = torch.ones(5, 5)
+        x = torch.ones(1, 3, 5, 5)
         px = F.pad(x, (5, 5, 5, 5), value=float("-inf"))
         cropped_tensor = crop_mod(px)
         assertTensorAlmostEqual(self, x, cropped_tensor)
@@ -338,7 +338,7 @@ class TestCenterCropFunction(BaseTest):
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
     def test_center_crop_offset_left_uneven_sides(self) -> None:
-        x = torch.ones(5, 5)
+        x = torch.ones(1, 3, 5, 5)
         px = F.pad(x, (5, 4, 5, 4), value=float("-inf"))
         x_out = transform.center_crop(
             px, crop_vals=[5, 5], pixels_from_edges=False, offset_left=True
@@ -346,7 +346,7 @@ class TestCenterCropFunction(BaseTest):
         assertTensorAlmostEqual(self, x, cropped_tensor)
 
     def test_center_crop_offset_left_even_sides(self) -> None:
-        x = torch.ones(5, 5)
+        x = torch.ones(1, 3, 5, 5)
         px = F.pad(x, (5, 5, 5, 5), value=float("-inf"))
         x_out = transform.center_crop(
             px, crop_vals=[5, 5], pixels_from_edges=False, offset_left=True
