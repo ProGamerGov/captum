@@ -75,7 +75,7 @@ class TestRandomScale(BaseTest):
 class TestRandomRotation(BaseTest):
     def test_random_rotation_degrees(self) -> None:
         test_degrees = [0.0, 1.0, 2.0, 3.0, 4.0]
-        rot_mod = RandomRotation(test_degrees)
+        rot_mod = transform.RandomRotation(test_degrees)
         degrees = rot_mod.degrees
         self.assertTrue(hasattr(degrees, "__iter__"))
         self.assertEqual(degrees, test_degrees)
@@ -83,7 +83,7 @@ class TestRandomRotation(BaseTest):
     def test_random_rotation_matrix(self) -> None:
         theta = 25.1
         theta = theta * 3.141592653589793 / 180
-        rot_mod = RandomRotation([25.1])
+        rot_mod = transform.RandomRotation([25.1])
         rot_matrix = rot_mod.get_rot_mat(
             theta, device=torch.device("cpu"), dtype=torch.float32
         )
@@ -94,7 +94,7 @@ class TestRandomRotation(BaseTest):
         assertTensorAlmostEqual(self, rot_matrix, expected_matrix)
 
     def test_random_rotation_rotate_tensor(self) -> None:
-        rot_mod = RandomRotation([25.0])
+        rot_mod = transform.RandomRotation([25.0])
 
         test_input = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
         test_output = rot_mod.rotate_tensor(test_input, 25.0)
