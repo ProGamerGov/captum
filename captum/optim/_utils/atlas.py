@@ -81,7 +81,8 @@ def extract_grid_vectors(
     min_density: int = 8,
 ) -> Tuple[torch.Tensor, List[Tuple[int, int]]]:
     """
-    Create direction vectors.
+    Create direction vectors for activation samples and grid indices.
+
     Carter, et al., "Activation Atlas", Distill, 2019.
     https://distill.pub/2019/activation-atlas/
 
@@ -96,6 +97,7 @@ def extract_grid_vectors(
         cell_coords (List[Tuple[int, int]]): List of coordinates for each of
             the direction vectors.
     """
+
     assert activations.dim() == 2
 
     cell_coords = []
@@ -117,7 +119,9 @@ def create_atlas_vectors(
     normalize: bool = True,
 ) -> Tuple[torch.Tensor, List[Tuple[int, int]]]:
     """
-    Create direction vectors by splitting an irregular grid into cells.
+    Create direction vectors by splitting an irregular grid of activation samples
+    into cells.
+
     Carter, et al., "Activation Atlas", Distill, 2019.
     https://distill.pub/2019/activation-atlas/
 
@@ -154,7 +158,7 @@ def create_atlas(
     grid_size: Tuple[int, int] = (8, 8),
 ) -> torch.Tensor:
     """
-    Create atlas grid with coordinates.
+    Create atlas grid from visualization imags with coordinates.
 
     Args:
         cells (list of tensor): A list of visualizations made using atlas
