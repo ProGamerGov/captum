@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import torch
 
@@ -64,7 +64,7 @@ def capture_activation_samples(
     targets: List[torch.nn.Module],
     target_names: List[str],
     num_samples: Optional[int] = None,
-    input_device: torch.device = "cpu",
+    input_device: torch.device = torch.device("cpu"),
 ) -> ModuleOutputMapping:
     """
     Create a dict of randomly sampled activations for an image dataset.
@@ -73,10 +73,12 @@ def capture_activation_samples(
         loader (torch.utils.data.DataLoader): A torch.utils.data.DataLoader
             instance for an image dataset.
         model (nn.Module): A PyTorch model instance.
-        targets (list of nn.Module): A list of layers to sample activations from.
-        target_names (list of str): A list of names to use for the layers to targets in
-            the output dict.
-        num_samples (int): How many samples to collect. Default is to collect all samples.
+        targets (list of nn.Module): A list of layers to sample activations
+            from.
+        target_names (list of str): A list of names to use for the layers
+            to targets in the output dict.
+        num_samples (int): How many samples to collect. Default is to collect
+            all samples.
         input_device (torch.device): The device to use for model inputs.
     Returns:
         activation_dict (dict of tensor): A dictionary containing the sampled
@@ -101,7 +103,7 @@ def capture_activation_samples(
         return torch.cat(rnd_samples, 1).permute(1, 0)
 
     assert len(target_names) == len(targets)
-    activation_dict = {k: [] for k in dict.fromkeys(target_names).keys()}
+    activation_dict: Dict = {k: [] for k in dict.fromkeys(target_names).keys()}
 
     sample_count = 0
     with torch.no_grad():
