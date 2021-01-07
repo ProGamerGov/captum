@@ -125,10 +125,8 @@ def capture_activation_samples(
 
             target_activ_dict = collect_activations(model, targets, inputs)
 
-            for t in target_activ_dict.keys():
-                target_activ_dict[t] = [random_sample(target_activ_dict[t])]
             activation_dict = {
-                k: activation_dict[k] + target_activ_dict[t]
+                k: activation_dict[k] + [random_sample(target_activ_dict[t])]
                 for k, t in zip(activation_dict, target_activ_dict)
             }
             del target_activ_dict
