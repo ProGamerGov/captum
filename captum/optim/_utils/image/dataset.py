@@ -84,9 +84,10 @@ def capture_activation_samples(
             from.
         target_names (list of str): A list of names to use for the layers
             to targets in the output dict.
-        num_samples (int): How many samples to collect. Default is to collect
-            all samples.
-        input_device (torch.device): The device to use for model inputs.
+        num_samples (int, optional): How many samples to collect. Default is
+            to collect all samples.
+        input_device (torch.device, optional): The device to use for model
+            inputs.
         show_progress (bool, optional): Whether or not to show progress.
     Returns:
         activation_dict (dict of tensor): A dictionary containing the sampled
