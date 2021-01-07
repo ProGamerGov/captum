@@ -115,7 +115,9 @@ def capture_activation_samples(
     activation_dict: Dict = {k: [] for k in dict.fromkeys(target_names).keys()}
 
     if show_progress:
-        total = len(loader.dataset) if num_samples is None else num_samples
+        total = (
+            len(loader.dataset) if num_samples is None else num_samples  # type: ignore
+        )
         pbar = tqdm(total=total, unit=" images")
 
     sample_count = 0
