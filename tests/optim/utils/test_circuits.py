@@ -65,6 +65,9 @@ class TestGetExpandedWeights(BaseTest):
         model = googlenet(
             pretrained=True, replace_nonlinears_with_linear_equivalents=True
         )
+        output_tensor = circuits.get_expanded_weights(
+            model, model.pool3, model.mixed4a, 5
+        )
         self.assertEqual(list(output_tensor.shape), [508, 480, 5, 5])
 
         top_connected_neurons = torch.argsort(
