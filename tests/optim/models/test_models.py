@@ -9,7 +9,7 @@ from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 class TestInceptionV1(BaseTest):
     def test_load_inceptionv1(self) -> None:
-        if torch.__version__ == "1.2.0":
+        if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
                 "Skipping load pretrained inception"
                 + " due to insufficient Torch version."
@@ -21,8 +21,34 @@ class TestInceptionV1(BaseTest):
             test = False
         self.assertTrue(test)
 
+    def test_load_inceptionv1_no_redirected_relu(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping load pretrained inception RedirectedRelu"
+                + " due to insufficient Torch version."
+            )
+        try:
+            googlenet(pretrained=True, replace_relus_with_redirectedrelu=False)
+            test = True
+        except Exception:
+            test = False
+        self.assertTrue(test)
+
+    def test_load_inceptionv1_linear(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping load pretrained inception linear"
+                + " due to insufficient Torch version."
+            )
+        try:
+            googlenet(pretrained=True, replace_nonlinears_with_linear_equivalents=True)
+            test = True
+        except Exception:
+            test = False
+        self.assertTrue(test)
+
     def test_transform_inceptionv1(self) -> None:
-        if torch.__version__ == "1.2.0":
+        if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
                 "Skipping inceptionV1 internal transform"
                 + " due to insufficient Torch version."
@@ -34,7 +60,7 @@ class TestInceptionV1(BaseTest):
         assertTensorAlmostEqual(self, output, expected_output, 0)
 
     def test_load_and_forward_basic_inceptionv1(self) -> None:
-        if torch.__version__ == "1.2.0":
+        if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
                 "Skipping basic pretrained inceptionV1 forward"
                 + " due to insufficient Torch version."
@@ -49,7 +75,7 @@ class TestInceptionV1(BaseTest):
         self.assertTrue(test)
 
     def test_load_and_forward_diff_sizes_inceptionv1(self) -> None:
-        if torch.__version__ == "1.2.0":
+        if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
                 "Skipping pretrained inceptionV1 forward with different sized inputs"
                 + " due to insufficient Torch version."
@@ -66,7 +92,7 @@ class TestInceptionV1(BaseTest):
         self.assertTrue(test)
 
     def test_forward_aux_inceptionv1(self) -> None:
-        if torch.__version__ == "1.2.0":
+        if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
                 "Skipping pretrained inceptionV1 with aux logits forward"
                 + " due to insufficient Torch version."
