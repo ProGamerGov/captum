@@ -24,8 +24,8 @@ def googlenet(
         pretrained (bool): If True, returns a model pre-trained on ImageNet
         progress (bool): If True, displays a progress bar of the download to stderr
         model_path (str): Optional path for InceptionV1 model file.
-        replace_relu_with_redirectedrelu (bool): If True, return pretrained model with
-            Redirected ReLU in place of ReLU layers.
+        replace_relus_with_redirectedrelu (bool): If True, return pretrained model
+            with Redirected ReLU in place of ReLU layers.
         replace_nonlinears_with_linear_equivalents (bool): If True, return pretrained
             model with all nonlinear layers replaced with linear equivalents.
         aux_logits (bool): If True, adds two auxiliary branches that can improve
@@ -54,7 +54,7 @@ def googlenet(
         model.load_state_dict(state_dict)
 
         if (
-            replace_relu_with_redirectedrelu
+            replace_relus_with_redirectedrelu
             and not replace_non_linears_with_linear_equivalents
         ):
             model_utils.replace_layers(model)
