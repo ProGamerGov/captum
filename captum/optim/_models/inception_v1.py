@@ -55,10 +55,10 @@ def googlenet(
 
         if (
             replace_relus_with_redirectedrelu
-            and not replace_non_linears_with_linear_equivalents
+            and not replace_nonlinears_with_linear_equivalents
         ):
             model_utils.replace_layers(model)
-        elif replace_non_linears_with_linear_equivalents:
+        elif replace_nonlinears_with_linear_equivalents:
             model_utils.max2avg_pool2d(model)
             model_utils.ignore_layer(model, model_utils.ReluLayer)
         return model
