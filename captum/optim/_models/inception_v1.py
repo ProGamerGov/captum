@@ -14,7 +14,7 @@ def googlenet(
     pretrained: bool = False,
     progress: bool = True,
     model_path: str = None,
-    replace_relu_with_redirectedrelu: bool = True,
+    replace_relus_with_redirectedrelu: bool = True,
     replace_nonlinears_with_linear_equivalents: bool = False,
     **kwargs
 ):
