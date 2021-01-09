@@ -3,19 +3,21 @@ import unittest
 
 import torch
 
+from captum.optim._utils.models import RedirectedReluLayer, ReluLayer
 from captum.optim._models.inception_v1 import googlenet
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
+from tests.optim.helpers.common_helpers import check_layer_not_in_model
 
 
 class TestInceptionV1(BaseTest):
-    def test_load_inceptionv1(self) -> None:
+    def test_load_inceptionv1_with_redirected_relu(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
                 "Skipping load pretrained inception"
                 + " due to insufficient Torch version."
             )
         try:
-            googlenet(pretrained=True)
+            googlenet(pretrained=True, replace_relus_with_redirectedrelu=True)
             test = True
         except Exception:
             test = False
@@ -33,6 +35,7 @@ class TestInceptionV1(BaseTest):
         except Exception:
             test = False
         self.assertTrue(test)
+        check_layer_not_in_model(self, model, RedirectedReluLayer)
 
     def test_load_inceptionv1_linear(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -46,6 +49,10 @@ class TestInceptionV1(BaseTest):
         except Exception:
             test = False
         self.assertTrue(test)
+        check_layer_not_in_model(self, model, RedirectedReluLayer)
+        check_layer_not_in_model(self, model, ReluLayer)
+        check_layer_not_in_model(self, model, torch.nn.ReLU)
+        check_layer_not_in_model(self, model, torch.nn.MaxPool2d)
 
     def test_transform_inceptionv1(self) -> None:
         if torch.__version__ <= "1.2.0":
