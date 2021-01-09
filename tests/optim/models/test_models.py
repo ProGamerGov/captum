@@ -3,10 +3,16 @@ import unittest
 
 import torch
 
-from captum.optim._utils.models import RedirectedReluLayer, ReluLayer
 from captum.optim._models.inception_v1 import googlenet
+from captum.optim._utils.models import RedirectedReluLayer, ReluLayer
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
-from tests.optim.helpers.common_helpers import check_layer_not_in_model
+
+
+def check_layer_not_in_model(self, model, layer) -> None:
+    for name, child in model._modules.items():
+        if child is not None:
+            self.assertNotIsInstance(child, layer)
+            check_layer_not_in_model(self, child, layer)
 
 
 class TestInceptionV1(BaseTest):
@@ -30,7 +36,7 @@ class TestInceptionV1(BaseTest):
                 + " due to insufficient Torch version."
             )
         try:
-            googlenet(pretrained=True, replace_relus_with_redirectedrelu=False)
+            model = googlenet(pretrained=True, replace_relus_with_redirectedrelu=False)
             test = True
         except Exception:
             test = False
@@ -44,7 +50,9 @@ class TestInceptionV1(BaseTest):
                 + " due to insufficient Torch version."
             )
         try:
-            googlenet(pretrained=True, replace_nonlinears_with_linear_equivalents=True)
+            model = googlenet(
+                pretrained=True, replace_nonlinears_with_linear_equivalents=True
+            )
             test = True
         except Exception:
             test = False
