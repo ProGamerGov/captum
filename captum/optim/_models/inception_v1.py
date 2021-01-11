@@ -1,4 +1,4 @@
-from typing import Tuple, Union
+from typing import Tuple, Union, cast
 
 import torch
 import torch.nn as nn
@@ -185,7 +185,7 @@ class InceptionV1(nn.Module):
         x = self.drop(x)
         x = self.fc(x)
         if not self.aux_logits:
-            return x
+            return cast(torch.Tensor, x)
         else:
             return x, aux1_output, aux2_output
 
