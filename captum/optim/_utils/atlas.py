@@ -83,7 +83,7 @@ def extract_grid_vectors(
     activations: torch.Tensor,
     grid_size: Tuple[int, int],
     min_density: int = 8,
-) -> Tuple[torch.Tensor, List[Tuple[int, int]]]:
+) -> Tuple[torch.Tensor, List[Tuple[int, int, int]]]:
     """
     Create direction vectors for activation samples and grid indices.
 
@@ -123,7 +123,7 @@ def create_atlas_vectors(
     grid_size: Tuple[int, int],
     min_density: int = 8,
     normalize: bool = True,
-) -> Tuple[torch.Tensor, List[Tuple[int, int]]]:
+) -> Tuple[torch.Tensor, List[Tuple[int, int, int]]]:
     """
     Create direction vectors by splitting an irregular grid of activation samples
     into cells.
@@ -141,8 +141,9 @@ def create_atlas_vectors(
     Returns:
         grid_vecs (torch.tensor): A tensor containing all the direction vector
             that were created.
-        vec_coords (List[Tuple[int, int]]): List of coordinates for each of
-            the direction vectors.
+        cell_coords (List[Tuple[int, int]]): List of coordinates for grid
+            spatial positons of each direction vector, and the number of
+            samples used for the cell.
     """
 
     assert tensor.dim() == 2 and tensor.size(1) == 2
@@ -167,10 +168,10 @@ def create_atlas(
     Create atlas grid from visualization imags with coordinates.
 
     Args:
-        cells (list of tensor): A list of visualizations made using atlas
+        cells (list of tensor): A list of image tensors made with atlas
             direction vectors.
-        coords (list of Tuple[int, int]): A list of coordinates to use for
-            the visualizations.
+        coords (list of Tuple[int, int] or list of Tuple[int, int, int]):
+            A list of coordinates to use for the atlas image tensors.
         grid_size (Tuple[int, int]): The size of grid cells used to create
             the visualization direction vectors.
     Returns:
