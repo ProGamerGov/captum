@@ -11,7 +11,6 @@ def grid_indices(
 ) -> List[List[torch.Tensor]]:
     """
     Create grid cells of a specified size for an irregular grid.
-
     Args:
         tensor (torch.tensor): xy coordinate tensor to extract grid
             indices from.
@@ -24,14 +23,10 @@ def grid_indices(
     """
 
     assert tensor.dim() == 2 and tensor.size(1) == 2
-    
+
     #  Convert coordinations to bins
-    x_bin = ((tensor[:, 0] - x_extent[0]) / (x_extent[1] - x_extent[0])) * grid_size[
-        1
-    ]
-    y_bin = ((tensor[:, 1] - y_extent[0]) / (y_extent[1] - y_extent[0])) * grid_size[
-        0
-    ]
+    x_bin = ((tensor[:, 0] - x_extent[0]) / (x_extent[1] - x_extent[0])) * grid_size[1]
+    y_bin = ((tensor[:, 1] - y_extent[0]) / (y_extent[1] - y_extent[0])) * grid_size[0]
 
     x_list = []
     for x in range(grid_size[1]):
