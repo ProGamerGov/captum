@@ -100,7 +100,8 @@ def extract_grid_vectors(
         cells (torch.tensor): A tensor containing all the direction vector
             that were created.
         cell_coords (List[Tuple[int, int]]): List of coordinates for grid
-            spatial positons of each direction vector.
+            spatial positons of each direction vector, and the number of
+            samples used for the cell.
     """
 
     assert activations.dim() == 2
@@ -112,7 +113,7 @@ def extract_grid_vectors(
             indices = grid[x][y]
             if len(indices) >= min_density:
                 average_activations.append(torch.mean(activations[indices], 0))
-                cell_coords.append((x, y))
+                cell_coords.append((x, y, len(indices)))
     return torch.stack(average_activations), cell_coords
 
 
