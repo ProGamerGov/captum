@@ -3,7 +3,7 @@ from typing import List, Tuple
 import torch
 
 
-def grid_indices(
+def calc_grid_indices(
     tensor: torch.Tensor,
     grid_size: Tuple[int, int],
     x_extent: Tuple[float, float] = (0.0, 1.0),
@@ -149,7 +149,7 @@ def create_atlas_vectors(
 
     if normalize:
         tensor = normalize_grid(tensor)
-    indices = grid_indices(tensor, grid_size)
+    indices = calc_grid_indices(tensor, grid_size)
     grid_vecs, vec_coords = extract_grid_vectors(
         indices, activations, grid_size, min_density
     )
