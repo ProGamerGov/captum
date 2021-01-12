@@ -26,10 +26,10 @@ def grid_indices(
     assert tensor.dim() == 2 and tensor.size(1) == 2
     
     #  Convert coordinations to bins
-    x_coords = ((tensor[:, 0] - x_extent[0]) / (x_extent[1] - x_extent[0])) * grid_size[
+    x_bin = ((tensor[:, 0] - x_extent[0]) / (x_extent[1] - x_extent[0])) * grid_size[
         1
     ]
-    y_coords = ((tensor[:, 1] - y_extent[0]) / (y_extent[1] - y_extent[0])) * grid_size[
+    y_bin = ((tensor[:, 1] - y_extent[0]) / (y_extent[1] - y_extent[0])) * grid_size[
         0
     ]
 
@@ -37,8 +37,8 @@ def grid_indices(
     for x in range(grid_size[1]):
         y_list = []
         for y in range(grid_size[0]):
-            in_bounds_x = torch.logical_and(x <= x_coords, x_coords <= x + 1)
-            in_bounds_y = torch.logical_and(y <= y_coords, y_coords <= y + 1)
+            in_bounds_x = torch.logical_and(x <= x_bin, x_bin <= x + 1)
+            in_bounds_y = torch.logical_and(y <= y_bin, y_bin <= y + 1)
             in_bounds_indices = torch.where(
                 torch.logical_and(in_bounds_x, in_bounds_y)
             )[0]
