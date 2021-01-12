@@ -24,6 +24,8 @@ def grid_indices(
     """
 
     assert tensor.dim() == 2 and tensor.size(1) == 2
+    
+    #  Convert coordinations to bins
     x_coords = ((tensor[:, 0] - x_extent[0]) / (x_extent[1] - x_extent[0])) * grid_size[
         1
     ]
