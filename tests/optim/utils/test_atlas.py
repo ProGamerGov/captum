@@ -71,7 +71,7 @@ class TestExtractGridVectors(BaseTest):
         )
 
         expected_vecs = torch.tensor([[8.0, 9.0, 10.0, 11.0], [24.0, 25.0, 26.0, 27.0]])
-        expected_coords = [(0, 0), (1, 1)]
+        expected_coords = [(0, 0, 5), (1, 1, 5)]
 
         assertTensorAlmostEqual(self, x_vecs, expected_vecs)
         self.assertEqual(vec_coords, expected_coords)
@@ -90,7 +90,7 @@ class TestCreateAtlasVectors(BaseTest):
         )
 
         expected_vecs = torch.tensor([[8.0, 9.0, 10.0, 11.0], [24.0, 25.0, 26.0, 27.0]])
-        expected_coords = [(0, 0), (1, 1)]
+        expected_coords = [(0, 0, 5), (1, 1, 5)]
 
         assertTensorAlmostEqual(self, x_vecs, expected_vecs)
         self.assertEqual(vec_coords, expected_coords)
