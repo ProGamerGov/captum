@@ -76,7 +76,7 @@ def normalize_grid(
 
 
 def extract_grid_vectors(
-    grid: List[List[torch.Tensor]],
+    grid_indices: List[List[torch.Tensor]],
     activations: torch.Tensor,
     grid_size: Tuple[int, int],
     min_density: int = 8,
@@ -88,7 +88,7 @@ def extract_grid_vectors(
     https://distill.pub/2019/activation-atlas/
 
     Args:
-        grid (torch.tensor): List of lists of grid indices to use.
+        grid_indices (torch.tensor): List of lists of grid indices to use.
         activations (torch.tensor): Raw activation samples.
         grid_size (Tuple[int, int]): The grid_size of grid cells to use.
         min_density (int, optional): The minamum number of points for a
@@ -107,7 +107,7 @@ def extract_grid_vectors(
     average_activations = []
     for x in range(grid_size[1]):
         for y in range(grid_size[0]):
-            indices = grid[x][y]
+            indices = grid_indices[x][y]
             if len(indices) >= min_density:
                 average_activations.append(torch.mean(activations[indices], 0))
                 cell_coords.append((x, y, len(indices)))
