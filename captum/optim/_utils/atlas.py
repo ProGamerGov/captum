@@ -175,9 +175,9 @@ def create_atlas(
         canvas (torch.tensor): The full activation atlas visualization.
     """
 
+    assert len(cells) == len(coords)
     assert sum([c.dim() for c in cells]) == 4 * len(cells)
     assert all([c.shape == cells[0].shape for c in cells])
-    assert len(cells) == len(coords)
 
     cell_b, cell_c, cell_h, cell_w = cells[0].shape
     canvas = torch.ones(cell_b, cell_c, cell_h * grid_size[0], cell_w * grid_size[1])
