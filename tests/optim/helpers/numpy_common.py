@@ -26,7 +26,7 @@ def weights_to_heatmap_2d(
     t_colors = [get_color(c) for c in colors]
     xt = array[None, :].repeat(3, 0).transpose(1, 2, 0)
 
-    color_tensor = (
+    color_array = (
         (xt >= 0) * (xt < 0.5) * ((1 - xt * 2) * t_colors[2] + xt * 2 * t_colors[3])
         + (xt >= 0)
         * (xt >= 0.5)
@@ -38,4 +38,4 @@ def weights_to_heatmap_2d(
         * (xt <= -0.5)
         * ((1 - (-xt - 0.5) * 2) * t_colors[1] + (-xt - 0.5) * 2 * t_colors[0])
     ).transpose(2, 0, 1)
-    return color_tensor
+    return color_array
