@@ -113,7 +113,7 @@ def weights_to_heatmap_2d(
         )
 
     t_colors = [get_color(c) for c in colors]
-    xt = x.expand((3, x.shape[0], x.shape[1])).permute(1, 2, 0)
+    xt = tensor.expand((3, tensor.shape[0], tensor.shape[1])).permute(1, 2, 0)
 
     color_tensor = (
         (xt >= 0) * (xt < 0.5) * ((1 - xt * 2) * t_colors[2] + xt * 2 * t_colors[3])
