@@ -307,7 +307,7 @@ class WhitenedNeuronDirection(Loss):
         target: torch.nn.Module,
         vec: torch.Tensor,
         vec_w: torch.Tensor,
-        cossim_pow: int = 4.0,
+        cossim_pow: float = 4.0,
         x: Optional[int] = None,
         y: Optional[int] = None,
         eps: float = 1.0e-4,
