@@ -4,7 +4,12 @@ import unittest
 import torch
 
 from captum.optim._models.inception_v1 import googlenet
-from captum.optim._utils.models import RedirectedReluLayer, ReluLayer, IgnoreLayer, AvgPool2dLayer
+from captum.optim._utils.models import (
+    AvgPool2dLayer,
+    IgnoreLayer,
+    RedirectedReluLayer,
+    ReluLayer,
+)
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 
@@ -69,7 +74,6 @@ class TestInceptionV1(BaseTest):
         self.assertTrue(test)
         check_layer_not_in_model(self, model, RedirectedReluLayer)
         check_layer_not_in_model(self, model, ReluLayer)
-        check_layer_not_in_model(self, model, torch.nn.ReLU)
         check_layer_not_in_model(self, model, torch.nn.MaxPool2d)
         check_layer_in_model(self, model, IgnoreLayer)
         check_layer_in_model(self, model, AvgPool2dLayer)
