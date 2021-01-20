@@ -50,9 +50,7 @@ class TestInceptionV1(BaseTest):
                 + " due to insufficient Torch version."
             )
         try:
-            model = googlenet(
-                pretrained=True, replace_nonlinears_with_linear_equivalents=True
-            )
+            model = googlenet(pretrained=True, use_linear_modules_only=True)
             test = True
         except Exception:
             test = False
