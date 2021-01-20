@@ -172,14 +172,33 @@ def collect_activations(
     catch_activ = ActivationFetcher(model, targets)
     activ_out = catch_activ(model_input)
     return activ_out
+
+
 class AvgPool2dLayer(torch.nn.Module):
+    """
+    AvgPool2d layer that also zeros padding of a specific value. This
+    layer is meant to be used to replace MaxPool2d layers.
+
+    Args:
+        kernel_size (int or tuple of int): The size of the window to
+            perform average pooling with.
+        stride (int or tuple of int, optional): The stride window size
+            to use.
+        padding (int or tuple of int): The amount of
+            zero padding to add to both sides.
+        ceil_mode (bool, optional): Whether to use ceil or floor for
+            creating the output shape.
+        value (Any): Used to return any padding that's meant to be ignored
+            by pooling layers back to zero.
+    """
+
     def __init__(
         self,
-        kernel_size: Union[int, Tuple[int, ...]] = 2,
-        stride: Optional[Union[int, Tuple[int, ...]]] = 2,
+        kernel_size: Union[int, Tuple[int, ...]],
+        stride: Optional[Union[int, Tuple[int, ...]]] = None,
         padding: Union[int, Tuple[int, ...]] = 0,
         ceil_mode: bool = False,
-        value: Optional[Any] = None,
+        value: Optional[Any] = float("-inf"),
     ) -> None:
         super().__init__()
         self.avgpool = torch.nn.AvgPool2d(
@@ -223,6 +242,10 @@ def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
 
 
 class IgnoreLayer(torch.nn.Module):
+    """
+    This layer is made to take the place of nonlinear activation layers.
+    """
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return x
 
