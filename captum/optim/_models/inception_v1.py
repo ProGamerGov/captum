@@ -27,15 +27,16 @@ def googlenet(
     r"""GoogLeNet (also known as Inception v1 & Inception 5h) model architecture from
     `"Going Deeper with Convolutions" <http://arxiv.org/abs/1409.4842>`_.
     Args:
-        pretrained (bool, optional): If True, returns a model pre-trained on ImageNet
-        progress (bool, optional): If True, displays a progress bar of the download to stderr
+        pretrained (bool, optional): If True, returns a model pre-trained on ImageNet.
+        progress (bool, optional): If True, displays a progress bar of the download to
+            stderr
         model_path (str, optional): Optional path for InceptionV1 model file.
-        replace_relus_with_redirectedrelu (bool, optional): If True, return pretrained model
-            with Redirected ReLU in place of ReLU layers.
+        replace_relus_with_redirectedrelu (bool, optional): If True, return pretrained
+            model with Redirected ReLU in place of ReLU layers.
         use_linear_modules_only (bool, optional): If True, return pretrained
             model with all nonlinear layers replaced with linear equivalents.
-        aux_logits (bool, optional): If True, adds two auxiliary branches that can improve
-            training. Default: *False* when pretrained is True otherwise *True*
+        aux_logits (bool, optional): If True, adds two auxiliary branches that can
+            improve training. Default: *False* when pretrained is True otherwise *True*
         out_features (int, optional): Number of output features in the model used for
             training. Default: 1008 when pretrained is True.
         transform_input (bool, optional): If True, preprocesses the input according to
@@ -44,6 +45,7 @@ def googlenet(
             RGB to BGR transform in the internal preprocessing.
             Default: *False*
     """
+
     if pretrained:
         if "transform_input" not in kwargs:
             kwargs["transform_input"] = True
