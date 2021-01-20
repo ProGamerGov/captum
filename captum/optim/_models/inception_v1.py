@@ -27,7 +27,7 @@ def googlenet(
     r"""GoogLeNet (also known as Inception v1 & Inception 5h) model architecture from
     `"Going Deeper with Convolutions" <http://arxiv.org/abs/1409.4842>`_.
     Args:
-        pretrained (bool, optional): If True, returns a model pre-trained on ImageNet
+        pretrained (bool, optional): If True, returns a model pre-trained on ImageNet.
         progress (bool, optional): If True, displays a progress bar of the download to
             stderr
         model_path (str, optional): Optional path for InceptionV1 model file.
