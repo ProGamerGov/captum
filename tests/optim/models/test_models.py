@@ -15,6 +15,18 @@ def check_layer_not_in_model(self, model, layer) -> None:
             check_layer_not_in_model(self, child, layer)
 
 
+def check_layer_in_model(self, model, layer) -> None:
+    L = []
+    for name, child in model._modules.items():
+        if child is not None:
+            if isinstance(child, layer):
+                L.append(True)
+            else:
+                L.append(False)
+            check_layer_in_model(self, child, layer)
+    self.assertTrue(any(L))
+
+
 class TestInceptionV1(BaseTest):
     def test_load_inceptionv1_with_redirected_relu(self) -> None:
         if torch.__version__ <= "1.2.0":
