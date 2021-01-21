@@ -6,10 +6,10 @@ import torch.nn.functional as F
 
 from captum.optim._utils.models import (
     AvgPool2dLayer,
-    SkipLayer,
     LocalResponseNormLayer,
     RedirectedReluLayer,
     ReluLayer,
+    SkipLayer,
 )
 
 GS_SAVED_WEIGHTS_URL = (
