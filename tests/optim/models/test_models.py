@@ -27,7 +27,7 @@ def _check_layer_in_model(self, model, layer) -> None:
                 check_for_layer_in_model(child, layer, in_model)
 
     check_for_layer_in_model(model, layer, in_model)
-    self.assertTrue(any(in_models))
+    self.assertTrue(any(in_model))
 
 
 def _check_layer_not_in_model(self, model, layer) -> None:
