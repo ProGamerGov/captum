@@ -34,7 +34,7 @@ def _check_layer_not_in_model(self, model, layer) -> None:
     for name, child in model._modules.items():
         if child is not None:
             self.assertNotIsInstance(child, layer)
-            check_layer_not_in_model(self, child, layer)
+            _check_layer_not_in_model(self, child, layer)
 
 
 class TestInceptionV1(BaseTest):
@@ -53,12 +53,7 @@ class TestInceptionV1(BaseTest):
                 "Skipping load pretrained inception RedirectedRelu"
                 + " due to insufficient Torch version."
             )
-        try:
-            model = googlenet(pretrained=True, replace_relus_with_redirectedrelu=False)
-            test = True
-        except Exception:
-            test = False
-        self.assertTrue(test)
+        model = googlenet(pretrained=True, replace_relus_with_redirectedrelu=False)
         _check_layer_not_in_model(self, model, RedirectedReluLayer)
         _check_layer_in_model(self, model, ReluLayer)
 
@@ -68,12 +63,7 @@ class TestInceptionV1(BaseTest):
                 "Skipping load pretrained inception linear"
                 + " due to insufficient Torch version."
             )
-        try:
-            model = googlenet(pretrained=True, use_linear_modules_only=True)
-            test = True
-        except Exception:
-            test = False
-        self.assertTrue(test)
+        model = googlenet(pretrained=True, use_linear_modules_only=True)
         _check_layer_not_in_model(self, model, RedirectedReluLayer)
         _check_layer_not_in_model(self, model, ReluLayer)
         _check_layer_not_in_model(self, model, torch.nn.MaxPool2d)
