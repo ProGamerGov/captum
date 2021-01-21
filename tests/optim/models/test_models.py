@@ -44,12 +44,7 @@ class TestInceptionV1(BaseTest):
                 "Skipping load pretrained inception"
                 + " due to insufficient Torch version."
             )
-        try:
-            googlenet(pretrained=True, replace_relus_with_redirectedrelu=True)
-            test = True
-        except Exception:
-            test = False
-        self.assertTrue(test)
+        model = googlenet(pretrained=True, replace_relus_with_redirectedrelu=True)
         _check_layer_in_model(self, model, RedirectedReluLayer)
 
     def test_load_inceptionv1_no_redirected_relu(self) -> None:
