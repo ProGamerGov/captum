@@ -5,11 +5,16 @@ from typing import List
 import torch
 
 from captum.optim._models.inception_v1 import googlenet
-from captum.optim._utils.models import RedirectedReluLayer, ReluLayer
+from captum.optim._utils.models import (
+    AvgPool2dLayer,
+    RedirectedReluLayer,
+    ReluLayer,
+    SkipLayer,
+)
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 
-def _check_layer_in_model(model, layer) -> List[bool]:
+def _check_layer_in_model(self, model, layer) -> None:
     in_model = []
 
     def check_for_layer_in_model(model, layer, in_model: List) -> None:
@@ -22,7 +27,7 @@ def _check_layer_in_model(model, layer) -> List[bool]:
                 check_for_layer_in_model(child, layer, in_model)
 
     check_for_layer_in_model(model, layer, in_model)
-    return in_model
+    self.assertTrue(any(in_models))
 
 
 def _check_layer_not_in_model(self, model, layer) -> None:
@@ -45,6 +50,7 @@ class TestInceptionV1(BaseTest):
         except Exception:
             test = False
         self.assertTrue(test)
+        _check_layer_in_model(self, model, RedirectedReluLayer)
 
     def test_load_inceptionv1_no_redirected_relu(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -59,6 +65,7 @@ class TestInceptionV1(BaseTest):
             test = False
         self.assertTrue(test)
         _check_layer_not_in_model(self, model, RedirectedReluLayer)
+        _check_layer_in_model(self, model, ReluLayer)
 
     def test_load_inceptionv1_linear(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -75,6 +82,8 @@ class TestInceptionV1(BaseTest):
         _check_layer_not_in_model(self, model, RedirectedReluLayer)
         _check_layer_not_in_model(self, model, ReluLayer)
         _check_layer_not_in_model(self, model, torch.nn.MaxPool2d)
+        _check_layer_in_model(self, model, SkipLayer)
+        _check_layer_in_model(self, model, AvgPool2dLayer)
 
     def test_transform_inceptionv1(self) -> None:
         if torch.__version__ <= "1.2.0":
