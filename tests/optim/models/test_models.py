@@ -8,10 +8,13 @@ from captum.optim._utils.models import RedirectedReluLayer, ReluLayer
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 
-def check_layer_not_in_model(self, model, layer) -> None:
+def _check_layer_in_or_not_in_model(self, model, layer, in_model: bool = False) -> None:
     for name, child in model._modules.items():
         if child is not None:
-            self.assertNotIsInstance(child, layer)
+            if in_model:
+                self.assertIsInstance(child, layer)
+            else:
+                self.assertNotIsInstance(child, layer)
             check_layer_not_in_model(self, child, layer)
 
 
@@ -41,7 +44,7 @@ class TestInceptionV1(BaseTest):
         except Exception:
             test = False
         self.assertTrue(test)
-        check_layer_not_in_model(self, model, RedirectedReluLayer)
+        _check_layer_in_or_not_in_model(self, model, RedirectedReluLayer, False)
 
     def test_load_inceptionv1_linear(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -55,9 +58,9 @@ class TestInceptionV1(BaseTest):
         except Exception:
             test = False
         self.assertTrue(test)
-        check_layer_not_in_model(self, model, RedirectedReluLayer)
-        check_layer_not_in_model(self, model, ReluLayer)
-        check_layer_not_in_model(self, model, torch.nn.MaxPool2d)
+        _check_layer_in_or_not_in_model(self, model, RedirectedReluLayer, False)
+        _check_layer_in_or_not_in_model(self, model, ReluLayer, False)
+        _check_layer_in_or_not_in_model(self, model, torch.nn.MaxPool2d, False)
 
     def test_transform_inceptionv1(self) -> None:
         if torch.__version__ <= "1.2.0":
