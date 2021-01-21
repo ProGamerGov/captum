@@ -1,11 +1,28 @@
 #!/usr/bin/env python3
 import unittest
+from typing import List
 
 import torch
 
 from captum.optim._models.inception_v1 import googlenet
 from captum.optim._utils.models import RedirectedReluLayer, ReluLayer
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
+
+
+def _check_layer_in_model(model, layer) -> List[bool]:
+    in_model = []
+
+    def check_for_layer_in_model(model, layer, in_model: List) -> None:
+        for name, child in model._modules.items():
+            if child is not None:
+                if isinstance(child, layer):
+                    in_model += [True]
+                else:
+                    in_model += [False]
+                check_for_layer_in_model(child, layer, in_model)
+
+    check_for_layer_in_model(model, layer, in_model)
+    return in_model
 
 
 def _check_layer_not_in_model(self, model, layer) -> None:
