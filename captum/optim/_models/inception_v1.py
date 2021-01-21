@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 from captum.optim._utils.models import (
     AvgPool2dLayer,
-    IgnoreLayer,
+    SkipLayer,
     LocalResponseNormLayer,
     RedirectedReluLayer,
     ReluLayer,
@@ -92,7 +92,7 @@ class InceptionV1(nn.Module):
         lrn_vals = (9, 9.99999974738e-05, 0.5, 1.0)
 
         if use_linear_modules_only:
-            activ = IgnoreLayer
+            activ = SkipLayer
             pool = AvgPool2dLayer
         else:
             if replace_relus_with_redirectedrelu:
