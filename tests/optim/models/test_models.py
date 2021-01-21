@@ -15,7 +15,7 @@ from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 
 def _check_layer_in_model(self, model, layer) -> None:
-    in_model = []
+    in_model: List = []
 
     def check_for_layer_in_model(model, layer, in_model: List) -> None:
         for name, child in model._modules.items():
