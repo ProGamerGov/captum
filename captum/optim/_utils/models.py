@@ -79,7 +79,9 @@ class ReluLayer(nn.Module):
         return F.relu(input, inplace=self.inplace)
 
 
-def replace_layers(model, layer1, layer2, transfer_vars: bool = False, **kwargs) -> None:
+def replace_layers(
+    model, layer1, layer2, transfer_vars: bool = False, **kwargs
+) -> None:
     """
     Replace all target layers with new layers inside the specified model,
     possibly with the same initialization variables.
@@ -105,7 +107,7 @@ def replace_layers(model, layer1, layer2, transfer_vars: bool = False, **kwargs)
                 new_layer = layer2(**kwargs)
             setattr(model, name, new_layer)
         elif child is not None:
-            replace_layers(child, layer1, layer2, **kwargs)
+            replace_layers(child, layer1, layer2, transfer_vars, **kwargs)
 
 
 def _transfer_layer_vars(layer1, layer2, **kwargs):
@@ -268,26 +270,16 @@ class AvgPool2dConstrained(torch.nn.Module):
 def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
     """
     Replace all nonlinear MaxPool2d layers with their linear AvgPool2d equivalents.
+    This function is a wrapper function for replace_layers.
     This allows us to ignore nonlinear values when calculating expanded weights.
-
     Args:
         model (nn.Module): A PyTorch model instance.
         value (Any): Used to return any padding that's meant to be ignored by
             pooling layers back to zero.
     """
-
-    for name, child in model._modules.items():
-        if isinstance(child, torch.nn.MaxPool2d):
-            new_layer = AvgPool2dConstrained(
-                kernel_size=child.kernel_size,
-                stride=child.stride,
-                padding=child.padding,
-                ceil_mode=child.ceil_mode,
-                value=value,
-            )
-            setattr(model, name, new_layer)
-        elif child is not None:
-            max2avg_pool2d(child)
+    replace_layers(
+        model, torch.nn.MaxPool2d, AvgPool2dConstrained, transfer_vars=True, value=value
+    )
 
 
 class SkipLayer(torch.nn.Module):
@@ -316,4 +308,4 @@ def skip_layers(model, layers) -> None:
     else:
         layers = cast(List, layers)
         for target_layer in layers:
-            replace_layers(model, target_layer, SkipLayer)
+            replace_layers(model, target_layer, SkipLayer, transfer_vars=True)
