@@ -174,7 +174,7 @@ def collect_activations(
     return activ_out
 
 
-class AvgPool2dLayer(torch.nn.Module):
+class AvgPool2dConstrained(torch.nn.Module):
     """
     AvgPool2d layer that also zeros padding of a specific value. This
     layer is meant to be used to replace MaxPool2d layers.
