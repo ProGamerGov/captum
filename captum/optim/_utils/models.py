@@ -80,8 +80,8 @@ class ReluLayer(nn.Module):
 
 def replace_layers(model, layer1, layer2, transfer_vars: bool = True, **kwargs) -> None:
     """
-    Replace all target layers with new layers, possibly with the same
-    initialization variables.
+    Replace all target layers with new layers inside the specified model,
+    possibly with the same initialization variables.
 
     Args:
         model: (nn.Module): A PyTorch model instance.
