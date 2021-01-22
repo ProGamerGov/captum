@@ -90,7 +90,10 @@ def replace_layers(model, layer1, layer2, transfer_vars: bool = True, **kwargs) 
             initialization variables from.
         layer2: (nn.Module): The layer class to create with the variables
             from of layer1.
-        kwargs: (Any): Any additional variables to use when creating
+        transfer_vars (bool, optional): Wether or not to try and copy
+            initialization variables from layer1 instances to the replacement
+            layer2 instances.
+        kwargs: (Any, optional): Any additional variables to use when creating
             the new layer.
     """
 
@@ -114,7 +117,7 @@ def transfer_layer_vars(layer1, layer2, **kwargs):
             initialization variables from.
         layer2: (nn.Module): The layer class to create with the variables
             from of layer1.
-        kwargs: (Any): Any additional variables to use when creating
+        kwargs: (Any, optional): Any additional variables to use when creating
             the new layer.
     Returns:
         layer2 instance (nn.Module): An instance of layer2 with the initialization
