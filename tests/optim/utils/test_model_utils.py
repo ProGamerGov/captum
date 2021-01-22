@@ -378,7 +378,7 @@ class TestSkipLayer(BaseTest):
         assertTensorAlmostEqual(self, x, output_tensor, 0)
 
 
-class TestSkipLayerFunction(BaseTest):
+class TestSkipLayersFunction(BaseTest):
     def test_skip_layers(self) -> None:
         model = torch.nn.Sequential(torch.nn.ReLU())
         x = torch.randn(1, 3, 4, 4)
