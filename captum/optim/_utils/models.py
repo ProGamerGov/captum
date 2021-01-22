@@ -79,7 +79,7 @@ class ReluLayer(nn.Module):
         return F.relu(input, inplace=self.inplace)
 
 
-def replace_layers(model, layer1, layer2, transfer_vars: bool = True, **kwargs) -> None:
+def replace_layers(model, layer1, layer2, transfer_vars: bool = False, **kwargs) -> None:
     """
     Replace all target layers with new layers inside the specified model,
     possibly with the same initialization variables.
