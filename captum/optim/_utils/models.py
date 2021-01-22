@@ -78,18 +78,60 @@ class ReluLayer(nn.Module):
         return F.relu(input, inplace=self.inplace)
 
 
-def replace_layers(model, old_layer=ReluLayer, new_layer=RedirectedReluLayer) -> None:
+def replace_layers(model, layer1, layer2, transfer_vars: bool = True, **kwargs) -> None:
     """
-    Replace all target layers with new layers.
-    The most common use case is replacing activation layers with activation layers
-    that can handle gradient flow issues.
+    Replace all target layers with new layers, possibly with the same
+    initialization variables.
+
+    Args:
+        model: (nn.Module): A PyTorch model instance.
+        layer1: (nn.Module): A layer instance that you want to transfer
+            initialization variables from.
+        layer2: (nn.Module): The layer class to create with the variables
+            from of layer1.
+        kwargs: (Any): Any additional variables to use when creating
+            the new layer.
     """
 
     for name, child in model._modules.items():
-        if isinstance(child, old_layer):
-            setattr(model, name, new_layer())
+        if isinstance(child, layer1):
+            if transfer_vars:
+                new_layer = transfer_layer_vars(child, layer2, **kwargs)
+            else:
+                new_layer = layer2(**kwargs)
+            setattr(model, name, new_layer)
         elif child is not None:
-            replace_layers(child, old_layer, new_layer)
+            replace_layers(child, layer1, layer2, **kwargs)
+
+
+def transfer_layer_vars(layer1, layer2, **kwargs):
+    """
+    Given a layer instance, create a new layer instance of another class
+    with the same initialization variables as the original layer.
+    Args:
+        layer1: (nn.Module): A layer instance that you want to transfer
+            initialization variables from.
+        layer2: (nn.Module): The layer class to create with the variables
+            from of layer1.
+        kwargs: (Any): Any additional variables to use when creating
+            the new layer.
+    Returns:
+        layer2 instance (nn.Module): An instance of layer2 with the initialization
+            variables that it shares with layer1, and any specified additional
+            initialization variables.
+    """
+
+    layer1_vars = {k: v for k, v in vars(layer1).items() if not k.startswith("_")}
+    layer2_vars = {
+        k: v
+        for k, v in vars(layer2)["__annotations__"].items()
+        if not k.startswith("_")
+    }
+    shared_vars = {
+        k: v for k, v in layer1_vars.items() if k in layer2_vars and k != "training"
+    }
+    new_vars = dict(item for d in (shared_vars, kwargs) for item in d.items())
+    return layer2(**new_vars)
 
 
 class LocalResponseNormLayer(nn.Module):
@@ -252,7 +294,9 @@ class SkipLayer(torch.nn.Module):
 
 def skip_layer(model, layer) -> None:
     """
-    Replace target layers with layers that do nothing.
+    This function is a wrapper function for 
+    replace_layers and replaces the target layer
+    with layers that do nothing.
     This is useful for removing the nonlinear ReLU
     layers when creating expanded weights.
     Args:
