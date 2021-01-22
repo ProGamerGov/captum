@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from captum.optim._utils.models import (
-    AvgPool2dLayer,
+    AvgPool2dConstrained,
     LocalResponseNormLayer,
     RedirectedReluLayer,
     ReluLayer,
