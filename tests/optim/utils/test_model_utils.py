@@ -317,12 +317,14 @@ class TestCollectActivations(BaseTest):
         self.assertEqual(list(cast(torch.Tensor, m4d_activ).shape), [1, 528, 14, 14])
 
 
-class TestAvgPool2dLayer(BaseTest):
-    def test_avg_pool2d_layer(self) -> None:
+class TestAvgPool2dConstrained(BaseTest):
+    def test_avg_pool2d_constrained(self) -> None:
         test_tensor = torch.randn(128, 32, 16, 16)
         test_tensor = F.pad(test_tensor, (0, 1, 0, 1), value=float("-inf"))
 
-        avg_pool_layer = model_utils.AvgPool2dLayer(kernel_size=3, stride=2, padding=0)
+        avg_pool_layer = model_utils.AvgPool2dConstrained(
+            kernel_size=3, stride=2, padding=0
+        )
         out_tensor = avg_pool_layer(test_tensor)
 
         avg_pool = torch.nn.AvgPool2d(kernel_size=3, stride=2, padding=0)
