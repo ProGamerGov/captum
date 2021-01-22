@@ -1,6 +1,6 @@
 import math
 from inspect import signature
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any, List, Optional, Tuple, Union, cast
 
 import torch
 import torch.nn as nn
@@ -100,7 +100,7 @@ def replace_layers(model, layer1, layer2, transfer_vars: bool = True, **kwargs) 
     for name, child in model._modules.items():
         if isinstance(child, layer1):
             if transfer_vars:
-                new_layer = transfer_layer_vars(child, layer2, **kwargs)
+                new_layer = _transfer_layer_vars(child, layer2, **kwargs)
             else:
                 new_layer = layer2(**kwargs)
             setattr(model, name, new_layer)
@@ -108,7 +108,7 @@ def replace_layers(model, layer1, layer2, transfer_vars: bool = True, **kwargs) 
             replace_layers(child, layer1, layer2, **kwargs)
 
 
-def transfer_layer_vars(layer1, layer2, **kwargs):
+def _transfer_layer_vars(layer1, layer2, **kwargs):
     """
     Given a layer instance, create a new layer instance of another class
     with the same initialization variables as the original layer.
@@ -278,7 +278,7 @@ def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
 
     for name, child in model._modules.items():
         if isinstance(child, torch.nn.MaxPool2d):
-            new_layer = AvgPool2dLayer(
+            new_layer = AvgPool2dConstrained(
                 kernel_size=child.kernel_size,
                 stride=child.stride,
                 padding=child.padding,
@@ -301,7 +301,7 @@ class SkipLayer(torch.nn.Module):
 
 def skip_layers(model, layers) -> None:
     """
-    This function is a wrapper function for 
+    This function is a wrapper function for
     replace_layers and replaces the target layer
     with layers that do nothing.
     This is useful for removing the nonlinear ReLU
@@ -312,7 +312,8 @@ def skip_layers(model, layers) -> None:
             class type to replace in the model.
     """
     if not hasattr(layers, "__iter__"):
-        replace_layers(model, layer, SkipLayer)
+        replace_layers(model, layers, SkipLayer)
     else:
-        for l in layers:
-            replace_layers(model, l, SkipLayer)
+        layers = cast(List, layers)
+        for target_layer in layers:
+            replace_layers(model, target_layer, SkipLayer)
