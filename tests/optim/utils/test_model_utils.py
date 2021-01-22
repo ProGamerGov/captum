@@ -109,6 +109,23 @@ class TestReplaceLayers(BaseTest):
         self.assertIsInstance(toy_model.relu1, new_layer)
         self.assertIsInstance(toy_model.relu2.relu, new_layer)
 
+    def test_max2avg_pool2d(self) -> None:
+        model = torch.nn.Sequential(
+            torch.nn.MaxPool2d(kernel_size=3, stride=2, padding=0)
+        )
+
+        model_utils.replace_layers(model, model_utils.AvgPool2dConstrained, value=float("-inf"))
+
+        test_tensor = torch.randn(128, 32, 16, 16)
+        test_tensor = F.pad(test_tensor, (0, 1, 0, 1), value=float("-inf"))
+        out_tensor = model(test_tensor)
+
+        avg_pool = torch.nn.AvgPool2d(kernel_size=3, stride=2, padding=0)
+        expected_tensor = avg_pool(test_tensor)
+        expected_tensor[expected_tensor == float("-inf")] = 0.0
+
+        assertTensorAlmostEqual(self, out_tensor, expected_tensor, 0)
+
 
 class TestGetLayers(BaseTest):
     def test_get_layers_pretrained_inceptionv1(self) -> None:
@@ -362,10 +379,10 @@ class TestSkipLayer(BaseTest):
 
 
 class TestSkipLayerFunction(BaseTest):
-    def test_skip_layer(self) -> None:
+    def test_skip_layers(self) -> None:
         model = torch.nn.Sequential(torch.nn.ReLU())
         x = torch.randn(1, 3, 4, 4)
-        model_utils.skip_layer(model, torch.nn.ReLU)
+        model_utils.skip_layers(model, torch.nn.ReLU)
         output_tensor = model(x)
         assertTensorAlmostEqual(self, x, output_tensor, 0)
 
