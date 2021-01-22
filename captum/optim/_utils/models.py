@@ -250,14 +250,20 @@ class SkipLayer(torch.nn.Module):
         return x
 
 
-def skip_layer(model, layer) -> None:
+def skip_layers(model, layers) -> None:
     """
-    Replace target layers with layers that do nothing.
+    This function is a wrapper function for 
+    replace_layers and replaces the target layer
+    with layers that do nothing.
     This is useful for removing the nonlinear ReLU
     layers when creating expanded weights.
     Args:
         model (nn.Module): A PyTorch model instance.
-        layer (nn.Module): A layer class type.
+        layers (nn.Module or list of nn.Module): The layer
+            class type to replace in the model.
     """
-
-    replace_layers(model, layer, SkipLayer)
+    if not hasattr(layers, "__iter__"):
+        replace_layers(model, layer, SkipLayer)
+    else:
+        for l in layers:
+            replace_layers(model, l, SkipLayer)
