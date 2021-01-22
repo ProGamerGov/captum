@@ -1,4 +1,5 @@
 import math
+from inspect import signature
 from typing import Any, List, Optional, Tuple, Union
 
 import torch
@@ -121,15 +122,18 @@ def transfer_layer_vars(layer1, layer2, **kwargs):
             initialization variables.
     """
 
+    l2_vars = list(signature(layer2.__init__).parameters.values())
+    l2_vars = [
+        str(l2_vars[i]).split()[0]
+        for i in range(len(l2_vars))
+        if str(l2_vars[i]) != "self"
+    ]
+    l2_vars = [p.split(":")[0] if ":" in p and "=" not in p else p for p in l2_vars]
+    l2_vars = [p.split("=")[0] if "=" in p and ":" not in p else p for p in l2_vars]
+    layer2_vars = {k: [] for k in dict.fromkeys(l2_vars).keys()}
+
     layer1_vars = {k: v for k, v in vars(layer1).items() if not k.startswith("_")}
-    layer2_vars = {
-        k: v
-        for k, v in vars(layer2)["__annotations__"].items()
-        if not k.startswith("_")
-    }
-    shared_vars = {
-        k: v for k, v in layer1_vars.items() if k in layer2_vars and k != "training"
-    }
+    shared_vars = {k: v for k, v in layer1_vars.items() if k in layer2_vars}
     new_vars = dict(item for d in (shared_vars, kwargs) for item in d.items())
     return layer2(**new_vars)
 
