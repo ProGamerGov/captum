@@ -109,7 +109,7 @@ class TestDatasetKLTMatrix(BaseTest):
 
 class TestCaptureActivationSamples(BaseTest):
     def test_capture_activation_samples(self) -> None:
-        if torch.__version__ == "1.2.0":
+        if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
                 "Skipping capture_activation_samples test due to"
                 + "insufficient Torch version."
