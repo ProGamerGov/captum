@@ -273,7 +273,7 @@ class AvgPool2dConstrained(torch.nn.Module):
         return x
 
 
-def max2avg_pool2d(
+def replace_max_with_avgconst_pool2d(
     model: Type[nn.Module], value: Optional[Any] = float("-inf")
 ) -> None:
     """
