@@ -115,11 +115,11 @@ class TestCaptureActivationSamples(BaseTest):
                 + "insufficient Torch version."
             )
 
-        num_tensors = 10
+        num_tensors = 20
         dataset_tensors = [torch.ones(3, 224, 224) for x in range(num_tensors)]
         test_dataset = dataset_helpers.ImageTestDataset(dataset_tensors)
         dataset_loader = torch.utils.data.DataLoader(
-            test_dataset, batch_size=10, num_workers=0, shuffle=False
+            test_dataset, batch_size=5, num_workers=0, shuffle=False
         )
         model = googlenet(pretrained=True)
         targets = [model.mixed4c]
