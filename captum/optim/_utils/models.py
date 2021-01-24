@@ -102,10 +102,10 @@ def replace_layers(
     for name, child in model._modules.items():
         if isinstance(child, old_layer):
             if transfer_vars:
-                new_layer = _transfer_layer_vars(child, new_layer, **kwargs)
+                new_layer_instance = _transfer_layer_vars(child, new_layer, **kwargs)
             else:
-                new_layer = new_layer(**kwargs)
-            setattr(model, name, new_layer)
+                new_layer_instance = new_layer(**kwargs)
+            setattr(model, name, new_layer_instance)
         elif child is not None:
             replace_layers(child, old_layer, new_layer, transfer_vars, **kwargs)
 
