@@ -1,6 +1,6 @@
 import math
 from inspect import signature
-from typing import Any, List, Optional, Tuple, Type, Union, cast
+from typing import Any, List, Optional, Tuple, Union, cast
 
 import torch
 import torch.nn as nn
@@ -10,7 +10,7 @@ from captum.optim._core.output_hook import ActivationFetcher
 from captum.optim._utils.typing import ModuleOutputMapping, TupleOfTensorsOrTensorType
 
 
-def get_model_layers(model: Type[nn.Module]) -> List[str]:
+def get_model_layers(model: Any) -> List[str]:
     """
     Return a list of hookable layers for the target model.
     """
@@ -80,11 +80,7 @@ class ReluLayer(nn.Module):
 
 
 def replace_layers(
-    model: Type[nn.Module],
-    old_layer: Type[nn.Module],
-    new_layer: Type[nn.Module],
-    transfer_vars: bool = False,
-    **kwargs
+    model: Any, old_layer: Any, new_layer: Any, transfer_vars: bool = False, **kwargs
 ) -> None:
     """
     Replace all target layers with new layers inside the specified model,
@@ -114,9 +110,7 @@ def replace_layers(
             replace_layers(child, old_layer, new_layer, transfer_vars, **kwargs)
 
 
-def _transfer_layer_vars(
-    old_layer: Type[nn.Module], new_layer: Type[nn.Module], **kwargs
-) -> Type[nn.Module]:
+def _transfer_layer_vars(old_layer: Any, new_layer: Any, **kwargs) -> Any:
     """
     Given a layer instance, create a new layer instance of new_layer
     with the same initialization variables as the original layer instance
@@ -219,7 +213,7 @@ class Conv2dSame(nn.Conv2d):
 
 
 def collect_activations(
-    model: Type[nn.Module],
+    model: Any,
     targets: Union[nn.Module, List[nn.Module]],
     model_input: TupleOfTensorsOrTensorType = torch.zeros(1, 3, 224, 224),
 ) -> ModuleOutputMapping:
@@ -275,7 +269,7 @@ class AvgPool2dConstrained(torch.nn.Module):
 
 
 def replace_max_with_avgconst_pool2d(
-    model: Type[nn.Module], value: Optional[Any] = float("-inf")
+    model: Any, value: Optional[Any] = float("-inf")
 ) -> None:
     """
     Replace all nonlinear MaxPool2d layers with their linear AvgPool2d equivalents.
@@ -300,7 +294,7 @@ class SkipLayer(torch.nn.Module):
         return x
 
 
-def skip_layers(model: Type[nn.Module], layers: Type[nn.Module]) -> None:
+def skip_layers(model: Any, layers: Any) -> None:
     """
     This function is a wrapper function for
     replace_layers and replaces the target layer
