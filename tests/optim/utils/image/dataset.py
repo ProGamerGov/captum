@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import unittest
 
 import torch
@@ -123,10 +124,22 @@ class TestCaptureActivationSamples(BaseTest):
         model = googlenet(pretrained=True)
         targets = [model.mixed4c]
         target_names = ["mixed4c"]
-        activation_dict = dataset_utils.capture_activation_samples(
+        sample_dir = "test_samples"
+        os.mkdir(sample_dir)
+
+        dataset_utils.capture_activation_samples(
             dataset_loader, model, targets, target_names
         )
-        self.assertEqual(list(activation_dict["mixed4c"].shape), [num_tensors, 512])
+
+        tensor_samples_files = [
+            os.path.join(sample_dir, name)
+            for name in os.listdir(sample_dir)
+            if os.path.isfile(os.path.join(sample_dir, name))
+        ]
+        tensor_samples = []
+        [tensor_samples + torch.load(file) for file in tensor_samples_files]
+        sample_tensor = torch.cat(tensor_samples, 1).permute(1, 0)
+        self.assertEqual(list(sample_tensor.shape), [num_tensors, 512])
 
 
 if __name__ == "__main__":
