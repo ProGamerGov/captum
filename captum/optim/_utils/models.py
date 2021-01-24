@@ -1,6 +1,6 @@
 import math
 from inspect import signature
-from typing import Any, List, Optional, Tuple, Union, cast
+from typing import Any, List, Optional, Tuple, Type, Union, cast
 
 import torch
 import torch.nn as nn
@@ -10,7 +10,7 @@ from captum.optim._core.output_hook import ActivationFetcher
 from captum.optim._utils.typing import ModuleOutputMapping, TupleOfTensorsOrTensorType
 
 
-def get_model_layers(model) -> List[str]:
+def get_model_layers(model: Type[nn.Module]) -> List[str]:
     """
     Return a list of hookable layers for the target model.
     """
@@ -80,7 +80,7 @@ class ReluLayer(nn.Module):
 
 
 def replace_layers(
-    model, layer1, layer2, transfer_vars: bool = False, **kwargs
+    model: Type[nn.Module], layer1: Type[nn.Module], layer2: Type[nn.Module], transfer_vars: bool = False, **kwargs
 ) -> None:
     """
     Replace all target layers with new layers inside the specified model,
@@ -92,7 +92,7 @@ def replace_layers(
             initialization variables from.
         layer2: (nn.Module): The layer class to create with the variables
             from of layer1.
-        transfer_vars (bool, optional): Wether or not to try and copy
+        transfer_vars (bool, optional): Whether or not to try and copy
             initialization variables from layer1 instances to the replacement
             layer2 instances.
         kwargs: (Any, optional): Any additional variables to use when creating
@@ -110,7 +110,7 @@ def replace_layers(
             replace_layers(child, layer1, layer2, transfer_vars, **kwargs)
 
 
-def _transfer_layer_vars(layer1, layer2, **kwargs):
+def _transfer_layer_vars(layer1: Type[nn.Module], layer2: Type[nn.Module], **kwargs) -> Type[nn.Module]:
     """
     Given a layer instance, create a new layer instance of another class
     with the same initialization variables as the original layer.
@@ -212,7 +212,7 @@ class Conv2dSame(nn.Conv2d):
 
 
 def collect_activations(
-    model,
+    model: Type[nn.Module],
     targets: Union[nn.Module, List[nn.Module]],
     model_input: TupleOfTensorsOrTensorType = torch.zeros(1, 3, 224, 224),
 ) -> ModuleOutputMapping:
@@ -267,7 +267,7 @@ class AvgPool2dConstrained(torch.nn.Module):
         return x
 
 
-def max2avg_pool2d(model, value: Optional[Any] = float("-inf")) -> None:
+def max2avg_pool2d(model: Type[nn.Module], value: Optional[Any] = float("-inf")) -> None:
     """
     Replace all nonlinear MaxPool2d layers with their linear AvgPool2d equivalents.
     This function is a wrapper function for replace_layers.
@@ -291,7 +291,7 @@ class SkipLayer(torch.nn.Module):
         return x
 
 
-def skip_layers(model, layers) -> None:
+def skip_layers(model: Type[nn.Module], layers: Type[nn.Module]) -> None:
     """
     This function is a wrapper function for
     replace_layers and replaces the target layer
