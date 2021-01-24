@@ -84,7 +84,7 @@ def capture_activation_samples(
         loader (torch.utils.data.DataLoader): A torch.utils.data.DataLoader
             instance for an image dataset.
         model (nn.Module): A PyTorch model instance.
-        targets (list of nn.Module): A list of layers to callect activation samples
+        targets (list of nn.Module): A list of layers to collect activation samples
             from.
         target_names (list of str, optional): A list of names to use when saving sample
             tensors as files.
