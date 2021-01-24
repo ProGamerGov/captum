@@ -128,7 +128,7 @@ def capture_activation_samples(
         )
         pbar = tqdm(total=total, unit=" images")
 
-    image_count, batch_count = 0,0
+    image_count, batch_count = 0, 0
     with torch.no_grad():
         for inputs, _ in loader:
             inputs = inputs.to(input_device)
