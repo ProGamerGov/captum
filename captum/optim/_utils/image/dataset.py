@@ -155,3 +155,42 @@ def capture_activation_samples(
 
     if show_progress:
         pbar.close()
+
+
+def consolidate_samples(
+    sample_dir: str = "samples", sample_basename: str = "", show_progress: bool = False
+) -> torch.Tensor:
+    """
+    Combine samples collected from capture_activation_samples into a single tensor with a
+    shape of [n_samples, n_channels].
+
+    Args:
+        sample_dir (str): The directory where activation samples where saved.
+        sample_basename (str, optional): If samples from different layers are present in
+            sample_dir, then you can use samples from only a specific layer by specifying
+            the basename that samples of the same layer share.
+        show_progress (bool, optional): Whether or not to show progress.
+    Returns:
+        sample_tensor (torch.Tensor): A tensor containing all the specified sample tensors
+            with a shape of [n_samples, n_channels].
+    """
+
+    samples = []
+    tensor_samples = [
+        os.path.join(sample_dir, name)
+        for name in os.listdir(sample_dir)
+        if sample_basename.lower() in name.lower()
+        and os.path.isfile(os.path.join(sample_dir, name))
+    ]
+
+    if show_progress:
+        pbar = tqdm(total=len(tensor_samples), unit=" sample batches collected")
+    for file in tensor_samples:
+        cuda_samples = torch.load(file)
+        for s in cuda_samples:
+            samples += [s.detatch().cpu()]
+        if show_progress:
+            pbar.update(1)
+    if show_progress:
+        pbar.close()
+    return torch.cat(samples, 1).permute(1, 0)
