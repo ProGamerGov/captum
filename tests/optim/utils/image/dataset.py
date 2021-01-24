@@ -142,5 +142,30 @@ class TestCaptureActivationSamples(BaseTest):
         self.assertEqual(list(sample_tensor.shape), [num_tensors, 512])
 
 
+class TestConsolidateSamples(BaseTest):
+    def test_consolidate_samples(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping consolidate_samples test due to"
+                + "insufficient Torch version."
+            )
+
+        sample_dir = "test_samples_consolidation"
+        os.mkdir(sample_dir)
+        num_channels = 512
+        num_files = 10
+        batch_size = 4
+        for i, f in enumerate(num_files):
+            tensor_batch = [torch.ones(num_channels, 1) for x in range(batch_size)]
+            torch.save(
+                tensor_batch, os.path.join(sample_dir, "tensor_batch_" + str(i) + ".pt")
+            )
+
+        sample_tensor = dataset_utils.consolidate_samples(sample_dir)
+        self.assertEqual(
+            list(sample_tensor.shape), [num_files * batch_size, num_channels]
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
