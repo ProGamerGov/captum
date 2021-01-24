@@ -80,7 +80,11 @@ class ReluLayer(nn.Module):
 
 
 def replace_layers(
-    model: Type[nn.Module], layer1: Type[nn.Module], layer2: Type[nn.Module], transfer_vars: bool = False, **kwargs
+    model: Type[nn.Module],
+    old_layer: Type[nn.Module],
+    new_layer: Type[nn.Module],
+    transfer_vars: bool = False,
+    **kwargs
 ) -> None:
     """
     Replace all target layers with new layers inside the specified model,
@@ -88,46 +92,48 @@ def replace_layers(
 
     Args:
         model: (nn.Module): A PyTorch model instance.
-        layer1: (nn.Module): A layer instance that you want to transfer
+        old_layer: (nn.Module): A layer instance that you want to transfer
             initialization variables from.
-        layer2: (nn.Module): The layer class to create with the variables
-            from of layer1.
+        new_layer: (nn.Module): The layer class to create with the variables
+            from of old_layer.
         transfer_vars (bool, optional): Whether or not to try and copy
-            initialization variables from layer1 instances to the replacement
-            layer2 instances.
+            initialization variables from old_layer instances to the replacement
+            new_layer instances.
         kwargs: (Any, optional): Any additional variables to use when creating
             the new layer.
     """
 
     for name, child in model._modules.items():
-        if isinstance(child, layer1):
+        if isinstance(child, old_layer):
             if transfer_vars:
-                new_layer = _transfer_layer_vars(child, layer2, **kwargs)
+                new_layer = _transfer_layer_vars(child, new_layer, **kwargs)
             else:
-                new_layer = layer2(**kwargs)
+                new_layer = new_layer(**kwargs)
             setattr(model, name, new_layer)
         elif child is not None:
-            replace_layers(child, layer1, layer2, transfer_vars, **kwargs)
+            replace_layers(child, old_layer, new_layer, transfer_vars, **kwargs)
 
 
-def _transfer_layer_vars(layer1: Type[nn.Module], layer2: Type[nn.Module], **kwargs) -> Type[nn.Module]:
+def _transfer_layer_vars(
+    old_layer: Type[nn.Module], new_layer: Type[nn.Module], **kwargs
+) -> Type[nn.Module]:
     """
     Given a layer instance, create a new layer instance of another class
     with the same initialization variables as the original layer.
     Args:
-        layer1: (nn.Module): A layer instance that you want to transfer
+        old_layer: (nn.Module): A layer instance that you want to transfer
             initialization variables from.
-        layer2: (nn.Module): The layer class to create with the variables
-            from of layer1.
+        new_layer: (nn.Module): The layer class to create with the variables
+            from of old_layer.
         kwargs: (Any, optional): Any additional variables to use when creating
             the new layer.
     Returns:
-        layer2 instance (nn.Module): An instance of layer2 with the initialization
-            variables that it shares with layer1, and any specified additional
+        new_layer instance (nn.Module): An instance of new_layer with the initialization
+            variables that it shares with old_layer, and any specified additional
             initialization variables.
     """
 
-    l2_vars = list(signature(layer2.__init__).parameters.values())
+    l2_vars = list(signature(new_layer.__init__).parameters.values())
     l2_vars = [
         str(l2_vars[i]).split()[0]
         for i in range(len(l2_vars))
@@ -135,12 +141,12 @@ def _transfer_layer_vars(layer1: Type[nn.Module], layer2: Type[nn.Module], **kwa
     ]
     l2_vars = [p.split(":")[0] if ":" in p and "=" not in p else p for p in l2_vars]
     l2_vars = [p.split("=")[0] if "=" in p and ":" not in p else p for p in l2_vars]
-    layer2_vars = {k: [] for k in dict.fromkeys(l2_vars).keys()}
+    new_layer_vars = {k: [] for k in dict.fromkeys(l2_vars).keys()}
 
-    layer1_vars = {k: v for k, v in vars(layer1).items() if not k.startswith("_")}
-    shared_vars = {k: v for k, v in layer1_vars.items() if k in layer2_vars}
+    old_layer_vars = {k: v for k, v in vars(old_layer).items() if not k.startswith("_")}
+    shared_vars = {k: v for k, v in old_layer_vars.items() if k in new_layer_vars}
     new_vars = dict(item for d in (shared_vars, kwargs) for item in d.items())
-    return layer2(**new_vars)
+    return new_layer(**new_vars)
 
 
 class LocalResponseNormLayer(nn.Module):
@@ -267,7 +273,9 @@ class AvgPool2dConstrained(torch.nn.Module):
         return x
 
 
-def max2avg_pool2d(model: Type[nn.Module], value: Optional[Any] = float("-inf")) -> None:
+def max2avg_pool2d(
+    model: Type[nn.Module], value: Optional[Any] = float("-inf")
+) -> None:
     """
     Replace all nonlinear MaxPool2d layers with their linear AvgPool2d equivalents.
     This function is a wrapper function for replace_layers.
