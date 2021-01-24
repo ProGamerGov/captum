@@ -185,9 +185,9 @@ def consolidate_samples(
     if show_progress:
         pbar = tqdm(total=len(tensor_samples), unit=" sample batches collected")
     for file in tensor_samples:
-        cuda_samples = torch.load(file)
-        for s in cuda_samples:
-            samples += [s.detatch().cpu()]
+        sample_batch = torch.load(file)
+        for s in sample_batch:
+            samples += [s.cpu()]
         if show_progress:
             pbar.update(1)
     if show_progress:
