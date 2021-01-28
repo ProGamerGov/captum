@@ -96,9 +96,9 @@ def extract_grid_vectors(
     Returns:
         cells (torch.tensor): A tensor containing all the direction vector
             that were created.
-        cell_coords (List[Tuple[int, int]]): List of coordinates for grid
-            spatial positons of each direction vector, and the number of
-            samples used for the cell.
+        cell_coords (list of Tuple[int, int] or list of Tuple[int, int, int]):
+            List of coordinates for grid spatial positons of each direction
+            vector, and the number of samples used for the cell.
     """
 
     assert activations.dim() == 2
@@ -138,7 +138,7 @@ def create_atlas_vectors(
     Returns:
         grid_vecs (torch.tensor): A tensor containing all the direction vector
             that were created.
-        cell_coords (List[Tuple[int, int]]): List of coordinates for grid
+        cell_coords (list of Tuple[int, int, int]): List of coordinates for grid
             spatial positons of each direction vector, and the number of
             samples used for the cell.
     """
