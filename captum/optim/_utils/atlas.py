@@ -48,6 +48,8 @@ def calc_grid_indices(
         tensor (torch.tensor): xy coordinate tensor to extract grid
             indices from.
         grid_size (Tuple[int, int]): The size of grid cells to use.
+            The grid_size variable is expected to be in the format
+            of: [height, width]
         x_extent (Tuple[float, float], optional): The x extent to use.
         y_extent (Tuple[float, float], optional): The y extent to use.
     Returns:
@@ -91,6 +93,8 @@ def extract_grid_vectors(
         grid_indices (torch.tensor): List of lists of grid indices to use.
         activations (torch.tensor): Raw activation samples.
         grid_size (Tuple[int, int]): The grid_size of grid cells to use.
+            The grid_size variable is expected to be in the format of:
+            [height, width]
         min_density (int, optional): The minamum number of points for a
             cell to counted.
     Returns:
@@ -170,7 +174,8 @@ def create_atlas(
         coords (list of Tuple[int, int] or list of Tuple[int, int, int]):
             A list of coordinates to use for the atlas image tensors.
         grid_size (Tuple[int, int]): The size of grid cells used to create
-            the visualization direction vectors.
+            the visualization direction vectors. The grid_size variable is
+            expected to be in the format of: [height, width]
     Returns:
         canvas (torch.tensor): The full activation atlas visualization.
     """
