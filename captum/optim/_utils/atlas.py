@@ -177,10 +177,17 @@ def create_atlas(
 
     assert len(cells) == len(coords)
     assert all([c.shape == cells[0].shape for c in cells])
+    assert all([c.device == cells[0].device for c in cells])
     assert cells[0].dim() == 4
 
     cell_b, cell_c, cell_h, cell_w = cells[0].shape
-    canvas = torch.ones(cell_b, cell_c, cell_h * grid_size[0], cell_w * grid_size[1])
+    canvas = torch.ones(
+        cell_b,
+        cell_c,
+        cell_h * grid_size[0],
+        cell_w * grid_size[1],
+        device=cells[0].device,
+    )
     for i, img in enumerate(cells):
         y = int(coords[i][0])
         x = int(coords[i][1])
