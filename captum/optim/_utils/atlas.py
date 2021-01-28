@@ -3,6 +3,39 @@ from typing import List, Tuple
 import torch
 
 
+def normalize_grid(
+    x: torch.Tensor,
+    min_percentile: float = 0.01,
+    max_percentile: float = 0.99,
+    relative_margin: float = 0.1,
+) -> torch.Tensor:
+    """
+    Remove outliers and rescale tensor to [0,1].
+
+    Args:
+        x (torch.tensor): Tensor to normalize.
+        min_percentile (float, optional): The minamum percentile to
+            use when normalizing the tensor.
+        max_percentile (float, optional): The maximum percentile to
+            use when normalizing the tensor.
+        relative_margin (float, optional): The relative margin to use
+            when normalizing the tensor.
+    Returns:
+        clipped (torch.tensor): A normalized tensor.
+    """
+
+    assert x.dim() == 2 and x.size(1) == 2
+    mins = torch.quantile(x, min_percentile, dim=0)
+    maxs = torch.quantile(x, max_percentile, dim=0)
+
+    mins = mins - relative_margin * (maxs - mins)
+    maxs = maxs + relative_margin * (maxs - mins)
+
+    clipped = torch.max(torch.min(x, maxs), mins)
+    clipped = clipped - clipped.min(0)[0]
+    return clipped / clipped.max(0)[0]
+
+
 def calc_grid_indices(
     tensor: torch.Tensor,
     grid_size: Tuple[int, int],
@@ -40,39 +73,6 @@ def calc_grid_indices(
             y_list.append(in_bounds_indices)
         x_list.append(y_list)
     return x_list
-
-
-def normalize_grid(
-    x: torch.Tensor,
-    min_percentile: float = 0.01,
-    max_percentile: float = 0.99,
-    relative_margin: float = 0.1,
-) -> torch.Tensor:
-    """
-    Remove outliers and rescale tensor to [0,1].
-
-    Args:
-        x (torch.tensor): Tensor to normalize.
-        min_percentile (float, optional): The minamum percentile to
-            use when normalizing the tensor.
-        max_percentile (float, optional): The maximum percentile to
-            use when normalizing the tensor.
-        relative_margin (float, optional): The relative margin to use
-            when normalizing the tensor.
-    Returns:
-        clipped (torch.tensor): A normalized tensor.
-    """
-
-    assert x.dim() == 2 and x.size(1) == 2
-    mins = torch.quantile(x, min_percentile, dim=0)
-    maxs = torch.quantile(x, max_percentile, dim=0)
-
-    mins = mins - relative_margin * (maxs - mins)
-    maxs = maxs + relative_margin * (maxs - mins)
-
-    clipped = torch.max(torch.min(x, maxs), mins)
-    clipped = clipped - clipped.min(0)[0]
-    return clipped / clipped.max(0)[0]
 
 
 def extract_grid_vectors(
