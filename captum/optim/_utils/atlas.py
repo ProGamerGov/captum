@@ -193,7 +193,7 @@ def create_atlas(
         x = int(coords[i][1])
         canvas[
             ...,
-            (grid_size[0] - x - 1) * cell_h : (grid_size[0] - x) * cell_h,
-            y * cell_w : (y + 1) * cell_w,
+            (grid_size[0] - y - 1) * cell_h : (grid_size[0] - y) * cell_h,
+            (grid_size[1] - x - 1) * cell_w : (grid_size[1] - x) * cell_w,
         ] = img
     return canvas
