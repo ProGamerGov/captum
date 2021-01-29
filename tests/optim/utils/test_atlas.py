@@ -107,6 +107,23 @@ class TestCreateAtlasVectors(BaseTest):
         assertTensorAlmostEqual(self, x_vecs, expected_vecs)
         self.assertEqual(vec_coords, expected_coords)
 
+    def test_create_atlas_vectors_diff_grid_sizes(self) -> None:
+        grid_size = (2, 3)
+        x_raw = torch.arange(0, 4 * 5 * 4).view(5 * 4, 4).float()
+        x = torch.arange(0, 2 * 5 * 4).view(5 * 4, 2).float()
+
+        x_vecs, vec_coords = atlas.create_atlas_vectors(
+            x, x_raw, grid_size=grid_size, min_density=4, normalize=True
+        )
+
+        expected_vecs = torch.tensor(
+            [[12.0, 13.0, 14.0, 15.0], [64.0, 65.0, 66.0, 67.0]]
+        )
+        expected_coords = [(0, 0, 7), (1, 2, 7)]
+
+        assertTensorAlmostEqual(self, x_vecs, expected_vecs)
+        self.assertEqual(vec_coords, expected_vecs)
+
 
 class TestCreateAtlas(BaseTest):
     def test_create_atlas(self) -> None:
