@@ -53,6 +53,18 @@ class TestCalcGridIndices(BaseTest):
             for t1, t2 in zip(list1, list2):
                 assertTensorAlmostEqual(self, t1, t2)
 
+    def test_calc_grid_indices_extent(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping grid indices extent test due to insufficient Torch version."
+            )
+        x = torch.arange(0, 2 * 5 * 5).view(5 * 5, 2).float()
+        x = atlas.normalize_grid(x)
+        x_indices = atlas.calc_grid_indices(
+            x, grid_size=(1, 1), x_extent=(1.0, 2.0), y_extent=(1.0, 2.0)
+        )
+        assertTensorAlmostEqual(self, x_indices[0][0], torch.tensor([24]), 0)
+
 
 class TestExtractGridVectors(BaseTest):
     def test_extract_grid_vectors(self) -> None:
@@ -94,6 +106,27 @@ class TestCreateAtlasVectors(BaseTest):
 
         assertTensorAlmostEqual(self, x_vecs, expected_vecs)
         self.assertEqual(vec_coords, expected_coords)
+
+    def test_create_atlas_vectors_diff_grid_sizes(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping create atlas vectors test due to insufficient Torch version."
+            )
+        grid_size = (2, 3)
+        x_raw = torch.arange(0, 4 * 5 * 4).view(5 * 4, 4).float()
+        x = torch.arange(0, 2 * 5 * 4).view(5 * 4, 2).float()
+
+        x_vecs, vec_coords = atlas.create_atlas_vectors(
+            x, x_raw, grid_size=grid_size, min_density=4, normalize=True
+        )
+
+        expected_vecs = torch.tensor(
+            [[12.0, 13.0, 14.0, 15.0], [64.0, 65.0, 66.0, 67.0]]
+        )
+        expected_coords = [(0, 0, 7), (1, 2, 7)]
+
+        assertTensorAlmostEqual(self, x_vecs, expected_vecs)
+        self.assertEqual(vec_coords, expected_vecs)
 
 
 class TestCreateAtlas(BaseTest):

@@ -48,7 +48,7 @@ def calc_grid_indices(
         tensor (torch.tensor): xy coordinate tensor to extract grid
             indices from.
         grid_size (Tuple[int, int]): The grid_size of grid cells to use.
-            The grid_size variable should be in the format of: [height, width]
+            The grid_size variable should be in the format of: [height, width].
         x_extent (Tuple[float, float], optional): The x extent to use.
         y_extent (Tuple[float, float], optional): The y extent to use.
     Returns:
@@ -92,7 +92,7 @@ def extract_grid_vectors(
         grid_indices (torch.tensor): List of lists of grid indices to use.
         activations (torch.tensor): Raw activation samples.
         grid_size (Tuple[int, int]): The grid_size of grid cells to use.
-            The grid_size variable should be in the format of: [height, width]
+            The grid_size variable should be in the format of: [height, width].
         min_density (int, optional): The minamum number of points for a
             cell to counted.
     Returns:
@@ -100,7 +100,8 @@ def extract_grid_vectors(
             that were created.
         cell_coords (list of Tuple[int, int] or list of Tuple[int, int, int]):
             List of coordinates for grid spatial positons of each direction
-            vector, and the number of samples used for the cell.
+            vector, and the number of samples used for the cell. The tuple for
+            each cell is in the format of [y coord, x coord, number of samples].
     """
 
     assert activations.dim() == 2
@@ -112,7 +113,7 @@ def extract_grid_vectors(
             indices = grid_indices[x][y]
             if len(indices) >= min_density:
                 average_activations.append(torch.mean(activations[indices], 0))
-                cell_coords.append((x, y, len(indices)))
+                cell_coords.append((y, x, len(indices)))
     return torch.stack(average_activations), cell_coords
 
 
@@ -134,16 +135,17 @@ def create_atlas_vectors(
         tensor (torch.tensor): The dimensionality reduced activation samples.
         activations (torch.tensor): Raw activation samples.
         grid_size (Tuple[int, int]): The size of grid cells to use. The grid_size
-            variable should be in the format of: [height, width]
+            variable should be in the format of: [height, width].
         min_density (int, optional): The minamum number of points for a cell to counted.
         normalize (bool, optional): Whether to normalize the dimensionality
-            reduced activation samples to between [0,1] & to remove outliers.
+            reduced activation samples to between [0, 1] & to remove outliers.
     Returns:
         grid_vecs (torch.tensor): A tensor containing all the direction vector
             that were created.
         cell_coords (list of Tuple[int, int, int]): List of coordinates for grid
             spatial positons of each direction vector, and the number of
-            samples used for the cell.
+            samples used for the cell. The tuple for each cell is in the
+            format of [y coord, x coord, number of samples].
     """
 
     assert tensor.dim() == 2 and tensor.size(1) == 2
@@ -173,7 +175,7 @@ def create_atlas(
         coords (list of Tuple[int, int] or list of Tuple[int, int, int]):
             A list of coordinates to use for the atlas image tensors.
         grid_size (Tuple[int, int]): The size of grid cells to use. The grid_size
-            variable should be in the format of: [height, width]
+            variable should be in the format of: [height, width].
     Returns:
         canvas (torch.tensor): The full activation atlas visualization.
     """
