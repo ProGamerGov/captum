@@ -108,6 +108,10 @@ class TestCreateAtlasVectors(BaseTest):
         self.assertEqual(vec_coords, expected_coords)
 
     def test_create_atlas_vectors_diff_grid_sizes(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping create atlas vectors test due to insufficient Torch version."
+            )
         grid_size = (2, 3)
         x_raw = torch.arange(0, 4 * 5 * 4).view(5 * 4, 4).float()
         x = torch.arange(0, 2 * 5 * 4).view(5 * 4, 2).float()
