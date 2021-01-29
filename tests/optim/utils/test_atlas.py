@@ -53,6 +53,18 @@ class TestCalcGridIndices(BaseTest):
             for t1, t2 in zip(list1, list2):
                 assertTensorAlmostEqual(self, t1, t2)
 
+    def test_calc_grid_indices_extent(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping grid indices extent test due to insufficient Torch version."
+            )
+        x = torch.arange(0, 2 * 5 * 5).view(5 * 5, 2).float()
+        x = atlas.normalize_grid(x)
+        x_indices = atlas.calc_grid_indices(
+            x, grid_size=(1, 1), x_extent=(1.0, 2.0), y_extent=(1.0, 2.0)
+        )
+        assertTensorAlmostEqual(self, x_indices[0][0], torch.tensor([24]), 0)
+
 
 class TestExtractGridVectors(BaseTest):
     def test_extract_grid_vectors(self) -> None:
