@@ -126,7 +126,7 @@ class TestCreateAtlasVectors(BaseTest):
         expected_coords = [(0, 0, 7), (1, 2, 7)]
 
         assertTensorAlmostEqual(self, x_vecs, expected_vecs)
-        self.assertEqual(vec_coords, expected_vecs)
+        self.assertEqual(vec_coords, expected_coords)
 
 
 class TestCreateAtlas(BaseTest):
