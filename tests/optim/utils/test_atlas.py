@@ -191,7 +191,7 @@ class TestCreateAtlas(BaseTest):
         expected_canvas = torch.stack(
             [torch.hstack((c_pattern, c_pattern.flip(0)))] * 3, 0
         ).unsqueeze(0)
-        assertTensorAlmostEqual(self, atlas_canvas, expected_canvas)
+        assertTensorAlmostEqual(self, atlas_canvas, expected_canvas, 0)
 
     def test_create_atlas_test_diff_grid_sizes(self) -> None:
         grid_size = (2, 3)
