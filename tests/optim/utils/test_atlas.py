@@ -31,7 +31,7 @@ class TestNormalizeGrid(BaseTest):
             ]
         )
 
-        assertTensorAlmostEqual(self, xy_grid, xy_grid_expected, 0.001)
+        assertTensorAlmostEqual(self, xy_grid, xy_grid_expected)
 
     def test_normalize_grid_max_percentile(self) -> None:
         if torch.__version__ < "1.7.0":
@@ -81,7 +81,7 @@ class TestNormalizeGrid(BaseTest):
             ]
         )
 
-        assertTensorAlmostEqual(self, xy_grid, xy_grid_expected)
+        assertTensorAlmostEqual(self, xy_grid, xy_grid_expected, 0.001)
 
 
 class TestCalcGridIndices(BaseTest):
