@@ -220,7 +220,7 @@ class TestConsolidateSamples(BaseTest):
         num_channels = 512
         num_files = 10
         batch_size = 4
-        
+
         for i in range(num_files):
             tensor_batch = [torch.ones(num_channels, 1) for x in range(batch_size)]
             torch.save(
@@ -232,7 +232,9 @@ class TestConsolidateSamples(BaseTest):
                 tensor_batch, os.path.join(sample_dir, "other_data_" + str(i) + ".pt")
             )
 
-        sample_tensor = dataset_utils.consolidate_samples(sample_dir, sample_basename="other_data_")
+        sample_tensor = dataset_utils.consolidate_samples(
+            sample_dir, sample_basename="other_data_"
+        )
         self.assertEqual(
             list(sample_tensor.shape), [num_files * batch_size, num_channels]
         )
