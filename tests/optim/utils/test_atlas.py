@@ -181,6 +181,10 @@ class TestCreateAtlasVectors(BaseTest):
 
 class TestCreateAtlas(BaseTest):
     def test_create_atlas_square_grid_size(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping create atlas canvas test due to insufficient Torch version."
+            )
         grid_size = (2, 2)
         img_list = [torch.ones(1, 3, 4, 4)] * 2
         vec_coords = [(0, 0), (1, 1)]
@@ -194,6 +198,10 @@ class TestCreateAtlas(BaseTest):
         assertTensorAlmostEqual(self, atlas_canvas, expected_canvas, 0)
 
     def test_create_atlas_test_diff_grid_sizes(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping create atlas canvas test due to insufficient Torch version."
+            )
         grid_size = (2, 3)
         img_list = [torch.zeros(1, 3, 4, 4)] * 2
         vec_coords = [(0, 0), (1, 2)]
