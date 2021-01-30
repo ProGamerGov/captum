@@ -195,11 +195,18 @@ class TestCreateAtlas(BaseTest):
 
     def test_create_atlas_test_diff_grid_sizes(self) -> None:
         grid_size = (2, 3)
-        img_list = [torch.ones(1, 3, 4, 4)] * 2
+        img_list = [torch.zeros(1, 3, 4, 4)] * 2
         vec_coords = [(0, 0, 7), (1, 2, 7)]
 
-        atlas_canvas = atlas.create_atlas(img_list, vec_coords, grid_size=grid_size)
-        assertTensorAlmostEqual(self, atlas_canvas, torch.ones_like(atlas_canvas))
+        atlas_canvas = create_atlas(img_list, vec_coords, grid_size=grid_size)
+
+        c_pattern = torch.hstack(
+            (torch.zeros(4, 4), torch.ones(4, 4), torch.ones(4, 4))
+        )
+        expected_canvas = torch.stack(
+            [torch.vstack((c_pattern, c_pattern.flip(1)))] * 3, 0
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, atlas_canvas, expected_canvas)
 
 
 if __name__ == "__main__":
