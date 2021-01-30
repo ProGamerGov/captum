@@ -130,11 +130,21 @@ class TestCreateAtlasVectors(BaseTest):
 
 
 class TestCreateAtlas(BaseTest):
-    def test_create_atlas(self) -> None:
+    def test_create_atlas_square_grid_size(self) -> None:
+        grid_size = (2, 2)
         img_list = [torch.ones(1, 3, 4, 4)] * 2
-        expected_coords = [(0, 0), (1, 1)]
-        canvas = atlas.create_atlas(img_list, expected_coords, grid_size=(2, 2))
-        assertTensorAlmostEqual(self, canvas, torch.ones_like(canvas))
+        vec_coords = [(0, 0), (1, 1)]
+
+        atlas_canvas = atlas.create_atlas(img_list, vec_coords, grid_size=grid_size)
+        assertTensorAlmostEqual(self, atlas_canvas, torch.ones_like(atlas_canvas))
+
+    def test_create_atlas_test_diff_grid_sizes(self) -> None:
+        grid_size = (2, 3)
+        img_list = [torch.ones(1, 3, 4, 4)] * 2
+        vec_coords = [(0, 0, 7), (1, 2, 7)]
+
+        atlas_canvas = atlas.create_atlas(img_list, vec_coords, grid_size=grid_size)
+        assertTensorAlmostEqual(self, atlas_canvas, torch.ones_like(atlas_canvas))
 
 
 if __name__ == "__main__":
