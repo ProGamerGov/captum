@@ -196,7 +196,7 @@ class TestCreateAtlas(BaseTest):
     def test_create_atlas_test_diff_grid_sizes(self) -> None:
         grid_size = (2, 3)
         img_list = [torch.zeros(1, 3, 4, 4)] * 2
-        vec_coords = [(0, 0, 7), (1, 2, 7)]
+        vec_coords = [(0, 0), (1, 2)]
 
         atlas_canvas = atlas.create_atlas(img_list, vec_coords, grid_size=grid_size)
 
