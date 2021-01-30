@@ -31,7 +31,7 @@ class TestNormalizeGrid(BaseTest):
             ]
         )
 
-        assertTensorAlmostEqual(self, xy_grid, xy_grid_expected)
+        assertTensorAlmostEqual(self, xy_grid, xy_grid_expected, 0.001)
 
     def test_normalize_grid_max_percentile(self) -> None:
         if torch.__version__ < "1.7.0":
@@ -56,7 +56,7 @@ class TestNormalizeGrid(BaseTest):
             ]
         )
 
-        assertTensorAlmostEqual(self, xy_grid, xy_grid_expected)
+        assertTensorAlmostEqual(self, xy_grid, xy_grid_expected, 0.001)
 
     def test_normalize_grid_min_percentile(self) -> None:
         if torch.__version__ < "1.7.0":
@@ -187,9 +187,9 @@ class TestCreateAtlas(BaseTest):
 
         atlas_canvas = atlas.create_atlas(img_list, vec_coords, grid_size=grid_size)
 
-        c_pattern = torch.vstack((torch.zeros(4, 4), torch.ones(4, 4)))
+        c_pattern = torch.hstack((torch.zeros(4, 4), torch.ones(4, 4)))
         expected_canvas = torch.stack(
-            [torch.hstack((c_pattern, c_pattern.flip(0)))] * 3, 0
+            [torch.vstack((c_pattern, c_pattern.flip(0)))] * 3, 0
         ).unsqueeze(0)
         assertTensorAlmostEqual(self, atlas_canvas, expected_canvas, 0)
 
