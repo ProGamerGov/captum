@@ -40,7 +40,7 @@ class TestNormalizeGrid(BaseTest):
             )
         xy_grid = torch.arange(0, 2 * 3 * 3).view(3 * 3, 2).float()
 
-        xy_grid = normalize_grid(xy_grid, max_percentile=0.85)
+        xy_grid = atlas.normalize_grid(xy_grid, max_percentile=0.85)
 
         xy_grid_expected = torch.tensor(
             [
@@ -65,7 +65,7 @@ class TestNormalizeGrid(BaseTest):
             )
         xy_grid = torch.arange(0, 2 * 3 * 3).view(3 * 3, 2).float()
 
-        xy_grid = normalize_grid(xy_grid, min_percentile=0.5)
+        xy_grid = atlas.normalize_grid(xy_grid, min_percentile=0.5)
 
         xy_grid_expected = torch.tensor(
             [
@@ -198,7 +198,7 @@ class TestCreateAtlas(BaseTest):
         img_list = [torch.zeros(1, 3, 4, 4)] * 2
         vec_coords = [(0, 0, 7), (1, 2, 7)]
 
-        atlas_canvas = create_atlas(img_list, vec_coords, grid_size=grid_size)
+        atlas_canvas = atlas.create_atlas(img_list, vec_coords, grid_size=grid_size)
 
         c_pattern = torch.hstack(
             (torch.zeros(4, 4), torch.ones(4, 4), torch.ones(4, 4))
