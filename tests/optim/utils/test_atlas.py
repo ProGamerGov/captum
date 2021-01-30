@@ -33,6 +33,56 @@ class TestNormalizeGrid(BaseTest):
 
         assertTensorAlmostEqual(self, xy_grid, xy_grid_expected)
 
+    def test_normalize_grid_max_percentile(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping normalize grid test due to insufficient Torch version."
+            )
+        xy_grid = torch.arange(0, 2 * 3 * 3).view(3 * 3, 2).float()
+
+        xy_grid = normalize_grid(xy_grid, max_percentile=0.85)
+
+        xy_grid_expected = torch.tensor(
+            [
+                [0.0000, 0.0000],
+                [0.1326, 0.1326],
+                [0.2653, 0.2653],
+                [0.3979, 0.3979],
+                [0.5306, 0.5306],
+                [0.6632, 0.6632],
+                [0.7958, 0.7958],
+                [0.9285, 0.9285],
+                [1.0000, 1.0000],
+            ]
+        )
+
+        assertTensorAlmostEqual(self, xy_grid, xy_grid_expected)
+
+    def test_normalize_grid_min_percentile(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping normalize grid test due to insufficient Torch version."
+            )
+        xy_grid = torch.arange(0, 2 * 3 * 3).view(3 * 3, 2).float()
+
+        xy_grid = normalize_grid(xy_grid, min_percentile=0.5)
+
+        xy_grid_expected = torch.tensor(
+            [
+                [0.0000, 0.0000],
+                [0.0000, 0.0000],
+                [0.0000, 0.0000],
+                [0.0000, 0.0000],
+                [0.0893, 0.0893],
+                [0.3169, 0.3169],
+                [0.5446, 0.5446],
+                [0.7723, 0.7723],
+                [1.0000, 1.0000],
+            ]
+        )
+
+        assertTensorAlmostEqual(self, xy_grid, xy_grid_expected)
+
 
 class TestCalcGridIndices(BaseTest):
     def test_calc_grid_indices(self) -> None:
