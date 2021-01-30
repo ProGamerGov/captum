@@ -186,14 +186,14 @@ class TestCreateAtlas(BaseTest):
                 "Skipping create atlas canvas test due to insufficient Torch version."
             )
         grid_size = (2, 2)
-        img_list = [torch.ones(1, 3, 4, 4)] * 2
+        img_list = [torch.zeros(1, 3, 4, 4)] * 2
         vec_coords = [(0, 0), (1, 1)]
 
         atlas_canvas = atlas.create_atlas(img_list, vec_coords, grid_size=grid_size)
 
         c_pattern = torch.hstack((torch.zeros(4, 4), torch.ones(4, 4)))
         expected_canvas = torch.stack(
-            [torch.vstack((c_pattern, c_pattern.flip(0)))] * 3, 0
+            [torch.vstack((c_pattern, c_pattern.flip(1)))] * 3, 0
         ).unsqueeze(0)
         assertTensorAlmostEqual(self, atlas_canvas, expected_canvas, 0)
 
