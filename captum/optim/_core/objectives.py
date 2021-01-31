@@ -76,9 +76,9 @@ class InputOptimization(Objective, Parameterized):
                         Size of the tensor corresponds to the targets passed.
         """
         input_t = (
-            self.input_param()[None, ...]
-            if self.input_param().dim() == 3
-            else self.input_param()
+            self.input_param()._t[None, ...]
+            if self.input_param()._t.dim() == 3
+            else self.input_param()._t
         )
 
         if self.transform:
