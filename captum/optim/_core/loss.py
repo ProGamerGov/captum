@@ -410,56 +410,6 @@ class NeuronDirection(Loss):
 
 
 @loss_wrapper
-class WhitenedNeuronDirection(Loss):
-    """
-    Visualize a single (x, y) position for a direction vector &
-    whitened activation samples.
-    Carter, et al., "Activation Atlas", Distill, 2019.
-    https://distill.pub/2019/activation-atlas/
-    """
-
-    def __init__(
-        self,
-        target: torch.nn.Module,
-        vec: torch.Tensor,
-        vec_whitened: torch.Tensor,
-        cossim_pow: float = 4.0,
-        x: Optional[int] = None,
-        y: Optional[int] = None,
-        eps: float = 1.0e-4,
-    ) -> None:
-        super(Loss, self).__init__()
-        self.target = target
-        self.direction = vec.reshape((1, -1))
-        self.vec_whitened = vec_whitened.reshape((1, -1))
-        self.cossim_pow = cossim_pow
-        self.eps = eps
-        self.x = x
-        self.y = y
-
-    def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
-        activations = targets_to_values[self.target]
-        assert activations.dim() == 4 or activations.dim() == 2
-        assert activations.shape[0] == 1
-        if activations.dim() == 4:
-            _x, _y = get_neuron_pos(
-                activations.size(2), activations.size(3), self.x, self.y
-            )
-            activations = activations[0, :, _x, _y]
-        else:
-            activations = activations[0, ...]
-
-        vec = torch.matmul(self.direction, self.vec_whitened)[0]
-        if self.cossim_pow == 0:
-            return activations * vec
-
-        dot = torch.mean(activations * vec)
-        cossims = dot / (self.eps + torch.sqrt(torch.sum(activations ** 2)))
-        floored_cossims = torch.max(torch.full_like(cossims, 0.1), cossims)
-        return dot * floored_cossims ** self.cossim_pow
-
-
-@loss_wrapper
 class TensorDirection(Loss):
     """
     Visualize a tensor direction vector.
