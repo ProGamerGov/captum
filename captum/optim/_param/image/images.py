@@ -60,6 +60,27 @@ class ImageTensor(torch.Tensor):
         im.save(filename)
 
 
+class TestImageTensor:
+    def __init__(self, data, **kwargs) -> None:
+        self._t = data
+
+    @classmethod
+    def __torch_function__(
+        self,
+        func: Callable,
+        types: Tuple,
+        args: Tuple = (),
+        kwargs: Optional[Dict] = None,
+    ) -> Any:
+        if kwargs is None:
+            kwargs = {}
+        args_t = [a._t if hasattr(a, "_t") else a for a in args]
+        return super().__torch_function__(func, types, args_t, **kwargs)
+
+    def __repr__(self) -> str:
+        return f"TestImageTensor(value={self._t})"
+
+
 def logit(p: torch.Tensor, epsilon: float = 1e-6) -> torch.Tensor:
     p = torch.clamp(p, min=epsilon, max=1.0 - epsilon)
     assert p.min() >= 0 and p.max() < 1
@@ -443,4 +464,4 @@ class NaturalImage(ImageParameterization):
         if self.decorrelate is not None:
             image = self.decorrelate(image)
         image = image.rename(None)  # TODO: the world is not yet ready
-        return ImageTensor(self.squash_func(image))
+        return TestImageTensor(self.squash_func(image))
