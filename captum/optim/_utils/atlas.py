@@ -63,18 +63,18 @@ def calc_grid_indices(
     x_bin = ((xy_grid[:, 0] - x_extent[0]) / (x_extent[1] - x_extent[0])) * grid_size[0]
     y_bin = ((xy_grid[:, 1] - y_extent[0]) / (y_extent[1] - y_extent[0])) * grid_size[1]
 
-    x_list = []
-    for x in range(grid_size[0]):
-        y_list = []
-        for y in range(grid_size[1]):
+    indices = []
+    for y in range(grid_size[1]):
+        indice_bounds = []
+        for x in range(grid_size[0]):
             in_bounds_x = torch.logical_and(x <= x_bin, x_bin <= x + 1)
             in_bounds_y = torch.logical_and(y <= y_bin, y_bin <= y + 1)
             in_bounds_indices = torch.where(
                 torch.logical_and(in_bounds_x, in_bounds_y)
             )[0]
-            y_list.append(in_bounds_indices)
-        x_list.append(y_list)
-    return x_list
+            indice_bounds.append(in_bounds_indices)
+        indices.append(indice_bounds)
+    return indices
 
 
 def extract_grid_vectors(
@@ -113,8 +113,8 @@ def extract_grid_vectors(
 
     cell_coords = []
     average_activations = []
-    for x in range(grid_size[0]):
-        for y in range(grid_size[1]):
+    for y in range(grid_size[1]):
+        for x in range(grid_size[0]):
             indices = grid_indices[x][y]
             if len(indices) >= min_density:
                 average_activations.append(torch.mean(raw_activations[indices], 0))
