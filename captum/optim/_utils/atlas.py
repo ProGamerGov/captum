@@ -115,7 +115,7 @@ def extract_grid_vectors(
     average_activations = []
     for x in range(grid_size[0]):
         for y in range(grid_size[1]):
-            indices = grid_indices[y][x]
+            indices = grid_indices[x][y]
             if len(indices) >= min_density:
                 average_activations.append(torch.mean(raw_activations[indices], 0))
                 cell_coords.append((x, y, len(indices)))
