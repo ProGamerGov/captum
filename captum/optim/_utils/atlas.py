@@ -113,8 +113,8 @@ def extract_grid_vectors(
 
     cell_coords: List = []
     average_activations = []
-    for y in range(grid_size[1]):
-        for x in range(grid_size[0]):
+    for x in range(grid_size[0]):
+        for y in range(grid_size[1]):
             indices = grid_indices[x][y]
             if len(indices) >= min_density:
                 average_activations.append(torch.mean(raw_activations[indices], 0))
@@ -213,4 +213,4 @@ def create_atlas(
             (grid_size[1] - y - 1) * cell_h : (grid_size[1] - y) * cell_h,
             (grid_size[0] - x - 1) * cell_w : (grid_size[0] - x) * cell_w,
         ] = img
-    return atlas_canvas
+    return torch.flip(atlas_canvas, [3])
