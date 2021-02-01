@@ -64,9 +64,9 @@ def calc_grid_indices(
     y_bin = ((xy_grid[:, 1] - y_extent[0]) / (y_extent[1] - y_extent[0])) * grid_size[1]
 
     indices: List = []
-    for y in range(grid_size[1]):
+    for x in range(grid_size[0]):
         indice_bounds: List = []
-        for x in range(grid_size[0]):
+        for y in range(grid_size[1]):
             in_bounds_x = torch.logical_and(x <= x_bin, x_bin <= x + 1)
             in_bounds_y = torch.logical_and(y <= y_bin, y_bin <= y + 1)
             in_bounds_indices = torch.where(
