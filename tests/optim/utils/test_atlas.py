@@ -216,7 +216,7 @@ class TestCreateAtlas(BaseTest):
             .unsqueeze(0)
             .flip(2)
         )
-        assertTensorAlmostEqual(self, atlas_canvas, expected_canvas)
+        assertTensorAlmostEqual(self, atlas_canvas, expected_canvas, 0)
 
     def test_create_atlas_zeros(self) -> None:
         if torch.__version__ < "1.7.0":
