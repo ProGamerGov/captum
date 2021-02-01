@@ -170,7 +170,9 @@ class TestCreateAtlasVectors(BaseTest):
             xy_grid, raw_activ, grid_size=grid_size, min_density=4, normalize=True
         )
 
-        expected_vecs = torch.tensor([[12.0, 13.0, 14.0, 15.0], [64.0, 65.0, 66.0, 67.0]])
+        expected_vecs = torch.tensor(
+            [[12.0, 13.0, 14.0, 15.0], [64.0, 65.0, 66.0, 67.0]]
+        )
         expected_coords = [(0, 0, 7), (2, 1, 7)]
 
         assertTensorAlmostEqual(self, vecs, expected_vecs)
