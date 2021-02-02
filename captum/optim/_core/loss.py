@@ -340,7 +340,7 @@ class WhitenedNeuronDirection(Loss):
         dot = torch.mean(activations * vec)
         cossims = dot / (self.eps + torch.sqrt(torch.sum(activations ** 2)))
         floored_cossims = torch.max(torch.full_like(cossims, 0.1), cossims)
-        return torch.sum(dot * floored_cossims ** self.cossim_pow)
+        return dot * floored_cossims ** self.cossim_pow
 
 
 class TensorDirection(Loss):
