@@ -35,13 +35,13 @@ class InputOptimization(Objective, Parameterized):
         https://github.com/tensorflow/lucid
         https://distill.pub/2017/feature-visualization/
     """
-
     def __init__(
         self,
         model: nn.Module,
         loss_function: LossFunction,
         input_param: Optional[InputParameterization] = None,
         transform: Optional[nn.Module] = None,
+        transform_targets: Optional[nn.Module] = None,
         lr: float = 0.025,
     ) -> None:
         r"""
@@ -67,6 +67,9 @@ class InputOptimization(Objective, Parameterized):
         )
         self.loss_function = loss_function
         self.lr = lr
+        if not hasattr(transform_targets, "__iter__") and transform_targets is not None:
+            transform_targets = [transform_targets]
+        self.transform_targets = transform_targets
 
     def loss(self) -> torch.Tensor:
         r"""Compute loss value for current iteration.
@@ -90,6 +93,10 @@ class InputOptimization(Objective, Parameterized):
         # consume_outputs return the captured values and resets the hook's state
         module_outputs = self.hooks.consume_outputs()
         loss_value = self.loss_function(module_outputs)
+        
+        if self.transform_targets is not None:
+           for t in self.transform_targets:
+               loss_value + t.loss
         return loss_value
 
     def cleanup(self) -> None:
