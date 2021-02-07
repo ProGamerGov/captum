@@ -25,7 +25,9 @@ def image_cov(tensor: torch.Tensor) -> torch.Tensor:
 
 
 def dataset_cov_matrix(
-    loader: torch.utils.data.DataLoader, show_progress: bool = False
+    loader: torch.utils.data.DataLoader,
+    show_progress: bool = False,
+    device: torch.device = torch.device("cpu"),
 ) -> torch.Tensor:
     """
     Calculate the covariance matrix for an image dataset.
@@ -37,6 +39,7 @@ def dataset_cov_matrix(
     cov_mtx = cast(torch.Tensor, 0.0)
     for images, _ in loader:
         assert images.dim() == 4
+        images = images.to(device)
         for b in range(images.size(0)):
             cov_mtx = cov_mtx + image_cov(images[b].permute(1, 2, 0))
 
@@ -68,6 +71,7 @@ def dataset_klt_matrix(
     loader: torch.utils.data.DataLoader,
     normalize: bool = False,
     show_progress: bool = False,
+    device: torch.device = torch.device("cpu"),
 ) -> torch.Tensor:
     """
     Calculate the color correlation matrix, also known as
@@ -76,7 +80,7 @@ def dataset_klt_matrix(
     transforms for models trained on the dataset.
     """
 
-    cov_mtx = dataset_cov_matrix(loader, show_progress)
+    cov_mtx = dataset_cov_matrix(loader, show_progress=show_progress, device=device)
     return cov_matrix_to_klt(cov_mtx, normalize)
 
 
