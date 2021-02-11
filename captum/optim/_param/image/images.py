@@ -269,19 +269,18 @@ class FFTImage(ImageParameterization):
 
 class FFTImageConstant(FFTImage):
     """
-    Parameterize an image using inverse real 2D FFT. This version of FFTImage is
-    based on the Lucid library's implementation of FFT parameterization.
-    In this version of FFTImage, output image tensors are divided by 4.0 and fft
-    operations are normalized. If you provide an init tensor created from an image,
-    it should be multiplied by 4.0 beforehand.
+    Parameterize an image using inverse real 2D FFT. In this version of FFTImage,
+    output image tensors are divided by 4.0 and fft operations are normalized. If you
+    provide an init tensor created from an image, it should be multiplied by 4.0
+    beforehand.
 
     Args:
-        size (list of int): The H & W dimensions to use for creating
-            the nn.Parameter tensor.
-        channels (int): The number of channels to create.
-        batch (int): The number of batches to create.
-        init (torch.tensor, optional): Optionally specify a tensor to
-            use instead of creating one.
+        size (Tuple[int, int]): The H & W dimensions to use for creating the
+            nn.Parameter tensor.
+        channels (int, optional): The number of channels to create.
+        batch (int, optional): The number of batches to create.
+        init (torch.tensor, optional): Optionally specify a tensor to use instead of
+            creating one.
     """
 
     def get_fft_funcs(self) -> Tuple[Callable, Callable]:
