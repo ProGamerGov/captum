@@ -267,6 +267,67 @@ class FFTImage(ImageParameterization):
         return output.refine_names("B", "C", "H", "W")
 
 
+class FFTImageConstant(FFTImage):
+    """
+    Parameterize an image using inverse real 2D FFT. This version of FFTImage is
+    based on the Lucid library's implementation of FFT parameterization.
+    In this version of FFTImage, output image tensors are divided by 4.0 and fft
+    operations are normalized. If you provide an init tensor created from an image,
+    it should be multiplied by 4.0 beforehand.
+
+    Args:
+        size (list of int): The H & W dimensions to use for creating
+            the nn.Parameter tensor.
+        channels (int): The number of channels to create.
+        batch (int): The number of batches to create.
+        init (torch.tensor, optional): Optionally specify a tensor to
+            use instead of creating one.
+    """
+
+    def get_fft_funcs(self) -> Tuple[Callable, Callable]:
+        """
+        Support older versions of PyTorch.
+
+        Returns:
+            fft functions (tuple of Callable): A list of FFT functions
+                to use for irfft and rfft operations.
+        """
+        import torch
+
+        if torch.__version__ >= "1.7.0":
+            import torch.fft
+
+            def torch_rfft(x: torch.Tensor) -> torch.Tensor:
+                return torch.view_as_real(torch.fft.rfftn(x, s=self.size), norm="ortho")  # type: ignore  # noqa: E501
+
+            def torch_irfft(x: torch.Tensor) -> torch.Tensor:
+                if type(x) is not torch.complex64:
+                    x = torch.view_as_complex(x)
+                return torch.fft.irfftn(x, s=self.size, norm="ortho")  # type: ignore
+
+        else:
+            torch_rfft = lambda x: torch.rfft(
+                x, signal_ndim=2, normalized=True
+            )  # noqa: E731
+            torch_irfft = lambda x: torch.irfft(
+                x, signal_ndim=2, normalized=True
+            )[  # noqa: E731
+                :, :, : self.size[0], : self.size[1]  # noqa: E731
+            ]  # noqa: E731
+        return torch_rfft, torch_irfft
+
+    def forward(self) -> torch.Tensor:
+        """
+        Returns:
+            output (tensor): A spatially recorrelated tensor.
+        """
+
+        h, w = self.size
+        scaled_spectrum = self.fourier_coeffs * self.spectrum_scale
+        output = self.torch_irfft(scaled_spectrum) / 4.0
+        return output.refine_names("B", "C", "H", "W")
+
+
 class PixelImage(ImageParameterization):
     def __init__(
         self,
