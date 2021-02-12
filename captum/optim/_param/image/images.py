@@ -283,6 +283,46 @@ class FFTImageConstant(FFTImage):
             creating one.
     """
 
+    def __init__(
+        self,
+        size: Tuple[int, int] = None,
+        channels: int = 3,
+        batch: int = 1,
+        init: Optional[torch.Tensor] = None,
+    ) -> None:
+        super().__init__()
+        if init is None:
+            assert len(size) == 2
+            self.size = size
+        else:
+            assert init.dim() == 3 or init.dim() == 4
+            self.size = (
+                (init.size(1), init.size(2))
+                if init.dim() == 3
+                else (init.size(2), init.size(3))
+            )
+        self.torch_rfft, self.torch_irfft = self.get_fft_funcs()
+
+        frequencies = FFTImage.rfft2d_freqs(*self.size)
+        scale = 1.0 / torch.max(
+            frequencies,
+            torch.full_like(frequencies, 1.0 / (max(self.size[0], self.size[1]))),
+        )
+        spectrum_scale = scale[None, :, :, None]
+        self.register_buffer("spectrum_scale", spectrum_scale)
+
+        if init is None:
+            coeffs_shape = (channels, self.size[0], self.size[1] // 2 + 1, 2)
+            random_coeffs = torch.randn(
+                coeffs_shape
+            )  # names=["C", "H_f", "W_f", "complex"]
+            fourier_coeffs = random_coeffs / 50
+        else:
+            fourier_coeffs = self.torch_rfft(init * 4.0) / spectrum_scale
+
+        fourier_coeffs = self.setup_batch(fourier_coeffs, batch, 4)
+        self.fourier_coeffs = nn.Parameter(fourier_coeffs)
+
     def get_fft_funcs(self) -> Tuple[Callable, Callable]:
         """
         Support older versions of PyTorch.
