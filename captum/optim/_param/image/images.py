@@ -267,7 +267,7 @@ class FFTImage(ImageParameterization):
         return output.refine_names("B", "C", "H", "W")
 
 
-class FFTImageConstant(FFTImage):
+class FFTImageConstant(ImageParameterization):
     """
     Parameterize an image using inverse real 2D FFT. In this version of FFTImage,
     output image tensors are divided by 4.0 and fft operations are normalized. If you
