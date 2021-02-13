@@ -4,6 +4,7 @@ from typing import Callable, Optional
 
 import torch
 import torch.nn as nn
+import operator
 
 from captum.optim._utils.image.common import get_neuron_pos
 from captum.optim._utils.typing import ModuleOutputMapping
