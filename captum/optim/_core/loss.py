@@ -64,7 +64,7 @@ class Loss(ABC):
         return -1 * self
 
     def __sub__(self, other):
-        return self + (-1 * other)
+        return module_op(self, other, operator.sub)
 
     def __mul__(self, other):
         return module_op(self, other, operator.mul)
