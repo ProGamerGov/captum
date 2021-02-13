@@ -24,13 +24,6 @@ def module_op(self, other, math_op: Callable):
 
         name = self.__name__
         target = self.target
-    elif isinstance(self, (int, float)):
-
-        def loss_fn(module):
-            return math_op(self(module), other)
-
-        name = self.__name__
-        target = self.target
     else:
         # We take the mean of the output tensor to resolve shape mismatches
         def loss_fn(module):
@@ -71,7 +64,10 @@ class Loss(ABC):
         return -1 * self
 
     def __sub__(self, other):
-        return module_op(self, other, operator.sub)
+        return self + (-1 * other)
+
+    def __rsub__(self, other):
+        return (-1 * self) + other
 
     def __mul__(self, other):
         return module_op(self, other, operator.mul)
