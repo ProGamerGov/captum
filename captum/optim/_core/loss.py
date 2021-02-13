@@ -15,6 +15,26 @@ def _make_arg_str(arg):
     return arg[:15] + "..." if too_big else arg
 
 
+def module_op(self, other, math_op: Callable):
+    if isinstance(other, (int, float)):
+
+        def loss_fn(module):
+            return math_op(other, self(module))
+
+        name = self.__name__
+        target = self.target
+    else:
+        # We take the mean of the output tensor to resolve shape mismatches
+        def loss_fn(module):
+            return math_op(torch.mean(self(module)), torch.mean(other(module)))
+
+        name = f"Compose({', '.join([self.__name__, other.__name__])})"
+        target = (
+            self.target if hasattr(self.target, "__iter__") else [self.target]
+        ) + (other.target if hasattr(other.target, "__iter__") else [other.target])
+    return CompositeLoss(loss_fn, name=name, target=target)
+
+
 class Loss(ABC):
     """
     Abstract Class to describe loss.
@@ -37,23 +57,7 @@ class Loss(ABC):
         return self.__name__
 
     def __add__(self, other):
-        if isinstance(other, (int, float)):
-
-            def loss_fn(module):
-                return other + self(module)
-
-            name = self.__name__
-            target = self.target
-        else:
-            # We take the mean of the output tensor to resolve shape mismatches
-            def loss_fn(module):
-                return torch.mean(self(module)) + torch.mean(other(module))
-
-            name = f"Compose({', '.join([self.__name__, other.__name__])})"
-            target = (
-                self.target if hasattr(self.target, "__iter__") else [self.target]
-            ) + (other.target if hasattr(other.target, "__iter__") else [other.target])
-        return CompositeLoss(loss_fn, name=name, target=target)
+        return module_op(self, other, operator.add)
 
     def __neg__(self):
         return -1 * self
@@ -62,24 +66,10 @@ class Loss(ABC):
         return self + (-1 * other)
 
     def __mul__(self, other):
-        if isinstance(other, (int, float)):
-
-            def loss_fn(module):
-                return other * self(module)
-
-            return CompositeLoss(loss_fn, name=self.__name__, target=self.target)
-        else:
-            raise TypeError(
-                "Can only multiply by int or float. Received type " + str(type(other))
-            )
+        return module_op(self, other, operator.mul)
 
     def __truediv__(self, other):
-        if isinstance(other, (int, float)):
-            return self.__mul__(1 / other)
-        else:
-            raise TypeError(
-                "Can only divide by int or float. Received type " + str(type(other))
-            )
+        return module_op(self, other, operator.truediv)
 
     def __rmul__(self, other):
         return self.__mul__(other)
@@ -88,17 +78,7 @@ class Loss(ABC):
         return self.__add__(other)
 
     def __pow__(self, other):
-        if isinstance(other, (int, float)):
-
-            def loss_fn(module):
-                return self(module) ** other
-
-            return CompositeLoss(loss_fn, name=self.__name__, target=self.target)
-        else:
-            raise TypeError(
-                "Can only take to the power of int or float. Received type "
-                + str(type(other))
-            )
+        return module_op(self, other, operator.pow)
 
 
 class SimpleLoss(Loss):
