@@ -128,6 +128,13 @@ class LayerActivation(SimpleLoss):
 
 
 @loss_wrapper
+class AlphaActivation(SimpleLoss):
+    def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
+        activations = targets_to_values[self.target]
+        return activations[:, 3:].mean()
+
+
+@loss_wrapper
 class ChannelActivation(SimpleLoss):
     """
     Maximize activations at the target layer and target channel.
