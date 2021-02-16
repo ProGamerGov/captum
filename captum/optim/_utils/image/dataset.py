@@ -179,18 +179,18 @@ def capture_activation_samples(
         pos_list: List = []
         
         with torch.no_grad():
-          for i in range(samples_per_image):
-            for b in range(activations.size(0)):
-                if activations.dim() == 4:
-                    h, w = activations.shape[2:]
-                    y = torch.randint(low=1, high=h - 1, size=[1])
-                    x = torch.randint(low=1, high=w - 1, size=[1])
-                    activ = activations[b, :, y, x]
-                    pos_list.append((b, y, x))
-                elif activations.dim() == 2:
-                    activ = activations[b].unsqueeze(1)
-                    pos_list.append((b, y, x))
-                activation_samples.append(activ.detach())
+            for i in range(samples_per_image):
+                for b in range(activations.size(0)):
+                    if activations.dim() == 4:
+                        h, w = activations.shape[2:]
+                        y = torch.randint(low=1, high=h - 1, size=[1])
+                        x = torch.randint(low=1, high=w - 1, size=[1])
+                        activ = activations[b, :, y, x]
+                        pos_list.append((b, y, x))
+                    elif activations.dim() == 2:
+                        activ = activations[b].unsqueeze(1)
+                        pos_list.append(b)
+                    activation_samples.append(activ)
                
         if collect_attributions:
             zeros_mask = torch.zeros_like(activations)
@@ -198,11 +198,14 @@ def capture_activation_samples(
                 if activations.dim() == 4:
                      zeros_mask[c[0], :, c[1], c[2]] = 1
                 elif activations.dim() == 2:
-                     zeros_mask = zeros_mask + 1
-            attr = find_pos_attr(logit_activ, activations, position_mask=zeros_mask)
-            sample_attributions.append(attr[:, 0:1].permute(1, 0).detach())
+                     zeros_mask[c] = 1
+            attr = find_pos_attr(
+                logit_activ, activations, position_mask=zeros_mask
+            ).detach()
+            sample_attributions.append(attr[:, 0:1].permute(1, 0))
 
         return activation_samples, sample_attributions
+
 
     if collect_attributions:
         logit_target == list(model.children())[len(list(model.children())) - 1 :][
