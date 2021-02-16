@@ -89,16 +89,21 @@ def find_pos_attr(
     target_activ: torch.Tensor,
     y: Optional[Union[int, torch.Tensor]] = None,
     x: Optional[Union[int, torch.Tensor]] = None,
+    position_mask: Optional[torch.Tensor] = None,
 ) -> torch.Tensor:
     assert x is not None and y is not None or x is None and y is None
+    assert x is None and position_mask is not None or x is not None and position_mask is None
 
     zeros = torch.nn.Parameter(torch.zeros_like(logit_activ))
     target_zeros = torch.zeros_like(target_activ)
 
-    if x is not None and y is not None:
-        target_zeros[..., y, x] = target_activ[..., y, x]
+    if position_mask is None:
+        if x is not None and y is not None:
+            target_zeros[..., y, x] = target_activ[..., y, x]
+        else:
+            target_zeros = target_activ
     else:
-        target_zeros = target_activ
+        target_zeros = target_activ * position_mask
 
     grad_one = torch.autograd.grad(
         outputs=[logit_activ],
@@ -112,47 +117,8 @@ def find_pos_attr(
         grad_outputs=[target_zeros],
         create_graph=True,
     )[0]
-    return torch.argsort(-logit_attr[0])
+    return torch.argsort(-logit_attr)
 
-
-def capture_activation_samples(
-    loader: torch.utils.data.DataLoader,
-    model: torch.nn.Module,
-    targets: List[torch.nn.Module],
-    target_names: Optional[List[str]] = None,
-    sample_dir: str = "",
-    num_images: Optional[int] = None,
-    samples_per_image: int = 1,
-    input_device: torch.device = torch.device("cpu"),
-    collect_attributions: bool = False,
-    logit_target: Optional[torch.nn.Module] = None,
-    show_progress: bool = False,
-):
-    """
-    Capture randomly sampled activations for an image dataset from one or multiple
-    target layers.
-    Args:
-        loader (torch.utils.data.DataLoader): A torch.utils.data.DataLoader
-            instance for an image dataset.
-        model (nn.Module): A PyTorch model instance.
-        targets (list of nn.Module): A list of layers to collect activation samples
-            from.
-        target_names (list of str, optional): A list of names to use when saving sample
-            tensors as files.
-        sample_dir (str): Path to where activation samples should be saved.
-        num_images (int, optional): How many images to collect samples from.
-            Default is to collect samples for every image in the dataset.
-        samples_per_image (int): How many samples to collect per image. Default
-            is 1 sample per image.
-        input_device (torch.device, optional): The device to use for model
-            inputs.
-        collect_attributions (bool, optional): Whether or not to collect attributions
-            for samples.
-        logit_target (nn.Module, optional): The final layer in the model that
-            determines the classes I think. This parameter is only enabled if
-            collect_attributions is set to True.
-        show_progress (bool, optional): Whether or not to show progress.
-    """
 
     def random_sample(
         activations: torch.Tensor,
@@ -165,22 +131,32 @@ def capture_activation_samples(
 
         activation_samples: List = []
         sample_attributions: List = []
-        for i in range(samples_per_image):
+        pos_list: List = []
+        
+        with torch.no_grad():
+          for i in range(samples_per_image):
             for b in range(activations.size(0)):
                 if activations.dim() == 4:
                     h, w = activations.shape[2:]
                     y = torch.randint(low=1, high=h - 1, size=[1])
                     x = torch.randint(low=1, high=w - 1, size=[1])
                     activ = activations[b, :, y, x]
-                    if collect_attributions:
-                        attr = find_pos_attr(activations[b : b + 1], logit_activ, y, x)
+                    pos_list.append((b, y, x))
                 elif activations.dim() == 2:
                     activ = activations[b].unsqueeze(1)
-                    if collect_attributions:
-                        attr = find_pos_attr(activations[b : b + 1], logit_activ)
+                    pos_list.append((b, y, x))
                 activation_samples.append(activ.detach())
-                if collect_attributions:
-                    sample_attributions.append(attr[0].unsqueeze(1).detach())
+               
+        if collect_attributions:
+            zeros_mask = torch.zeros_like(activations)
+            for c in pos_list:
+                if activations.dim() == 4:
+                     zeros_mask[c[0], :, c[1], c[2]] = 1
+                elif activations.dim() == 2:
+                     zeros_mask = zeros_mask + 1
+            attr = find_pos_attr(logit_activ, activations, position_mask=zeros_mask)
+            sample_attributions.append(attr.permute(1, 0).detach())
+
         return activation_samples, sample_attributions
 
     if target_names is None:
@@ -230,8 +206,11 @@ def capture_activation_samples(
                             n + "_attributions_" + str(batch_count) + ".pt",
                         ),
                     )
-
+            del sample_tensors
             del target_activ_dict
+            
+            if collect_attributions:
+                model.zero_grad()
 
             if show_progress:
                 pbar.update(inputs.size(0))
