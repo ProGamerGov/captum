@@ -169,10 +169,8 @@ def capture_activation_samples(
         """
         assert activations.dim() == 4 or activations.dim() == 2
 
-        if collect_attributions:
-            sample_attributions: List = []
-
-        activation_samples = []
+        activation_samples: List = []
+        sample_attributions: List = []
         for i in range(samples_per_image):
             for b in range(activations.size(0)):
                 if activations.dim() == 4:
