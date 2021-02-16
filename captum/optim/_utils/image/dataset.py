@@ -155,7 +155,7 @@ def find_pos_attr(
                 elif activations.dim() == 2:
                      zeros_mask = zeros_mask + 1
             attr = find_pos_attr(logit_activ, activations, position_mask=zeros_mask)
-            sample_attributions.append(attr.permute(1, 0).detach())
+            sample_attributions.append(attr[:, 0:1].permute(1, 0).detach())
 
         return activation_samples, sample_attributions
 
