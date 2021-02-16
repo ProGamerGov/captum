@@ -188,7 +188,7 @@ def capture_activation_samples(
                         attr = find_pos_attr(activations[b : b + 1], logit_activ)
                 activation_samples.append(activ.detach())
                 if collect_attributions:
-                    sample_attributions.append(attr.detach())
+                    sample_attributions.append(attr[0].unsqueeze(1).detach())
         return activation_samples, sample_attributions
 
     if target_names is None:
