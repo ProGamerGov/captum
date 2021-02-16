@@ -217,13 +217,14 @@ def capture_activation_samples(
         pbar = tqdm(total=total, unit=" images")
 
     image_count, batch_count = 0, 0
-    with torch.set_grad_enabled(collect_attributions):
+    with torch.no_grad():
         for inputs, _ in loader:
             inputs = inputs.to(input_device)
             image_count += inputs.size(0)
             batch_count += 1
 
             if collect_attributions:
+                torch.set_grad_enabled(True)
                 target_activ_dict = collect_activations(model, targets, inputs)
                 logit_activ = target_activ_dict[logit_target]
                 del target_activ_dict[logit_target]
@@ -235,9 +236,10 @@ def capture_activation_samples(
                 sample_tensors = random_sample(target_activ_dict[t], logit_activ)
                 torch.save(
                     sample_tensors[0],
-                    os.path.join(sample_dir, n + "_" + str(batch_count) + ".pt"),
+                    os.path.join(sample_dir, n + "_activations_" + str(batch_count) + ".pt"),
                 )
                 if collect_attributions:
+                    torch.set_grad_enabled(False)
                     torch.save(
                         sample_tensors[1],
                         os.path.join(
@@ -245,7 +247,6 @@ def capture_activation_samples(
                             n + "_attributions_" + str(batch_count) + ".pt",
                         ),
                     )
-            del sample_tensors
             del target_activ_dict
             
             if collect_attributions:
