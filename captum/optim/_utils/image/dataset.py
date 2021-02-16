@@ -154,12 +154,6 @@ def capture_activation_samples(
         show_progress (bool, optional): Whether or not to show progress.
     """
 
-    if collect_attributions:
-        logit_target == list(model.children())[len(list(model.children())) - 1 :][
-            0
-        ] if logit_target is None else logit_target
-        targets += [cast(torch.nn.Module, logit_target)]
-
     def random_sample(
         activations: torch.Tensor,
         logit_activ: torch.Tensor,
@@ -194,6 +188,12 @@ def capture_activation_samples(
 
     assert len(target_names) == len(targets)
     assert os.path.isdir(sample_dir)
+
+    if collect_attributions:
+        logit_target == list(model.children())[len(list(model.children())) - 1 :][
+            0
+        ] if logit_target is None else logit_target
+        targets += [cast(torch.nn.Module, logit_target)]
 
     if show_progress:
         total = (
