@@ -149,7 +149,8 @@ def capture_activation_samples(
         collect_attributions (bool, optional): Whether or not to collect attributions
             for samples.
         logit_target (nn.Module, optional): The final layer in the model that
-            determines the classes.
+            determines the classes I think. This parameter is only enabled if
+            collect_attributions is set to True.
         show_progress (bool, optional): Whether or not to show progress.
     """
 
