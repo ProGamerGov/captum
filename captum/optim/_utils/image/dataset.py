@@ -120,6 +120,51 @@ def find_pos_attr(
     return torch.argsort(-logit_attr)
 
 
+def capture_activation_samples(
+    loader: torch.utils.data.DataLoader,
+    model: torch.nn.Module,
+    targets: List[torch.nn.Module],
+    target_names: Optional[List[str]] = None,
+    sample_dir: str = "",
+    num_images: Optional[int] = None,
+    samples_per_image: int = 1,
+    input_device: torch.device = torch.device("cpu"),
+    collect_attributions: bool = False,
+    logit_target: Optional[torch.nn.Module] = None,
+    show_progress: bool = False,
+):
+    """
+    Capture randomly sampled activations for an image dataset from one or multiple
+    target layers.
+    Args:
+        loader (torch.utils.data.DataLoader): A torch.utils.data.DataLoader
+            instance for an image dataset.
+        model (nn.Module): A PyTorch model instance.
+        targets (list of nn.Module): A list of layers to collect activation samples
+            from.
+        target_names (list of str, optional): A list of names to use when saving sample
+            tensors as files.
+        sample_dir (str): Path to where activation samples should be saved.
+        num_images (int, optional): How many images to collect samples from.
+            Default is to collect samples for every image in the dataset.
+        samples_per_image (int): How many samples to collect per image. Default
+            is 1 sample per image.
+        input_device (torch.device, optional): The device to use for model
+            inputs.
+        collect_attributions (bool, optional): Whether or not to collect attributions
+            for samples.
+        logit_target (nn.Module, optional): The final layer in the model that
+            determines the classes I think. This parameter is only enabled if
+            collect_attributions is set to True.
+        show_progress (bool, optional): Whether or not to show progress.
+    """
+
+    if target_names is None:
+        target_names = ["target" + str(i) + "_" for i in range(len(targets))]
+
+    assert len(target_names) == len(targets)
+    assert os.path.isdir(sample_dir)
+
     def random_sample(
         activations: torch.Tensor,
         logit_activ: torch.Tensor,
@@ -158,12 +203,6 @@ def find_pos_attr(
             sample_attributions.append(attr[:, 0:1].permute(1, 0).detach())
 
         return activation_samples, sample_attributions
-
-    if target_names is None:
-        target_names = ["target" + str(i) + "_" for i in range(len(targets))]
-
-    assert len(target_names) == len(targets)
-    assert os.path.isdir(sample_dir)
 
     if collect_attributions:
         logit_target == list(model.children())[len(list(model.children())) - 1 :][
