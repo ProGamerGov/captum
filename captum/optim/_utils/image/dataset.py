@@ -284,7 +284,7 @@ def consolidate_samples(
         sample_basename (str, optional): If samples from different layers are present
             in sample_dir, then you can use samples from only a specific layer by
             specifying the basename that samples of the same layer share.
-        dim (int, optional): the dimension to concatinate the samples together on.
+        dim (int, optional): The dimension to concatinate the samples together on.
         show_progress (bool, optional): Whether or not to show progress.
     Returns:
         sample_tensor (torch.Tensor): A tensor containing all the specified sample
