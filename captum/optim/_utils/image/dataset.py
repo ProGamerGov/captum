@@ -291,7 +291,7 @@ def consolidate_samples(
             tensors with a shape of [n_channels, n_samples].
     """
 
-    samples = []
+    samples: List = []
     tensor_samples = [
         os.path.join(sample_dir, name)
         for name in os.listdir(sample_dir)
