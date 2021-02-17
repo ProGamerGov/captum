@@ -93,6 +93,8 @@ def find_pos_attr(
 ) -> torch.Tensor:
     assert x is not None and y is not None or x is None and y is None
     assert x is None and position_mask is not None or x is not None and position_mask is None
+    assert logit_activ.dim() == 2
+    assert target_activ.dim() == 2 or target_activ.dim() == 4
 
     zeros = torch.nn.Parameter(torch.zeros_like(logit_activ))
     target_zeros = torch.zeros_like(target_activ)
