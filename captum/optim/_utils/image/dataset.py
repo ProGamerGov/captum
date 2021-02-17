@@ -202,7 +202,7 @@ def capture_activation_samples(
             attr = find_pos_attr(
                 logit_activ, activations, position_mask=zeros_mask
             ).detach()
-            attr = torch.stack(torch.sort(attr)).permute(1, 2, 0)
+            attr = torch.stack(torch.sort(-attr)).permute(1, 2, 0)
             sample_attributions.append(attr)
 
         return activation_samples, sample_attributions
