@@ -117,7 +117,7 @@ def find_pos_attr(
         grad_outputs=[target_zeros],
         create_graph=True,
     )[0]
-    return torch.argsort(-logit_attr)
+    return logit_attr
 
 
 def capture_activation_samples(
@@ -202,7 +202,8 @@ def capture_activation_samples(
             attr = find_pos_attr(
                 logit_activ, activations, position_mask=zeros_mask
             ).detach()
-            sample_attributions.append(attr[:, 0:1].permute(1, 0))
+            attr = torch.stack(torch.sort(attr)).permute(1, 2, 0)
+            sample_attributions.append(attr)
 
         return activation_samples, sample_attributions
 
