@@ -158,7 +158,6 @@ def create_atlas_vectors(
 
     assert xy_grid.dim() == 2 and xy_grid.size(1) == 2
     assert raw_activations.dim() == 2
-    assert raw_activations.shape[0] == xy_grid.shape[0]
 
     if normalize:
         xy_grid = normalize_grid(xy_grid)
