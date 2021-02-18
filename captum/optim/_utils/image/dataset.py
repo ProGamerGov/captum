@@ -273,6 +273,7 @@ def consolidate_samples(
     sample_dir: str = "samples",
     sample_basename: str = "",
     dim: int = 1,
+    num_files: Optional[int] = None,
     show_progress: bool = False,
 ) -> torch.Tensor:
     """
@@ -300,13 +301,23 @@ def consolidate_samples(
     ]
 
     if show_progress:
-        pbar = tqdm(total=len(tensor_samples), unit=" sample batches collected")
+        total = (
+            len(tensor_samples) if num_files is None else num_files  # type: ignore
+        )
+        pbar = tqdm(total=total, unit=" sample batches collected")
+
+    file_count = 0
     for file in tensor_samples:
         sample_batch = torch.load(file)
         for s in sample_batch:
             samples += [s.cpu()]
         if show_progress:
             pbar.update(1)
+
+        file_count +=1
+        if file_count > num_files and num_files is not None:
+            break
     if show_progress:
         pbar.close()
+
     return torch.cat(samples, dim)
