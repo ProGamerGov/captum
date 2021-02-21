@@ -293,21 +293,17 @@ class InceptionModule(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         c1x1 = self.conv_1x1(x)
-        c1x1 = self.conv_1x1_relu(c1x1)
 
         c3x3 = self.conv_3x3_reduce(x)
         c3x3 = self.conv_3x3_reduce_relu(c3x3)
         c3x3 = self.conv_3x3(c3x3)
-        c3x3 = self.conv_3x3_relu(c3x3)
 
         c5x5 = self.conv_5x5_reduce(x)
         c5x5 = self.conv_5x5_reduce_relu(c5x5)
         c5x5 = self.conv_5x5(c5x5)
-        c5x5 = self.conv_5x5_relu(c5x5)
 
         px = self.pool(x)
         px = self.pool_proj(px)
-        px = self.pool_proj_relu(px)
         return torch.cat([c1x1, c3x3, c5x5, px], dim=1)
 
 
