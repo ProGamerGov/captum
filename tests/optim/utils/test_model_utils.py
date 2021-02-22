@@ -370,5 +370,19 @@ class TestSkipLayersFunction(BaseTest):
         assertTensorAlmostEqual(self, x, output_tensor, 0)
 
 
+class TestCatLayer(BaseTest):
+    def test_cat_layer_dim_one(self) -> None:
+        x = [torch.ones(1, 3, 4, 4)] * 4
+        layer = model_utils.CatLayer()
+        x_out = layer(x, dim=1)
+        self.assertEqual(list(x_out.shape), [1, 12, 4, 4])
+
+    def test_cat_layer_dim_two(self) -> None:
+        x = [torch.ones(1, 3, 4, 4)] * 4
+        layer = model_utils.CatLayer()
+        x_out = layer(x, dim=0)
+        self.assertEqual(list(x_out.shape), [4, 3, 4, 4])
+
+
 if __name__ == "__main__":
     unittest.main()
