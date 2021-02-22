@@ -2,7 +2,6 @@ from typing import Optional, Tuple, Union, cast
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 from captum.optim._utils.models import (
     AvgPool2dConstrained,
