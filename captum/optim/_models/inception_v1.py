@@ -6,6 +6,7 @@ import torch.nn.functional as F
 
 from captum.optim._utils.models import (
     AvgPool2dConstrained,
+    CatLayer,
     Conv2dSame,
     LocalResponseNormLayer,
     RedirectedReluLayer,
@@ -287,6 +288,7 @@ class InceptionModule(nn.Module):
             groups=1,
             bias=True,
         )
+        self.conv = CatLayer()
         self.relu = activ()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -302,7 +304,9 @@ class InceptionModule(nn.Module):
 
         px = self.pool(x)
         px = self.pool_proj(px)
-        return self.relu(torch.cat([c1x1, c3x3, c5x5, px], dim=1))
+
+        xc = self.conv([c1x1, c3x3, c5x5, px], dim=1)
+        return self.relu(xc)
 
 
 class AuxBranch(nn.Module):
