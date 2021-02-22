@@ -287,6 +287,7 @@ class InceptionModule(nn.Module):
             groups=1,
             bias=True,
         )
+
         self.conv = CatLayer()
         self.relu = activ()
 
