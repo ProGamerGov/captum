@@ -258,7 +258,7 @@ class InceptionModule(nn.Module):
             groups=1,
             bias=True,
         )
-        self.conv_3x3_reduce_relu = activ()
+        self.conv_3x3_relu = activ()
 
         self.conv_5x5_reduce = nn.Conv2d(
             in_channels=in_channels,
