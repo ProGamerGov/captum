@@ -308,7 +308,6 @@ class InceptionModule(nn.Module):
         px = self.pool(x)
         px = self.pool_proj(px)
         px = self.pool_proj_relu(px)
-
         return torch.cat([c1x1, c3x3, c5x5, px], dim=1)
 
 
