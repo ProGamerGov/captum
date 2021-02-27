@@ -128,6 +128,8 @@ def create_atlas_vectors(
     grid_size: Tuple[int, int],
     min_density: int = 8,
     normalize: bool = True,
+    x_extent: Tuple[float, float] = (0.0, 1.0),
+    y_extent: Tuple[float, float] = (0.0, 1.0),
 ) -> Tuple[torch.Tensor, List[Tuple[int, int, int]]]:
     """
     Create direction vectors by splitting an irregular grid of activation samples into
@@ -147,6 +149,9 @@ def create_atlas_vectors(
         min_density (int, optional): The minamum number of points for a cell to counted.
         normalize (bool, optional): Whether or not to remove outliers from an xy
             coordinate grid tensor, and rescale it to [0, 1].
+        x_extent (Tuple[float, float], optional): The x extent to use.
+        y_extent (Tuple[float, float], optional): The y extent to use.
+
     Returns:
         grid_vecs (torch.tensor): A tensor containing all the direction vector that
             were created, stacked along the batch dimension.
@@ -161,7 +166,7 @@ def create_atlas_vectors(
 
     if normalize:
         xy_grid = normalize_grid(xy_grid)
-    indices = calc_grid_indices(xy_grid, grid_size)
+    indices = calc_grid_indices(xy_grid, grid_size, x_extent=x_extent, y_extent=y_extent)
     grid_vecs, vec_coords = extract_grid_vectors(
         indices, raw_activations, grid_size, min_density
     )
