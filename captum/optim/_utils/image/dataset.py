@@ -85,36 +85,32 @@ def dataset_klt_matrix(
 
 
 def find_pos_attr(
-    logit_activ: torch.Tensor,
     target_activ: torch.Tensor,
-    y: Optional[Union[int, torch.Tensor]] = None,
-    x: Optional[Union[int, torch.Tensor]] = None,
-    position_mask: Optional[torch.Tensor] = None,
+    logit_activ: torch.Tensor,
+    position_mask: torch.Tensor,
 ) -> torch.Tensor:
-    assert x is not None and y is not None or x is None and y is None
-    assert x is None and position_mask is not None or x is not None and position_mask is None
-    assert logit_activ.dim() == 2
-    assert target_activ.dim() == 2 or target_activ.dim() == 4
+    """
+    Args:
+        logit_activ: Captured activations from the FC / logit layer.
+        target_activ: Captured activations from the target layer.
+        position_mask (torch.Tensor, optional): If using a batch size greater than
+        one, a mask is used to zero out all the non-target positions.
+    Returns:
+        logit_attr (torch.Tensor): A sorted list of class attributions for the target
+            spatial positions.
+    """
 
     zeros = torch.nn.Parameter(torch.zeros_like(logit_activ))
-    target_zeros = torch.zeros_like(target_activ)
-
-    if position_mask is None:
-        if x is not None and y is not None:
-            target_zeros[..., y, x] = target_activ[..., y, x]
-        else:
-            target_zeros = target_activ
-    else:
-        target_zeros = target_activ * position_mask
+    target_zeros = target_activ * position_mask
 
     grad_one = torch.autograd.grad(
         outputs=[logit_activ],
         inputs=[target_activ],
         grad_outputs=[zeros],
         create_graph=True,
-    )[0]
+    )
     logit_attr = torch.autograd.grad(
-        outputs=[grad_one],
+        outputs=grad_one,
         inputs=zeros,
         grad_outputs=[target_zeros],
         create_graph=True,
@@ -202,9 +198,8 @@ def capture_activation_samples(
                 elif activations.dim() == 2:
                      zeros_mask[c] = 1
             attr = find_pos_attr(
-                logit_activ, activations, position_mask=zeros_mask
+                activations, logit_activ, position_mask=zeros_mask
             ).detach()
-            attr = torch.stack(torch.sort(-attr)).permute(1, 2, 0)
             sample_attributions.append(attr)
 
         return activation_samples, sample_attributions
