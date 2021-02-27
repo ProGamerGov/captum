@@ -100,6 +100,9 @@ def find_pos_attr(
             spatial positions.
     """
 
+    assert target_activ.dim() == 2 or target_activ.dim() == 4
+    assert logit_activ.dim() == 2
+
     zeros = torch.nn.Parameter(torch.zeros_like(logit_activ))
     target_zeros = target_activ * position_mask
 
