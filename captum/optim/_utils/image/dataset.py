@@ -207,7 +207,7 @@ def capture_activation_samples(
 
         return activation_samples, sample_attributions
 
-
+    logit_activ = None
     if collect_attributions:
         logit_target == list(model.children())[len(list(model.children())) - 1 :][
             0
@@ -227,14 +227,11 @@ def capture_activation_samples(
             image_count += inputs.size(0)
             batch_count += 1
 
+            torch.set_grad_enabled(True) if collect_attributions else None
+            target_activ_dict = collect_activations(model, targets, inputs)
             if collect_attributions:
-                torch.set_grad_enabled(True)
-                target_activ_dict = collect_activations(model, targets, inputs)
                 logit_activ = target_activ_dict[logit_target]
                 del target_activ_dict[logit_target]
-            else:
-                target_activ_dict = collect_activations(model, targets, inputs)
-                logit_activ = None
 
             for t, n in zip(target_activ_dict, target_names):
                 sample_tensors = random_sample(target_activ_dict[t], logit_activ)
