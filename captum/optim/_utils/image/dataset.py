@@ -169,7 +169,7 @@ def capture_activation_samples(
     def random_sample(
         activations: torch.Tensor,
         logit_activ: torch.Tensor,
-    ) -> Tuple[List[torch.Tensor], List]:
+    ) -> Tuple[List[torch.Tensor], Union[List, List[torch.Tensor]]]:
         """
         Randomly sample H & W dimensions of activations with 4 dimensions.
         """
@@ -178,32 +178,35 @@ def capture_activation_samples(
         activation_samples: List = []
         sample_attributions: List = []
         position_list: List = []
-        
+
         with torch.no_grad():
             for i in range(samples_per_image):
+                sample_position_list: List = []
                 for b in range(activations.size(0)):
                     if activations.dim() == 4:
                         h, w = activations.shape[2:]
                         y = torch.randint(low=1, high=h - 1, size=[1])
                         x = torch.randint(low=1, high=w - 1, size=[1])
                         activ = activations[b, :, y, x]
-                        position_list.append((b, y, x))
+                        sample_position_list.append((b, y, x))
                     elif activations.dim() == 2:
                         activ = activations[b].unsqueeze(1)
-                        position_list.append(b)
+                        sample_position_list.append(b)
                     activation_samples.append(activ)
-               
+                position_list.append(sample_position_list)
+
         if collect_attributions:
             zeros_mask = torch.zeros_like(activations)
-            for c in position_list:
-                if activations.dim() == 4:
-                     zeros_mask[c[0], :, c[1], c[2]] = 1
-                elif activations.dim() == 2:
-                     zeros_mask[c] = 1
-            attr = attribute_spatial_position(
-                activations, logit_activ, position_mask=zeros_mask
-            ).detach()
-            sample_attributions.append(attr)
+            for sample_pos_list in position_list:
+                for c in sample_pos_list:
+                    if activations.dim() == 4:
+                        zeros_mask[c[0], :, c[1], c[2]] = 1
+                    elif activations.dim() == 2:
+                        zeros_mask[c] = 1
+                attr = attribute_spatial_position(
+                    activations, logit_activ, position_mask=zeros_mask
+                ).detach()
+                sample_attributions.append(attr)
 
         return activation_samples, sample_attributions
 
