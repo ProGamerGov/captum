@@ -84,7 +84,7 @@ def dataset_klt_matrix(
     return cov_matrix_to_klt(cov_mtx, normalize)
 
 
-def find_pos_attr(
+def attribute_spatial_position(
     target_activ: torch.Tensor,
     logit_activ: torch.Tensor,
     position_mask: torch.Tensor,
@@ -177,7 +177,7 @@ def capture_activation_samples(
 
         activation_samples: List = []
         sample_attributions: List = []
-        pos_list: List = []
+        position_list: List = []
         
         with torch.no_grad():
             for i in range(samples_per_image):
@@ -187,20 +187,20 @@ def capture_activation_samples(
                         y = torch.randint(low=1, high=h - 1, size=[1])
                         x = torch.randint(low=1, high=w - 1, size=[1])
                         activ = activations[b, :, y, x]
-                        pos_list.append((b, y, x))
+                        position_list.append((b, y, x))
                     elif activations.dim() == 2:
                         activ = activations[b].unsqueeze(1)
-                        pos_list.append(b)
+                        position_list.append(b)
                     activation_samples.append(activ)
                
         if collect_attributions:
             zeros_mask = torch.zeros_like(activations)
-            for c in pos_list:
+            for c in position_list:
                 if activations.dim() == 4:
                      zeros_mask[c[0], :, c[1], c[2]] = 1
                 elif activations.dim() == 2:
                      zeros_mask[c] = 1
-            attr = find_pos_attr(
+            attr = attribute_spatial_position(
                 activations, logit_activ, position_mask=zeros_mask
             ).detach()
             sample_attributions.append(attr)
