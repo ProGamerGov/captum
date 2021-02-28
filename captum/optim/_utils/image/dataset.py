@@ -114,7 +114,7 @@ def attribute_spatial_position(
     )
     logit_attr = torch.autograd.grad(
         outputs=grad_one,
-        inputs=zeros,
+        inputs=[zeros],
         grad_outputs=[target_zeros],
         create_graph=True,
     )[0]
