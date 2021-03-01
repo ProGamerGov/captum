@@ -252,9 +252,6 @@ def capture_activation_samples(
                         ),
                     )
             del target_activ_dict
-            
-            if collect_attributions:
-                model.zero_grad()
 
             if show_progress:
                 pbar.update(inputs.size(0))
