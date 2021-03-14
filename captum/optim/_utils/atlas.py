@@ -166,7 +166,9 @@ def create_atlas_vectors(
 
     if normalize:
         xy_grid = normalize_grid(xy_grid)
-    indices = calc_grid_indices(xy_grid, grid_size, x_extent=x_extent, y_extent=y_extent)
+    indices = calc_grid_indices(
+        xy_grid, grid_size, x_extent=x_extent, y_extent=y_extent
+    )
     grid_vecs, vec_coords = extract_grid_vectors(
         indices, raw_activations, grid_size, min_density
     )
