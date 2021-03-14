@@ -131,6 +131,8 @@ def capture_activation_samples(
     samples_per_image: int = 1,
     input_device: torch.device = torch.device("cpu"),
     collect_attributions: bool = False,
+    attr_model: Optional[torch.nn.Module] = None,
+    attr_targets: Optional[List[torch.nn.Module]] = None,
     logit_target: Optional[torch.nn.Module] = None,
     show_progress: bool = False,
 ):
@@ -154,8 +156,13 @@ def capture_activation_samples(
             inputs.
         collect_attributions (bool, optional): Whether or not to collect attributions
             for samples.
-        logit_target (nn.Module, optional): The final layer in the model that
-            determines the classes I think. This parameter is only enabled if
+        attr_model (nn.Module, optional): A PyTorch model instance to use for
+            calculating sample attributions.
+        attr_targets (list of nn.Module, optional): A list of attribution model layers
+            to collect attributions from. This should be the exact same as the targets
+            parameter, except for the attribution model.
+        logit_target (nn.Module, optional): The final layer in the attribution model
+            that determines the classes. This parameter is only enabled if
             collect_attributions is set to True.
         show_progress (bool, optional): Whether or not to show progress.
     """
@@ -168,15 +175,13 @@ def capture_activation_samples(
 
     def random_sample(
         activations: torch.Tensor,
-        logit_activ: torch.Tensor,
-    ) -> Tuple[List[torch.Tensor], Union[List, List[torch.Tensor]]]:
+    ) -> Tuple[List[torch.Tensor], List[List[int]]]:
         """
         Randomly sample H & W dimensions of activations with 4 dimensions.
         """
         assert activations.dim() == 4 or activations.dim() == 2
 
         activation_samples: List = []
-        sample_attributions: List = []
         position_list: List = []
 
         with torch.no_grad():
@@ -194,8 +199,20 @@ def capture_activation_samples(
                         sample_position_list.append(b)
                     activation_samples.append(activ)
                 position_list.append(sample_position_list)
+        return activation_samples, position_list
 
-        if collect_attributions:
+    def attribute_samples(
+        activations: torch.Tensor,
+        logit_activ: torch.Tensor,
+        position_list: List[List[int]],
+    ) -> List[torch.Tensor]:
+        """
+        Collect attributions for target sample positions.
+        """
+        assert activations.dim() == 4 or activations.dim() == 2
+
+        sample_attributions: List = []
+        with torch.set_grad_enabled(True):
             zeros_mask = torch.zeros_like(activations)
             for sample_pos_list in position_list:
                 for c in sample_pos_list:
@@ -207,15 +224,13 @@ def capture_activation_samples(
                     activations, logit_activ, position_mask=zeros_mask
                 ).detach()
                 sample_attributions.append(attr)
+        return sample_attributions
 
-        return activation_samples, sample_attributions
-
-    logit_activ = None
     if collect_attributions:
         logit_target == list(model.children())[len(list(model.children())) - 1 :][
             0
         ] if logit_target is None else logit_target
-        targets += [cast(torch.nn.Module, logit_target)]
+        attr_targets += [cast(torch.nn.Module, logit_target)]
 
     if show_progress:
         total = (
@@ -230,20 +245,33 @@ def capture_activation_samples(
             image_count += inputs.size(0)
             batch_count += 1
 
-            torch.set_grad_enabled(True) if collect_attributions else None
             target_activ_dict = collect_activations(model, targets, inputs)
             if collect_attributions:
-                logit_activ = target_activ_dict[logit_target]
-                del target_activ_dict[logit_target]
+                with torch.set_grad_enabled(True):
+                    target_activ_attr_dict = collect_activations(
+                        attr_model, attr_targets, inputs
+                    )
+                    logit_activ = target_activ_attr_dict[logit_target]
+                    del target_activ_attr_dict[logit_target]
 
+            sample_coords = []
             for t, n in zip(target_activ_dict, target_names):
-                sample_tensors = random_sample(target_activ_dict[t], logit_activ)
+                sample_tensors, p_list = random_sample(target_activ_dict[t])
                 torch.save(
                     sample_tensors[0],
-                    os.path.join(sample_dir, n + "_activations_" + str(batch_count) + ".pt"),
+                    os.path.join(
+                        sample_dir, n + "_activations_" + str(batch_count) + ".pt"
+                    ),
                 )
-                if collect_attributions:
-                    torch.set_grad_enabled(False)
+                sample_coords.append(p_list)
+
+            if collect_attributions:
+                for t, n, s_coords in zip(
+                    target_activ_attr_dict, target_names, sample_coords
+                ):
+                    sample_attr = attribute_samples(
+                        target_activ_attr_dict[t], logit_activ, s_coords
+                    )
                     torch.save(
                         sample_tensors[1],
                         os.path.join(
@@ -251,7 +279,6 @@ def capture_activation_samples(
                             n + "_attributions_" + str(batch_count) + ".pt",
                         ),
                     )
-            del target_activ_dict
 
             if show_progress:
                 pbar.update(inputs.size(0))
