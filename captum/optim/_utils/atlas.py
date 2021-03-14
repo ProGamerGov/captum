@@ -112,7 +112,7 @@ def extract_grid_vectors(
     assert raw_activations.dim() == 2
 
     cell_coords: List = []
-    average_activations = []
+    average_activations: List = []
     for x in range(grid_size[0]):
         for y in range(grid_size[1]):
             indices = grid_indices[x][y]
