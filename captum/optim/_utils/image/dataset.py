@@ -1,5 +1,5 @@
 import os
-from typing import List, Optional, Tuple, Union, cast
+from typing import List, Optional, Tuple, cast
 
 import torch
 
@@ -175,7 +175,7 @@ def capture_activation_samples(
 
     def random_sample(
         activations: torch.Tensor,
-    ) -> Tuple[List[torch.Tensor], List[List[int]]]:
+    ) -> Tuple[List[torch.Tensor], List[List[List[int]]]]:
         """
         Randomly sample H & W dimensions of activations with 4 dimensions.
         """
@@ -204,7 +204,7 @@ def capture_activation_samples(
     def attribute_samples(
         activations: torch.Tensor,
         logit_activ: torch.Tensor,
-        position_list: List[List[int]],
+        position_list: List[List[List[int]]],
     ) -> List[torch.Tensor]:
         """
         Collect attributions for target sample positions.
@@ -230,6 +230,7 @@ def capture_activation_samples(
         logit_target == list(model.children())[len(list(model.children())) - 1 :][
             0
         ] if logit_target is None else logit_target
+        attr_targets = cast(List[torch.nn.Module], attr_targets)
         attr_targets += [cast(torch.nn.Module, logit_target)]
 
     if show_progress:
@@ -258,7 +259,7 @@ def capture_activation_samples(
             for t, n in zip(target_activ_dict, target_names):
                 sample_tensors, p_list = random_sample(target_activ_dict[t])
                 torch.save(
-                    sample_tensors[0],
+                    sample_tensors,
                     os.path.join(
                         sample_dir, n + "_activations_" + str(batch_count) + ".pt"
                     ),
@@ -269,11 +270,11 @@ def capture_activation_samples(
                 for t, n, s_coords in zip(
                     target_activ_attr_dict, target_names, sample_coords
                 ):
-                    sample_attr = attribute_samples(
+                    sample_attrs = attribute_samples(
                         target_activ_attr_dict[t], logit_activ, s_coords
                     )
                     torch.save(
-                        sample_tensors[1],
+                        sample_attrs,
                         os.path.join(
                             sample_dir,
                             n + "_attributions_" + str(batch_count) + ".pt",
@@ -323,12 +324,9 @@ def consolidate_samples(
     ]
 
     if show_progress:
-        total = (
-            len(tensor_samples) if num_files is None else num_files  # type: ignore
-        )
+        total = len(tensor_samples) if num_files is None else num_files  # type: ignore
         pbar = tqdm(total=total, unit=" sample batches collected")
 
-    file_count = 0
     for file in tensor_samples:
         sample_batch = torch.load(file)
         for s in sample_batch:
@@ -336,10 +334,6 @@ def consolidate_samples(
         if show_progress:
             pbar.update(1)
 
-        file_count +=1
-        if file_count > num_files and num_files is not None:
-            break
     if show_progress:
         pbar.close()
-
     return torch.cat(samples, dim)
