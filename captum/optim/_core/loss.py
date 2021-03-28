@@ -294,7 +294,7 @@ class NeuronDirection(Loss):
         return torch.cosine_similarity(self.direction, activations)
 
 
-class AngledDirection(Loss):
+class AngledNeuronDirection(Loss):
     """
     Visualize a direction vector with an optional whitened activation vector to
     unstretch the activation space. Compared to the traditional Direction objectives,
