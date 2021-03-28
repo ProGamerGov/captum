@@ -356,7 +356,7 @@ class AngledDirection(Loss):
         vec = (
             torch.matmul(self.vec, self.vec_whitened)[0]
             if self.vec_whitened is not None
-            else self.direction
+            else self.vec
         )
         if self.cossim_pow == 0:
             return activations * vec
