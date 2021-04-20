@@ -1,4 +1,4 @@
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Union, cast
 
 import torch
 
@@ -176,14 +176,13 @@ def create_atlas_vectors(
 
 
 def create_atlas(
-    cells: List[torch.Tensor],
+    cells: Union[List[torch.Tensor], torch.Tensor],
     coords: List[Tuple[int, int]],
     grid_size: Tuple[int, int],
     base_tensor: Callable = torch.ones,
 ) -> torch.Tensor:
     """
     Create atlas grid from visualization imags with coordinates.
-
     Args:
         cells (list of tensor): A list of image tensors made with atlas direction
             vectors.
@@ -197,6 +196,10 @@ def create_atlas(
     Returns:
         atlas_canvas (torch.tensor): The full activation atlas visualization.
     """
+
+    if torch.is_tensor(cells):
+        assert cast(torch.Tensor, cells).dim() == 4
+        cells = [c.unsqueeze(0) for c in cells]
 
     assert len(cells) == len(coords)
     assert all([c.shape == cells[0].shape for c in cells])
