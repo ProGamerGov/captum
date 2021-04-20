@@ -176,7 +176,7 @@ def create_atlas_vectors(
 
 
 def create_atlas(
-    cells: Union[List[torch.Tensor], torch.Tensor],
+    cells: Union[torch.Tensor, List[torch.Tensor]],
     coords: List[Tuple[int, int]],
     grid_size: Tuple[int, int],
     base_tensor: Callable = torch.ones,
@@ -184,8 +184,8 @@ def create_atlas(
     """
     Create atlas grid from visualization imags with coordinates.
     Args:
-        cells (list of tensor): A list of image tensors made with atlas direction
-            vectors.
+        cells (list of tensor or tensor): A list or stack of image tensors made with
+            atlas direction vectors.
         coords (list of Tuple[int, int] or list of Tuple[int, int, int]): A list of
             coordinates to use for the atlas image tensors. The first 2 values in each
             coordinate list should be: [x, y, ...].
