@@ -215,6 +215,25 @@ class TestCreateAtlas(BaseTest):
         ).unsqueeze(0)
         assertTensorAlmostEqual(self, atlas_canvas, expected_canvas, 0)
 
+    def test_create_atlas_tensor_stack(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping create atlas canvas tensor stack test due to insufficient"
+                + "Torch version."
+            )
+        grid_size = (2, 2)
+        img_stack = torch.stack([torch.zeros(3, 4, 4)] * 2)
+        vec_coords = [(0, 0), (1, 1)]
+
+        atlas_canvas = atlas.create_atlas(img_stack, vec_coords, grid_size=grid_size)
+
+        c_pattern = torch.hstack((torch.ones(4, 4), torch.zeros(4, 4)))
+        expected_canvas = torch.stack(
+            [torch.vstack((c_pattern, c_pattern.flip(1)))] * 3, 0
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, atlas_canvas, expected_canvas, 0)
+
+
     def test_create_atlas_test_diff_grid_sizes(self) -> None:
         if torch.__version__ < "1.7.0":
             raise unittest.SkipTest(
