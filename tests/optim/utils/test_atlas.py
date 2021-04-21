@@ -233,7 +233,6 @@ class TestCreateAtlas(BaseTest):
         ).unsqueeze(0)
         assertTensorAlmostEqual(self, atlas_canvas, expected_canvas, 0)
 
-
     def test_create_atlas_test_diff_grid_sizes(self) -> None:
         if torch.__version__ < "1.7.0":
             raise unittest.SkipTest(
