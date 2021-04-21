@@ -138,6 +138,24 @@ class TestExtractGridVectors(BaseTest):
         assertTensorAlmostEqual(self, vecs, expected_vecs)
         self.assertEqual(vec_coords, expected_coords)
 
+    def test_extract_grid_vectors_assertion_error(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping extract grid vectors assertion test due to insufficient"
+                + "Torch version."
+            )
+
+        grid_size = (2, 2)
+        raw_activ = torch.arange(0, 4 * 3 * 3).view(3 * 3, 4).float()
+        xy_grid = torch.arange(0, 2 * 3 * 3).view(3 * 3, 2).float()
+        xy_grid = atlas.normalize_grid(xy_grid)
+        grid_indices = atlas.calc_grid_indices(xy_grid, grid_size=grid_size)
+
+        with self.assertRaises(AssertionError):
+            vecs, vec_coords = atlas.extract_grid_vectors(
+                grid_indices, raw_activ, grid_size=grid_size, min_density=50
+            )
+
 
 class TestCreateAtlasVectors(BaseTest):
     def test_create_atlas_vectors(self) -> None:
@@ -234,7 +252,3 @@ class TestCreateAtlas(BaseTest):
             [torch.vstack((c_pattern, c_pattern.flip(1)))] * 3, 0
         ).unsqueeze(0)
         assertTensorAlmostEqual(self, atlas_canvas, expected_canvas, 0)
-
-
-if __name__ == "__main__":
-    unittest.main()
