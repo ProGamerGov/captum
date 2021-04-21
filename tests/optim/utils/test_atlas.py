@@ -222,7 +222,7 @@ class TestCreateAtlas(BaseTest):
                 + "Torch version."
             )
         grid_size = (2, 2)
-        img_stack = torch.stack([torch.zeros(3, 4, 4)] * 2)
+        img_stack = torch.stack([torch.zeros(3, 4, 4)] * 2, dim=0)
         vec_coords = [(0, 0), (1, 1)]
 
         atlas_canvas = atlas.create_atlas(img_stack, vec_coords, grid_size=grid_size)
