@@ -14,11 +14,11 @@ def normalize_grid(
 
     Args:
         xy_grid (torch.tensor): The xy coordinate grid tensor to normalize,
-            with a shape of: [n_channels, 2].
+            with a shape of: [n_channels, n_axes].
         min_percentile (float, optional): The minamum percentile to use when
-            normalizing the tensor.
+            normalizing the tensor. Value must be in the range [0, 1].
         max_percentile (float, optional): The maximum percentile to use when
-            normalizing the tensor.
+            normalizing the tensor. Value must be in the range [0, 1].
         relative_margin (float, optional): The relative margin to use when
             normalizing the tensor.
     Returns:
