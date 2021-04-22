@@ -22,7 +22,7 @@ def normalize_grid(
         relative_margin (float, optional): The relative margin to use when
             normalizing the tensor.
     Returns:
-        normalized_grid (torch.tensor): A normalized xy coordinate grid tensor.
+        normalized_grid (torch.tensor): A normalized grid tensor.
     """
 
     assert xy_grid.dim() == 2
