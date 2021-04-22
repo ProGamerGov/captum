@@ -108,7 +108,7 @@ def extract_grid_vectors(
             created.
         cell_coords (list of Tuple[int, int, int]): List of coordinates for grid
             spatial positons of each direction vector, and the number of samples used
-            for the cell. The tuple for each cell is in the format of:
+            for the cell. The list for each cell is in the format of:
             [x_coord, y_coord, number_of_samples_used].
     """
 
