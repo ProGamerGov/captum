@@ -54,8 +54,8 @@ def calc_grid_indices(
             of: [n_channels, 2].
         grid_size (Tuple[int, int]): The grid_size of grid cells to use. The grid_size
             variable should be in the format of: [width, height].
-        x_extent (Tuple[float, float], optional): The x extent to use.
-        y_extent (Tuple[float, float], optional): The y extent to use.
+        x_extent (Tuple[float, float], optional): The x axis range to use.
+        y_extent (Tuple[float, float], optional): The y axis range to use.
     Returns:
         indices (list of list of tensor): Grid cell indices for the irregular grid.
     """
