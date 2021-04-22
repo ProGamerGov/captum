@@ -106,10 +106,10 @@ def extract_grid_vectors(
     Returns:
         cells (torch.tensor): A tensor containing all the direction vector that were
             created.
-        cell_coords (list of Tuple[int, int] or list of Tuple[int, int, int]): List of
-            coordinates for grid spatial positons of each direction vector, and the
-            number of samples used for the cell. The tuple for each cell is in the
-            format of [x coord, y coord, number of samples].
+        cell_coords (list of Tuple[int, int, int]): List of coordinates for grid
+            spatial positons of each direction vector, and the number of samples used
+            for the cell. The tuple for each cell is in the format of:
+            [x_coord, y_coord, number_of_samples_used].
     """
 
     assert raw_activations.dim() == 2
