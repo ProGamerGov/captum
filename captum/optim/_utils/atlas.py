@@ -153,8 +153,8 @@ def create_atlas_vectors(
         min_density (int, optional): The minamum number of points for a cell to counted.
         normalize (bool, optional): Whether or not to remove outliers from an xy
             coordinate grid tensor, and rescale it to [0, 1].
-        x_extent (Tuple[float, float], optional): The x extent to use.
-        y_extent (Tuple[float, float], optional): The y extent to use.
+        x_extent (Tuple[float, float], optional): The x axis range to use.
+        y_extent (Tuple[float, float], optional): The y axis range to use.
 
     Returns:
         grid_vecs (torch.tensor): A tensor containing all the direction vector that
