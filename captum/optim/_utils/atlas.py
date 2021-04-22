@@ -26,6 +26,9 @@ def normalize_grid(
     """
 
     assert xy_grid.dim() == 2
+    assert 0.0 <= min_percentile <= 1.0
+    assert 0.0 <= max_percentile <= 1.0
+
     mins = torch.quantile(xy_grid, min_percentile, dim=0)
     maxs = torch.quantile(xy_grid, max_percentile, dim=0)
 
