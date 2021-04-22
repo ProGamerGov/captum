@@ -109,7 +109,7 @@ def weights_to_heatmap_2d(
             return int(x, 16) / 255.0
 
         return torch.tensor(
-            [hex2base10(x[0:2]), hex2base10(x[2:4]), hex2base10(x[4:6])]
+            [hex2base10(x[0:2]), hex2base10(x[2:4]), hex2base10(x[4:6])], device=device
         )
 
     color_list = [get_color(c, tensor.device) for c in colors]
