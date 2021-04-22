@@ -95,7 +95,7 @@ def weights_to_heatmap_2d(
     no excitation or inhibition.
     Args:
         weight (torch.Tensor):  A 2d tensor to create the heatmap from.
-        colors (List of strings):  A list of strings containing color
+        colors (List of strings):  A list of 5 strings containing color
         hex values to use for coloring the heatmap.
     Returns:
         *color_tensor*:  A weight heatmap.
