@@ -327,7 +327,6 @@ class RandomRotation(nn.Module):
     def rotate_tensor(
         self, x: torch.Tensor, theta: Union[int, float, torch.Tensor]
     ) -> torch.Tensor:
-        assert len(theta) == 1
         theta = theta * math.pi / 180
         rot_matrix = self.get_rot_mat(theta, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
