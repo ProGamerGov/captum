@@ -95,7 +95,7 @@ def weights_to_heatmap_2d(
 
     Args:
         weight (torch.Tensor):  A 2d tensor to create the heatmap from.
-        colors (List of strings):  A list of 5 strings containing hex triplet
+        colors (list of str):  A list of 5 strings containing hex triplet
             (six digit), three-byte hexadecimal color values to use for coloring
             the heatmap.
     Returns:
