@@ -99,7 +99,7 @@ def weights_to_heatmap_2d(
             (six digit), three-byte hexadecimal color values to use for coloring
             the heatmap.
     Returns:
-        *color_tensor* (torch.Tensor):  A weight heatmap.
+        color_tensor (torch.Tensor):  A weight heatmap.
     """
 
     assert tensor.dim() == 2
