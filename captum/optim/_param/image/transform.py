@@ -290,9 +290,11 @@ class RandomSpatialJitter(torch.nn.Module):
 
 class RandomRotation(nn.Module):
     """
-    Apply random rotation transforms on a NCHW tensor.
+    Apply random rotation transforms on a NCHW tensor, using a sequence of degrees.
+
     Arguments:
-        degrees (float, sequence): Tuple of degrees to randomly select from.
+        degrees (float, sequence): Tuple, List, or Tensor of degrees to randomly
+            select from.
     """
 
     def __init__(
