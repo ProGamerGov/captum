@@ -89,16 +89,17 @@ def weights_to_heatmap_2d(
     colors: List[str] = ["0571b0", "92c5de", "f7f7f7", "f4a582", "ca0020"],
 ) -> torch.Tensor:
     """
-    Create a color heatmap of an input weight tensor.
-    By default red represents excitatory values,
-    blue represents inhibitory values, and white represents
+    Create a color heatmap of an input weight tensor. By default red represents
+    excitatory values, blue represents inhibitory values, and white represents
     no excitation or inhibition.
+
     Args:
         weight (torch.Tensor):  A 2d tensor to create the heatmap from.
-        colors (List of strings):  A list of 5 strings containing color
-        hex values to use for coloring the heatmap.
+        colors (List of strings):  A list of 5 strings containing hex triplet
+            (six digit), three-byte hexadecimal color values to use for coloring
+            the heatmap.
     Returns:
-        *color_tensor*:  A weight heatmap.
+        *color_tensor* (torch.Tensor):  A weight heatmap.
     """
 
     assert tensor.dim() == 2
