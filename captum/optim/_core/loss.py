@@ -363,7 +363,7 @@ class AngledNeuronDirection(Loss):
 
         dot = torch.mean(activations * vec)
         cossims = dot / (self.eps + torch.sqrt(torch.sum(activations ** 2)))
-        return dot * torch.clamp(cossims, 0.1) ** self.cossim_pow
+        return dot * torch.clamp(cossims, min=0.1) ** self.cossim_pow
 
 
 class TensorDirection(Loss):
