@@ -6,21 +6,26 @@ import torch.nn as nn
 from captum.optim.models._common import Conv2dSame, RedirectedReluLayer, SkipLayer
 
 GS_SAVED_WEIGHTS_URL = (
-    "https://github.com/pytorch/captum/raw/"
-    + "optim-wip/captum/optim/_models/inception5h.pth"
+    "https://pytorch-tutorial-assets.s3.amazonaws.com/"
+    + "captum/inceptionv1_places365.pth"
 )
 
 
-def googlenet(
+def googlenet_places365(
     pretrained: bool = False,
     progress: bool = True,
     model_path: Optional[str] = None,
     **kwargs: Any
-) -> "InceptionV1":
+) -> "InceptionV1Places365":
     r"""GoogLeNet (also known as Inception v1 & Inception 5h) model architecture from
     `"Going Deeper with Convolutions" <http://arxiv.org/abs/1409.4842>`_.
+
+    The pretrained GoogleNet model was trained using the MIT Places365 Standard
+    dataset. See here for more information: https://arxiv.org/abs/1610.02055
+
     Args:
-        pretrained (bool, optional): If True, returns a model pre-trained on ImageNet.
+        pretrained (bool, optional): If True, returns a model pre-trained on the MIT
+        Places365 Standard dataset.
         progress (bool, optional): If True, displays a progress bar of the download to
             stderr
         model_path (str, optional): Optional path for InceptionV1 model file.
@@ -29,31 +34,26 @@ def googlenet(
         use_linear_modules_only (bool, optional): If True, return pretrained
             model with all nonlinear layers replaced with linear equivalents.
         aux_logits (bool, optional): If True, adds two auxiliary branches that can
-            improve training. Default: *False* when pretrained is True otherwise *True*
+            improve training. Default: *True*
         out_features (int, optional): Number of output features in the model used for
-            training. Default: 1008 when pretrained is True.
+            training. Default: 365 when pretrained is True.
         transform_input (bool, optional): If True, preprocesses the input according to
-            the method with which it was trained on ImageNet. Default: *False*
-        bgr_transform (bool, optional): If True and transform_input is True, perform an
-            RGB to BGR transform in the internal preprocessing.
-            Default: *False*
+            the method with which it was trained on Places365. Default: *True*
     """
 
     if pretrained:
         if "transform_input" not in kwargs:
             kwargs["transform_input"] = True
-        if "bgr_transform" not in kwargs:
-            kwargs["bgr_transform"] = False
         if "replace_relus_with_redirectedrelu" not in kwargs:
             kwargs["replace_relus_with_redirectedrelu"] = True
         if "use_linear_modules_only" not in kwargs:
             kwargs["use_linear_modules_only"] = False
         if "aux_logits" not in kwargs:
-            kwargs["aux_logits"] = False
+            kwargs["aux_logits"] = True
         if "out_features" not in kwargs:
-            kwargs["out_features"] = 1008
+            kwargs["out_features"] = 365
 
-        model = InceptionV1(**kwargs)
+        model = InceptionV1Places365(**kwargs)
 
         if model_path is None:
             state_dict = torch.hub.load_state_dict_from_url(
@@ -64,27 +64,40 @@ def googlenet(
         model.load_state_dict(state_dict)
         return model
 
-    return InceptionV1(**kwargs)
+    return InceptionV1Places365(**kwargs)
 
 
-# Better version of Inception V1 / GoogleNet for Inception5h
-class InceptionV1(nn.Module):
-    __constants__ = ["aux_logits", "transform_input", "bgr_transform"]
+class InceptionV1Places365(nn.Module):
+    """
+    MIT Places365 variant of the InceptionV1 model.
+
+    Args:
+        out_features (int, optional): Number of output features in the model used for
+            training. Default: 365 when pretrained is True.
+        aux_logits (bool, optional): If True, adds two auxiliary branches that can
+            improve training. Default: *True*
+        transform_input (bool, optional): If True, preprocesses the input according to
+            the method with which it was trained on Places365. Default: *True*
+        replace_relus_with_redirectedrelu (bool, optional): If True, return pretrained
+            model with Redirected ReLU in place of ReLU layers.
+        use_linear_modules_only (bool, optional): If True, return pretrained
+            model with all nonlinear layers replaced with linear equivalents.
+    """
+
+    __constants__ = ["aux_logits", "transform_input"]
 
     def __init__(
         self,
-        out_features: int = 1008,
-        aux_logits: bool = False,
-        transform_input: bool = False,
-        bgr_transform: bool = False,
+        out_features: int = 365,
+        aux_logits: bool = True,
+        transform_input: bool = True,
         replace_relus_with_redirectedrelu: bool = False,
         use_linear_modules_only: bool = False,
     ) -> None:
-        super(InceptionV1, self).__init__()
+        super(InceptionV1Places365, self).__init__()
         self.aux_logits = aux_logits
         self.transform_input = transform_input
-        self.bgr_transform = bgr_transform
-        lrn_vals = (11, 0.0011, 0.5, 2.0)
+        lrn_vals = (5, 9.999999747378752e-05, 0.75, 1.0)
 
         if use_linear_modules_only:
             activ = SkipLayer
@@ -134,13 +147,13 @@ class InceptionV1(nn.Module):
         self.mixed3b = InceptionModule(256, 128, 128, 192, 32, 96, 64, activ, pool)
         self.mixed3b_relu = activ()
         self.pool3 = pool(kernel_size=3, stride=2, padding=0, ceil_mode=True)
-        self.mixed4a = InceptionModule(480, 192, 96, 204, 16, 48, 64, activ, pool)
+        self.mixed4a = InceptionModule(480, 192, 96, 208, 16, 48, 64, activ, pool)
         self.mixed4a_relu = activ()
 
         if self.aux_logits:
-            self.aux1 = AuxBranch(508, out_features, activ)
+            self.aux1 = AuxBranch(512, out_features, activ)
 
-        self.mixed4b = InceptionModule(508, 160, 112, 224, 24, 64, 64, activ, pool)
+        self.mixed4b = InceptionModule(512, 160, 112, 224, 24, 64, 64, activ, pool)
         self.mixed4b_relu = activ()
         self.mixed4c = InceptionModule(512, 128, 128, 256, 24, 64, 64, activ, pool)
         self.mixed4c_relu = activ()
@@ -153,7 +166,7 @@ class InceptionV1(nn.Module):
         self.mixed4e = InceptionModule(528, 256, 160, 320, 32, 128, 128, activ, pool)
         self.mixed4e_relu = activ()
         self.pool4 = pool(kernel_size=3, stride=2, padding=0, ceil_mode=True)
-        self.mixed5a = InceptionModule(832, 256, 160, 320, 48, 128, 128, activ, pool)
+        self.mixed5a = InceptionModule(832, 256, 160, 320, 32, 128, 128, activ, pool)
         self.mixed5a_relu = activ()
         self.mixed5b = InceptionModule(832, 384, 192, 384, 48, 128, 128, activ, pool)
         self.mixed5b_relu = activ()
@@ -167,8 +180,10 @@ class InceptionV1(nn.Module):
             assert x.dim() == 3 or x.dim() == 4
             assert x.min() >= 0.0 and x.max() <= 1.0
             x = x.unsqueeze(0) if x.dim() == 3 else x
-            x = x * 255 - 117
-            x = x[:, [2, 1, 0]] if self.bgr_transform else x
+            x = x * 255 - torch.tensor(
+                [116.7894, 112.6004, 104.0437], device=x.device
+            ).view(3, 1, 1)
+            x = x[:, [2, 1, 0]]  # RGB to BGR
         return x
 
     def forward(
@@ -305,8 +320,8 @@ class InceptionModule(nn.Module):
 class AuxBranch(nn.Module):
     def __init__(
         self,
-        in_channels: int = 508,
-        out_features: int = 1008,
+        in_channels: int = 512,
+        out_features: int = 365,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> None:
         super(AuxBranch, self).__init__()
