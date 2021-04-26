@@ -80,7 +80,7 @@ class InceptionV1(nn.Module):
         replace_relus_with_redirectedrelu: bool = False,
         use_linear_modules_only: bool = False,
     ) -> None:
-        super(InceptionV1, self).__init__()
+        super().__init__()
         self.aux_logits = aux_logits
         self.transform_input = transform_input
         self.bgr_transform = bgr_transform
@@ -230,7 +230,7 @@ class InceptionModule(nn.Module):
         activ: Type[nn.Module] = nn.ReLU,
         p_layer: Type[nn.Module] = nn.MaxPool2d,
     ) -> None:
-        super(InceptionModule, self).__init__()
+        super().__init__()
         self.conv_1x1 = nn.Conv2d(
             in_channels=in_channels,
             out_channels=c1x1,
@@ -309,7 +309,7 @@ class AuxBranch(nn.Module):
         out_features: int = 1008,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> None:
-        super(AuxBranch, self).__init__()
+        super().__init__()
         self.avg_pool = nn.AdaptiveAvgPool2d((4, 4))
         self.conv = nn.Conv2d(
             in_channels=in_channels,
