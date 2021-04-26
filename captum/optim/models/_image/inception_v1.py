@@ -69,6 +69,8 @@ def googlenet(
 
 # Better version of Inception V1 / GoogleNet for Inception5h
 class InceptionV1(nn.Module):
+    __constants__ = ["aux_logits", "transform_input", "bgr_transform"]
+
     def __init__(
         self,
         out_features: int = 1008,
@@ -99,7 +101,6 @@ class InceptionV1(nn.Module):
             out_channels=64,
             kernel_size=(7, 7),
             stride=(2, 2),
-            padding=3,
             groups=1,
             bias=True,
         )
@@ -121,7 +122,6 @@ class InceptionV1(nn.Module):
             out_channels=192,
             kernel_size=(3, 3),
             stride=(1, 1),
-            padding=1,
             groups=1,
             bias=True,
         )
@@ -254,7 +254,6 @@ class InceptionModule(nn.Module):
             out_channels=c3x3,
             kernel_size=(3, 3),
             stride=(1, 1),
-            padding=1,
             groups=1,
             bias=True,
         )
@@ -273,7 +272,6 @@ class InceptionModule(nn.Module):
             out_channels=c5x5,
             kernel_size=(5, 5),
             stride=(1, 1),
-            padding=1,
             groups=1,
             bias=True,
         )
@@ -313,7 +311,7 @@ class AuxBranch(nn.Module):
     ) -> None:
         super(AuxBranch, self).__init__()
         self.avg_pool = nn.AdaptiveAvgPool2d((4, 4))
-        self.loss_conv = nn.Conv2d(
+        self.conv = nn.Conv2d(
             in_channels=in_channels,
             out_channels=128,
             kernel_size=(1, 1),
@@ -321,21 +319,19 @@ class AuxBranch(nn.Module):
             groups=1,
             bias=True,
         )
-        self.loss_conv_relu = activ()
-        self.loss_fc = nn.Linear(in_features=2048, out_features=1024, bias=True)
-        self.loss_fc_relu = activ()
-        self.loss_dropout = nn.Dropout(0.699999988079071)
-        self.loss_classifier = nn.Linear(
-            in_features=1024, out_features=out_features, bias=True
-        )
+        self.conv_relu = activ()
+        self.fc1 = nn.Linear(in_features=2048, out_features=1024, bias=True)
+        self.fc1_relu = activ()
+        self.dropout = nn.Dropout(0.699999988079071)
+        self.fc2 = nn.Linear(in_features=1024, out_features=out_features, bias=True)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.avg_pool(x)
-        x = self.loss_conv(x)
-        x = self.loss_conv_relu(x)
+        x = self.conv(x)
+        x = self.conv_relu(x)
         x = torch.flatten(x, 1)
-        x = self.loss_fc(x)
-        x = self.loss_fc_relu(x)
-        x = self.loss_dropout(x)
-        x = self.loss_classifier(x)
+        x = self.fc1(x)
+        x = self.fc1_relu(x)
+        x = self.dropout(x)
+        x = self.fc2(x)
         return x
