@@ -11,7 +11,7 @@ from ._image.inception_v1_places365 import (  # noqa: F401
     InceptionV1Places365,
     googlenet_places365,
 )
-from ._image.inceptionv1_places365_classes import (  # noqa: F401
+from ._image.inception_v1_places365_classes import (  # noqa: F401
     INCEPTIONV1_PLACES365_CLASSES,
 )
 
