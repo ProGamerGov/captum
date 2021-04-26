@@ -94,7 +94,7 @@ class InceptionV1Places365(nn.Module):
         replace_relus_with_redirectedrelu: bool = False,
         use_linear_modules_only: bool = False,
     ) -> None:
-        super(InceptionV1Places365, self).__init__()
+        super().__init__()
         self.aux_logits = aux_logits
         self.transform_input = transform_input
         lrn_vals = (5, 9.999999747378752e-05, 0.75, 1.0)
@@ -245,7 +245,7 @@ class InceptionModule(nn.Module):
         activ: Type[nn.Module] = nn.ReLU,
         p_layer: Type[nn.Module] = nn.MaxPool2d,
     ) -> None:
-        super(InceptionModule, self).__init__()
+        super().__init__()
         self.conv_1x1 = nn.Conv2d(
             in_channels=in_channels,
             out_channels=c1x1,
@@ -324,7 +324,7 @@ class AuxBranch(nn.Module):
         out_features: int = 365,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> None:
-        super(AuxBranch, self).__init__()
+        super().__init__()
         self.avg_pool = nn.AdaptiveAvgPool2d((4, 4))
         self.conv = nn.Conv2d(
             in_channels=in_channels,
