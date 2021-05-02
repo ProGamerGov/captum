@@ -449,7 +449,7 @@ class Direction(BaseLoss):
     ) -> None:
         BaseLoss.__init__(self, target, batch_index)
         assert vec.dim() == 2 or vec.dim() == 4
-        self.vec = vec.reshape((vec.size(0), -1, 1, 1)) if vec.dim() != 4 else vec
+        self.vec = vec.reshape((vec.size(0), -1, 1, 1)) if vec.dim() == 2 else vec
         self.cossim_pow = cossim_pow
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
@@ -479,7 +479,7 @@ class NeuronDirection(BaseLoss):
     ) -> None:
         BaseLoss.__init__(self, target, batch_index)
         assert vec.dim() == 2 or vec.dim() == 4
-        self.vec = vec.reshape((vec.size(0), -1, 1, 1)) if vec.dim() != 4 else vec
+        self.vec = vec.reshape((vec.size(0), -1, 1, 1)) if vec.dim() == 2 else vec
         self.x = x
         self.y = y
         self.channel_index = channel_index
