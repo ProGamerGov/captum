@@ -601,7 +601,7 @@ class TensorDirection(BaseLoss):
         assert activations.dim() == 4
 
         H_direction, W_direction = self.vec.shape[2:]
-        H_activ, W_activ = activations.size(2), activations.size(3)
+        H_activ, W_activ = activations.shape[2:]
 
         H = (H_activ - H_direction) // 2
         W = (W_activ - W_direction) // 2
