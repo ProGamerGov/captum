@@ -40,7 +40,7 @@ class TestGetNeuronPos(unittest.TestCase):
 class TestNChannelsToRGB(BaseTest):
     def test_nchannels_to_rgb_collapse(self) -> None:
         test_input = torch.arange(0, 1 * 4 * 4 * 4).view(1, 4, 4, 4).float()
-        test_output = nchannels_to_rgb(test_input, warp=True)
+        test_output = common.nchannels_to_rgb(test_input, warp=True)
         expected_output = torch.tensor(
             [
                 [
@@ -69,7 +69,7 @@ class TestNChannelsToRGB(BaseTest):
 
     def test_nchannels_to_rgb_collapse_warp_false(self) -> None:
         test_input = torch.arange(0, 1 * 4 * 4 * 4).view(1, 4, 4, 4).float()
-        test_output = nchannels_to_rgb(test_input, warp=False)
+        test_output = common.nchannels_to_rgb(test_input, warp=False)
         expected_output = torch.tensor(
             [
                 [
@@ -98,7 +98,7 @@ class TestNChannelsToRGB(BaseTest):
 
     def test_nchannels_to_rgb_increase(self) -> None:
         test_input = torch.arange(0, 1 * 2 * 4 * 4).view(1, 2, 4, 4).float()
-        test_output = nchannels_to_rgb(test_input, warp=True)
+        test_output = common.nchannels_to_rgb(test_input, warp=True)
         expected_output = torch.tensor(
             [
                 [
@@ -145,7 +145,7 @@ class TestWeightsToHeatmap2D(BaseTest):
         x[3:4, 0:4] = x[3:4, 0:4] * -0.2
         x[4:5, 0:4] = x[4:5, 0:4] * -0.8
 
-        x_out = weights_to_heatmap_2d(x)
+        x_out = common.weights_to_heatmap_2d(x)
 
         x_out_expected = torch.tensor(
             [
@@ -186,7 +186,7 @@ class TestWeightsToHeatmap2D(BaseTest):
         x[3:4, 0:4] = x[3:4, 0:4] * -0.2
         x[4:5, 0:4] = x[4:5, 0:4] * -0.8
 
-        x_out = weights_to_heatmap_2d(x.cuda())
+        x_out = common.weights_to_heatmap_2d(x.cuda())
 
         x_out_expected = torch.tensor(
             [
