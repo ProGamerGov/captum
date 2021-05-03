@@ -39,14 +39,62 @@ class TestGetNeuronPos(unittest.TestCase):
 
 class TestNChannelsToRGB(BaseTest):
     def test_nchannels_to_rgb_collapse(self) -> None:
-        test_input = torch.randn(1, 6, 224, 224)
-        test_output = common.nchannels_to_rgb(test_input)
-        self.assertEqual(list(test_output.size()), [1, 3, 224, 224])
+        test_input = torch.arange(0, 1 * 4 * 4 * 4).view(1, 4, 4, 4).float()
+        test_output = nchannels_to_rgb(test_input)
+        expected_output = torch.tensor(
+            [
+                [
+                    [
+                        [31.6934, 32.6204, 33.5554, 34.4981],
+                        [35.4482, 36.4053, 37.3690, 38.3390],
+                        [39.3149, 40.2964, 41.2832, 42.2750],
+                        [43.2715, 44.2725, 45.2776, 46.2866],
+                    ],
+                    [
+                        [20.6687, 21.5674, 22.4618, 23.3529],
+                        [24.2417, 25.1290, 26.0154, 26.9013],
+                        [27.7870, 28.6729, 29.5592, 30.4460],
+                        [31.3335, 32.2217, 33.1109, 34.0009],
+                    ],
+                    [
+                        [46.3932, 47.4421, 48.5129, 49.6036],
+                        [50.7125, 51.8380, 52.9788, 54.1335],
+                        [55.3011, 56.4806, 57.6710, 58.8715],
+                        [60.0815, 61.3001, 62.5268, 63.7611],
+                    ],
+                ]
+            ]
+        )
+        assertTensorAlmostEqual(self, test_output, expected_output, 0)
 
     def test_nchannels_to_rgb_increase(self) -> None:
-        test_input = torch.randn(1, 2, 224, 224)
-        test_output = common.nchannels_to_rgb(test_input)
-        self.assertEqual(list(test_output.size()), [1, 3, 224, 224])
+        test_input = torch.arange(0, 1 * 2 * 4 * 4).view(1, 2, 4, 4).float()
+        test_output = nchannels_to_rgb(test_input)
+        expected_output = torch.tensor(
+            [
+                [
+                    [
+                        [0.0000, 0.9234, 1.7311, 2.4623],
+                        [3.1419, 3.7855, 4.4036, 5.0033],
+                        [5.5894, 6.1654, 6.7337, 7.2961],
+                        [7.8540, 8.4083, 8.9597, 9.5089],
+                    ],
+                    [
+                        [11.3136, 12.0238, 12.7476, 13.4895],
+                        [14.2500, 15.0278, 15.8210, 16.6277],
+                        [17.4464, 18.2754, 19.1135, 19.9595],
+                        [20.8124, 21.6714, 22.5357, 23.4049],
+                    ],
+                    [
+                        [11.3136, 12.0238, 12.7476, 13.4895],
+                        [14.2500, 15.0278, 15.8210, 16.6277],
+                        [17.4464, 18.2754, 19.1135, 19.9595],
+                        [20.8124, 21.6714, 22.5357, 23.4049],
+                    ],
+                ]
+            ]
+        )
+        assertTensorAlmostEqual(self, test_output, expected_output, 0)
 
     def test_nchannels_to_rgb_cuda(self) -> None:
         if not torch.cuda.is_available():
