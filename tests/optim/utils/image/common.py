@@ -48,6 +48,16 @@ class TestNChannelsToRGB(BaseTest):
         test_output = common.nchannels_to_rgb(test_input)
         self.assertEqual(list(test_output.size()), [1, 3, 224, 224])
 
+    def test_nchannels_to_rgb_cuda(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping nchannels_to_rgb CUDA test due to not supporting CUDA."
+            )
+        test_input = torch.randn(1, 6, 224, 224).cuda()
+        test_output = common.nchannels_to_rgb(test_input)
+        self.assertTrue(test_output.is_cuda)
+        self.assertEqual(list(test_output.size()), [1, 3, 224, 224])
+
 
 class TestWeightsToHeatmap2D(BaseTest):
     def test_weights_to_heatmap_2d(self) -> None:
@@ -90,7 +100,7 @@ class TestWeightsToHeatmap2D(BaseTest):
     def test_weights_to_heatmap_2d_cuda(self) -> None:
         if not torch.cuda.is_available():
             raise unittest.SkipTest(
-                "Skipping ImageTensor CUDA test due to not supporting CUDA."
+                "Skipping weights_to_heatmap_2d CUDA test due to not supporting CUDA."
             )
         x = torch.ones(5, 4)
         x[0:1, 0:4] = x[0:1, 0:4] * 0.2
