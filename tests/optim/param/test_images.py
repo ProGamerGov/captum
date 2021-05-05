@@ -22,16 +22,19 @@ class TestImageTensor(BaseTest):
     def test_new(self) -> None:
         x = torch.ones(5)
         test_tensor = images.ImageTensor(x)
+        self.assertTrue(torch.is_tensor(test_tensor))
         self.assertEqual(x.shape, test_tensor.shape)
 
     def test_new_numpy(self) -> None:
         x = torch.ones(5).numpy()
         test_tensor = images.ImageTensor(x)
+        self.assertTrue(torch.is_tensor(test_tensor))
         self.assertEqual(x.shape, test_tensor.shape)
 
     def test_new_list(self) -> None:
         x = torch.ones(5).tolist()
         test_tensor = images.ImageTensor(x)
+        self.assertTrue(torch.is_tensor(test_tensor))
         self.assertEqual(x.shape, test_tensor.shape)
 
     def test_torch_function(self) -> None:
@@ -46,6 +49,7 @@ class TestImageTensor(BaseTest):
             + "/raw/master/website/static/img/captum_logo.png"
         )
         new_tensor = images.ImageTensor().open(img_url)
+        self.assertTrue(torch.is_tensor(new_tensor))
         self.assertEqual(list(new_tensor.shape), [3, 54, 208])
 
     def test_export_and_open_local_image(self) -> None:
@@ -56,6 +60,7 @@ class TestImageTensor(BaseTest):
         image_tensor.export(filename)
         new_tensor = images.ImageTensor().open(filename)
 
+        self.assertTrue(torch.is_tensor(new_tensor))
         assertTensorAlmostEqual(self, image_tensor, new_tensor)
 
     def test_natural_image_cuda(self) -> None:
