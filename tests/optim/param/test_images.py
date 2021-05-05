@@ -20,13 +20,9 @@ class TestImageTensor(BaseTest):
         self.assertEqual(str(images.ImageTensor()), "ImageTensor([])")
 
     def test_new(self) -> None:
-        try:
-            x = torch.ones(5)
-            test_tensor = images.ImageTensor(x)
-            test_works = True
-        except Exception as e:
-            test_works = False
-        self.assertTrue(test_works)
+        x = torch.ones(5)
+        test_tensor = images.ImageTensor(x)
+        self.assertEqual(x.shape, test_tensor.shape)
 
     def test_torch_function(self) -> None:
         x = torch.ones(5)
@@ -39,12 +35,8 @@ class TestImageTensor(BaseTest):
             "https://github.com/pytorch/captum"
             + "/raw/master/website/static/img/captum_logo.png"
         )
-        try:
-            new_tensor = images.ImageTensor().open(img_url)
-            test_works = True
-        except Exception as e:
-            test_works = False
-        self.assertTrue(test_works)
+        new_tensor = images.ImageTensor().open(img_url)
+        self.assertEqual(list(new_tensor.shape), [3, 54, 208])
 
     def test_export_and_open_local_image(self) -> None:
         x = torch.ones(1, 3, 5, 5)
