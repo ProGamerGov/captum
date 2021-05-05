@@ -31,8 +31,8 @@ class TestImageTensor(BaseTest):
     def test_torch_function(self) -> None:
         x = torch.ones(5)
         image_tensor = images.ImageTensor(x)
-        image_tensor = (image_tensor * 5) * torch.ones(5)
-        self.assertEqual(image_tensor.sum().item(), (torch.ones(5) * 5).sum().item())
+        image_tensor = (image_tensor * 1) * torch.ones(5)
+        self.assertEqual(image_tensor.sum().item(), torch.ones(5).sum().item())
 
     def test_load_image_from_url(self) -> None:
         img_url = (
