@@ -15,6 +15,7 @@ from tests.helpers.basic import (
 from tests.optim.helpers import numpy_image
 
 
+class TestImageTensor(BaseTest):
     def test_repr(self) -> None:
         self.assertEqual(str(images.ImageTensor()), "ImageTensor([])")
 
