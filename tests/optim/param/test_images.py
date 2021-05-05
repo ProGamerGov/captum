@@ -24,6 +24,16 @@ class TestImageTensor(BaseTest):
         test_tensor = images.ImageTensor(x)
         self.assertEqual(x.shape, test_tensor.shape)
 
+    def test_new_numpy(self) -> None:
+        x = torch.ones(5).numpy()
+        test_tensor = images.ImageTensor(x)
+        self.assertEqual(x.shape, test_tensor.shape)
+
+    def test_new_list(self) -> None:
+        x = torch.ones(5).tolist()
+        test_tensor = images.ImageTensor(x)
+        self.assertEqual(x.shape, test_tensor.shape)
+
     def test_torch_function(self) -> None:
         x = torch.ones(5)
         image_tensor = images.ImageTensor(x)
