@@ -566,7 +566,6 @@ class TestSharedImage(BaseTest):
 
 
 class TestNaturalImage(BaseTest):
-    @unittest.skipIf(torch.__version__ > "1.8.1", "Bug in PyTorch nightly build")
     def test_natural_image_0(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
@@ -576,7 +575,6 @@ class TestNaturalImage(BaseTest):
         image_np = image_param.forward().detach().numpy()
         assertArraysAlmostEqual(image_np, np.ones_like(image_np) * 0.5)
 
-    @unittest.skipIf(torch.__version__ > "1.8.1", "Bug in PyTorch nightly build")
     def test_natural_image_1(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
