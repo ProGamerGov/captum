@@ -15,9 +15,45 @@ from tests.helpers.basic import (
 from tests.optim.helpers import numpy_image
 
 
-class TestImageTensor(BaseTest):
     def test_repr(self) -> None:
         self.assertEqual(str(images.ImageTensor()), "ImageTensor([])")
+
+    def test_new(self) -> None:
+        try:
+            x = torch.ones(5)
+            test_tensor = images.ImageTensor(x)
+            test_works = True
+        except Exception as e:
+            test_works = False
+        self.assertTrue(test_works)
+
+    def test_torch_function(self) -> None:
+        x = torch.ones(5)
+        image_tensor = images.ImageTensor(x)
+        image_tensor = (image_tensor * 5) * torch.ones(5)
+        self.assertEqual((image_tensor).sum().item(), (torch.ones(5) * 5).sum().item())
+
+    def test_load_image_from_url(self) -> None:
+        img_url = (
+            "https://github.com/pytorch/captum"
+            + "/raw/master/website/static/img/captum_logo.png"
+        )
+        try:
+            new_tensor = images.ImageTensor().open(img_url)
+            test_works = True
+        except Exception as e:
+            test_works = False
+        self.assertTrue(test_works)
+
+    def test_export_and_open_local_image(self) -> None:
+        x = torch.ones(5) * 2
+        image_tensor = images.ImageTensor(x)
+
+        filename = "image_tensor.jpg"
+        image_tensor.export(filename)
+        new_tensor = images.ImageTensor().open(filename)
+
+        assertTensorAlmostEqual(self, image_tensor(), new_tensor())
 
     def test_natural_image_cuda(self) -> None:
         if not torch.cuda.is_available():
