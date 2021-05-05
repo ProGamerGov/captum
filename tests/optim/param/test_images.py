@@ -16,7 +16,6 @@ from tests.optim.helpers import numpy_image
 
 
 class TestImageTensor(BaseTest):
-    @unittest.skipIf(torch.__version__ > "1.8.1", "Bug in PyTorch nightly build")
     def test_repr(self) -> None:
         self.assertEqual(str(images.ImageTensor()), "ImageTensor([])")
 
