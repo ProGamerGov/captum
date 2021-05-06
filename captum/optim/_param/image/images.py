@@ -392,7 +392,7 @@ class SharedImage(ImageParameterization):
         Returns:
             A (list of torch.Tensor): list of offset tensors.
         """
- 
+
         A = []
         for x, offset in zip(x_list, self.offset):
             assert x.dim() == 4
