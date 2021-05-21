@@ -98,8 +98,8 @@ class Loss(ABC):
             def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
                 return operator.pow(other, self(module))
 
-        name = f"Compose({', '.join([self.__name__, 'tensor'])})"
-        target = self.target
+            name = self.__name__
+            target = self.target
         else:
             raise TypeError(
                 "Can only apply math operations with int, float or Loss. Received type "
