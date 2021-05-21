@@ -93,6 +93,13 @@ class Loss(ABC):
         elif isinstance(other, Loss):
             # This should never get called because __pow__ will be called instead
             pass
+        elif isinstance(other, torch.Tensor):
+
+            def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+                return operator.pow(other, self(module))
+
+        name = f"Compose({', '.join([self.__name__, 'tensor'])})"
+        target = self.target
         else:
             raise TypeError(
                 "Can only apply math operations with int, float or Loss. Received type "
