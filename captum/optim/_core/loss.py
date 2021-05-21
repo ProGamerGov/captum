@@ -152,6 +152,14 @@ def module_op(
         target = (
             self.target if hasattr(self.target, "__iter__") else [self.target]
         ) + (other.target if hasattr(other.target, "__iter__") else [other.target])
+    elif isinstance(other, torch.Tensor):
+
+        def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+            return math_op(self(module), other)
+
+        other_name = "tensor"
+        name = f"Compose({', '.join([self.__name__, other_name])})"
+        target = self.target
     else:
         raise TypeError(
             "Can only apply math operations with int, float or Loss. Received type "
