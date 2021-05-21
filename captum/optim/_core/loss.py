@@ -101,7 +101,7 @@ class Loss(ABC):
         return CompositeLoss(loss_fn, name=name, target=target)
 
     def mean(
-        self, dim: Optional[Union[int, Tuple[int, ...]]] = None, keepdim: bool = False
+        self, dim: Union[int, Tuple[int, ...]] = (), keepdim: bool = False
     ) -> "CompositeLoss":
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
             return torch.mean(self(module), dim, keepdim)
@@ -112,7 +112,7 @@ class Loss(ABC):
         return CompositeLoss(loss_fn, name=name, target=target)
 
     def sum(
-        self, dim: Optional[Union[int, Tuple[int, ...]]] = None, keepdim: bool = False
+        self, dim: Union[int, Tuple[int, ...]] = (), keepdim: bool = False
     ) -> "CompositeLoss":
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
             return torch.sum(self(module), dim, keepdim)
