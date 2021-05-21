@@ -157,12 +157,12 @@ def module_op(
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
             return math_op(self(module), other)
 
-        other_name = "tensor"
-        name = f"Compose({', '.join([self.__name__, other_name])})"
+        name = f"Compose({', '.join([self.__name__, 'tensor'])})"
         target = self.target
     else:
         raise TypeError(
-            "Can only apply math operations with int, float or Loss. Received type "
+            "Can only apply math operations with int, float, tensor, or Loss."
+            + "Received type "
             + str(type(other))
         )
     return CompositeLoss(loss_fn, name=name, target=target)
