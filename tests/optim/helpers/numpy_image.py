@@ -3,17 +3,6 @@ from typing import Optional
 import numpy as np
 
 
-def setup_batch(x: np.ndarray, batch: int = 1, dim: int = 3) -> np.ndarray:
-    assert batch > 0
-    x = x[None, :] if x.ndim == dim and batch == 1 else x
-    x = (
-        np.stack([np.copy(x) for b in range(batch)])
-        if x.ndim == dim and batch > 1
-        else x
-    )
-    return x
-
-
 class FFTImage:
     """Parameterize an image using inverse real 2D FFT"""
 
