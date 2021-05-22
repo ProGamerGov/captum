@@ -54,10 +54,6 @@ class FFTImage:
         fx = np.fft.fftfreq(width)[: width // 2 + 1]
         return np.sqrt((fx * fx) + (fy * fy))
 
-    def set_image(self, correlated_image: np.ndarray) -> None:
-        coeffs = np.fft.rfftn(correlated_image, s=self.size).view("(2,)float")
-        self.fourier_coeffs = coeffs / self.spectrum_scale
-
     def forward(self) -> np.ndarray:
         h, w = self.size
         scaled_spectrum = self.fourier_coeffs * self.spectrum_scale
