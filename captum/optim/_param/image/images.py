@@ -421,12 +421,15 @@ class NaturalImage(ImageParameterization):
         init: Optional[torch.Tensor] = None,
         parameterization: ImageParameterization = FFTImage,
         squash_func: Optional[Callable[[torch.Tensor], torch.Tensor]] = None,
-        decorrelation_module: Optional[nn.Module] = None,
+        decorrelation_module: Optional[nn.Module] = ToRGB(transform="klt"),
         decorrelate_init: bool = True,
     ) -> None:
         super().__init__()
-        self.decorrelate = decorrelation_module or ToRGB(transform="klt")
+        self.decorrelate = (
+            decorrelation_module.cpu() if decorrelation_module is not None else None
+        )
         if init is not None:
+            assert not init.is_cuda
             assert init.dim() == 3 or init.dim() == 4
             if decorrelate_init:
                 assert self.decorrelate is not None
