@@ -1,4 +1,4 @@
-from typing import List, Optional, Type, Union
+from typing import List, Optional, Type, Union, cast
 from warnings import warn
 
 import torch
@@ -49,7 +49,7 @@ def vgg16(
         [64, 64, "P", 128, 128, "P"]
         + [256] * 3
         + ["P"]
-        + list([512] * 3 + ["P"]) * 2  #  type: ignore
+        + list([512] * 3 + ["P"]) * 2  # type: ignore
     )
     if "layers" not in kwargs:
         kwargs["layers"] = layers
@@ -87,7 +87,7 @@ class VGG(nn.Module):
 
     def __init__(
         self,
-        layers: nn.Sequential,
+        layers: List[Union[int, str]],
         out_features: int = 1000,
         transform_input: bool = True,
         scale_input: bool = True,
@@ -113,13 +113,13 @@ class VGG(nn.Module):
         self.features = _buildSequential(layers, activ, pool)
         if self.classifier_logits:
             self.classifier = nn.Sequential(
-                 nn.Linear(512 * 7 * 7, 4096),
-                 activ(),
-                 nn.Dropout(),
-                 nn.Linear(4096, 4096),
-                 activ(),
-                 nn.Dropout(),
-                 nn.Linear(4096, out_features),
+                nn.Linear(512 * 7 * 7, 4096),
+                activ(),
+                nn.Dropout(),
+                nn.Linear(4096, 4096),
+                activ(),
+                nn.Dropout(),
+                nn.Linear(4096, out_features),
             )
 
     def _transform_input(self, x: torch.Tensor) -> torch.Tensor:
