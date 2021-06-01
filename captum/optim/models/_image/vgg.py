@@ -91,7 +91,7 @@ class VGG(nn.Module):
         out_features: int = 1000,
         transform_input: bool = True,
         scale_input: bool = True,
-        classifier_logits: bool = False,
+        classifier_logits: bool = True,
         replace_relus_with_redirectedrelu: bool = False,
         use_linear_modules_only: bool = False,
     ) -> None:
