@@ -437,7 +437,6 @@ class NaturalImage(ImageParameterization):
             else decorrelation_module
         )
         if init is not None:
-            assert not init.is_cuda
             assert init.dim() == 3 or init.dim() == 4
             if decorrelate_init and self.decorrelate is not None:
                 init = (
