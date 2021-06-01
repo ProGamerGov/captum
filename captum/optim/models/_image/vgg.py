@@ -91,7 +91,7 @@ class VGG(nn.Module):
         out_features: int = 1000,
         transform_input: bool = True,
         scale_input: bool = True,
-        classifier_logits: bool = True,
+        classifier_logits: bool = False,
         replace_relus_with_redirectedrelu: bool = False,
         use_linear_modules_only: bool = False,
     ) -> None:
@@ -112,6 +112,7 @@ class VGG(nn.Module):
 
         self.features = _buildSequential(layers, activ, pool)
         if self.classifier_logits:
+            self.avgpool = nn.AdaptiveAvgPool2d((7, 7))
             self.classifier = nn.Sequential(
                 nn.Linear(512 * 7 * 7, 4096),
                 activ(),
@@ -139,6 +140,8 @@ class VGG(nn.Module):
         x = self._transform_input(x)
         x = self.features(x)
         if self.classifier_logits:
+            x = self.avgpool(x)
+            x = torch.flatten(x, 1)
             x = self.classifier(x)
         return x
 
