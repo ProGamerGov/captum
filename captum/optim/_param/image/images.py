@@ -209,6 +209,9 @@ class PixelImage(ImageParameterization):
 
 
 class LaplacianImage(ImageParameterization):
+    """
+    TODO: Fix divison by 6 in setup_input when init is not None.
+    """
     def __init__(
         self,
         size: Tuple[int, int] = None,
