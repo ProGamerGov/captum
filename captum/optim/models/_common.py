@@ -204,7 +204,7 @@ class SkipLayer(torch.nn.Module):
     like ReLU for circuits research.
 
     This layer works almost exactly the same way that nn.Indentiy does, except it also
-    ignores and additional arguments passed to the forward function.
+    ignores any additional arguments passed to the forward function.
 
     See nn.Identity for more details:
     https://pytorch.org/docs/stable/generated/torch.nn.Identity.html
