@@ -140,10 +140,24 @@ class VGG(nn.Module):
 
 
 def _buildSequential(
-    channel_list: List,
+    channel_list: List[Union[str, int]],
     activ: Type[nn.Module] = nn.ReLU,
     p_layer: Type[nn.Module] = nn.MaxPool2d,
 ) -> nn.Sequential:
+    """
+    Build the feature component of VGG models, based on the make_layers helper function
+    from: https://github.com/pytorch/vision/blob/master/torchvision/models/vgg.py
+
+    Args:
+        channel_list (list of int and str): The list of layer channels and pool layer
+            locations to use for creating the feature model.
+        activ (Type[nn.Module]): The type of activation layer to use for the feature
+            model.
+        p_layer (Type[nn.Module]): The type of pooling layer to use for the feature
+            model.
+    Returns:
+        features (nn.Sequential): The full feature model for a VGG model.
+    """
     layers: List[nn.Module] = []
     in_channels = 3
     for c in channel_list:
