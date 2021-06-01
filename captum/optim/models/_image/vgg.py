@@ -21,11 +21,9 @@ def vgg16(
     r"""
     The VGG-16 model Caffe that the Oxford Visual Geometry Group trained for the
     ImageNet ILSVRC-2014 Challenge.
-
     https://arxiv.org/abs/1409.1556
     http://www.robots.ox.ac.uk/~vgg/research/very_deep/
     https://gist.github.com/ksimonyan/3785162f95cd2d5fee77#file-readme-md
-
     Args:
         pretrained (bool, optional): If True, returns a model pre-trained on ImageNet.
         progress (bool, optional): If True, displays a progress bar of the download to
@@ -42,10 +40,16 @@ def vgg16(
         scale_input (bool, optional): If True and transform_input is True, scale the
             input range from [0, 1] to [0, 255] in the internal preprocessing.
             Default: *True*
+        classifier_logits_logits (bool, optional): If True, adds the classifier
+            component of the model. Default: *False* when pretrained is True otherwise
+            set to *True*.
     """
 
-    layers = (
-        [64, 64, "P", 128, 128, "P"] + [256] * 3 + ["P"] + list([512] * 3 + ["P"]) * 2
+    layers: List[Union[int, str]] = (
+        [64, 64, "P", 128, 128, "P"]
+        + [256] * 3
+        + ["P"]
+        + list([512] * 3 + ["P"]) * 2  #  type: ignore
     )
     if "layers" not in kwargs:
         kwargs["layers"] = layers
@@ -140,14 +144,13 @@ class VGG(nn.Module):
 
 
 def _buildSequential(
-    channel_list: List[Union[str, int]],
+    channel_list: List[Union[int, str]],
     activ: Type[nn.Module] = nn.ReLU,
     p_layer: Type[nn.Module] = nn.MaxPool2d,
 ) -> nn.Sequential:
     """
     Build the feature component of VGG models, based on the make_layers helper function
     from: https://github.com/pytorch/vision/blob/master/torchvision/models/vgg.py
-
     Args:
         channel_list (list of int and str): The list of layer channels and pool layer
             locations to use for creating the feature model.
@@ -159,11 +162,12 @@ def _buildSequential(
         features (nn.Sequential): The full feature model for a VGG model.
     """
     layers: List[nn.Module] = []
-    in_channels = 3
+    in_channels: int = 3
     for c in channel_list:
         if c == "P":
             layers += [p_layer(kernel_size=2, stride=2)]
         else:
+            c = cast(int, c)
             conv2d = nn.Conv2d(in_channels, c, kernel_size=3, padding=1)
             layers += [conv2d, activ()]
             in_channels = c
