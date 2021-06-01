@@ -432,7 +432,9 @@ class NaturalImage(ImageParameterization):
     ) -> None:
         super().__init__()
         self.decorrelate = (
-            decorrelation_module.cpu() if decorrelation_module is not None else None
+            deepcopy(decorrelation_module)
+            if isinstance(decorrelation_module, ToRGB)
+            else decorrelation_module
         )
         if init is not None:
             assert not init.is_cuda
