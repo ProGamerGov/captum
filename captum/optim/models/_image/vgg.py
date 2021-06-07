@@ -40,9 +40,9 @@ def vgg16(
         scale_input (bool, optional): If True and transform_input is True, scale the
             input range from [0, 1] to [0, 255] in the internal preprocessing.
             Default: *True*
-        classifier_logits_logits (bool, optional): If True, adds the classifier
-            component of the model. Default: *False* when pretrained is True otherwise
-            set to *True*.
+        classifier_logits (bool, optional): If True, adds the classifier component of
+            the model. Default: *False* when pretrained is True otherwise set to
+            *True*.
     """
 
     layers: List[Union[int, str]] = (
