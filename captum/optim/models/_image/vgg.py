@@ -10,7 +10,7 @@ GS_SAVED_WEIGHTS_URL = (
     "https://pytorch-tutorial-assets.s3.amazonaws.com/captum/vgg16_caffe_features.pth"
 )
 
-VGG16_LAYERS = List[Union[int, str]] = (
+VGG16_LAYERS: List[Union[int, str]] = (
     [64, 64, "P", 128, 128, "P"]
     + [256] * 3
     + ["P"]
