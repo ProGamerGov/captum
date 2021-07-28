@@ -13,15 +13,15 @@ from captum.optim._utils.typing import IntSeqOrIntType, NumSeqOrTensorType
 
 class BlendAlpha(nn.Module):
     r"""Blends a 4 channel input parameterization into an RGB image.
-
     You can specify a fixed background, or a random one will be used by default.
-
-    Args:
-        background (tensor, optional):  An NCHW image tensor to be used as the
-            Alpha channel's background.
     """
 
     def __init__(self, background: Optional[torch.Tensor] = None) -> None:
+        """
+        Args:
+            background (tensor, optional):  An NCHW image tensor to be used as the
+                Alpha channel's background.
+        """
         super().__init__()
         self.background = background
 
@@ -76,8 +76,10 @@ class ToRGB(nn.Module):
     def klt_transform() -> torch.Tensor:
         """
         Karhunen-Loève transform (KLT) measured on ImageNet
+
         Returns:
-            transform (torch.Tensor): A Karhunen-Loève transform (KLT) measured on ImageNet
+            transform (torch.Tensor): A Karhunen-Loève transform (KLT) measured on
+                the ImageNet dataset.
         """
         KLT = [[0.26, 0.09, 0.02], [0.27, 0.00, -0.05], [0.27, -0.09, 0.03]]
         transform = torch.Tensor(KLT).float()
@@ -86,6 +88,11 @@ class ToRGB(nn.Module):
 
     @staticmethod
     def i1i2i3_transform() -> torch.Tensor:
+        """
+        Returns:
+            transform (torch.Tensor): An approximation of natural colors transform
+                (i1i2i3).
+        """
         i1i2i3_matrix = [
             [1 / 3, 1 / 3, 1 / 3],
             [1 / 2, 0, -1 / 2],
@@ -94,6 +101,12 @@ class ToRGB(nn.Module):
         return torch.Tensor(i1i2i3_matrix)
 
     def __init__(self, transform: Union[str, torch.Tensor] = "klt") -> None:
+        """
+        Arguments:
+            transform (str or tensor):  Either a string for one of the precalculated
+            transform matrices, or a 3x3 matrix for the 3 RGB channels of input
+            tensors.
+        """
         super().__init__()
         assert isinstance(transform, str) or torch.is_tensor(transform)
         if torch.is_tensor(transform):
