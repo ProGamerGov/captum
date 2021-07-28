@@ -77,7 +77,7 @@ class ActivationFetcher:
 
     Args:
         model (nn.Module):  The reference to PyTorch model instance.
-        targets (nn.module or list of nn.module):  The target layers to
+        targets (nn.Module or list of nn.module):  The target layers to
             collect activations from.
     """
 
