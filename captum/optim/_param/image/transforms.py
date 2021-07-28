@@ -70,16 +70,15 @@ class ToRGB(nn.Module):
     [0] Y. Ohta, T. Kanade, and T. Sakai, "Color information for region segmentation,"
     Computer Graphics and Image Processing, vol. 13, no. 3, pp. 222–241, 1980
     https://www.sciencedirect.com/science/article/pii/0146664X80900477
-
-    Arguments:
-        transform (str or tensor):  Either a string for one of the precalculated
-            transform matrices, or a 3x3 matrix for the 3 RGB channels of input
-            tensors.
     """
 
     @staticmethod
     def klt_transform() -> torch.Tensor:
-        """Karhunen-Loève transform (KLT) measured on ImageNet"""
+        """
+        Karhunen-Loève transform (KLT) measured on ImageNet
+        Returns:
+            transform (torch.Tensor): A Karhunen-Loève transform (KLT) measured on ImageNet
+        """
         KLT = [[0.26, 0.09, 0.02], [0.27, 0.00, -0.05], [0.27, -0.09, 0.03]]
         transform = torch.Tensor(KLT).float()
         transform = transform / torch.max(torch.norm(transform, dim=0))
