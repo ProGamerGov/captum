@@ -215,7 +215,9 @@ class FFTImage(ImageParameterization):
 
     def get_fft_funcs(self) -> Tuple[Callable, Callable, Callable]:
         """
-        Support older versions of PyTorch.
+        Support older versions of PyTorch. This function ensures that the same FFT
+        operations are carried regardless of whether your PyTorch version has the
+        torch.fft update.
 
         Returns:
             fft functions (tuple of Callable): A list of FFT functions
