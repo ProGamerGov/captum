@@ -10,6 +10,11 @@ from captum.optim._utils.typing import ModuleOutputMapping, TupleOfTensorsOrTens
 
 class ModuleOutputsHook:
     def __init__(self, target_modules: Iterable[nn.Module]) -> None:
+        """
+        Args:
+
+            target_modules (Iterable of nn.Module): A list of nn.Module targets.
+        """
         self.outputs: ModuleOutputMapping = dict.fromkeys(target_modules, None)
         self.hooks = [
             module.register_forward_hook(self._forward_hook())
@@ -17,6 +22,9 @@ class ModuleOutputsHook:
         ]
 
     def _reset_outputs(self) -> None:
+        """
+        Delete captured activations.
+        """
         self.outputs = dict.fromkeys(self.outputs.keys(), None)
 
     @property
@@ -24,6 +32,13 @@ class ModuleOutputsHook:
         return all(value is not None for value in self.outputs.values())
 
     def _forward_hook(self) -> Callable:
+        """
+        Return the forward_hook function.
+
+        Returns:
+            forward_hook (Callable): The forward_hook function.
+        """
+
         def forward_hook(
             module: nn.Module, input: Tuple[torch.Tensor], output: torch.Tensor
         ) -> None:
@@ -45,6 +60,12 @@ class ModuleOutputsHook:
         return forward_hook
 
     def consume_outputs(self) -> ModuleOutputMapping:
+        """
+        Collect target activations and return them.
+
+        Returns:
+            outputs (ModuleOutputMapping): The captured outputs.
+        """
         if not self.is_ready:
             warn(
                 "Consume captured outputs, but not all requested target outputs "
@@ -59,11 +80,16 @@ class ModuleOutputsHook:
         return self.outputs.keys()
 
     def remove_hooks(self) -> None:
+        """
+        Remove hooks.
+        """
         for hook in self.hooks:
             hook.remove()
 
     def __del__(self) -> None:
-        # print(f"DEL HOOKS!: {list(self.outputs.keys())}")
+        """
+        Ensure that using 'del' properly deletes hooks.
+        """
         self.remove_hooks()
 
 
