@@ -8,10 +8,6 @@ import torch.nn as nn
 from captum.optim._utils.typing import ModuleOutputMapping, TupleOfTensorsOrTensorType
 
 
-class ModuleReuseException(Exception):
-    pass
-
-
 class ModuleOutputsHook:
     def __init__(self, target_modules: Iterable[nn.Module]) -> None:
         self.outputs: ModuleOutputMapping = dict.fromkeys(target_modules, None)
