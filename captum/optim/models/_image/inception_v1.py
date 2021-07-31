@@ -24,9 +24,12 @@ def googlenet(
     Args:
 
         pretrained (bool, optional): If True, returns a model pre-trained on ImageNet.
+            Default: False
         progress (bool, optional): If True, displays a progress bar of the download to
             stderr
+            Default: True
         model_path (str, optional): Optional path for InceptionV1 model file.
+            Default: None
         replace_relus_with_redirectedrelu (bool, optional): If True, return pretrained
             model with Redirected ReLU in place of ReLU layers.
             Default: *True* when pretrained is True otherwise *False*
