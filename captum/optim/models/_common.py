@@ -262,14 +262,8 @@ class MaxPool2dRelaxed(torch.nn.Module):
     positions. This layer reduces Noise in the gradient through the use of a
     continuous relaxation of the gradient.
 
-    Args:
-        kernel_size (int or tuple of int): The size of the window to perform max &
-            average pooling with.
-        stride (int or tuple of int, optional): The stride window size to use.
-        padding (int or tuple of int): The amount of zero padding to add to both sides
-            in the nn.MaxPool2d & nn.AvgPool2d modules.
-        ceil_mode (bool, optional): Whether to use ceil or floor for creating the
-            output shape.
+    This layer peforms a MaxPool2d operation on the input, while using an equivalent
+    AvgPool2d layer to compute the gradient.
     """
 
     def __init__(
@@ -279,6 +273,20 @@ class MaxPool2dRelaxed(torch.nn.Module):
         padding: Union[int, Tuple[int, ...]] = 0,
         ceil_mode: bool = False,
     ) -> None:
+        """
+        Args:
+
+            kernel_size (int or tuple of int): The size of the window to perform max &
+            average pooling with.
+            stride (int or tuple of int, optional): The stride window size to use.
+                Default: None
+            padding (int or tuple of int): The amount of zero padding to add to both
+                sides in the nn.MaxPool2d & nn.AvgPool2d modules.
+                Default: 0
+            ceil_mode (bool, optional): Whether to use ceil or floor for creating the
+                output shape.
+                Default: False
+        """
         super().__init__()
         self.maxpool = torch.nn.MaxPool2d(
             kernel_size=kernel_size, stride=stride, padding=padding, ceil_mode=ceil_mode
@@ -288,4 +296,13 @@ class MaxPool2dRelaxed(torch.nn.Module):
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+
+            x (torch.Tensor): An input tensor to run the pooling operations on.
+
+        Returns:
+            x (torch.Tensor): A max pooled x tensor with gradient of an equivalent avg
+                pooled tensor.
+        """
         return self.maxpool(x.detach()) + self.avgpool(x) - self.avgpool(x.detach())
