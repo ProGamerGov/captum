@@ -262,8 +262,8 @@ class MaxPool2dRelaxed(torch.nn.Module):
     positions. Noise in the gradient is reduced by the continuous relaxation of the
     gradient of models using this layer.
 
-    This layer is meant to be combined with forward-mode JVP, so that the
-    class attributions of spatial positition can be estimated using the rate at which
+    This layer is meant to be combined with forward-mode AD, so that the class
+    attributions of spatial posititions can be estimated using the rate at which
     increasing the neuron affects the output classes
 
     This layer peforms a MaxPool2d operation on the input, while using an equivalent
