@@ -27,7 +27,7 @@ def get_model_layers(model: nn.Module) -> List[str]:
                 get_layers(layer, prefix=prefix + [name])
 
     get_layers(model)
-    return layers
+    return layers #
 
 
 class RedirectedReLU(torch.autograd.Function):
