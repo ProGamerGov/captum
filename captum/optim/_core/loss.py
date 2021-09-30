@@ -448,15 +448,14 @@ class Direction(BaseLoss):
         batch_index: Optional[int] = None,
     ) -> None:
         BaseLoss.__init__(self, target, batch_index)
-        assert vec.dim() == 2 or vec.dim() == 4
-        self.vec = vec.reshape((vec.size(0), -1, 1, 1)) if vec.dim() == 2 else vec
+        self.direction = vec.reshape((1, -1, 1, 1))
         self.cossim_pow = cossim_pow
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
-        assert activations.size(1) == self.vec.size(1)
+        assert activations.size(1) == self.direction.size(1)
         activations = activations[self.batch_index[0] : self.batch_index[1]]
-        return _dot_cossim(self.vec, activations, cossim_pow=self.cossim_pow)
+        return _dot_cossim(self.direction, activations, cossim_pow=self.cossim_pow)
 
 
 @loss_wrapper
@@ -478,8 +477,7 @@ class NeuronDirection(BaseLoss):
         batch_index: Optional[int] = None,
     ) -> None:
         BaseLoss.__init__(self, target, batch_index)
-        assert vec.dim() == 2 or vec.dim() == 4
-        self.vec = vec.reshape((vec.size(0), -1, 1, 1)) if vec.dim() == 2 else vec
+        self.direction = vec.reshape((1, -1, 1, 1))
         self.x = x
         self.y = y
         self.channel_index = channel_index
@@ -498,7 +496,7 @@ class NeuronDirection(BaseLoss):
         ]
         if self.channel_index is not None:
             activations = activations[:, self.channel_index, ...][:, None, ...]
-        return _dot_cossim(self.vec, activations, cossim_pow=self.cossim_pow)
+        return _dot_cossim(self.direction, activations, cossim_pow=self.cossim_pow)
 
 
 @loss_wrapper
@@ -508,25 +506,12 @@ class AngledNeuronDirection(BaseLoss):
     unstretch the activation space. Compared to the traditional Direction objectives,
     this objective places more emphasis on angle by optionally multiplying the dot
     product by the cosine similarity.
-
     When cossim_pow is equal to 0, this objective works as a euclidean
     neuron objective. When cossim_pow is greater than 0, this objective works as a
     cosine similarity objective. An additional whitened neuron direction vector
     can optionally be supplied to improve visualization quality for some models.
-
     Carter, et al., "Activation Atlas", Distill, 2019.
     https://distill.pub/2019/activation-atlas/
-    Args:
-        target (nn.Module): A target layer instance.
-        vec (torch.Tensor): A neuron direction vector to use.
-        vec_whitened (torch.Tensor, optional): A whitened neuron direction vector.
-        cossim_pow (float, optional): The desired cosine similarity power to use.
-        x (int, optional): Optionally provide a specific x position for the target
-            neuron.
-        y (int, optional): Optionally provide a specific y position for the target
-            neuron.
-        eps (float, optional): If cossim_pow is greater than zero, the desired
-            epsilon value to use for cosine similarity calculations.
     """
 
     def __init__(
@@ -540,6 +525,19 @@ class AngledNeuronDirection(BaseLoss):
         eps: float = 1.0e-4,
         batch_index: Optional[int] = None,
     ) -> None:
+        """
+        Args:
+            target (nn.Module): A target layer instance.
+            vec (torch.Tensor): A neuron direction vector to use.
+            vec_whitened (torch.Tensor, optional): A whitened neuron direction vector.
+            cossim_pow (float, optional): The desired cosine similarity power to use.
+            x (int, optional): Optionally provide a specific x position for the target
+                neuron.
+            y (int, optional): Optionally provide a specific y position for the target
+                neuron.
+            eps (float, optional): If cossim_pow is greater than zero, the desired
+                epsilon value to use for cosine similarity calculations.
+        """
         BaseLoss.__init__(self, target, batch_index)
         self.vec = vec.unsqueeze(0) if vec.dim() == 1 else vec
         self.vec_whitened = vec_whitened
@@ -591,8 +589,7 @@ class TensorDirection(BaseLoss):
         batch_index: Optional[int] = None,
     ) -> None:
         BaseLoss.__init__(self, target, batch_index)
-        assert vec.dim() == 4
-        self.vec = vec
+        self.direction = vec
         self.cossim_pow = cossim_pow
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
@@ -600,8 +597,8 @@ class TensorDirection(BaseLoss):
 
         assert activations.dim() == 4
 
-        H_direction, W_direction = self.vec.shape[2:]
-        H_activ, W_activ = activations.shape[2:]
+        H_direction, W_direction = self.direction.size(2), self.direction.size(3)
+        H_activ, W_activ = activations.size(2), activations.size(3)
 
         H = (H_activ - H_direction) // 2
         W = (W_activ - W_direction) // 2
@@ -612,7 +609,7 @@ class TensorDirection(BaseLoss):
             H : H + H_direction,
             W : W + W_direction,
         ]
-        return _dot_cossim(self.vec, activations, cossim_pow=self.cossim_pow)
+        return _dot_cossim(self.direction, activations, cossim_pow=self.cossim_pow)
 
 
 @loss_wrapper
