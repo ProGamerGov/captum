@@ -165,7 +165,7 @@ def create_atlas_vectors(
         y_extent (Tuple[float, float], optional): The y axis range to use.
 
     Returns:
-        grid_vecs (torch.tensor): A tensor containing all the direction vector that
+        grid_vecs (torch.tensor): A tensor containing all the direction vectors that
             were created, stacked along the batch dimension.
         cell_coords (list of Tuple[int, int, int]): List of coordinates for grid
             spatial positions of each direction vector, and the number of samples used
