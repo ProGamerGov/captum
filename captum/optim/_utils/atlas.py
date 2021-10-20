@@ -199,7 +199,7 @@ def create_atlas(
 
     Args:
 
-        cells (list of tensor or tensor): A list or stack of image tensors made with
+        cells (list of tensors or tensor): A list or stack of image tensors made with
             atlas direction vectors.
         coords (list of Tuple[int, int] or list of Tuple[int, int, int]): A list of
             coordinates to use for the atlas image tensors. The first 2 values in each
