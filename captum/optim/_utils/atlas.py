@@ -222,7 +222,8 @@ def create_atlas(
             Default: torch.ones
 
     Returns:
-        atlas_canvas (torch.tensor): The full activation atlas visualization.
+        atlas_canvas (torch.tensor): The full activation atlas visualization, with a
+            shape of NCHW.
     """
 
     if torch.is_tensor(cells):
