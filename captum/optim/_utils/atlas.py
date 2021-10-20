@@ -18,10 +18,13 @@ def normalize_grid(
             with a shape of: [n_points, n_axes].
         min_percentile (float, optional): The minimum percentile to use when
             normalizing the tensor. Value must be in the range [0, 1].
+            Default: 0.01
         max_percentile (float, optional): The maximum percentile to use when
             normalizing the tensor. Value must be in the range [0, 1].
+            Default: 0.99
         relative_margin (float, optional): The relative margin to use when
             normalizing the tensor.
+            Default: 0.1
 
     Returns:
         normalized_grid (torch.tensor): A normalized xy coordinate grid tensor.
@@ -30,6 +33,7 @@ def normalize_grid(
     assert xy_grid.dim() == 2
     assert 0.0 <= min_percentile <= 1.0
     assert 0.0 <= max_percentile <= 1.0
+    assert min_percentile < max_percentile
 
     mins = torch.quantile(xy_grid, min_percentile, dim=0)
     maxs = torch.quantile(xy_grid, max_percentile, dim=0)
@@ -58,7 +62,9 @@ def calc_grid_indices(
         grid_size (Tuple[int, int]): The grid_size of grid cells to use. The grid_size
             variable should be in the format of: [width, height].
         x_extent (Tuple[float, float], optional): The x axis range to use.
+            Default: (0.0, 1.0)
         y_extent (Tuple[float, float], optional): The y axis range to use.
+            Default: (0.0, 1.0)
 
     Returns:
         indices (list of list of tensor): Grid cell indices for the irregular grid.
@@ -108,6 +114,7 @@ def extract_grid_vectors(
             variable should be in the format of: [width, height].
         min_density (int, optional): The minimum number of points for a cell to be
             counted.
+            Default: 8
 
     Returns:
         cells (torch.tensor): A tensor containing all the direction vector that were
@@ -159,10 +166,14 @@ def create_atlas_vectors(
             variable should be in the format of: [width, height].
         min_density (int, optional): The minimum number of points for a cell to be
             counted.
+            Default: 8
         normalize (bool, optional): Whether or not to remove outliers from an xy
             coordinate grid tensor, and rescale it to [0, 1].
+            Default: True
         x_extent (Tuple[float, float], optional): The x axis range to use.
+            Default: (0.0, 1.0)
         y_extent (Tuple[float, float], optional): The y axis range to use.
+            Default: (0.0, 1.0)
 
     Returns:
         grid_vecs (torch.tensor): A tensor containing all the direction vectors that
@@ -199,8 +210,8 @@ def create_atlas(
 
     Args:
 
-        cells (list of tensors or tensor): A list or stack of image tensors made with
-            atlas direction vectors.
+        cells (list of tensors or tensor): A list or stack of NCHW image tensors made
+            with atlas direction vectors.
         coords (list of Tuple[int, int] or list of Tuple[int, int, int]): A list of
             coordinates to use for the atlas image tensors. The first 2 values in each
             coordinate list should be: [x, y, ...].
@@ -208,6 +219,7 @@ def create_atlas(
             variable should be in the format of: [width, height].
         base_tensor (Callable, optional): What to use for the atlas base tensor. Basic
             choices are: torch.ones or torch.zeros.
+            Default: torch.ones
 
     Returns:
         atlas_canvas (torch.tensor): The full activation atlas visualization.
