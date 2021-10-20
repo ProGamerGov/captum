@@ -67,7 +67,7 @@ def calc_grid_indices(
             Default: (0.0, 1.0)
 
     Returns:
-        indices (list of list of tensor): Grid cell indices for the irregular grid.
+        indices (list of list of tensors): Grid cell indices for the irregular grid.
     """
 
     assert xy_grid.dim() == 2 and xy_grid.size(1) == 2
