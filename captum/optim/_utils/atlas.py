@@ -67,7 +67,8 @@ def calc_grid_indices(
             Default: (0.0, 1.0)
 
     Returns:
-        indices (list of list of tensors): Grid cell indices for the irregular grid.
+        indices (list of list of torch.Tensors): Grid cell indices for the irregular
+            grid.
     """
 
     assert xy_grid.dim() == 2 and xy_grid.size(1) == 2
@@ -210,8 +211,8 @@ def create_atlas(
 
     Args:
 
-        cells (list of tensors or tensor): A list or stack of NCHW image tensors made
-            with atlas direction vectors.
+        cells (list of torch.tensor or torch.tensor): A list or stack of NCHW image
+            tensors made with atlas direction vectors.
         coords (list of Tuple[int, int] or list of Tuple[int, int, int]): A list of
             coordinates to use for the atlas image tensors. The first 2 values in each
             coordinate list should be: [x, y, ...].
