@@ -69,7 +69,7 @@ def calc_grid_indices(
     Returns:
         indices (list of list of torch.Tensors): List of lists of grid indices
             stored inside tensors to use. Each 1D tensor of indices has a size of:
-            0 to n_points.
+            0 to n_indices.
     """
 
     assert xy_grid.dim() == 2 and xy_grid.size(1) == 2
@@ -110,7 +110,7 @@ def extract_grid_vectors(
 
         grid_indices (list of list of torch.tensor): List of lists of grid indices
             stored inside tensors to use. Each 1D tensor of indices has a size of:
-            0 to n_points.
+            0 to n_indices.
         raw_activations (torch.tensor): Raw unmodified activation samples, with a shape
             of: [n_samples, n_channels].
         grid_size (Tuple[int, int]): The grid_size of grid cells to use. The grid_size
