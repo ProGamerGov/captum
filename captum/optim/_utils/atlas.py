@@ -240,8 +240,8 @@ def create_atlas(
     assert all([c.device == cells[0].device for c in cells])
     assert cells[0].dim() == 4
 
-    #  cells is a list of NCHW image tensors, where the length of list is equal to
-    #  the number of coordinates in the coords variable
+    #  The cells variable is a list of equal sized NCHW image tensors, where the length
+    #  of list is equal to the number of coordinates in the coords variable
     cell_b, cell_c, cell_h, cell_w = cells[0].shape
     atlas_canvas = base_tensor(
         cell_b,
