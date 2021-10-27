@@ -240,7 +240,7 @@ def create_atlas(
     assert all([c.device == cells[0].device for c in cells])
     assert cells[0].dim() == 4
 
-    #  cells should be a list of NCHW image tensors
+    #  cells is a list of NCHW image tensors
     cell_b, cell_c, cell_h, cell_w = cells[0].shape
     atlas_canvas = base_tensor(
         cell_b,
