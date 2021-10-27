@@ -121,7 +121,7 @@ def extract_grid_vectors(
 
     Returns:
         cell_vecs (torch.tensor): A tensor containing all the direction vectors that
-            were created, stacked along the batch dimension with a shape of: 
+            were created, stacked along the batch dimension with a shape of:
             [n_vecs, vecs].
         cell_coords (list of Tuple[int, int, int]): List of coordinates for grid
             spatial positions of each direction vector, and the number of samples used
