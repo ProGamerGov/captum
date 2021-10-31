@@ -114,7 +114,8 @@ def extract_grid_vectors(
     """
     Create direction vectors for activation samples and grid indices. Grid cells
     without the minimum number of points as specified by min_density will be
-    ignored.
+    ignored. The calc_grid_indices function can be used to produce the values required
+    for the grid_indices variable.
 
     Carter, et al., "Activation Atlas", Distill, 2019.
     https://distill.pub/2019/activation-atlas/
