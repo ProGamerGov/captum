@@ -512,7 +512,7 @@ class AngledNeuronDirection(BaseLoss):
     cosine similarity objective. An additional whitened neuron direction vector
     can optionally be supplied to improve visualization quality for some models.
 
-    More information on the algorithm this objective uses can be found here: 
+    More information on the algorithm this objective uses can be found here:
     https://github.com/tensorflow/lucid/issues/116
 
     This Lucid equivalents of this loss function can be found here:
