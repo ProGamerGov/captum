@@ -56,12 +56,12 @@ def calc_grid_indices(
     This function draws a 2D grid across the irregular grid of points, and then groups
     point indices based on the grid cell they fall within. The grid cells are then
     filled with 1D tensors that have anywhere from 0 to n_indices values in them. The
-    sets of grid indices can then be used with the extract_grid_vectors function to 
+    sets of grid indices can then be used with the extract_grid_vectors function to
     create atlas grid cell direction vectors.
 
     Indices are stored for grid cells in an xy matrix, where the outer lists represent
     x positions and the inner lists represent y positions. Each grid cell is filled
-    with 1D tensors that have anywhere from 0 to n_indices index values inside them. 
+    with 1D tensors that have anywhere from 0 to n_indices index values inside them.
 
     Below is an example of the index list format for a grid_size of (3, 3):
     indices = [x1[y1, y2, y3], x2[y1, y2, y3], x3[y1, y2, y3]]
