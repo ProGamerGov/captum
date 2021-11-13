@@ -105,7 +105,7 @@ class Loss(ABC):
         """Summarize a large number of losses without recursion errors"""
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-            return sum([l(module) for l in loss_fn_list])
+            return sum([torch.mean(l(module)) for l in loss_fn_list])
 
         name = ', '.join([l.__name__ for l in loss_fn_list])
         target = list(set([loss_fn_list[i].target for i in range(len(loss_fn_list))]))
