@@ -100,15 +100,15 @@ class Loss(ABC):
             )
         return CompositeLoss(loss_fn, name=name, target=target)
 
-  @staticmethod
-  def sum_list(loss_fn_list: List) -> "CompositeLoss":
-      def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-          return sum([l(module) for l in loss_fn_list])
+    @staticmethod
+    def sum_list(loss_fn_list: List) -> "CompositeLoss":
+        def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+            return sum([l(module) for l in loss_fn_list])
 
 
-      name = ', '.join([l.__name__ for l in loss_fn_list])
-      target = loss_fn_list[0].target
-      return CompositeLoss(loss_fn, name=name, target=target)
+        name = ', '.join([l.__name__ for l in loss_fn_list])
+        target = loss_fn_list[0].target
+        return CompositeLoss(loss_fn, name=name, target=target)
 
 
 def module_op(
