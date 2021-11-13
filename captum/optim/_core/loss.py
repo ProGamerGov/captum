@@ -102,12 +102,13 @@ class Loss(ABC):
 
     @staticmethod
     def sum_list(loss_fn_list: List) -> "CompositeLoss":
+        """Summarize a large number of losses without recursion errors"""
+
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
             return sum([l(module) for l in loss_fn_list])
 
-
         name = ', '.join([l.__name__ for l in loss_fn_list])
-        target = loss_fn_list[0].target
+        target = list(set([loss_fn_list[i].target for i in range(len(loss_fn_list))]))
         return CompositeLoss(loss_fn, name=name, target=target)
 
 
