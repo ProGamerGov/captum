@@ -101,14 +101,26 @@ class Loss(ABC):
         return CompositeLoss(loss_fn, name=name, target=target)
 
     @staticmethod
-    def sum_list(loss_fn_list: List) -> "CompositeLoss":
-        """Summarize a large number of losses without recursion errors"""
+    def sum_list(
+        loss_fn_list: List,
+        to_scalar_fn: Callable[[torch.Tensor], torch.Tensor] = torch.mean,
+    ) -> "CompositeLoss":
+        """
+        Summarize a large number of losses without recursion errors.
+
+        Args:
+
+            loss_fn_list (list): A list of loss function objectives.
+            to_scalar_fn (Callable): A function for converting loss function outputs
+                to scalar values, in order to prevent size mismatches.
+        """
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-            return sum([torch.mean(l(module)) for l in loss_fn_list])
+            return sum([to_scalar_fn(l(module)) for l in loss_fn_list])
 
-        name = ', '.join([l.__name__ for l in loss_fn_list])
-        target = list(set([loss_fn_list[i].target for i in range(len(loss_fn_list))]))
+        name = ", ".join([l.__name__ for l in loss_fn_list])
+        #  Only use unique targets to avoid unnecessary duplication
+        target = list(set([loss_fn.target for loss_fn in loss_fn_list]))
         return CompositeLoss(loss_fn, name=name, target=target)
 
 
