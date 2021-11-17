@@ -27,7 +27,7 @@ class Loss(ABC):
         super(Loss, self).__init__()
 
     @abstractproperty
-    def target(self) -> nn.Module:
+    def target(self) -> Union[nn.Module, List[nn.Module]]:
         pass
 
     @abstractmethod
