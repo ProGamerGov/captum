@@ -683,8 +683,8 @@ class ActivationWeights(BaseLoss):
         return activations
 
 
-def sum_loss_fn_list(
-    loss_fn_list: List,
+def sum_loss_list(
+    loss_list: List,
     to_scalar_fn: Callable[[torch.Tensor], torch.Tensor] = torch.mean,
 ) -> CompositeLoss:
     """
@@ -698,21 +698,21 @@ def sum_loss_fn_list(
 
     Args:
 
-        loss_fn_list (list): A list of loss function objectives.
+        loss_list (list): A list of loss function objectives.
         to_scalar_fn (Callable): A function for converting loss function outputs to
             scalar values, in order to prevent size mismatches.
 
     Returns:
         loss_fn (CompositeLoss): A composite loss function containing all the loss
-            functions from `loss_fn_list`.
+            functions from `loss_list`.
     """
 
     def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-        return sum([to_scalar_fn(loss_fn(module)) for loss_fn in loss_fn_list])
+        return sum([to_scalar_fn(loss_fn(module)) for loss_fn in loss_list])
 
-    name = ", ".join([loss_fn.__name__ for loss_fn in loss_fn_list])
+    name = ", ".join([loss_fn.__name__ for loss_fn in loss_list])
     #  Only use unique targets to avoid unnecessary duplication
-    target = list(set([loss_fn.target for loss_fn in loss_fn_list]))
+    target = list(set([loss_fn.target for loss_fn in loss_list]))
     return CompositeLoss(loss_fn, name=name, target=target)
 
 
