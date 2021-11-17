@@ -100,29 +100,6 @@ class Loss(ABC):
             )
         return CompositeLoss(loss_fn, name=name, target=target)
 
-    @staticmethod
-    def sum_list(
-        loss_fn_list: List,
-        to_scalar_fn: Callable[[torch.Tensor], torch.Tensor] = torch.mean,
-    ) -> "CompositeLoss":
-        """
-        Summarize a large number of losses without recursion errors.
-
-        Args:
-
-            loss_fn_list (list): A list of loss function objectives.
-            to_scalar_fn (Callable): A function for converting loss function outputs
-                to scalar values, in order to prevent size mismatches.
-        """
-
-        def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-            return sum([to_scalar_fn(l(module)) for l in loss_fn_list])
-
-        name = ", ".join([l.__name__ for l in loss_fn_list])
-        #  Only use unique targets to avoid unnecessary duplication
-        target = list(set([loss_fn.target for loss_fn in loss_fn_list]))
-        return CompositeLoss(loss_fn, name=name, target=target)
-
 
 def module_op(
     self: Loss, other: Union[None, int, float, Loss], math_op: Callable
@@ -701,6 +678,37 @@ class ActivationWeights(BaseLoss):
         return activations
 
 
+def sum_loss_fn_list(
+    loss_fn_list: List,
+    to_scalar_fn: Callable[[torch.Tensor], torch.Tensor] = torch.mean,
+) -> CompositeLoss:
+    """
+    Summarize a large number of losses without recursion errors. By default using
+    300+ loss functions for a single optimization task will result in exceeding
+    Python's default maximum recursion depth limit. This function can be used to
+    avoid the recursion depth limit for tasks such as summarizing a large list of
+    loss functions with the built-in sum() function.
+
+    Args:
+
+        loss_fn_list (list): A list of loss function objectives.
+        to_scalar_fn (Callable): A function for converting loss function outputs
+            to scalar values, in order to prevent size mismatches.
+
+    Returns:
+        loss_fn (CompositeLoss): A composite loss function containing all the loss
+            functions from `loss_fn_list`.
+    """
+
+    def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+        return sum([to_scalar_fn(l(module)) for l in loss_fn_list])
+
+    name = ", ".join([l.__name__ for l in loss_fn_list])
+    #  Only use unique targets to avoid unnecessary duplication
+    target = list(set([loss_fn.target for loss_fn in loss_fn_list]))
+    return CompositeLoss(loss_fn, name=name, target=target)
+
+
 def default_loss_summarize(loss_value: torch.Tensor) -> torch.Tensor:
     """
     Helper function to summarize tensor outputs from loss functions.
@@ -731,5 +739,6 @@ __all__ = [
     "AngledNeuronDirection",
     "TensorDirection",
     "ActivationWeights",
+    "sum_loss_fn_list",
     "default_loss_summarize",
 ]
