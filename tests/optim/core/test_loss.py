@@ -268,10 +268,10 @@ class TestCompositeLoss(BaseTest):
     #             model.layer, 1
     #         )
 
-    def test_sum_list(self) -> None:
+    def test_sum_loss_fn_list(self) -> None:
         n_batch = 400
         model = torch.nn.Identity()
         loss_fn_list = [opt_loss.LayerActivation(model) for i in range(n_batch)]
-        loss_fn = opt_loss.Loss.sum_list(loss_fn_list)
+        loss_fn = opt_loss.sum_loss_fn_list(loss_fn_list)
         out = get_loss_value(model, loss_fn, [n_batch, 3, 1, 1])
         self.assertEqual(out, float(n_batch))
