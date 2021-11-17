@@ -140,7 +140,9 @@ def module_op(
 
 class BaseLoss(Loss):
     def __init__(
-        self, target: Union[nn.Module, List[nn.Module]] = [], batch_index: Optional[int] = None
+        self,
+        target: Union[nn.Module, List[nn.Module]] = [],
+        batch_index: Optional[int] = None,
     ) -> None:
         super(BaseLoss, self).__init__()
         self._target = target
@@ -150,7 +152,7 @@ class BaseLoss(Loss):
             self._batch_index = (batch_index, batch_index + 1)
 
     @property
-    def target(self) -> nn.Module:
+    def target(self) -> Union[nn.Module, List[nn.Module]]:
         return self._target
 
     @property
@@ -160,7 +162,10 @@ class BaseLoss(Loss):
 
 class CompositeLoss(BaseLoss):
     def __init__(
-        self, loss_fn: Callable, name: str = "", target: Union[nn.Module, List[nn.Module]] = []
+        self,
+        loss_fn: Callable,
+        name: str = "",
+        target: Union[nn.Module, List[nn.Module]] = [],
     ) -> None:
         super(CompositeLoss, self).__init__(target)
         self.__name__ = name
