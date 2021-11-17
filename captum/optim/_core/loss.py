@@ -140,7 +140,7 @@ def module_op(
 
 class BaseLoss(Loss):
     def __init__(
-        self, target: nn.Module = [], batch_index: Optional[int] = None
+        self, target: Union[nn.Module, List[nn.Module]] = [], batch_index: Optional[int] = None
     ) -> None:
         super(BaseLoss, self).__init__()
         self._target = target
