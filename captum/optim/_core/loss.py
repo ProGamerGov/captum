@@ -683,17 +683,19 @@ def sum_loss_fn_list(
     to_scalar_fn: Callable[[torch.Tensor], torch.Tensor] = torch.mean,
 ) -> CompositeLoss:
     """
-    Summarize a large number of losses without recursion errors. By default using
-    300+ loss functions for a single optimization task will result in exceeding
-    Python's default maximum recursion depth limit. This function can be used to
-    avoid the recursion depth limit for tasks such as summarizing a large list of
-    loss functions with the built-in sum() function.
+    Summarize a large number of losses without recursion errors. By default using 300+
+    loss functions for a single optimization task will result in exceeding Python's
+    default maximum recursion depth limit. This function can be used to avoid the
+    recursion depth limit for tasks such as summarizing a large list of loss functions
+    with the built-in sum() function.
+    
+    This functions works similar to Lucid's optvis.objectives.Objective.sum() function.
 
     Args:
 
         loss_fn_list (list): A list of loss function objectives.
-        to_scalar_fn (Callable): A function for converting loss function outputs
-            to scalar values, in order to prevent size mismatches.
+        to_scalar_fn (Callable): A function for converting loss function outputs to
+            scalar values, in order to prevent size mismatches.
 
     Returns:
         loss_fn (CompositeLoss): A composite loss function containing all the loss
