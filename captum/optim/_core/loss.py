@@ -703,9 +703,9 @@ def sum_loss_fn_list(
     """
 
     def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-        return sum([to_scalar_fn(l(module)) for l in loss_fn_list])
+        return sum([to_scalar_fn(loss_fn(module)) for loss_fn in loss_fn_list])
 
-    name = ", ".join([l.__name__ for l in loss_fn_list])
+    name = ", ".join([loss_fn.__name__ for loss_fn in loss_fn_list])
     #  Only use unique targets to avoid unnecessary duplication
     target = list(set([loss_fn.target for loss_fn in loss_fn_list]))
     return CompositeLoss(loss_fn, name=name, target=target)
