@@ -711,16 +711,17 @@ def sum_loss_list(
         return sum([to_scalar_fn(loss(module)) for loss in loss_list])
 
     name = "Sum(" + ", ".join([loss.__name__ for loss in loss_list]) + ")"
+    # Collect targets from losses
+    target = [
+        target
+        for targets in [
+            [l.target] if not hasattr(l.target, "__iter__") else l.target
+            for l in loss_list
+        ]
+        for target in targets
+    ]
     #  Only use unique targets to avoid unnecessary duplication
-    #target = list(set([loss.target for loss in loss_list]))
-    #target = []
-    #for l in loss_list:
-    #    if hasattr(l.target, "__iter__"):
-    #        target += l.target
-    #   else:
-    #        target += [l.target]
-    #target = list(set(target))
-    target = list(set([loss for targets in [[l.target] if not hasattr(l.target, "__iter__") else l.target for l in loss_list] for loss in targets]))
+    target = list(set(target))
     return CompositeLoss(loss_fn, name=name, target=target)
 
 
