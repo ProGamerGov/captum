@@ -720,8 +720,6 @@ def sum_loss_list(
         ]
         for target in targets
     ]
-    #  Only use unique targets to avoid unnecessary duplication
-    target = list(set(target))
     return CompositeLoss(loss_fn, name=name, target=target)
 
 
