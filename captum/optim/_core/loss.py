@@ -684,7 +684,7 @@ class ActivationWeights(BaseLoss):
 
 
 def sum_loss_list(
-    loss_list: List,
+    loss_list: List[Loss],
     to_scalar_fn: Callable[[torch.Tensor], torch.Tensor] = torch.mean,
 ) -> CompositeLoss:
     """
@@ -698,7 +698,7 @@ def sum_loss_list(
 
     Args:
 
-        loss_list (list): A list of loss function objectives.
+        loss_list (list of Loss): A list of loss function objectives.
         to_scalar_fn (Callable): A function for converting loss function outputs to
             scalar values, in order to prevent size mismatches.
 
