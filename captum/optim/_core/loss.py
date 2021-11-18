@@ -755,6 +755,6 @@ __all__ = [
     "AngledNeuronDirection",
     "TensorDirection",
     "ActivationWeights",
-    "sum_loss_fn_list",
+    "sum_loss_list",
     "default_loss_summarize",
 ]
