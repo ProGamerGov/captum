@@ -716,7 +716,7 @@ def sum_loss_list(
         target
         for targets in [
             [loss.target] if not hasattr(loss.target, "__iter__") else loss.target
-            for l in loss_list
+            for loss in loss_list
         ]
         for target in targets
     ]
