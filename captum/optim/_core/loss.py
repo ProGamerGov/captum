@@ -694,7 +694,7 @@ def sum_loss_list(
     recursion depth limit for tasks such as summarizing a large list of loss functions
     with the built-in sum() function.
 
-    This functions works similar to Lucid's optvis.objectives.Objective.sum() function.
+    This function works similar to Lucid's optvis.objectives.Objective.sum() function.
 
     Args:
 
