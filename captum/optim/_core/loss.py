@@ -684,7 +684,7 @@ class ActivationWeights(BaseLoss):
 
 
 def sum_loss_list(
-    loss_list: List[Loss],
+    loss_list: List,
     to_scalar_fn: Callable[[torch.Tensor], torch.Tensor] = torch.mean,
 ) -> CompositeLoss:
     """
@@ -715,7 +715,7 @@ def sum_loss_list(
     target = [
         target
         for targets in [
-            [l.target] if not hasattr(l.target, "__iter__") else l.target
+            [loss.target] if not hasattr(loss.target, "__iter__") else loss.target
             for l in loss_list
         ]
         for target in targets
