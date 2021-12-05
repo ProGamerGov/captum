@@ -33,6 +33,5 @@ StopCriteria = Callable[[int, Objective, Iterable[Tensor], Optimizer], bool]
 LossFunction = Callable[[ModuleOutputMapping], Tensor]
 SingleTargetLossFunction = Callable[[Tensor], Tensor]
 
-NumSeqOrTensorType = Union[Sequence[int], Sequence[float], Tensor]
 IntSeqOrIntType = Union[List[int], Tuple[int], Tuple[int, int], int]
 TupleOfTensorsOrTensorType = Union[Tuple[Tensor, ...], Tensor]
