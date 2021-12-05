@@ -380,7 +380,7 @@ class RandomSpatialJitter(torch.nn.Module):
         Returns:
             **tensor** (torch.Tensor): A randomly translated *tensor*.
         """
-        insets = torch.randint(high=self.pad_range, size=(2,))
+        insets = torch.randint(high=self.pad_range, size=(2,), dtype=input.dtype, layout=input.layout, device=input.device)
         return self.translate_tensor(input, insets)
 
 
