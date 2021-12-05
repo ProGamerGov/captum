@@ -288,7 +288,7 @@ def _rand_select(
     """
     device = (
         torch.device("cpu")
-        if not torch.is_tensor(transform_values)
+        if not isinstance(transform_values, torch.Tensor)
         else transform_values.device
     )
     n = torch.randint(
