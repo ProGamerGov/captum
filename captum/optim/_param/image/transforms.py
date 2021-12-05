@@ -286,8 +286,19 @@ def _rand_select(
     Returns:
         **value**:  A single value from the specified sequence.
     """
-    device = torch.device("cpu") if not torch.is_tensor(transform_values) else transform_values.device
-    n = torch.randint(low=0, high=len(transform_values), size=[1], dtype=torch.int64, layout=torch.strided, device=device).item()
+    device = (
+        torch.device("cpu")
+        if not torch.is_tensor(transform_values)
+        else transform_values.device
+    )
+    n = torch.randint(
+        low=0,
+        high=len(transform_values),
+        size=[1],
+        dtype=torch.int64,
+        layout=torch.strided,
+        device=device,
+    ).item()
     return transform_values[n]
 
 
@@ -310,7 +321,10 @@ class RandomScale(nn.Module):
         self.scale = scale
 
     def get_scale_mat(
-        self, m: Union[int, float, torch.Tensor], device: torch.device, dtype: torch.dtype
+        self,
+        m: Union[int, float, torch.Tensor],
+        device: torch.device,
+        dtype: torch.dtype,
     ) -> torch.Tensor:
         if isinstance(m, torch.Tensor):
             m = m.cpu().item()
@@ -387,7 +401,13 @@ class RandomSpatialJitter(torch.nn.Module):
         Returns:
             **tensor** (torch.Tensor): A randomly translated *tensor*.
         """
-        insets = torch.randint(high=self.pad_range, size=(2,), dtype=input.dtype, layout=input.layout, device=input.device)
+        insets = torch.randint(
+            high=self.pad_range,
+            size=(2,),
+            dtype=input.dtype,
+            layout=input.layout,
+            device=input.device,
+        )
         return self.translate_tensor(input, insets)
 
 
