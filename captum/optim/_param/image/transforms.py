@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from captum.optim._utils.image.common import nchannels_to_rgb
-from captum.optim._utils.typing import IntSeqOrIntType, NumSeqOrTensorType
+from captum.optim._utils.typing import IntSeqOrIntType, NumListOrTensorType
 
 
 class BlendAlpha(nn.Module):
@@ -274,7 +274,7 @@ def center_crop(
 
 
 def _rand_select(
-    transform_values: NumSeqOrTensorType,
+    transform_values: NumListOrTensorType,
 ) -> Union[int, float, torch.Tensor]:
     """
     Randomly return a single value from the provided tuple, list, or tensor.
@@ -295,7 +295,7 @@ class RandomScale(nn.Module):
     Apply random rescaling on a NCHW tensor.
     """
 
-    def __init__(self, scale: NumSeqOrTensorType) -> None:
+    def __init__(self, scale: NumListOrTensorType) -> None:
         """
         Args:
 
@@ -305,7 +305,7 @@ class RandomScale(nn.Module):
         self.scale = scale
 
     def get_scale_mat(
-        self, m: IntSeqOrIntType, device: torch.device, dtype: torch.dtype
+        self, m: Union[int, float, torch.Tensor], device: torch.device, dtype: torch.dtype
     ) -> torch.Tensor:
         scale_mat = torch.tensor(
             [[m, 0.0, 0.0], [0.0, m, 0.0]], device=device, dtype=dtype
