@@ -216,7 +216,7 @@ class InceptionV1(nn.Module):
         if not self.aux_logits:
             if torch.jit.is_scripting():
                 return x
-            else
+            else:
                 return cast(torch.Tensor, x)
         else:
             return x, aux1_output, aux2_output
