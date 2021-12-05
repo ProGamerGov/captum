@@ -286,7 +286,7 @@ def _rand_select(
     Returns:
         **value**:  A single value from the specified sequence.
     """
-    n = torch.randint(low=0, high=len(transform_values), size=[1]).item()
+    n = torch.randint(low=0, high=len(transform_values), size=[1], dtype=torch.int64, layout=torch.strided, device=torch.device("cpu")).item()
     return transform_values[n]
 
 
