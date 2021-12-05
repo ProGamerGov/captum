@@ -69,6 +69,8 @@ def googlenet(
 
 # Better version of Inception V1 / GoogleNet for Inception5h
 class InceptionV1(nn.Module):
+    __constants__ = ["aux_logits", "transform_input", "bgr_transform"]
+
     def __init__(
         self,
         out_features: int = 1008,
