@@ -303,11 +303,17 @@ class RandomScale(nn.Module):
             scale (float, sequence): Tuple of rescaling values to randomly select from.
         """
         super().__init__()
+        assert hasattr(scale, "__iter__")
+        if torch.is_tensor(scale):
+            assert cast(torch.Tensor, scale).dim() == 1
+        assert len(scale) > 0
         self.scale = scale
 
     def get_scale_mat(
         self, m: Union[int, float, torch.Tensor], device: torch.device, dtype: torch.dtype
     ) -> torch.Tensor:
+        if isinstance(m, torch.Tensor):
+            m = m.cpu().item()
         scale_mat = torch.tensor(
             [[m, 0.0, 0.0], [0.0, m, 0.0]], device=device, dtype=dtype
         )
