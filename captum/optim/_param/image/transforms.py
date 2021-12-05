@@ -681,8 +681,8 @@ class RandomCrop(nn.Module):
         hs = x.shape[2] - self.crop_size[0]
         ws = x.shape[3] - self.crop_size[1]
         shifts = [
-            torch.randint(low=-hs, high=hs, size=[1]),
-            torch.randint(low=-ws, high=ws, size=[1]),
+            torch.randint(low=-hs, high=hs, size=[1], dtype=torch.int64, layout=torch.strided, device=torch.device("cpu").item()),
+            torch.randint(low=-ws, high=ws, size=[1], dtype=torch.int64, layout=torch.strided, device=torch.device("cpu").item()),
         ]
         x = torch.roll(x, shifts, dims=(2, 3))
         return center_crop(
