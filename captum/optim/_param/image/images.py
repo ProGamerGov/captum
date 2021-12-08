@@ -147,7 +147,6 @@ class FFTImage(ImageParameterization):
     ) -> None:
         """
         Args:
-
             size (Tuple[int, int]): The height & width dimensions to use for the
                 parameterized output image tensor.
             channels (int, optional): The number of channels to use for each image.
@@ -200,12 +199,9 @@ class FFTImage(ImageParameterization):
     def rfft2d_freqs(self, height: int, width: int) -> torch.Tensor:
         """
         Computes 2D spectrum frequencies.
-
         Args:
-
             height (int): The h dimension of the 2d frequency scale.
             width (int): The w dimension of the 2d frequency scale.
-
         Returns:
             **tensor** (tensor): A 2d frequency scale tensor.
         """
@@ -214,12 +210,20 @@ class FFTImage(ImageParameterization):
         fx = self.torch_fftfreq(width)[: width // 2 + 1]
         return torch.sqrt((fx * fx) + (fy * fy))
 
+    def torch_irfft(self, x: torch.Tensor) -> torch.Tensor:
+        x = torch.view_as_complex(x)
+        return torch.fft.irfftn(x, s=self.size)  # type: ignore
+
+    def torch_irfft_legacy(self, x: torch.Tensor) -> torch.Tensor:
+        return torch.irfft(x, signal_ndim=2)[
+            :, :, : self.size[0], : self.size[1]
+        ]
+
     def get_fft_funcs(self) -> Tuple[Callable, Callable, Callable]:
         """
         Support older versions of PyTorch. This function ensures that the same FFT
         operations are carried regardless of whether your PyTorch version has the
         torch.fft update.
-
         Returns:
             fft functions (tuple of Callable): A list of FFT functions
                 to use for irfft, rfft, and fftfreq operations.
@@ -231,10 +235,7 @@ class FFTImage(ImageParameterization):
             def torch_rfft(x: torch.Tensor) -> torch.Tensor:
                 return torch.view_as_real(torch.fft.rfftn(x, s=self.size))
 
-            def torch_irfft(x: torch.Tensor) -> torch.Tensor:
-                if type(x) is not torch.complex64:
-                    x = torch.view_as_complex(x)
-                return torch.fft.irfftn(x, s=self.size)  # type: ignore
+            torch_irfft = self.torch_irfft
 
             def torch_fftfreq(v: int, d: float = 1.0) -> torch.Tensor:
                 return torch.fft.fftfreq(v, d)
@@ -245,10 +246,7 @@ class FFTImage(ImageParameterization):
             def torch_rfft(x: torch.Tensor) -> torch.Tensor:
                 return torch.rfft(x, signal_ndim=2)
 
-            def torch_irfft(x: torch.Tensor) -> torch.Tensor:
-                return torch.irfft(x, signal_ndim=2)[
-                    :, :, : self.size[0], : self.size[1]
-                ]
+            torch_irfft = self.torch_irfft_legacy
 
             def torch_fftfreq(v: int, d: float = 1.0) -> torch.Tensor:
                 """PyTorch version of np.fft.fftfreq"""
