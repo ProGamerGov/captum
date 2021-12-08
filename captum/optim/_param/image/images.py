@@ -640,6 +640,8 @@ class NaturalImage(ImageParameterization):
         self.use_jit = use_jit
         if self.use_jit:
             self.parameterization = torch.jit.script(self.parameterization)
+            if self.decorrelate is not None:
+                self.decorrelate = torch.jit.script(self.decorrelate)
 
     def forward(self) -> torch.Tensor:
         image = self.parameterization()
