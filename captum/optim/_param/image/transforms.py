@@ -180,6 +180,7 @@ class CenterCrop(torch.nn.Module):
     """
     Center crop a specified amount from a tensor.
     """
+
     __constants__ = ["crop_vals", "pixels_from_edges", "offset_left"]
 
     def __init__(
@@ -307,6 +308,7 @@ class RandomScale(nn.Module):
     """
     Apply random rescaling on a NCHW tensor.
     """
+
     __constants__ = ["scale"]
 
     def __init__(self, scale: Union[List[int], List[float], torch.Tensor]) -> None:
@@ -359,7 +361,16 @@ class RandomScale(nn.Module):
         Returns:
             **tensor** (torch.Tensor): Scaled *tensor*.
         """
-        n = int(torch.randint(low=0, high=len(self.scale), size=[1], dtype=torch.int64, layout=torch.strided, device=input.device).item())
+        n = int(
+            torch.randint(
+                low=0,
+                high=len(self.scale),
+                size=[1],
+                dtype=torch.int64,
+                layout=torch.strided,
+                device=input.device,
+            ).item()
+        )
         scale = self.scale[n]
         return self._scale_tensor(input, scale=scale)
 
@@ -368,6 +379,7 @@ class RandomSpatialJitter(torch.nn.Module):
     """
     Apply random spatial translations on a NCHW tensor.
     """
+
     __constants__ = ["pad_range"]
 
     def __init__(self, translate: int) -> None:
@@ -418,6 +430,7 @@ class ScaleInputRange(nn.Module):
     Multiplies the input by a specified multiplier for models with input ranges other
     than [0,1].
     """
+
     __constants__ = ["multiplier"]
 
     def __init__(self, multiplier: float = 1.0) -> None:
@@ -503,6 +516,7 @@ class GaussianSmoothing(nn.Module):
     1d, 2d or 3d tensor. Filtering is performed seperately for each channel
     in the input using a depthwise convolution.
     """
+
     __constants__ = ["groups"]
 
     def __init__(
@@ -633,6 +647,7 @@ class NChannelsToRGB(nn.Module):
     """
     Convert an NCHW image with n channels into a 3 channel RGB image.
     """
+
     __constants__ = ["warp"]
 
     def __init__(self, warp: bool = False) -> None:
@@ -664,6 +679,7 @@ class RandomCrop(nn.Module):
     """
     Randomly crop out a specific size from an NCHW image tensor.
     """
+
     __constants__ = ["crop_size"]
 
     def __init__(
