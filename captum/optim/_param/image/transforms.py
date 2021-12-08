@@ -504,6 +504,7 @@ class GaussianSmoothing(nn.Module):
     1d, 2d or 3d tensor. Filtering is performed seperately for each channel
     in the input using a depthwise convolution.
     """
+    __constants__ = ["groups"]
 
     def __init__(
         self,
