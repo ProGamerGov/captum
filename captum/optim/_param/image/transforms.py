@@ -329,7 +329,7 @@ class RandomScale(nn.Module):
         dtype: torch.dtype,
     ) -> torch.Tensor:
         if isinstance(m, torch.Tensor):
-            m = m.cpu().item()
+            m = float(m.cpu().item())
         scale_mat = torch.tensor(
             [[m, 0.0, 0.0], [0.0, m, 0.0]], device=device, dtype=dtype
         )
