@@ -180,6 +180,7 @@ class CenterCrop(torch.nn.Module):
     """
     Center crop a specified amount from a tensor.
     """
+    __constants__ = ["crop_vals", "pixels_from_edges", "offset_left"]
 
     def __init__(
         self,
@@ -306,6 +307,7 @@ class RandomScale(nn.Module):
     """
     Apply random rescaling on a NCHW tensor.
     """
+    __constants__ = ["scale"]
 
     def __init__(self, scale: Union[List[int], List[float], torch.Tensor]) -> None:
         """
@@ -367,6 +369,7 @@ class RandomSpatialJitter(torch.nn.Module):
     """
     Apply random spatial translations on a NCHW tensor.
     """
+    __constants__ = ["pad_range"]
 
     def __init__(self, translate: int) -> None:
         """
@@ -416,6 +419,7 @@ class ScaleInputRange(nn.Module):
     Multiplies the input by a specified multiplier for models with input ranges other
     than [0,1].
     """
+    __constants__ = ["multiplier"]
 
     def __init__(self, multiplier: float = 1.0) -> None:
         """
@@ -629,6 +633,7 @@ class NChannelsToRGB(nn.Module):
     """
     Convert an NCHW image with n channels into a 3 channel RGB image.
     """
+    __constants__ = ["warp"]
 
     def __init__(self, warp: bool = False) -> None:
         """
@@ -659,6 +664,7 @@ class RandomCrop(nn.Module):
     """
     Randomly crop out a specific size from an NCHW image tensor.
     """
+    __constants__ = ["crop_size"]
 
     def __init__(
         self,
