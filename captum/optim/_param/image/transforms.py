@@ -134,44 +134,64 @@ class ToRGB(nn.Module):
     def forward(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
         """
         Args:
-
             x (torch.tensor):  A CHW or NCHW RGB or RGBA image tensor.
             inverse (bool, optional):  Whether to recorrelate or decorrelate colors.
                 Default: False.
-
         Returns:
             chw (torch.tensor):  A tensor with it's colors recorrelated or
                 decorrelated.
         """
-
         assert x.dim() == 3 or x.dim() == 4
+        if not torch.jit.is_scripting():
+            named_dims = not(x.names == tuple(x.dim() * [None]))
+            if named_dims:
+                if x.dim() == 3:
+                    assert x.names == ("C", "H", "W")
+                else:
+                    assert x.names == ("B", "C", "H", "W")
+        else:
+            named_dims = False
 
         # alpha channel is taken off...
-        has_alpha = x.size("C") == 4
+        if named_dims and not torch.jit.is_scripting():
+            has_alpha = x.size("C") == 4
+        else:
+            has_alpha = x.size(1 if x.dim() == 4 else 0) == 4
+
         if has_alpha:
             if x.dim() == 3:
                 x, alpha_channel = x[:3], x[3:]
-            elif x.dim() == 4:
+            else:
                 x, alpha_channel = x[:, :3], x[:, 3:]
             assert x.dim() == alpha_channel.dim()  # ensure we "keep_dim"
+        elif torch.jit.is_scripting():
+            alpha_channel = torch.tensor([0])
 
-        h, w = x.size("H"), x.size("W")
-        flat = x.flatten(("H", "W"), "spatials")
-        if inverse:
-            correct = torch.inverse(self.transform.to(x.device)) @ flat
+        if named_dims and not torch.jit.is_scripting():
+            h, w = x.size("H"), x.size("W")
+            flat = x.flatten(("H", "W"), "spatials")
         else:
-            correct = self.transform.to(x.device) @ flat
-        chw = correct.unflatten("spatials", (("H", h), ("W", w)))
+            flat = x.flatten(2 if x.dim() == 4 else 1)
 
-        if x.dim() == 3:
+        if inverse:
+            correct = torch.inverse(self.transform.to(x.device, dtype=x.dtype)) @ flat
+        else:
+            correct = self.transform.to(x.device, dtype=x.dtype) @ flat
+        
+        if named_dims and not torch.jit.is_scripting():
+            chw = correct.unflatten("spatials", (("H", h), ("W", w)))
+        else:
+            d = 2 if x.dim() == 4 else 1
+            chw = correct.unflatten(d, sizes=x.shape[d:])
+
+        if x.dim() == 3 and named_dims and not torch.jit.is_scripting():
             chw = chw.refine_names("C", ...)
-        elif x.dim() == 4:
+        elif x.dim() == 4 and named_dims and not torch.jit.is_scripting():
             chw = chw.refine_names("B", "C", ...)
 
         # ...alpha channel is concatenated on again.
         if has_alpha:
-            d = 0 if x.dim() == 3 else 1
-            chw = torch.cat([chw, alpha_channel], d)
+            chw = torch.cat([chw, alpha_channel], 0 if x.dim() == 3 else 1)
 
         return chw
 
