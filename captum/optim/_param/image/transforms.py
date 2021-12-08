@@ -322,7 +322,7 @@ class RandomScale(nn.Module):
         assert len(scale) > 0
         self.scale = scale
 
-    def get_scale_mat(
+    def _get_scale_mat(
         self,
         m: Union[int, float, torch.Tensor],
         device: torch.device,
@@ -330,15 +330,16 @@ class RandomScale(nn.Module):
     ) -> torch.Tensor:
         if isinstance(m, torch.Tensor):
             m = float(m.cpu().item())
+
         scale_mat = torch.tensor(
             [[m, 0.0, 0.0], [0.0, m, 0.0]], device=device, dtype=dtype
         )
         return scale_mat
 
-    def scale_tensor(
+    def _scale_tensor(
         self, x: torch.Tensor, scale: Union[int, float, torch.Tensor]
     ) -> torch.Tensor:
-        scale_matrix = self.get_scale_mat(scale, x.device, x.dtype)[None, ...].repeat(
+        scale_matrix = self._get_scale_mat(scale, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
         if torch.__version__ >= "1.3.0":
@@ -353,16 +354,14 @@ class RandomScale(nn.Module):
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         """
         Randomly scale / zoom in or out of a tensor.
-
         Args:
-
             input (torch.Tensor): Input to randomly scale.
-
         Returns:
             **tensor** (torch.Tensor): Scaled *tensor*.
         """
-        scale = _rand_select(self.scale)
-        return self.scale_tensor(input, scale=scale)
+        n = int(torch.randint(low=0, high=len(self.scale), size=[1], dtype=torch.int64, layout=torch.strided, device=input.device).item())
+        scale = self.scale[n]
+        return self._scale_tensor(input, scale=scale)
 
 
 class RandomSpatialJitter(torch.nn.Module):
