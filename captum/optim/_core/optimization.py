@@ -58,7 +58,7 @@ class InputOptimization(Objective, Parameterized):
         """
         self.model = model
         # Grab targets from loss_function
-        if hasattr(loss_function.target, "__iter__"):
+        if hasattr(loss_function.target, "__iter__") and not isinstance(loss_function.target, torch.jit.ScriptModule):
             self.hooks = ModuleOutputsHook(loss_function.target)
         else:
             self.hooks = ModuleOutputsHook([loss_function.target])
