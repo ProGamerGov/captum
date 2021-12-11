@@ -461,14 +461,14 @@ class RandomRotation(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
-        Randomly rotate an input tensor.
+        Randomly rotate an NCHW image tensor.
 
         Args:
 
             x (torch.Tensor): Input to randomly rotate.
 
         Returns:
-            **tensor** (torch.Tensor): A randomly rotated *tensor*.
+            **x** (torch.Tensor): A randomly rotated NCHW image *tensor*.
         """
         n = int(
             torch.randint(
