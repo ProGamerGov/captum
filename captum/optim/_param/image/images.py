@@ -137,6 +137,7 @@ class FFTImage(ImageParameterization):
     """
     Parameterize an image using inverse real 2D FFT
     """
+    __constants__ = ["size"]
 
     def __init__(
         self,
