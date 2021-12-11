@@ -414,6 +414,16 @@ class RandomRotation(nn.Module):
         device: torch.device,
         dtype: torch.dtype,
     ) -> torch.Tensor:
+        """
+        Create a rotation matrix tensor.
+
+        Args:
+        
+            theta (float): The rotation value in degrees.
+            
+        Returns:
+            **rot_mat** (torch.Tensor): A rotation matrix.
+        """
         theta = theta * math.pi / 180.0
         rot_mat = torch.tensor(
             [
@@ -426,6 +436,17 @@ class RandomRotation(nn.Module):
         return rot_mat
 
     def _rotate_tensor(self, x: torch.Tensor, theta: float) -> torch.Tensor:
+        """
+        Rotate an NCHW image tensor based on a specified degree value.
+
+        Args:
+        
+            x (torch.Tensor): The NCHW image tensor to rotate.
+            theta (float): The amount to rotate the NCHW image, in degrees.
+            
+        Returns:
+            **x** (torch.Tensor): A rotated tensor.
+        """
         rot_matrix = self._get_rot_mat(theta, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
