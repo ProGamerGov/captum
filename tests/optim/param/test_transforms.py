@@ -155,7 +155,7 @@ class TestRandomRotation(BaseTest):
                 "Skipping RandomRotation JIT test due to insufficient Torch version."
             )
         rotation_module = transforms.RandomRotation([25.0])
-        jit_rotation_module = torch.script.jit(rotation_module)
+        jit_rotation_module = torch.jit.script(rotation_module)
         test_input = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
 
         test_output = jit_rotation_module(test_input)
