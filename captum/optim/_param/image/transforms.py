@@ -425,9 +425,7 @@ class RandomRotation(nn.Module):
         )
         return rot_mat
 
-    def _rotate_tensor(
-        self, x: torch.Tensor, theta: float
-    ) -> torch.Tensor:
+    def _rotate_tensor(self, x: torch.Tensor, theta: float) -> torch.Tensor:
         rot_matrix = self._get_rot_mat(theta, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
