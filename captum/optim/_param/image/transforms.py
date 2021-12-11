@@ -445,7 +445,7 @@ class RandomRotation(nn.Module):
             theta (float): The amount to rotate the NCHW image, in degrees.
 
         Returns:
-            **x** (torch.Tensor): A rotated tensor.
+            **x** (torch.Tensor): A rotated NCHW image tensor.
         """
         rot_matrix = self._get_rot_mat(theta, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
@@ -465,11 +465,13 @@ class RandomRotation(nn.Module):
 
         Args:
 
-            x (torch.Tensor): Input to randomly rotate.
+            x (torch.Tensor): NCHW image tensor to randomly rotate.
 
         Returns:
             **x** (torch.Tensor): A randomly rotated NCHW image *tensor*.
         """
+        assert x.dim() == 4
+
         n = int(
             torch.randint(
                 low=0,
