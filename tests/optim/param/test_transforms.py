@@ -147,10 +147,6 @@ class TestRandomRotation(BaseTest):
         self.assertEqual(output.shape, x.shape)
 
     def test_random_rotation_matrix_torch_math_module(self) -> None:
-        if torch.__version__ <= "1.9.0":
-            raise unittest.SkipTest(
-                "Skipping RandomRotation math module test insufficient Torch version."
-            )
         theta = 25.1
         rot_mod = transforms.RandomRotation([theta])
         rot_matrix = rot_mod._get_rot_mat(
