@@ -396,6 +396,7 @@ class RandomRotation(nn.Module):
     ) -> None:
         """
         Args:
+
             degrees (float, sequence): Tuple, List, or Tensor of degrees to randomly
                 select from.
         """
@@ -447,6 +448,7 @@ class RandomRotation(nn.Module):
         Randomly rotate an input tensor.
 
         Args:
+
             x (torch.Tensor): Input to randomly rotate.
 
         Returns:
