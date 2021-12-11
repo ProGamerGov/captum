@@ -341,27 +341,44 @@ class RandomScale(nn.Module):
         assert hasattr(scale, "__iter__")
         if torch.is_tensor(scale):
             assert cast(torch.Tensor, scale).dim() == 1
+            scale = scale.tolist()
         assert len(scale) > 0
-        self.scale = scale
+        self.scale = [float(s) for s in scale]
 
     def _get_scale_mat(
         self,
-        m: Union[int, float, torch.Tensor],
+        m: float,
         device: torch.device,
         dtype: torch.dtype,
     ) -> torch.Tensor:
-        if isinstance(m, torch.Tensor):
-            m = float(m.item())
-        m = float(m)
+        """
+        Create a rotation matrix tensor.
 
+        Args:
+        
+            m (float): The scale value to use.
+            
+        Returns:
+            **scale_mat** (torch.Tensor): A scale matrix.
+        """
         scale_mat = torch.tensor(
             [[m, 0.0, 0.0], [0.0, m, 0.0]], device=device, dtype=dtype
         )
         return scale_mat
 
     def _scale_tensor(
-        self, x: torch.Tensor, scale: Union[int, float, torch.Tensor]
+        self, x: torch.Tensor, scale: float,
     ) -> torch.Tensor:
+        """
+        Scale an NCHW image tensor based on a specified scale value.
+
+        Args:
+            x (torch.Tensor): The NCHW image tensor to scale.
+            scale (float): The amount to scale the NCHW image by.
+            
+        Returns:
+            **x** (torch.Tensor): A scaled NCHW image tensor.
+        """
         scale_matrix = self._get_scale_mat(scale, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
@@ -376,12 +393,16 @@ class RandomScale(nn.Module):
 
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         """
-        Randomly scale / zoom in or out of a tensor.
+        Randomly scale / zoom in or out of an NCHW image tensor.
+
         Args:
-            input (torch.Tensor): Input to randomly scale.
+            input (torch.Tensor): NCHW image tensor to randomly scale.
+
         Returns:
-            **tensor** (torch.Tensor): Scaled *tensor*.
+            **tensor** (torch.Tensor): Randomly scaled NCHW image *tensor*.
         """
+        assert input.dim() == 4
+
         n = int(
             torch.randint(
                 low=0,
