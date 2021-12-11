@@ -82,7 +82,7 @@ class TestRandomRotation(BaseTest):
 
     def test_random_rotation_matrix(self) -> None:
         theta = 25.1
-        rot_mod = transforms.RandomRotation([25.1])
+        rot_mod = transforms.RandomRotation([theta])
         rot_matrix = rot_mod._get_rot_mat(
             theta, device=torch.device("cpu"), dtype=torch.float32
         )
@@ -134,7 +134,7 @@ class TestRandomRotation(BaseTest):
 
     def test_random_rotation_matrix_torch_math_module(self) -> None:
         theta = 25.1
-        rot_mod = transforms.RandomRotation([25.1])
+        rot_mod = transforms.RandomRotation([theta])
         rot_matrix = rot_mod._get_rot_mat(
             theta, device=torch.device("cpu"), dtype=torch.float32
         )
