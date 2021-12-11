@@ -93,7 +93,7 @@ class TestRandomRotation(BaseTest):
         assertTensorAlmostEqual(self, rot_matrix, expected_matrix)
 
     def test_random_rotation_rotate_tensor(self) -> None:
-        if torch.__version__ <= "0.9.0":
+        if torch.__version__ <= "1.9.0":
             raise unittest.SkipTest(
                 "Skipping RandomRotation rotate tensor test due to"
                 + "insufficient Torch version."
@@ -118,7 +118,7 @@ class TestRandomRotation(BaseTest):
         assertTensorAlmostEqual(self, test_output, expected_output, 0.005)
 
     def test_random_rotation_forward(self) -> None:
-        if torch.__version__ <= "0.9.0":
+        if torch.__version__ <= "1.9.0":
             raise unittest.SkipTest(
                 "Skipping RandomRotation forward test due to insufficient Torch version."
             )
@@ -134,7 +134,7 @@ class TestRandomRotation(BaseTest):
                 "Skipping RandomRotation forward CUDA test due to not supporting"
                 + " CUDA."
             )
-        if torch.__version__ <= "0.9.0":
+        if torch.__version__ <= "1.9.0":
             raise unittest.SkipTest(
                 "Skipping RandomRotation forward CUDA test due to insufficient"
                 + "Torch Version."
@@ -147,7 +147,7 @@ class TestRandomRotation(BaseTest):
         self.assertEqual(output.shape, x.shape)
 
     def test_random_rotation_matrix_torch_math_module(self) -> None:
-        if torch.__version__ <= "0.9.0":
+        if torch.__version__ <= "1.9.0":
             raise unittest.SkipTest(
                 "Skipping RandomRotation math module test insufficient Torch version."
             )
@@ -168,7 +168,7 @@ class TestRandomRotation(BaseTest):
         assertTensorAlmostEqual(self, rot_matrix, expected_matrix, 0.0)
 
     def test_random_rotation_jit_module(self) -> None:
-        if torch.__version__ <= "0.9.0":
+        if torch.__version__ <= "1.9.0":
             raise unittest.SkipTest(
                 "Skipping RandomRotation JIT test due to insufficient Torch version."
             )
