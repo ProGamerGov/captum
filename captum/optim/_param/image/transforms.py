@@ -382,7 +382,7 @@ class RandomScale(nn.Module):
         scale_matrix = self._get_scale_mat(scale, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
-        if torch.__version__ >= "1.3.0":
+        if torch.__version__ >= "1.3.0" or torch.jit.is_scripting():
             # Pass align_corners explicitly for torch >= 1.3.0
             grid = F.affine_grid(scale_matrix, x.size(), align_corners=False)
             x = F.grid_sample(x, grid, align_corners=False)
@@ -526,7 +526,7 @@ class RandomRotation(nn.Module):
         rot_matrix = self._get_rot_mat(theta, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
-        if torch.__version__ >= "1.3.0":
+        if torch.__version__ >= "1.3.0" or torch.jit.is_scripting():
             # Pass align_corners explicitly for torch >= 1.3.0
             grid = F.affine_grid(rot_matrix, x.size(), align_corners=False)
             x = F.grid_sample(x, grid, align_corners=False)
