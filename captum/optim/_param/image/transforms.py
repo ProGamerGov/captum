@@ -404,18 +404,17 @@ class RandomRotation(nn.Module):
         assert hasattr(degrees, "__iter__")
         if torch.is_tensor(degrees):
             assert cast(torch.Tensor, degrees).dim() == 1
+            degrees = degrees.tolist()
         assert len(degrees) > 0
-        self.degrees = degrees
+        self.degrees = [float(d) for d in degrees]
 
     def _get_rot_mat(
         self,
-        theta: Union[int, float, torch.Tensor],
+        theta: float,
         device: torch.device,
         dtype: torch.dtype,
     ) -> torch.Tensor:
-        if isinstance(theta, torch.Tensor):
-            theta = float(theta.item())
-        theta = float(theta) * math.pi / 180
+        theta = theta * math.pi / 180
         rot_mat = torch.tensor(
             [
                 [math.cos(theta), -math.sin(theta), 0.0],
@@ -427,7 +426,7 @@ class RandomRotation(nn.Module):
         return rot_mat
 
     def _rotate_tensor(
-        self, x: torch.Tensor, theta: Union[int, float, torch.Tensor]
+        self, x: torch.Tensor, theta: float
     ) -> torch.Tensor:
         rot_matrix = self._get_rot_mat(theta, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
