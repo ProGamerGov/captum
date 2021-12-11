@@ -19,7 +19,6 @@ from captum.optim._utils.image.common import save_tensor_as_image, show
 TORCH_VERSION = torch.__version__
 
 
-@torch.jit.ignore
 class ImageTensor(torch.Tensor):
     @staticmethod
     def __new__(
