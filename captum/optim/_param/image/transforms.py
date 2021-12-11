@@ -392,7 +392,10 @@ class RandomRotation(nn.Module):
     __constants__ = ["degrees", "mode", "padding_mode"]
 
     def __init__(
-        self, degrees: Union[List[float], Tuple[float, ...], torch.Tensor], mode: str ="bilinear", padding_mode: str = "zeros",
+        self,
+        degrees: Union[List[float], Tuple[float, ...], torch.Tensor],
+        mode: str = "bilinear",
+        padding_mode: str = "zeros",
     ) -> None:
         """
         Args:
@@ -424,11 +427,11 @@ class RandomRotation(nn.Module):
     ) -> torch.Tensor:
         """
         Create a rotation matrix tensor.
-        
+
         Args:
-        
+
             theta (float): The rotation value in degrees.
-            
+
         Returns:
             **rot_mat** (torch.Tensor): A rotation matrix.
         """
@@ -446,12 +449,12 @@ class RandomRotation(nn.Module):
     def _rotate_tensor(self, x: torch.Tensor, theta: float) -> torch.Tensor:
         """
         Rotate an NCHW image tensor based on a specified degree value.
-        
+
         Args:
-        
+
             x (torch.Tensor): The NCHW image tensor to rotate.
             theta (float): The amount to rotate the NCHW image, in degrees.
-            
+
         Returns:
             **x** (torch.Tensor): A rotated NCHW image tensor.
         """
@@ -461,7 +464,13 @@ class RandomRotation(nn.Module):
         if torch.__version__ >= "1.3.0" or torch.jit.is_scripting():
             # Pass align_corners explicitly for torch >= 1.3.0
             grid = F.affine_grid(rot_matrix, x.size(), align_corners=False)
-            x = F.grid_sample(x, grid, mode=self.mode, padding_mode=self.padding_mode, align_corners=False)
+            x = F.grid_sample(
+                x,
+                grid,
+                mode=self.mode,
+                padding_mode=self.padding_mode,
+                align_corners=False,
+            )
         else:
             grid = F.affine_grid(rot_matrix, x.size())
             x = F.grid_sample(x, grid, mode=self.mode, padding_mode=self.padding_mode)
@@ -470,11 +479,11 @@ class RandomRotation(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Randomly rotate an NCHW image tensor.
-        
+
         Args:
-        
+
             x (torch.Tensor): NCHW image tensor to randomly rotate.
-            
+
         Returns:
             **x** (torch.Tensor): A randomly rotated NCHW image *tensor*.
         """
