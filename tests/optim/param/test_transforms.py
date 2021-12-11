@@ -145,7 +145,7 @@ class TestRandomRotation(BaseTest):
                 [torch.cos(theta_expected), -torch.sin(theta_expected), 0.0],
                 [torch.sin(theta_expected), torch.cos(theta_expected), 0.0],
             ],
-        ).float()
+        )
 
         assertTensorAlmostEqual(self, rot_matrix, expected_matrix, 0.0)
 
