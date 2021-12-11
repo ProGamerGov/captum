@@ -414,14 +414,13 @@ class RandomRotation(nn.Module):
         dtype: torch.dtype,
     ) -> torch.Tensor:
         if isinstance(theta, torch.Tensor):
-            theta = theta.to(device=device, dtype=dtype)
-        else:
-            theta = torch.tensor(float(theta), device=device, dtype=dtype)
+            theta = float(theta.item())
+        theta = float(theta)
         theta = theta * math.pi / 180
         rot_mat = torch.tensor(
             [
-                [torch.cos(theta), -torch.sin(theta), 0],
-                [torch.sin(theta), torch.cos(theta), 0],
+                [math.cos(theta), -math.sin(theta), 0.0],
+                [math.sin(theta), math.cos(theta), 0.0],
             ],
             device=device,
             dtype=dtype,
