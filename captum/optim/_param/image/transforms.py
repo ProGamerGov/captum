@@ -415,8 +415,7 @@ class RandomRotation(nn.Module):
     ) -> torch.Tensor:
         if isinstance(theta, torch.Tensor):
             theta = float(theta.item())
-        theta = float(theta)
-        theta = theta * math.pi / 180
+        theta = float(theta) * math.pi / 180
         rot_mat = torch.tensor(
             [
                 [math.cos(theta), -math.sin(theta), 0.0],
