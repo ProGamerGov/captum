@@ -389,12 +389,13 @@ class RandomRotation(nn.Module):
     Apply random rotation transforms on a NCHW tensor, using a sequence of degrees.
     """
 
+    __constants__ = ["degrees"]
+
     def __init__(
         self, degrees: Union[List[float], Tuple[float, ...], torch.Tensor]
     ) -> None:
         """
         Args:
-
             degrees (float, sequence): Tuple, List, or Tensor of degrees to randomly
                 select from.
         """
@@ -411,10 +412,11 @@ class RandomRotation(nn.Module):
         device: torch.device,
         dtype: torch.dtype,
     ) -> torch.Tensor:
-        if torch.is_tensor(theta):
-            theta = theta.float().to(device)
+        if isinstance(theta, torch.Tensor):
+            theta = theta.to(device=device, dtype=dtype)
         else:
-            theta = torch.tensor(theta, device=device, dtype=dtype)
+            theta = torch.tensor(float(theta), device=device, dtype=dtype)
+        theta = theta * math.pi / 180
         rot_mat = torch.tensor(
             [
                 [torch.cos(theta), -torch.sin(theta), 0],
@@ -428,7 +430,6 @@ class RandomRotation(nn.Module):
     def _rotate_tensor(
         self, x: torch.Tensor, theta: Union[int, float, torch.Tensor]
     ) -> torch.Tensor:
-        theta = theta * math.pi / 180
         rot_matrix = self._get_rot_mat(theta, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
@@ -446,13 +447,22 @@ class RandomRotation(nn.Module):
         Randomly rotate an input tensor.
 
         Args:
-
-            input (torch.Tensor): Input to randomly rotate.
+            x (torch.Tensor): Input to randomly rotate.
 
         Returns:
             **tensor** (torch.Tensor): A randomly rotated *tensor*.
         """
-        rotate_angle = _rand_select(self.degrees)
+        n = int(
+            torch.randint(
+                low=0,
+                high=len(self.degrees),
+                size=[1],
+                dtype=torch.int64,
+                layout=torch.strided,
+                device=x.device,
+            ).item()
+        )
+        rotate_angle = self.degrees[n]
         return self._rotate_tensor(x, rotate_angle)
 
 
