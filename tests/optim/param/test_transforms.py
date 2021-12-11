@@ -82,7 +82,6 @@ class TestRandomRotation(BaseTest):
 
     def test_random_rotation_matrix(self) -> None:
         theta = 25.1
-        theta = theta * 3.141592653589793 / 180
         rot_mod = transforms.RandomRotation([25.1])
         rot_matrix = rot_mod._get_rot_mat(
             theta, device=torch.device("cpu"), dtype=torch.float32
