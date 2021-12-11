@@ -399,7 +399,7 @@ class RandomScale(nn.Module):
             input (torch.Tensor): NCHW image tensor to randomly scale.
 
         Returns:
-            **tensor** (torch.Tensor): Randomly scaled NCHW image *tensor*.
+            **tensor** (torch.Tensor): A randomly scaled NCHW image *tensor*.
         """
         assert input.dim() == 4
 
