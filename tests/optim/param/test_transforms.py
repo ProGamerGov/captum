@@ -139,7 +139,7 @@ class TestRandomRotation(BaseTest):
             theta, device=torch.device("cpu"), dtype=torch.float32
         )
 
-        theta_expected = theta * 3.141592653589793 / 180.0
+        theta_expected = torch.tensor(theta) * 3.141592653589793 / 180.0
         expected_matrix = torch.tensor(
             [
                 [torch.cos(theta_expected), -torch.sin(theta_expected), 0.0],
