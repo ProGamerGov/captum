@@ -23,14 +23,14 @@ class TestRandomScale(BaseTest):
         # Test rescaling
         assertTensorAlmostEqual(
             self,
-            scale_module.scale_tensor(test_tensor, 0.5),
+            scale_module._scale_tensor(test_tensor, 0.5),
             torch.ones(3, 1).repeat(3, 1, 3).unsqueeze(0),
             0,
         )
 
         assertTensorAlmostEqual(
             self,
-            scale_module.scale_tensor(test_tensor, 1.5),
+            scale_module._scale_tensor(test_tensor, 1.5),
             torch.tensor(
                 [
                     [0.2500, 0.5000, 0.2500],
@@ -50,14 +50,14 @@ class TestRandomScale(BaseTest):
 
         assertTensorAlmostEqual(
             self,
-            scale_module.get_scale_mat(0.5, test_tensor.device, test_tensor.dtype),
+            scale_module._get_scale_mat(0.5, test_tensor.device, test_tensor.dtype),
             torch.tensor([[0.5000, 0.0000, 0.0000], [0.0000, 0.5000, 0.0000]]),
             0,
         )
 
         assertTensorAlmostEqual(
             self,
-            scale_module.get_scale_mat(1.24, test_tensor.device, test_tensor.dtype),
+            scale_module._get_scale_mat(1.24, test_tensor.device, test_tensor.dtype),
             torch.tensor([[1.2400, 0.0000, 0.0000], [0.0000, 1.2400, 0.0000]]),
             0,
         )
