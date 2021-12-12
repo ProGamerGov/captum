@@ -329,13 +329,36 @@ class RandomScale(nn.Module):
     Apply random rescaling on a NCHW tensor.
     """
 
-    __constants__ = ["scale"]
+    __constants__ = [
+        "scale",
+        "mode",
+        "padding_mode",
+        "align_corners",
+        "has_align_corners",
+    ]
 
-    def __init__(self, scale: Union[List[int], List[float], torch.Tensor]) -> None:
+    def __init__(
+        self,
+        degrees: Union[List[float], Tuple[float, ...], torch.Tensor],
+        mode: str = "bilinear",
+        padding_mode: str = "zeros",
+        align_corners: bool = False,
+    ) -> None:
         """
         Args:
 
             scale (float, sequence): Tuple of rescaling values to randomly select from.
+            mode (str, optional): Interpolation mode to use. See documentation of
+                F.grid_sample for more details. One of; "bilinear", "nearest", or
+                "bicubic".
+                Default: "bilinear"
+            padding_mode (str, optional): Padding mode for values that fall outside of
+                the grid. See documentation of F.grid_sample for more details. One of;
+                "zeros", "border", or "reflection".
+                Default: "zeros"
+            align_corners (bool, optional): Whether or not to align corners. See
+                documentation of F.affine_grid & F.grid_sample for more details.
+                Default: False
         """
         super().__init__()
         assert hasattr(scale, "__iter__")
@@ -344,6 +367,10 @@ class RandomScale(nn.Module):
             scale = scale.tolist()
         assert len(scale) > 0
         self.scale = [float(s) for s in scale]
+        self.mode = mode
+        self.padding_mode = padding_mode
+        self.align_corners = align_corners
+        self.has_align_corners = torch.__version__ >= "1.3.0"
 
     def _get_scale_mat(
         self,
@@ -373,6 +400,7 @@ class RandomScale(nn.Module):
         Scale an NCHW image tensor based on a specified scale value.
 
         Args:
+
             x (torch.Tensor): The NCHW image tensor to scale.
             scale (float): The amount to scale the NCHW image by.
             
@@ -382,13 +410,19 @@ class RandomScale(nn.Module):
         scale_matrix = self._get_scale_mat(scale, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
-        if torch.__version__ >= "1.3.0" or torch.jit.is_scripting():
+        if self.has_align_corners:
             # Pass align_corners explicitly for torch >= 1.3.0
-            grid = F.affine_grid(scale_matrix, x.size(), align_corners=False)
-            x = F.grid_sample(x, grid, align_corners=False)
+            grid = F.affine_grid(scale_matrix, x.size(), align_corners=self.align_corners)
+            x = F.grid_sample(
+                x,
+                grid,
+                mode=self.mode,
+                padding_mode=self.padding_mode,
+                align_corners=self.align_corners,
+            )
         else:
             grid = F.affine_grid(scale_matrix, x.size())
-            x = F.grid_sample(x, grid)
+            x = F.grid_sample(x, grid, mode=self.mode, padding_mode=self.padding_mode)
         return x
 
     def forward(self, input: torch.Tensor) -> torch.Tensor:
