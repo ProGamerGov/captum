@@ -389,25 +389,27 @@ class RandomRotation(nn.Module):
     Apply random rotation transforms on a NCHW tensor, using a sequence of degrees.
     """
 
-    __constants__ = ["degrees", "mode", "padding_mode", "torch_version"]
+    __constants__ = ["degrees", "mode", "padding_mode", "align_corners", "has_align_corners"]
 
     def __init__(
         self,
         degrees: Union[List[float], Tuple[float, ...], torch.Tensor],
         mode: str = "bilinear",
         padding_mode: str = "zeros",
+        align_corners: bool = False,
     ) -> None:
         """
         Args:
 
             degrees (float, sequence): Tuple, List, or Tensor of degrees to randomly
                 select from.
-            mode (str): Interpolation mode to use. One of; 'bilinear', 'nearest',
-                or 'bicubic'.
+            mode (str, optional): Interpolation mode to use. One of; 'bilinear',
+                'nearest', or 'bicubic'.
                 Default: "bilinear"
-            padding_mode (str): Padding mode for values that fall outside of the grid.
-                One of; 'zeros', 'border', or 'reflection'.
+            padding_mode (str, optional): Padding mode for values that fall outside of
+                the grid. One of; 'zeros', 'border', or 'reflection'.
                 Default: "zeros"
+            align_corners (bool, optional): 
         """
         super().__init__()
         assert hasattr(degrees, "__iter__")
@@ -418,6 +420,7 @@ class RandomRotation(nn.Module):
         self.degrees = [float(d) for d in degrees]
         self.mode = mode
         self.padding_mode = padding_mode
+        self.align_corners = align_corners
         self.has_align_corners = torch.__version__ >= "1.3.0"
 
     def _get_rot_mat(
@@ -464,13 +467,13 @@ class RandomRotation(nn.Module):
         )
         if self.has_align_corners:
             # Pass align_corners explicitly for torch >= 1.3.0
-            grid = F.affine_grid(rot_matrix, x.size(), align_corners=False)
+            grid = F.affine_grid(rot_matrix, x.size(), align_corners=self.align_corners)
             x = F.grid_sample(
                 x,
                 grid,
                 mode=self.mode,
                 padding_mode=self.padding_mode,
-                align_corners=False,
+                align_corners=self.align_corners,
             )
         else:
             grid = F.affine_grid(rot_matrix, x.size())
