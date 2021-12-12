@@ -145,12 +145,10 @@ class TestRandomSpatialJitter(BaseTest):
 
         spatialjitter = transforms.RandomSpatialJitter(t_val)
         test_input = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
-        jittered_tensor = jit_spatialjitter(
-            test_input, torch.tensor(translate_vals)
-        )
+        jittered_tensor = spatialjitter(test_input)
         self.assertEqual(list(jittered_tensor.shape), list(test_input.shape))
 
-    def test_random_spatial_jitter_jit_module(self) -> None:
+    def test_random_spatial_jitter_forward_jit_module(self) -> None:
         if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
                 "Skipping RandomSpatialJitter JIT module test due to insufficient"
@@ -161,9 +159,7 @@ class TestRandomSpatialJitter(BaseTest):
         spatialjitter = transforms.RandomSpatialJitter(t_val)
         jit_spatialjitter = torch.jit.script(spatialjitter)
         test_input = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
-        jittered_tensor = jit_spatialjitter(
-            test_input, torch.tensor(translate_vals)
-        )
+        jittered_tensor = jit_spatialjitter(test_input)
         self.assertEqual(list(jittered_tensor.shape), list(test_input.shape))
 
 
@@ -742,7 +738,7 @@ class TestScaleInputRange(BaseTest):
             )
         x = torch.ones(1, 3, 4, 4)
         scale_input = transforms.ScaleInputRange(255)
-        jit_scale_input = torch.jit.script(jit_scale_input)
+        jit_scale_input = torch.jit.script(scale_input)
         output_tensor = jit_scale_input(x)
         self.assertEqual(output_tensor.mean(), 255.0)
 
