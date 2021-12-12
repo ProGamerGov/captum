@@ -644,12 +644,16 @@ class NaturalImage(ImageParameterization):
             if self.decorrelate is not None:
                 self.decorrelate = torch.jit.script(self.decorrelate)
 
+    @torch.jit.ignore
+    def image_tensor(self, image: torch.Tensor) -> ImageTensor:
+        return ImageTensor(self.squash_func(image))
+
     def forward(self) -> torch.Tensor:
         image = self.parameterization()
         if self.decorrelate is not None:
             image = self.decorrelate(image)
         image = image.rename(None)  # TODO: the world is not yet ready
-        return ImageTensor(self.squash_func(image))
+        return self.image_tensor(image)
 
 
 __all__ = [
