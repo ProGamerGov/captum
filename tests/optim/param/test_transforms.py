@@ -424,6 +424,39 @@ class TestCenterCropFunction(BaseTest):
         )
         assertTensorAlmostEqual(self, x, cropped_tensor)
 
+    def test_center_crop_one_number_exact_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping center_crop JIT module test due to insufficient"
+                + " Torch version."
+            )
+        pad = (1, 1, 1, 1)
+        test_tensor = (
+            F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1)
+            .repeat(3, 1, 1)
+            .unsqueeze(0)
+        )
+
+        crop_vals = 5
+
+        jit_center_crop = transforms.center_crop
+        cropped_tensor = jit_center_crop(test_tensor, crop_vals, False)
+        expected_tensor = torch.stack(
+            [
+                torch.tensor(
+                    [
+                        [1.0, 1.0, 1.0, 1.0, 1.0],
+                        [1.0, 0.0, 0.0, 0.0, 0.0],
+                        [1.0, 0.0, 1.0, 1.0, 0.0],
+                        [1.0, 0.0, 1.0, 1.0, 0.0],
+                        [1.0, 0.0, 0.0, 0.0, 0.0],
+                    ]
+                )
+            ]
+            * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
+
 
 class TestBlendAlpha(BaseTest):
     def test_blend_alpha(self) -> None:
