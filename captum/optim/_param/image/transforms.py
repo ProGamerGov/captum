@@ -389,7 +389,7 @@ class RandomRotation(nn.Module):
     Apply random rotation transforms on a NCHW tensor, using a sequence of degrees.
     """
 
-    __constants__ = ["degrees", "mode", "padding_mode"]
+    __constants__ = ["degrees", "mode", "padding_mode", "torch_version"]
 
     def __init__(
         self,
@@ -418,6 +418,7 @@ class RandomRotation(nn.Module):
         self.degrees = [float(d) for d in degrees]
         self.mode = mode
         self.padding_mode = padding_mode
+        self.torch_version = torch.__version__
 
     def _get_rot_mat(
         self,
@@ -461,7 +462,7 @@ class RandomRotation(nn.Module):
         rot_matrix = self._get_rot_mat(theta, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
-        if torch.__version__ >= "1.3.0" or torch.jit.is_scripting():
+        if self.torch_version >= "1.3.0":
             # Pass align_corners explicitly for torch >= 1.3.0
             grid = F.affine_grid(rot_matrix, x.size(), align_corners=False)
             x = F.grid_sample(
