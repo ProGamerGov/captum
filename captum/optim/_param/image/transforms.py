@@ -350,9 +350,9 @@ class RandomScale(nn.Module):
         Create a rotation matrix tensor.
 
         Args:
-        
+
             m (float): The scale value to use.
-            
+
         Returns:
             **scale_mat** (torch.Tensor): A scale matrix.
         """
@@ -362,7 +362,9 @@ class RandomScale(nn.Module):
         return scale_mat
 
     def _scale_tensor(
-        self, x: torch.Tensor, scale: float,
+        self,
+        x: torch.Tensor,
+        scale: float,
     ) -> torch.Tensor:
         """
         Scale an NCHW image tensor based on a specified scale value.
@@ -371,7 +373,7 @@ class RandomScale(nn.Module):
 
             x (torch.Tensor): The NCHW image tensor to scale.
             scale (float): The amount to scale the NCHW image by.
-            
+
         Returns:
             **x** (torch.Tensor): A scaled NCHW image tensor.
         """
@@ -380,7 +382,9 @@ class RandomScale(nn.Module):
         )
         if self.has_align_corners:
             # Pass align_corners explicitly for torch >= 1.3.0
-            grid = F.affine_grid(scale_matrix, x.size(), align_corners=self.align_corners)
+            grid = F.affine_grid(
+                scale_matrix, x.size(), align_corners=self.align_corners
+            )
             x = F.grid_sample(
                 x,
                 grid,
