@@ -445,6 +445,31 @@ class TestBlendAlpha(BaseTest):
 
         assertArraysAlmostEqual(blended_tensor.numpy(), blended_array, 0)
 
+    def test_blend_alpha_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping BlendAlpha JIT module test due to insufficient"
+                + " Torch version."
+            )
+        rgb_tensor = torch.ones(3, 3, 3)
+        alpha_tensor = ((torch.eye(3, 3) + torch.eye(3, 3).flip(1)) / 2).repeat(1, 1, 1)
+        test_tensor = torch.cat([rgb_tensor, alpha_tensor]).unsqueeze(0)
+
+        background_tensor = torch.ones_like(rgb_tensor) * 5
+        blend_alpha = transforms.BlendAlpha(background=background_tensor)
+        jit_blend_alpha = torch.jit.script(blend_alpha)
+        blended_tensor = jit_blend_alpha(test_tensor)
+
+        rgb_array = np.ones((3, 3, 3))
+        alpha_array = (np.add(np.eye(3, 3), np.flip(np.eye(3, 3), 1)) / 2)[None, :]
+        test_array = np.concatenate([rgb_array, alpha_array])[None, :]
+
+        background_array = np.ones(rgb_array.shape) * 5
+        blend_alpha_np = numpy_transforms.BlendAlpha(background=background_array)
+        blended_array = blend_alpha_np.blend_alpha(test_array)
+
+        assertArraysAlmostEqual(blended_tensor.numpy(), blended_array, 0)
+
 
 class TestIgnoreAlpha(BaseTest):
     def test_ignore_alpha(self) -> None:
