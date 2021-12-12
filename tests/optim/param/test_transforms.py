@@ -453,6 +453,18 @@ class TestIgnoreAlpha(BaseTest):
         rgb_tensor = ignore_alpha(test_input)
         assert rgb_tensor.size(1) == 3
 
+    def test_ignore_alpha_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping IgnoreAlpha JIT module test due to insufficient"
+                + " Torch version."
+            )
+        ignore_alpha = transforms.IgnoreAlpha()
+        jit_ignore_alpha = torch.jit.script(ignore_alpha)
+        test_input = torch.ones(1, 4, 3, 3)
+        rgb_tensor = jit_ignore_alpha(test_input)
+        assert rgb_tensor.size(1) == 3
+
 
 class TestToRGB(BaseTest):
     def test_to_rgb_i1i2i3(self) -> None:
@@ -760,6 +772,11 @@ class TestNChannelsToRGB(BaseTest):
         self.assertEqual(list(test_output.size()), [1, 3, 224, 224])
 
     def test_nchannels_to_rgb_collapse_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping NChannelsToRGB collapse JIT module test due to insufficient"
+                + " Torch version."
+            )
         test_input = torch.randn(1, 6, 224, 224)
         nchannels_to_rgb = transforms.NChannelsToRGB()
         jit_nchannels_to_rgb = torch.jit.script(nchannels_to_rgb)
