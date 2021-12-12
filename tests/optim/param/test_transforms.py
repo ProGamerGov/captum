@@ -120,7 +120,8 @@ class TestRandomRotation(BaseTest):
     def test_random_rotation_forward(self) -> None:
         if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
-                "Skipping RandomRotation forward test due to insufficient Torch version."
+                "Skipping RandomRotation forward test due to insufficient"
+                + " Torch version."
             )
         rotate_transform = transforms.RandomRotation(list(range(-25, 25)))
         x = torch.ones(1, 3, 224, 224)
@@ -137,7 +138,7 @@ class TestRandomRotation(BaseTest):
         if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
                 "Skipping RandomRotation forward CUDA test due to insufficient"
-                + "Torch Version."
+                + " Torch Version."
             )
         rotate_transform = transforms.RandomRotation(list(range(-25, 25)))
         x = torch.ones(1, 3, 224, 224).cuda()
