@@ -389,7 +389,13 @@ class RandomRotation(nn.Module):
     Apply random rotation transforms on a NCHW tensor, using a sequence of degrees.
     """
 
-    __constants__ = ["degrees", "mode", "padding_mode", "align_corners", "has_align_corners"]
+    __constants__ = [
+        "degrees",
+        "mode",
+        "padding_mode",
+        "align_corners",
+        "has_align_corners",
+    ]
 
     def __init__(
         self,
@@ -409,7 +415,7 @@ class RandomRotation(nn.Module):
             padding_mode (str, optional): Padding mode for values that fall outside of
                 the grid. One of; 'zeros', 'border', or 'reflection'.
                 Default: "zeros"
-            align_corners (bool, optional): 
+            align_corners (bool, optional):
         """
         super().__init__()
         assert hasattr(degrees, "__iter__")
