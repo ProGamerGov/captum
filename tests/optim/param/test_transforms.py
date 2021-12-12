@@ -862,4 +862,3 @@ class TestRandomCrop(BaseTest):
         x_out = jit_crop_transform(x)
 
         self.assertEqual(list(x_out.shape), [1, 4, 160, 160])
-
