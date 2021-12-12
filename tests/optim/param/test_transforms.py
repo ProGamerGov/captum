@@ -93,6 +93,11 @@ class TestRandomRotation(BaseTest):
         assertTensorAlmostEqual(self, rot_matrix, expected_matrix)
 
     def test_random_rotation_rotate_tensor(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping RandomRotation rotate tensor test due to"
+                + "insufficient Torch version."
+            )
         rot_mod = transforms.RandomRotation([25.0])
 
         test_input = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
@@ -113,6 +118,10 @@ class TestRandomRotation(BaseTest):
         assertTensorAlmostEqual(self, test_output, expected_output, 0.005)
 
     def test_random_rotation_forward(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping RandomRotation forward test due to insufficient Torch version."
+            )
         rotate_transform = transforms.RandomRotation(list(range(-25, 25)))
         x = torch.ones(1, 3, 224, 224)
         output = rotate_transform(x)
@@ -124,6 +133,11 @@ class TestRandomRotation(BaseTest):
             raise unittest.SkipTest(
                 "Skipping RandomRotation forward CUDA test due to not supporting"
                 + " CUDA."
+            )
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping RandomRotation forward CUDA test due to insufficient"
+                + "Torch Version."
             )
         rotate_transform = transforms.RandomRotation(list(range(-25, 25)))
         x = torch.ones(1, 3, 224, 224).cuda()
@@ -150,7 +164,7 @@ class TestRandomRotation(BaseTest):
         assertTensorAlmostEqual(self, rot_matrix, expected_matrix, 0.0)
 
     def test_random_rotation_jit_module(self) -> None:
-        if torch.__version__ <= "1.10.0":
+        if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
                 "Skipping RandomRotation JIT test due to insufficient Torch version."
             )
