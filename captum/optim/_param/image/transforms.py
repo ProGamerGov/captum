@@ -409,11 +409,13 @@ class RandomRotation(nn.Module):
 
             degrees (float, sequence): Tuple, List, or Tensor of degrees to randomly
                 select from.
-            mode (str, optional): Interpolation mode to use. One of; 'bilinear',
-                'nearest', or 'bicubic'.
+            mode (str, optional): Interpolation mode to use. See documentation of
+                F.grid_sample for more details. One of; "bilinear", "nearest", or
+                "bicubic".
                 Default: "bilinear"
             padding_mode (str, optional): Padding mode for values that fall outside of
-                the grid. One of; 'zeros', 'border', or 'reflection'.
+                the grid. See documentation of F.grid_sample for more details. One of;
+                "zeros", "border", or "reflection".
                 Default: "zeros"
             align_corners (bool, optional): Whether or not to align corners. See
                 documentation of F.affine_grid & F.grid_sample for more details.
