@@ -415,7 +415,9 @@ class RandomRotation(nn.Module):
             padding_mode (str, optional): Padding mode for values that fall outside of
                 the grid. One of; 'zeros', 'border', or 'reflection'.
                 Default: "zeros"
-            align_corners (bool, optional):
+            align_corners (bool, optional): Whether or not to align corners. See
+                documentation of F.affine_grid & F.grid_sample for more details.
+                Default: False
         """
         super().__init__()
         assert hasattr(degrees, "__iter__")
