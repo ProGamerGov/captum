@@ -251,7 +251,6 @@ def center_crop(
     assert input.dim() == 3 or input.dim() == 4
     crop_vals = [crop_vals] * 2 if not hasattr(crop_vals, "__iter__") else crop_vals
     crop_vals = list(crop_vals) * 2 if len(crop_vals) == 1 else crop_vals
-    crop_vals = cast(Union[List[int], Tuple[int, int]], crop_vals)
     assert len(crop_vals) == 2
 
     if input.dim() == 4:
