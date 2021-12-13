@@ -115,6 +115,7 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
     Convert an NCHW image with n channels into a 3 channel RGB image.
 
     Args:
+
         x (torch.Tensor):  NCHW image tensor to transform into RGB image.
         warp (bool, optional):  Whether or not to make colors more distinguishable.
             Default: True
