@@ -844,7 +844,7 @@ class TestRandomCrop(BaseTest):
         crop_transform = transforms.RandomCrop(crop_size=crop_size)
         x = torch.ones(1, 4, 224, 224)
 
-        x_out = crop_transform.center_crop(x)
+        x_out = crop_transform._center_crop(x)
 
         self.assertEqual(list(x_out.shape), [1, 4, 160, 160])
 
