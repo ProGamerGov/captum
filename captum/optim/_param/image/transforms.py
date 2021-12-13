@@ -778,6 +778,7 @@ class RandomCrop(nn.Module):
             x,
             crop_vals=self.crop_size,
             pixels_from_edges=False,
+            offset_left=False,
         )
 
 
