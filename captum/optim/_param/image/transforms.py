@@ -745,6 +745,16 @@ class RandomCrop(nn.Module):
         self.crop_size = crop_size
 
     def _center_crop(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Center crop an NCHW image tensor based on self.crop_size.
+
+        Args:
+
+            x (torch.Tensor): The NCHW image tensor to center crop.
+
+        Returns
+            x (torch.Tensor): The center cropped NCHW image tensor.
+        """
         h, w = x.shape[2:]
         h_crop = h - int(math.ceil((h - self.crop_size[0]) / 2.0))
         w_crop = w - int(math.ceil((w - self.crop_size[1]) / 2.0))
