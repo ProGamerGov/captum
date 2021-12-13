@@ -741,7 +741,7 @@ class RandomCrop(nn.Module):
         h, w = x.shape[2:]
         h_crop = h - int(math.ceil((h - self.crop_size[0]) / 2.0))
         w_crop = w - int(math.ceil((w - self.crop_size[1]) / 2.0))
-        return input[
+        return x[
             ...,
             h_crop - self.crop_size[0] : h_crop,
             w_crop - self.crop_size[1] : w_crop,
