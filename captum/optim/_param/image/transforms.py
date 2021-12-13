@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from captum.optim._utils.image.common import nchannels_to_rgb
-from captum.optim._utils.typing import IntSeqOrIntType, NumSeqOrTensorType
+from captum.optim._utils.typing import IntSeqOrIntType
 
 
 class BlendAlpha(nn.Module):
@@ -274,23 +274,6 @@ def center_crop(
             w_crop = w_crop + 1 if offset_left else w_crop
         x = input[..., h_crop - crop_vals[0] : h_crop, w_crop - crop_vals[1] : w_crop]
     return x
-
-
-def _rand_select(
-    transform_values: NumSeqOrTensorType,
-) -> Union[int, float, torch.Tensor]:
-    """
-    Randomly return a single value from the provided tuple, list, or tensor.
-
-    Args:
-
-        transform_values (sequence):  A sequence of values to randomly select from.
-
-    Returns:
-        **value**:  A single value from the specified sequence.
-    """
-    n = torch.randint(low=0, high=len(transform_values), size=[1]).item()
-    return transform_values[n]
 
 
 class RandomScale(nn.Module):
