@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from captum.optim._utils.image.common import nchannels_to_rgb
-from captum.optim._utils.typing import IntSeqOrIntType
+from captum.optim._utils.typing import IntSeqOrIntType, NumSeqOrTensorType
 
 
 class BlendAlpha(nn.Module):
@@ -291,7 +291,7 @@ class RandomScale(nn.Module):
 
     def __init__(
         self,
-        scale: Union[List[float], Tuple[float, ...], torch.Tensor],
+        scale: NumSeqOrTensorType,
         mode: str = "bilinear",
         padding_mode: str = "zeros",
         align_corners: bool = False,
