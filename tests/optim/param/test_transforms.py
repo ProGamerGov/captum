@@ -74,7 +74,7 @@ class TestRandomScale(BaseTest):
 
         assertTensorAlmostEqual(
             self,
-            jit_scale_module(test_tensor, 1.5),
+            jit_scale_module(test_tensor),
             torch.tensor(
                 [
                     [0.2500, 0.5000, 0.2500],
