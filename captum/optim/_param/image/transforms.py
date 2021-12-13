@@ -743,6 +743,7 @@ class RandomCrop(nn.Module):
         crop_size = cast(Union[List[int], Tuple[int, int]], crop_size)
         assert len(crop_size) == 2
         self.crop_size = crop_size
+        self.center_crop = center_crop
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         assert x.dim() == 4
@@ -767,7 +768,8 @@ class RandomCrop(nn.Module):
             ),
         ]
         x = torch.roll(x, [int(s) for s in shifts], dims=(2, 3))
-        return center_crop(input=x, crop_vals=self.crop_size)
+        x = self.center_crop(input=x, crop_vals=self.crop_size)
+        return x
 
 
 __all__ = [
