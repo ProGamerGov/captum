@@ -202,10 +202,7 @@ class CenterCrop(torch.nn.Module):
                 Default: False
         """
         super().__init__()
-        crop_vals = [crop_vals] * 2 if not hasattr(crop_vals, "__iter__") else crop_vals
-        crop_vals = list(crop_vals) * 2 if len(crop_vals) == 1 else crop_vals
-        assert len(crop_vals) == 2
-        self.crop_vals = [int(s) for s in size]
+        self.crop_vals = size
         self.pixels_from_edges = pixels_from_edges
         self.offset_left = offset_left
 
