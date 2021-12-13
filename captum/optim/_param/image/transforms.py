@@ -362,11 +362,7 @@ class RandomScale(nn.Module):
         )
         return scale_mat
 
-    def _scale_tensor(
-        self,
-        x: torch.Tensor,
-        scale: float,
-    ) -> torch.Tensor:
+    def _scale_tensor(self, x: torch.Tensor, scale: float) -> torch.Tensor:
         """
         Scale an NCHW image tensor based on a specified scale value.
 
