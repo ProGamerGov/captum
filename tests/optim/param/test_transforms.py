@@ -311,6 +311,26 @@ class TestCenterCrop(BaseTest):
 
 
 class TestCenterCropFunction(BaseTest):
+    def test_center_crop_one_number(self) -> None:
+        pad = (1, 1, 1, 1)
+        test_tensor = (
+            F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1)
+            .repeat(3, 1, 1)
+            .unsqueeze(0)
+        )
+        crop_vals = 3
+
+        cropped_tensor = transforms.center_crop(test_tensor, crop_vals, True)
+        cropped_array = numpy_transforms.center_crop(
+            test_tensor.numpy(), crop_vals, True
+        )
+
+        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        expected_tensor = torch.stack(
+            [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
+
     def test_center_crop_two_numbers(self) -> None:
         pad = (1, 1, 1, 1)
         test_tensor = (
@@ -318,7 +338,7 @@ class TestCenterCropFunction(BaseTest):
             .repeat(3, 1, 1)
             .unsqueeze(0)
         )
-        crop_vals = [4, 2]
+        crop_vals = (4, 2)
 
         cropped_tensor = transforms.center_crop(test_tensor, crop_vals, True)
         cropped_array = numpy_transforms.center_crop(
@@ -339,7 +359,7 @@ class TestCenterCropFunction(BaseTest):
             .unsqueeze(0)
         )
 
-        crop_vals = [5, 5]
+        crop_vals = 5
 
         cropped_tensor = transforms.center_crop(test_tensor, crop_vals, False)
         cropped_array = numpy_transforms.center_crop(
@@ -371,7 +391,7 @@ class TestCenterCropFunction(BaseTest):
             .unsqueeze(0)
         )
 
-        crop_vals = [4, 2]
+        crop_vals = (4, 2)
 
         cropped_tensor = transforms.center_crop(test_tensor, crop_vals, False)
         cropped_array = numpy_transforms.center_crop(
@@ -413,7 +433,7 @@ class TestCenterCropFunction(BaseTest):
             .unsqueeze(0)
         )
 
-        crop_vals = [5, 5]
+        crop_vals = 5
 
         jit_center_crop = transforms.center_crop
         cropped_tensor = jit_center_crop(test_tensor, crop_vals, False)
