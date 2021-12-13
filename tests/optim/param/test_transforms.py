@@ -281,6 +281,11 @@ class TestCenterCrop(BaseTest):
         assertTensorAlmostEqual(self, x, cropped_tensor)
 
     def test_center_crop_one_number_exact_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping CenterCrop JIT module test due to insufficient"
+                + " Torch version."
+            )
         pad = (1, 1, 1, 1)
         test_tensor = (
             F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1)
