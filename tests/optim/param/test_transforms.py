@@ -839,6 +839,15 @@ class TestNChannelsToRGB(BaseTest):
 
 
 class TestRandomCrop(BaseTest):
+    def test_random_crop_center_crop(self) -> None:
+        crop_size = [160, 160]
+        crop_transform = transforms.RandomCrop(crop_size=crop_size)
+        x = torch.ones(1, 4, 224, 224)
+
+        x_out = crop_transform.center_crop(x)
+
+        self.assertEqual(list(x_out.shape), [1, 4, 160, 160])
+
     def test_random_crop(self) -> None:
         crop_size = [160, 160]
         crop_transform = transforms.RandomCrop(crop_size=crop_size)
