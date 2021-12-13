@@ -225,6 +225,7 @@ class CenterCrop(torch.nn.Module):
         )
 
 
+@torch.jit.ignore
 def center_crop(
     input: torch.Tensor,
     crop_vals: List[int],
@@ -237,7 +238,7 @@ def center_crop(
     Args:
 
         input (tensor):  A CHW or NCHW image tensor to center crop.
-        size (list of int): Number of pixels to center crop away.
+        size (int, sequence, int): Number of pixels to center crop away.
         pixels_from_edges (bool, optional): Whether to treat crop size
             values as the number of pixels from the tensor's edge, or an
             exact shape in the center.
@@ -252,7 +253,9 @@ def center_crop(
     """
 
     assert input.dim() == 3 or input.dim() == 4
-    assert crop_vals hasattr(crop_vals, "__iter__")
+    crop_vals = [crop_vals] * 2 if not hasattr(crop_vals, "__iter__") else crop_vals
+    crop_vals = list(crop_vals) * 2 if len(crop_vals) == 1 else crop_vals
+    crop_vals = cast(Union[List[int], Tuple[int, int]], crop_vals)
     assert len(crop_vals) == 2
 
     if input.dim() == 4:
