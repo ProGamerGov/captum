@@ -744,7 +744,7 @@ class RandomCrop(nn.Module):
         assert len(crop_size) == 2
         self.crop_size = crop_size
 
-    def center_crop_image(self, x: torch.Tensor) -> torch.Tensor:
+    def center_crop(self, x: torch.Tensor) -> torch.Tensor:
         h, w = x.shape[2:]
         h_crop = h - int(math.ceil((h - self.crop_size[0]) / 2.0))
         w_crop = w - int(math.ceil((w - self.crop_size[1]) / 2.0))
@@ -775,7 +775,7 @@ class RandomCrop(nn.Module):
             ),
         ]
         x = torch.roll(x, [int(s) for s in shifts], dims=(2, 3))
-        return self.center_crop_image(x)
+        return self.center_crop(x)
 
 
 __all__ = [
