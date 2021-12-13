@@ -228,7 +228,7 @@ class CenterCrop(torch.nn.Module):
 @torch.jit.ignore
 def center_crop(
     input: torch.Tensor,
-    crop_vals: List[int],
+    crop_vals: IntSeqOrIntType,
     pixels_from_edges: bool = False,
     offset_left: bool = False,
 ) -> torch.Tensor:
