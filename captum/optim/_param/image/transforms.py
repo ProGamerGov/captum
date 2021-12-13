@@ -768,7 +768,7 @@ class RandomCrop(nn.Module):
         ]
         x = torch.roll(x, [int(s) for s in shifts], dims=(2, 3))
         return center_crop(
-            x,
+            input=x,
             crop_vals=self.crop_size,
             pixels_from_edges=False,
             offset_left=False,
