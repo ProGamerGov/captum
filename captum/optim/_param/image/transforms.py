@@ -207,7 +207,7 @@ class CenterCrop(torch.nn.Module):
                 Default: False
         """
         super().__init__()
-        if not hasattr(crop_size, "__iter__"):
+        if not hasattr(size, "__iter__"):
             size = [int(size), int(size)]
         elif isinstance(size, (tuple, list)):
             if len(size) == 1:
