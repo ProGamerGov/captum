@@ -279,9 +279,11 @@ def center_crop(
     assert len(size) == 2
 
     if input.dim() == 4:
-        h, w = input.size(2), input.size(3)
-    if input.dim() == 3:
-        h, w = input.size(1), input.size(2)
+        h, w = input.shape[2:]
+    else:
+        h, w = input.shape[1:]
+    else:
+        raise ValueError("Input has too many dimensions: {}".format(input.dim()))
 
     if pixels_from_edges:
         h_crop = h - size[0]
