@@ -223,6 +223,7 @@ class CenterCrop(torch.nn.Module):
         self.pixels_from_edges = pixels_from_edges
         self.offset_left = offset_left
 
+    @torch.jit.ignore
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         """
         Center crop an input.
