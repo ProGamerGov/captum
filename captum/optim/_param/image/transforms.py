@@ -219,7 +219,7 @@ class CenterCrop(torch.nn.Module):
         else:
             raise ValueError("Unsupported crop size value {}".format(size))
         assert len(size) == 2
-        self.size = size
+        self.size = list(size)
         self.pixels_from_edges = pixels_from_edges
         self.offset_left = offset_left
 
