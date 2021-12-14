@@ -20,7 +20,6 @@ TORCH_VERSION = torch.__version__
 
 
 class ImageTensor(torch.Tensor):
-    @torch.jit.ignore
     @staticmethod
     def __new__(
         cls: Type["ImageTensor"],
