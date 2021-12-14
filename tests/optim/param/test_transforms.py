@@ -341,7 +341,7 @@ class TestCenterCropFunction(BaseTest):
         x = torch.ones(1, 3, 5, 5)
         px = F.pad(x, (5, 4, 5, 4), value=float("-inf"))
         cropped_tensor = transforms.center_crop(
-            px, crop_vals=[5, 5], pixels_from_edges=False, offset_left=True
+            px, size=[5, 5], pixels_from_edges=False, offset_left=True
         )
         assertTensorAlmostEqual(self, x, cropped_tensor)
 
@@ -349,7 +349,7 @@ class TestCenterCropFunction(BaseTest):
         x = torch.ones(1, 3, 5, 5)
         px = F.pad(x, (5, 5, 5, 5), value=float("-inf"))
         cropped_tensor = transforms.center_crop(
-            px, crop_vals=[5, 5], pixels_from_edges=False, offset_left=True
+            px, size=[5, 5], pixels_from_edges=False, offset_left=True
         )
         assertTensorAlmostEqual(self, x, cropped_tensor)
 
