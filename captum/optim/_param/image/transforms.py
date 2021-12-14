@@ -208,7 +208,7 @@ class CenterCrop(torch.nn.Module):
         """
         super().__init__()
         if isinstance(size, numbers.Number):
-            size = list((int(size), int(size)))
+            size = [int(size), int(size)]
         elif isinstance(size, (tuple, list)):
             if len(size) == 1:
                 size = list((size[0], size[0]))
@@ -219,7 +219,7 @@ class CenterCrop(torch.nn.Module):
         else:
             raise ValueError("Unsupported crop size value {}".format(size))
         assert len(size) == 2
-        self.size = list(size)
+        self.size = size
         self.pixels_from_edges = pixels_from_edges
         self.offset_left = offset_left
 
@@ -266,7 +266,7 @@ def center_crop(
 
     assert input.dim() == 3 or input.dim() == 4
     if isinstance(size, numbers.Number):
-        size = list((int(size), int(size)))
+        size = [int(size), int(size)]
     elif isinstance(size, (tuple, list)):
         if len(size) == 1:
             size = list((size[0], size[0]))
