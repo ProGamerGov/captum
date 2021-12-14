@@ -667,7 +667,7 @@ class TestToRGB(BaseTest):
 
         assertTensorAlmostEqual(self, rgb_tensor, expected_rgb_tensor, 0.002)
 
-        inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
+        inverse_tensor = jit_to_rgb(rgb_tensor.clone(), inverse=True)
         assertTensorAlmostEqual(
             self, inverse_tensor, torch.ones_like(inverse_tensor.rename(None))
         )
