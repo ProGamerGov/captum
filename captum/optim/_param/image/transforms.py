@@ -773,8 +773,8 @@ class RandomCrop(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         assert x.dim() == 4
-        hs = x.shape[2] - self.crop_size[0]
-        ws = x.shape[3] - self.crop_size[1]
+        hs = int(math.ceil((x.shape[2] - self.crop_size[0]) / 2.0))
+        ws = int(math.ceil((x.shape[3] - self.crop_size[1]) / 2.0))
         shifts = [
             torch.randint(
                 low=-hs,
