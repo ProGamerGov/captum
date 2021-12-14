@@ -649,6 +649,29 @@ class TestToRGB(BaseTest):
             self, inverse_tensor, torch.ones_like(inverse_tensor.rename(None))
         )
 
+    def test_to_rgb_klt_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping ToRGB forward JIT module test due to insufficient"
+                + " Torch version."
+            )
+        to_rgb = transforms.ToRGB(transform="klt")
+        jit_to_rgb = torch.jit.script(to_rgb)
+        test_tensor = torch.ones(3, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
+        rgb_tensor = jit_to_rgb(test_tensor)
+
+        r = torch.ones(4, 4) * 0.8009
+        g = torch.ones(4, 4) * 0.4762
+        b = torch.ones(4, 4) * 0.4546
+        expected_rgb_tensor = torch.stack([r, g, b]).unsqueeze(0)
+
+        assertTensorAlmostEqual(self, rgb_tensor, expected_rgb_tensor, 0.002)
+
+        inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
+        assertTensorAlmostEqual(
+            self, inverse_tensor, torch.ones_like(inverse_tensor.rename(None))
+        )
+
 
 class TestGaussianSmoothing(BaseTest):
     def test_gaussian_smoothing_1d(self) -> None:
