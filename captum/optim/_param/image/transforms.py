@@ -265,11 +265,11 @@ def center_crop(
     """
 
     assert input.dim() == 3 or input.dim() == 4
-    if isinstance(size, numbers.Number):
+    if isinstance(size, int):
         size = [int(size), int(size)]
     elif isinstance(size, (tuple, list)):
         if len(size) == 1:
-            size = list((size[0], size[0]))
+            size = [size[0], size[0]]
         elif len(size) == 2:
             size = list(size)
         else:
