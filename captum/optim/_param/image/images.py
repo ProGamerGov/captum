@@ -587,7 +587,6 @@ class NaturalImage(ImageParameterization):
         squash_func: Optional[Callable[[torch.Tensor], torch.Tensor]] = None,
         decorrelation_module: Optional[nn.Module] = ToRGB(transform="klt"),
         decorrelate_init: bool = True,
-        use_jit: bool = False,
     ) -> None:
         """
         Args:
@@ -627,17 +626,12 @@ class NaturalImage(ImageParameterization):
                 init = self.decorrelate(init, inverse=True).rename(None)
             if squash_func is None:
 
-                self.squash_func = squash_func_clamp
+                self.squash_func = _squash_func_clamp
         self.parameterization = parameterization(
             size=size, channels=channels, batch=batch, init=init
         )
-        self.use_jit = use_jit
-        if self.use_jit:
-            self.parameterization = torch.jit.script(self.parameterization)
-            if self.decorrelate is not None:
-                self.decorrelate = torch.jit.script(self.decorrelate)
 
-    def squash_func_clamp(self, x: torch.Tensor) -> torch.Tensor:
+    def _squash_func_clamp(self, x: torch.Tensor) -> torch.Tensor:
         return x.clamp(0, 1)
 
     @torch.jit.ignore
@@ -650,7 +644,7 @@ class NaturalImage(ImageParameterization):
             image = self.decorrelate(image)
         image = image.rename(None)  # TODO: the world is not yet ready
         image = self.squash_func(image)
-        return self._to_image_tensor(image)
+        return ImageTensor(image)#self._to_image_tensor(image)
 
 
 __all__ = [
