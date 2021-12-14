@@ -207,7 +207,7 @@ class CenterCrop(torch.nn.Module):
                 Default: False
         """
         super().__init__()
-        if isinstance(size, numbers.Number):
+        if not hasattr(crop_size, "__iter__"):
             size = [int(size), int(size)]
         elif isinstance(size, (tuple, list)):
             if len(size) == 1:
@@ -219,7 +219,7 @@ class CenterCrop(torch.nn.Module):
         else:
             raise ValueError("Unsupported crop size value {}".format(size))
         assert len(size) == 2
-        self.size = size
+        self.size = cast(List[int], size)
         self.pixels_from_edges = pixels_from_edges
         self.offset_left = offset_left
 
