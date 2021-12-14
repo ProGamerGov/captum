@@ -131,6 +131,7 @@ class ToRGB(nn.Module):
                 "transform has to be either 'klt', 'i1i2i3'," + " or a matrix tensor."
             )
 
+    @torch.jit.ignore
     def forward(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
         """
         Args:
