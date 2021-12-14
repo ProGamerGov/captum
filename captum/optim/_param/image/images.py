@@ -644,7 +644,7 @@ class NaturalImage(ImageParameterization):
             image = self.decorrelate(image)
         image = image.rename(None)  # TODO: the world is not yet ready
         image = self.squash_func(image)
-        return ImageTensor(image)#self._to_image_tensor(image)
+        return self._to_image_tensor(image)
 
 
 __all__ = [
