@@ -235,9 +235,7 @@ class CenterCrop(torch.nn.Module):
             **tensor** (torch.Tensor): A center cropped *tensor*.
         """
 
-        return center_crop(
-            input, self.size, self.pixels_from_edges, self.offset_left
-        )
+        return center_crop(input, self.size, self.pixels_from_edges, self.offset_left)
 
 
 def center_crop(
