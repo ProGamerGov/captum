@@ -280,7 +280,7 @@ def center_crop(
 
     if input.dim() == 4:
         h, w = input.shape[2:]
-    else:
+    elif input.dim() == 3:
         h, w = input.shape[1:]
     else:
         raise ValueError("Input has too many dimensions: {}".format(input.dim()))
