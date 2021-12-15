@@ -16,8 +16,72 @@ from tests.optim.helpers import numpy_transforms
 
 
 class TestRandomScale(BaseTest):
-    def test_random_scale(self) -> None:
-        scale_module = transforms.RandomScale(scale=(1, 0.975, 1.025, 0.95, 1.05))
+    def test_random_scale_scale(self) -> None:
+        scale_module = transforms.RandomScale(scale=[1, 0.975, 1.025, 0.95, 1.05])
+        self.assertEqual(scale_module.scale, [1.0, 0.975, 1.025, 0.95, 1.05])
+
+    def test_random_scale_downscale_scale_tensor(self) -> None:
+        scale_module = transforms.RandomScale(scale=[0.5])
+        test_tensor = torch.ones(1, 3, 224, 224)
+
+        scaled_tensor = scale_module._scale_tensor(test_tensor, 0.5)
+        self.assertEqual(list(scaled_tensor.shape), [1, 3, 112, 112])
+
+    def test_random_scale_upscale_scale_tensor(self) -> None:
+        scale_module = transforms.RandomScale(scale=[1.5])
+        test_tensor = torch.ones(1, 3, 224, 224)
+
+        scaled_tensor = scale_module._scale_tensor(test_tensor, 1.5)
+        self.assertEqual(list(scaled_tensor.shape), [1, 3, 336, 336])
+
+    def test_random_scale_downscaling_forward(self) -> None:
+        scale_module = transforms.RandomScale(scale=[0.5])
+        test_tensor = torch.ones(1, 3, 224, 224)
+
+        scaled_tensor = scale_module(test_tensor)
+        self.assertEqual(list(scaled_tensor.shape), [1, 3, 112, 112])
+
+    def test_random_scale_upscaling_forward(self) -> None:
+        scale_module = transforms.RandomScale(scale=[1.5])
+        test_tensor = torch.ones(1, 3, 224, 224)
+
+        scaled_tensor = scale_module(test_tensor)
+        self.assertEqual(list(scaled_tensor.shape), [1, 3, 336, 336])
+
+    def test_random_scale_downscaling_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping RandomScale downscaling forward JIT module test due to"
+                + " insufficient Torch version."
+            )
+        scale_module = transforms.RandomScale(scale=[0.5])
+        jit_scale_module = torch.jit.scale(scale_module)
+        test_tensor = torch.ones(1, 3, 224, 224)
+
+        scaled_tensor = jit_scale_module(test_tensor)
+        self.assertEqual(list(scaled_tensor.shape), [1, 3, 112, 112])
+
+    def test_random_scale_upscaling_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping RandomScale upscaling forward JIT module test due to"
+                + " insufficient Torch version."
+            )
+        scale_module = transforms.RandomScale(scale=[1.5])
+        jit_scale_module = torch.jit.scale(scale_module)
+        test_tensor = torch.ones(1, 3, 224, 224)
+
+        scaled_tensor = jit_scale_module(test_tensor)
+        self.assertEqual(list(scaled_tensor.shape), [1, 3, 336, 336])
+
+
+class TestRandomScaleAffine(BaseTest):
+    def test_random_scale_affine_scale(self) -> None:
+        scale_module = transforms.RandomScaleAffine(scale=[1, 0.975, 1.025, 0.95, 1.05])
+        self.assertEqual(scale_module.scale, [1.0, 0.975, 1.025, 0.95, 1.05])
+
+    def test_random_scale_affine(self) -> None:
+        scale_module = transforms.RandomScaleAffine(scale=[1.0])
         test_tensor = torch.ones(1, 3, 3, 3)
 
         # Test rescaling
@@ -43,8 +107,8 @@ class TestRandomScale(BaseTest):
             0,
         )
 
-    def test_random_scale_matrix(self) -> None:
-        scale_module = transforms.RandomScale(scale=(1, 0.975, 1.025, 0.95, 1.05))
+    def test_random_scale_affine_matrix(self) -> None:
+        scale_module = transforms.RandomScaleAffine(scale=[0.5])
         test_tensor = torch.ones(1, 3, 3, 3)
         # Test scale matrices
 
@@ -62,13 +126,13 @@ class TestRandomScale(BaseTest):
             0,
         )
 
-    def test_random_scale_jit_module(self) -> None:
+    def test_random_scale_affine_jit_module(self) -> None:
         if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
-                "Skipping RandomScale JIT module test due to insufficient"
+                "Skipping RandomScaleAffine JIT module test due to insufficient"
                 + " Torch version."
             )
-        scale_module = transforms.RandomScale(scale=[1.5])
+        scale_module = transforms.RandomScaleAffine(scale=[1.5])
         jit_scale_module = torch.jit.script(scale_module)
         test_tensor = torch.ones(1, 3, 3, 3)
 
