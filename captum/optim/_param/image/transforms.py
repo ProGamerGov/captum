@@ -305,6 +305,9 @@ def center_crop(
 class RandomScale(nn.Module):
     """
     Apply random rescaling on a NCHW tensor using the F.interpolate function.
+
+    NCHW outputs from this transform will vary in the shape of their height (H)
+    and width (W) dimensions.
     """
 
     __constants__ = [
@@ -413,6 +416,8 @@ class RandomScale(nn.Module):
 class RandomScaleAffine(nn.Module):
     """
     Apply random rescaling on a NCHW tensor using affine transform matrices.
+
+    NCHW outputs from this transform will retain the same shape as the inputs.
     """
 
     __constants__ = [
