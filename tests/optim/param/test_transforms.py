@@ -413,7 +413,7 @@ class TestCenterCropFunction(BaseTest):
         x = torch.ones(1, 3, 5, 5)
         px = F.pad(x, (5, 4, 5, 4), value=float("-inf"))
         cropped_tensor = transforms.center_crop(
-            px, crop_vals=[5, 5], pixels_from_edges=False, offset_left=True
+            px, size=[5, 5], pixels_from_edges=False, offset_left=True
         )
         assertTensorAlmostEqual(self, x, cropped_tensor)
 
@@ -421,7 +421,7 @@ class TestCenterCropFunction(BaseTest):
         x = torch.ones(1, 3, 5, 5)
         px = F.pad(x, (5, 5, 5, 5), value=float("-inf"))
         cropped_tensor = transforms.center_crop(
-            px, crop_vals=[5, 5], pixels_from_edges=False, offset_left=True
+            px, size=[5, 5], pixels_from_edges=False, offset_left=True
         )
         assertTensorAlmostEqual(self, x, cropped_tensor)
 
@@ -645,6 +645,29 @@ class TestToRGB(BaseTest):
         assertArraysAlmostEqual(rgb_tensor.numpy(), rgb_array)
 
         inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
+        assertTensorAlmostEqual(
+            self, inverse_tensor, torch.ones_like(inverse_tensor.rename(None))
+        )
+
+    def test_to_rgb_klt_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping ToRGB forward JIT module test due to insufficient"
+                + " Torch version."
+            )
+        to_rgb = transforms.ToRGB(transform="klt")
+        jit_to_rgb = torch.jit.script(to_rgb)
+        test_tensor = torch.ones(3, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
+        rgb_tensor = jit_to_rgb(test_tensor)
+
+        r = torch.ones(4, 4) * 0.8009
+        g = torch.ones(4, 4) * 0.4762
+        b = torch.ones(4, 4) * 0.4546
+        expected_rgb_tensor = torch.stack([r, g, b]).unsqueeze(0)
+
+        assertTensorAlmostEqual(self, rgb_tensor, expected_rgb_tensor, 0.002)
+
+        inverse_tensor = jit_to_rgb(rgb_tensor.clone(), inverse=True)
         assertTensorAlmostEqual(
             self, inverse_tensor, torch.ones_like(inverse_tensor.rename(None))
         )
