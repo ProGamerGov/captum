@@ -55,7 +55,7 @@ class TestRandomScale(BaseTest):
                 + " insufficient Torch version."
             )
         scale_module = transforms.RandomScale(scale=[0.5])
-        jit_scale_module = torch.jit.scale(scale_module)
+        jit_scale_module = torch.jit.script(scale_module)
         test_tensor = torch.ones(1, 3, 224, 224)
 
         scaled_tensor = jit_scale_module(test_tensor)
@@ -68,7 +68,7 @@ class TestRandomScale(BaseTest):
                 + " insufficient Torch version."
             )
         scale_module = transforms.RandomScale(scale=[1.5])
-        jit_scale_module = torch.jit.scale(scale_module)
+        jit_scale_module = torch.jit.script(scale_module)
         test_tensor = torch.ones(1, 3, 224, 224)
 
         scaled_tensor = jit_scale_module(test_tensor)
