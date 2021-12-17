@@ -186,7 +186,7 @@ class CenterCrop(torch.nn.Module):
 
     def __init__(
         self,
-        size: IntSeqOrIntType,
+        size: IntSeqOrIntType = 0,
         pixels_from_edges: bool = False,
         offset_left: bool = False,
     ) -> None:
