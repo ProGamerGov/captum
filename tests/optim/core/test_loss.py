@@ -168,6 +168,23 @@ class TestCompositeLoss(BaseTest):
             get_loss_value(model, loss), -CHANNEL_ACTIVATION_0_LOSS, places=6
         )
 
+    def test_positive(self) -> None:
+        model = torch.nn.Identity()
+        loss = -opt.loss.LayerActivation(model, 0)
+        loss = +loss
+
+        self.assertAlmostEqual(
+            get_loss_value(model, loss), 1.0, places=1
+        )
+
+    def test_abs(self) -> None:
+        model = torch.nn.Identity()
+        loss = abs(opt.loss.LayerActivation(model, 0) * -1)
+
+        self.assertAlmostEqual(
+            get_loss_value(model, loss), 1.0, places=1
+        )
+
     def test_addition(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = (
@@ -242,3 +259,19 @@ class TestCompositeLoss(BaseTest):
     #         opt_loss.ChannelActivation(model.layer, 0) ** opt_loss.ChannelActivation(
     #             model.layer, 1
     #         )
+
+    def test_sum(self) -> None:
+        model = torch.nn.Identity()
+        loss = opt.loss.LayerActivation(model, 0).sum()
+
+        self.assertAlmostEqual(
+            get_loss_value(model, loss), 3.0, places=1
+        )
+
+    def mean(self) -> None:
+        model = torch.nn.Identity()
+        loss = opt.loss.LayerActivation(model, 0).mean()
+
+        self.assertAlmostEqual(
+            get_loss_value(model, loss), 1.0, places=1
+        )
