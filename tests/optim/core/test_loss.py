@@ -262,7 +262,7 @@ class TestCompositeLoss(BaseTest):
 
         self.assertAlmostEqual(get_loss_value(model, loss), 3.0, places=1)
 
-    def mean(self) -> None:
+    def test_mean(self) -> None:
         model = torch.nn.Identity()
         loss = opt_loss.LayerActivation(model).mean()
 
