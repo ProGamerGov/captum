@@ -173,17 +173,13 @@ class TestCompositeLoss(BaseTest):
         loss = -opt_loss.LayerActivation(model, 0)
         loss = +loss
 
-        self.assertAlmostEqual(
-            get_loss_value(model, loss), 1.0, places=1
-        )
+        self.assertAlmostEqual(get_loss_value(model, loss), 1.0, places=1)
 
     def test_abs(self) -> None:
         model = torch.nn.Identity()
         loss = abs(opt_loss.LayerActivation(model, 0) * -1)
 
-        self.assertAlmostEqual(
-            get_loss_value(model, loss), 1.0, places=1
-        )
+        self.assertAlmostEqual(get_loss_value(model, loss), 1.0, places=1)
 
     def test_addition(self) -> None:
         model = BasicModel_ConvNet_Optim()
@@ -264,17 +260,13 @@ class TestCompositeLoss(BaseTest):
         model = torch.nn.Identity()
         loss = opt_loss.LayerActivation(model, 0).sum()
 
-        self.assertAlmostEqual(
-            get_loss_value(model, loss), 3.0, places=1
-        )
+        self.assertAlmostEqual(get_loss_value(model, loss), 3.0, places=1)
 
     def mean(self) -> None:
         model = torch.nn.Identity()
         loss = opt_loss.LayerActivation(model, 0).mean()
 
-        self.assertAlmostEqual(
-            get_loss_value(model, loss), 1.0, places=1
-        )
+        self.assertAlmostEqual(get_loss_value(model, loss), 1.0, places=1)
 
 
 class TestCompositeLossReductionOP(BaseTest):
