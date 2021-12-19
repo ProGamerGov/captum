@@ -613,6 +613,7 @@ def default_loss_summarize(loss_value: torch.Tensor) -> torch.Tensor:
 
 __all__ = [
     "Loss",
+    "REDUCTION_OP",
     "loss_wrapper",
     "BaseLoss",
     "LayerActivation",
