@@ -128,7 +128,7 @@ class Loss(ABC):
         if dim is None:
             # dim is equal to all dimensions unless specified
             def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-                return torch.mean(self(module), keepdim=keepdim)
+                return torch.mean(self(module))
 
         else:
 
@@ -156,7 +156,7 @@ class Loss(ABC):
         if dim is None:
             # dim is equal to all dimensions unless specified
             def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-                return torch.sum(self(module), keepdim=keepdim)
+                return torch.sum(self(module))
 
         else:
 
