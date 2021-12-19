@@ -170,7 +170,7 @@ class TestCompositeLoss(BaseTest):
 
     def test_positive(self) -> None:
         model = torch.nn.Identity()
-        loss = -opt.loss.LayerActivation(model, 0)
+        loss = -opt_loss.LayerActivation(model, 0)
         loss = +loss
 
         self.assertAlmostEqual(
@@ -179,7 +179,7 @@ class TestCompositeLoss(BaseTest):
 
     def test_abs(self) -> None:
         model = torch.nn.Identity()
-        loss = abs(opt.loss.LayerActivation(model, 0) * -1)
+        loss = abs(opt_loss.LayerActivation(model, 0) * -1)
 
         self.assertAlmostEqual(
             get_loss_value(model, loss), 1.0, places=1
@@ -262,7 +262,7 @@ class TestCompositeLoss(BaseTest):
 
     def test_sum(self) -> None:
         model = torch.nn.Identity()
-        loss = opt.loss.LayerActivation(model, 0).sum()
+        loss = opt_loss.LayerActivation(model, 0).sum()
 
         self.assertAlmostEqual(
             get_loss_value(model, loss), 3.0, places=1
@@ -270,7 +270,7 @@ class TestCompositeLoss(BaseTest):
 
     def mean(self) -> None:
         model = torch.nn.Identity()
-        loss = opt.loss.LayerActivation(model, 0).mean()
+        loss = opt_loss.LayerActivation(model, 0).mean()
 
         self.assertAlmostEqual(
             get_loss_value(model, loss), 1.0, places=1
