@@ -169,11 +169,11 @@ class TestCompositeLoss(BaseTest):
         )
 
     def test_positive(self) -> None:
-        model = torch.nn.Identity()
-        loss = -opt_loss.LayerActivation(model, 0)
-        loss = +loss
-
-        self.assertAlmostEqual(get_loss_value(model, loss), 1.0, places=1)
+        model = BasicModel_ConvNet_Optim()
+        loss = +opt_loss.ChannelActivation(model.layer, 0)
+        self.assertAlmostEqual(
+            get_loss_value(model, loss), CHANNEL_ACTIVATION_0_LOSS, places=6
+        )
 
     def test_abs(self) -> None:
         model = BasicModel_ConvNet_Optim()
