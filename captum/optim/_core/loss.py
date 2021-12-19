@@ -114,6 +114,16 @@ class Loss(ABC):
         """
         Composable torch.mean reduction operator. See torch.mean for more details:
         https://pytorch.org/docs/stable/generated/torch.mean.html
+
+        Args:
+            dim (int or tuple of int, optional): The dimension or dimensions to reduce.
+                Default: None for all dimension.
+            keepdim (bool, optional): Whether the output tensor has dim retained or
+                not.
+                Default: False
+
+        Returns:
+            composite_loss (ComposableLoss): A composable loss instance.
         """
         if dim is None:
             # dim is equal to all dimensions unless specified
@@ -132,6 +142,16 @@ class Loss(ABC):
         """
         Composable torch.sum reduction operator. See torch.sum for more details:
         https://pytorch.org/docs/stable/generated/torch.sum.html
+
+        Args:
+            dim (int or tuple of int, optional): The dimension or dimensions to reduce.
+                Default: None for all dimension.
+            keepdim (bool, optional): Whether the output tensor has dim retained or
+                not.
+                Default: False
+
+        Returns:
+            composite_loss (ComposableLoss): A composable loss instance.
         """
         if dim is None:
             # dim is equal to all dimensions unless specified
