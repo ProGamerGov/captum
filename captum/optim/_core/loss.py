@@ -16,6 +16,9 @@ def _make_arg_str(arg: Any) -> str:
     return arg[:15] + "..." if too_big else arg
 
 
+REDUCTION_OP: Callable[[torch.Tensor], torch.Tensor] = torch.mean
+
+
 class Loss(ABC):
     """
     Abstract Class to describe loss.
@@ -39,6 +42,12 @@ class Loss(ABC):
 
     def __neg__(self) -> "CompositeLoss":
         return module_op(self, None, operator.neg)
+
+    def __pos__(self) -> "CompositeLoss":
+        return module_op(self, None, operator.pos)
+
+    def __abs__(self) -> "CompositeLoss":
+        return module_op(self, None, operator.abs)
 
     def __add__(self, other: Union[int, float, "Loss"]) -> "CompositeLoss":
         return module_op(self, other, operator.add)
@@ -68,7 +77,7 @@ class Loss(ABC):
         if isinstance(other, (int, float)):
 
             def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-                return operator.truediv(other, torch.mean(self(module)))
+                return operator.truediv(other, REDUCTION_OP(self(module)))
 
             name = self.__name__
             target = self.target
@@ -86,7 +95,7 @@ class Loss(ABC):
         if isinstance(other, (int, float)):
 
             def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-                return operator.pow(other, torch.mean(self(module)))
+                return operator.pow(other, REDUCTION_OP(self(module)))
 
             name = self.__name__
             target = self.target
@@ -107,7 +116,7 @@ def module_op(
     """
     This is a general function for applying math operations to Losses
     """
-    if other is None and math_op == operator.neg:
+    if other is None and math_op in [operator.neg, operator.pos, operator.abs]:
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
             return math_op(self(module))
@@ -124,7 +133,7 @@ def module_op(
     elif isinstance(other, Loss):
         # We take the mean of the output tensor to resolve shape mismatches
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-            return math_op(torch.mean(self(module)), torch.mean(other(module)))
+            return math_op(REDUCTION_OP(self(module)), REDUCTION_OP(other(module)))
 
         name = f"Compose({', '.join([self.__name__, other.__name__])})"
         target = (
