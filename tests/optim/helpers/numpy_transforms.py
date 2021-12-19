@@ -1,5 +1,5 @@
 import math
-from typing import List, Optional, Tuple, Union, cast
+from typing import List, Optional, Union
 
 import numpy as np
 
@@ -137,7 +137,7 @@ def center_crop(
     assert input.ndim == 3 or input.ndim == 4
     if isinstance(crop_vals, int):
         crop_vals = [int(crop_vals), int(crop_vals)]
-    elif isinstance(size, (tuple, list)):
+    elif isinstance(crop_vals, (tuple, list)):
         if len(crop_vals) == 1:
             crop_vals = [crop_vals[0], crop_vals[0]]
         elif len(crop_vals) == 2:
@@ -145,7 +145,7 @@ def center_crop(
         else:
             raise ValueError("Crop size length of {} too large".format(len(crop_vals)))
     else:
-        raise ValueError("Unsupported crop size value {}".format(size))
+        raise ValueError("Unsupported crop size value {}".format(crop_vals))
     assert len(crop_vals) == 2
 
     if input.ndim == 4:
