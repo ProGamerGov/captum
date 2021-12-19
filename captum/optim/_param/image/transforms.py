@@ -292,12 +292,19 @@ def center_crop(
         sw, sh = w // 2 - (w_crop // 2), h // 2 - (h_crop // 2)
         x = input[..., sh : sh + h_crop, sw : sw + w_crop]
     else:
-        h_crop = h - int(math.ceil((h - size[0]) / 2.0))
-        w_crop = w - int(math.ceil((w - size[1]) / 2.0))
+        h_crop = h - int(math.ceil((h - size[0]) / 2.0)) if h > size[0] else size[0]
+        w_crop = w - int(math.ceil((w - size[1]) / 2.0)) if w > size[1] else size[1]
+        
         if h % 2 == 0 and size[0] % 2 != 0 or h % 2 != 0 and size[0] % 2 == 0:
             h_crop = h_crop + 1 if offset_left else h_crop
         if w % 2 == 0 and size[1] % 2 != 0 or w % 2 != 0 and size[1] % 2 == 0:
             w_crop = w_crop + 1 if offset_left else w_crop
+        
+        if size[1] > w or size[0] > h:
+            h_pad = math.ceil(h_crop / 2.0) if size[0] > h else 0
+            w_pad = math.ceil(w_crop / 2.) if size[1] > h else 0
+            padding = [w_pad, h_pad] * 2
+            input = F.pad(input, padding)
         x = input[..., h_crop - size[0] : h_crop, w_crop - size[1] : w_crop]
     return x
 
