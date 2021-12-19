@@ -16,7 +16,7 @@ def _make_arg_str(arg: Any) -> str:
     return arg[:15] + "..." if too_big else arg
 
 
-# Reduction op for loss composability size mismatch avoidance
+# Reduction op for CompositeLoss loss composability size mismatch avoidance
 REDUCTION_OP: Callable[[torch.Tensor], torch.Tensor] = torch.mean
 
 
