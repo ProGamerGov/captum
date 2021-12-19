@@ -114,7 +114,7 @@ class CenterCrop:
 
 def center_crop(
     input: np.ndarray,
-    crop_vals: IntSeqOrIntType,
+    crop_vals: Union[int, List[int]],
     pixels_from_edges: bool = False,
     offset_left: bool = False,
 ) -> np.ndarray:
@@ -135,10 +135,18 @@ def center_crop(
     """
 
     assert input.ndim == 3 or input.ndim == 4
-    crop_vals = [crop_vals] if not hasattr(crop_vals, "__iter__") else crop_vals
-    crop_vals = cast(Union[List[int], Tuple[int], Tuple[int, int]], crop_vals)
-    assert len(crop_vals) == 1 or len(crop_vals) == 2
-    crop_vals = crop_vals * 2 if len(crop_vals) == 1 else crop_vals
+    if isinstance(crop_vals, int):
+        crop_vals = [int(crop_vals), int(crop_vals)]
+    elif isinstance(size, (tuple, list)):
+        if len(crop_vals) == 1:
+            crop_vals = [crop_vals[0], crop_vals[0]]
+        elif len(crop_vals) == 2:
+            crop_vals = list(crop_vals)
+        else:
+            raise ValueError("Crop size length of {} too large".format(len(crop_vals)))
+    else:
+        raise ValueError("Unsupported crop size value {}".format(size))
+    assert len(crop_vals) == 2
 
     if input.ndim == 4:
         h, w = input.shape[2], input.shape[3]
