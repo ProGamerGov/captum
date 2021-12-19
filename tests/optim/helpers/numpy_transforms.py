@@ -1,5 +1,5 @@
 import math
-from typing import List, Optional, Union
+from typing import List, Optional, Tuple, Union, cast
 
 import numpy as np
 
@@ -114,7 +114,7 @@ class CenterCrop:
 
 def center_crop(
     input: np.ndarray,
-    crop_vals: Union[int, List[int]],
+    crop_vals: IntSeqOrIntType,
     pixels_from_edges: bool = False,
     offset_left: bool = False,
 ) -> np.ndarray:
@@ -135,18 +135,10 @@ def center_crop(
     """
 
     assert input.ndim == 3 or input.ndim == 4
-    if isinstance(crop_vals, int):
-        crop_vals = [int(crop_vals), int(crop_vals)]
-    elif isinstance(crop_vals, (tuple, list)):
-        if len(crop_vals) == 1:
-            crop_vals = [crop_vals[0], crop_vals[0]]
-        elif len(crop_vals) == 2:
-            crop_vals = list(crop_vals)
-        else:
-            raise ValueError("Crop size length of {} too large".format(len(crop_vals)))
-    else:
-        raise ValueError("Unsupported crop size value {}".format(crop_vals))
-    assert len(crop_vals) == 2
+    crop_vals = [crop_vals] if not hasattr(crop_vals, "__iter__") else crop_vals
+    crop_vals = cast(Union[List[int], Tuple[int], Tuple[int, int]], crop_vals)
+    assert len(crop_vals) == 1 or len(crop_vals) == 2
+    crop_vals = crop_vals * 2 if len(crop_vals) == 1 else crop_vals
 
     if input.ndim == 4:
         h, w = input.shape[2], input.shape[3]
