@@ -244,6 +244,8 @@ def center_crop(
     size: Union[int, List[int]],
     pixels_from_edges: bool = False,
     offset_left: bool = False,
+    padding_mode: str = "constant",
+    padding_value: float = 0.0,
 ) -> torch.Tensor:
     """
     Center crop a specified amount from a tensor.
@@ -260,6 +262,13 @@ def center_crop(
             equal in size, offset center by +1 to the left and/or top.
             This parameter is only valid when `pixels_from_edges` is False.
             Default: False
+        padding_mode (optional, str): One of "constant", "reflect", "replicate" or
+            "circular". This parameter is only used if the crop size is larger than
+            the image size.
+            Default: "constant"
+        padding_value (float, optional): fill value for "constant" padding. This
+            parameter is only used if the crop size is larger than the image size.
+            Default: 0.0
 
     Returns:
         **tensor**:  A center cropped *tensor*.
@@ -304,7 +313,9 @@ def center_crop(
             h_pad = math.ceil(h_crop / 2.0) if size[0] > h else 0
             w_pad = math.ceil(w_crop / 2.0) if size[1] > w else 0
             padding = [w_pad, h_pad] * 2
-            input = F.pad(input, padding)
+            input = F.pad(
+                input, padding, mode=self.padding_mode, value=self.padding_value
+            )
         x = input[..., h_crop - size[0] : h_crop, w_crop - size[1] : w_crop]
     return x
 
