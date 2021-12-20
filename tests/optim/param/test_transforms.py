@@ -30,7 +30,7 @@ class TestRandomScale(BaseTest):
 
     def test_random_scale_downscaling(self) -> None:
         scale_module = transforms.RandomScale(scale=[0.5])
-        test_tensor = x = torch.arange(0, 1 * 1 * 10 * 10).view(1, 1, 10, 10).float()
+        test_tensor = torch.arange(0, 1 * 1 * 10 * 10).view(1, 1, 10, 10).float()
 
         scaled_tensor = scale_module._scale_tensor(test_tensor, 0.5)
 
@@ -57,7 +57,7 @@ class TestRandomScale(BaseTest):
 
     def test_random_scale_upscaling(self) -> None:
         scale_module = transforms.RandomScale(scale=[0.5])
-        test_tensor = x = torch.arange(0, 1 * 1 * 2 * 2).view(1, 1, 2, 2).float()
+        test_tensor = torch.arange(0, 1 * 1 * 2 * 2).view(1, 1, 2, 2).float()
 
         scaled_tensor = scale_module._scale_tensor(test_tensor, 1.5)
 
