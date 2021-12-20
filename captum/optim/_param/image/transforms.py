@@ -333,7 +333,7 @@ def center_crop(
         if w % 2 == 0 and size[1] % 2 != 0 or w % 2 != 0 and size[1] % 2 == 0:
             w_crop = w_crop + 1 if offset_left else w_crop
 
-        if size[1] > w or size[0] > h:
+        if size[0] > h or size[1] > w:
             # Padding functionality like Torchvision's center crop
             padding = [
                 (size[1] - w) // 2 if size[1] > w else 0,
