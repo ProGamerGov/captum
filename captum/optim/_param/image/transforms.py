@@ -399,33 +399,6 @@ class RandomScale(nn.Module):
             x = F.interpolate(x, scale_factor=scale, mode=self.mode)
         return x
 
-    def _get_scale(self, device: torch.device) -> float:
-        """
-        Args:
-
-            device: The device to generate random integers on if using a list of scale
-                values. This parameter is ignored if using torch.distributions.
-
-        Returns:
-            scale_value (float): A single float value to use for scaling.
-        
-        """
-        if self.is_distribution:
-            scale = self.scale_distribution.sample().item()
-        else:
-            n = int(
-                torch.randint(
-                    low=0,
-                    high=len(self.scale),
-                    size=[1],
-                    dtype=torch.int64,
-                    layout=torch.strided,
-                    device=device,
-                ).item()
-            )
-            scale = self.scale[n]
-        return scale
-
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Randomly scale an NCHW image tensor.
@@ -438,8 +411,20 @@ class RandomScale(nn.Module):
             **x** (torch.Tensor): A randomly scaled NCHW image *tensor*.
         """
         assert x.dim() == 4
-
-        scale = self._get_scale(x.device)
+        if self.is_distribution:
+            scale = self.scale_distribution.sample().item()
+        else:
+            n = int(
+                torch.randint(
+                    low=0,
+                    high=len(self.scale),
+                    size=[1],
+                    dtype=torch.int64,
+                    layout=torch.strided,
+                    device=x.device,
+                ).item()
+            )
+            scale = self.scale[n]
         return self._scale_tensor(x, scale=scale)
 
 
@@ -562,17 +547,18 @@ class RandomScaleAffine(nn.Module):
             x = F.grid_sample(x, grid, mode=self.mode, padding_mode=self.padding_mode)
         return x
 
-    def _get_scale(self, device: torch.device) -> float:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
+        Randomly scale an NCHW image tensor.
+
         Args:
 
-            device: The device to generate random integers on if using a list of scale
-                values. This parameter is ignored if using torch.distributions.
+            x (torch.Tensor): NCHW image tensor to randomly scale.
 
         Returns:
-            scale_value (float): A single float value to use for scaling.
-        
+            **x** (torch.Tensor): A randomly scaled NCHW image *tensor*.
         """
+        assert x.dim() == 4
         if self.is_distribution:
             scale = self.scale_distribution.sample().item()
         else:
@@ -583,25 +569,10 @@ class RandomScaleAffine(nn.Module):
                     size=[1],
                     dtype=torch.int64,
                     layout=torch.strided,
-                    device=device,
+                    device=x.device,
                 ).item()
             )
             scale = self.scale[n]
-        return scale
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Randomly scale / zoom in or out of an NCHW image tensor.
-
-        Args:
-
-            x (torch.Tensor): NCHW image tensor to randomly scale.
-
-        Returns:
-            **tensor** (torch.Tensor): A randomly scaled NCHW image *tensor*.
-        """
-        assert x.dim() == 4
-        scale = self._get_scale(x.device)
         return self._scale_tensor(x, scale=scale)
 
 
