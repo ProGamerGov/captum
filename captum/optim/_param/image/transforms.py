@@ -340,7 +340,7 @@ def center_crop(
                 (size[0] - h) // 2 if size[0] > h else 0,
                 (size[1] - w + 1) // 2 if size[1] > w else 0,
                 (size[0] - h + 1) // 2 if size[0] > h else 0,
-             ]
+            ]
             input = F.pad(input, padding, mode=padding_mode, value=padding_value)
 
         x = input[..., h_crop - size[0] : h_crop, w_crop - size[1] : w_crop]
