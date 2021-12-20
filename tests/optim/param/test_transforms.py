@@ -162,7 +162,7 @@ class TestRandomScaleAffine(BaseTest):
             0,
         )
 
-    def test_random_scale_affine_downscaling(self) -> None:
+    def test_random_scale_affine_upscaling(self) -> None:
         scale_module = transforms.RandomScaleAffine(scale=[1.5])
         test_tensor = torch.ones(1, 3, 3, 3)
 
