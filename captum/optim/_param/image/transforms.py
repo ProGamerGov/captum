@@ -369,8 +369,8 @@ class RandomScale(nn.Module):
         """
         Args:
 
-            scale (float, sequence, or torch.distribution): Tuple of rescaling values
-                to randomly select from, or a torch.distributions instance.
+            scale (float, sequence, or torch.distribution): Sequence of rescaling
+                values to randomly select from, or a torch.distributions instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 F.interpolate for more details. One of; "bilinear", "nearest", "area",
                 or "bicubic".
@@ -517,8 +517,8 @@ class RandomScaleAffine(nn.Module):
         """
         Args:
 
-            scale (float, sequence, or torch.distribution): Tuple of rescaling values
-                to randomly select from, or a torch.distributions instance.
+            scale (float, sequence, or torch.distribution): Sequence of rescaling
+                values to randomly select from, or a torch.distributions instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 F.grid_sample for more details. One of; "bilinear", "nearest", or
                 "bicubic".
