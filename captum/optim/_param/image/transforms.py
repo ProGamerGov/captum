@@ -337,9 +337,7 @@ def center_crop(
             h_pad = math.ceil(h_crop / 2.0) if size[0] > h else 0
             w_pad = math.ceil(w_crop / 2.0) if size[1] > w else 0
             padding = [w_pad, h_pad] * 2
-            input = F.pad(
-                input, padding, mode=self.padding_mode, value=self.padding_value
-            )
+            input = F.pad(input, padding, mode=padding_mode, value=padding_value)
         x = input[..., h_crop - size[0] : h_crop, w_crop - size[1] : w_crop]
     return x
 
