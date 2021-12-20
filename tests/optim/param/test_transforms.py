@@ -24,7 +24,8 @@ class TestRandomScale(BaseTest):
         scale = torch.distributions.Uniform(0.95, 1.05)
         scale_module = transforms.RandomScale(scale=scale)
         self.assertIsInstance(
-            scale_module.scale, torch.distributions.distribution.Distribution
+            scale_module.scale_distribution,
+            torch.distributions.distribution.Distribution,
         )
 
     def test_random_scale_downscaling(self) -> None:
@@ -146,7 +147,8 @@ class TestRandomScaleAffine(BaseTest):
         scale = torch.distributions.Uniform(0.95, 1.05)
         scale_module = transforms.RandomScaleAffine(scale=scale)
         self.assertIsInstance(
-            scale_module.scale, torch.distributions.distribution.Distribution
+            scale_module.scale_distribution,
+            torch.distributions.distribution.Distribution,
         )
 
     def test_random_scale_affine_downscaling(self) -> None:
