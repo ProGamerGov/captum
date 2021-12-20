@@ -23,19 +23,29 @@ class TestRandomScale(BaseTest):
     def test_random_scale_scale_distributions(self) -> None:
         scale = torch.distributions.Uniform(0.95, 1.05)
         scale_module = transforms.RandomScale(scale=scale)
-        self.assertIsInstance(scale_module.scale, torch.distributions.distribution.Distribution)
+        self.assertIsInstance(
+            scale_module.scale, torch.distributions.distribution.Distribution
+        )
 
     def test_random_scale_downscaling(self) -> None:
         scale_module = transforms.RandomScale(scale=[0.5])
         test_tensor = x = torch.arange(0, 1 * 1 * 10 * 10).view(1, 1, 10, 10).float()
 
         scaled_tensor = scale_module._scale_tensor(test_tensor, 0.5)
-        
-        expected_tensor = torch.tensor([[[[ 5.5000,  7.5000,  9.5000, 11.5000, 13.5000],
-          [25.5000, 27.5000, 29.5000, 31.5000, 33.5000],
-          [45.5000, 47.5000, 49.5000, 51.5000, 53.5000],
-          [65.5000, 67.5000, 69.5000, 71.5000, 73.5000],
-          [85.5000, 87.5000, 89.5000, 91.5000, 93.5000]]]])
+
+        expected_tensor = torch.tensor(
+            [
+                [
+                    [
+                        [5.5000, 7.5000, 9.5000, 11.5000, 13.5000],
+                        [25.5000, 27.5000, 29.5000, 31.5000, 33.5000],
+                        [45.5000, 47.5000, 49.5000, 51.5000, 53.5000],
+                        [65.5000, 67.5000, 69.5000, 71.5000, 73.5000],
+                        [85.5000, 87.5000, 89.5000, 91.5000, 93.5000],
+                    ]
+                ]
+            ]
+        )
 
         assertTensorAlmostEqual(
             self,
@@ -50,9 +60,17 @@ class TestRandomScale(BaseTest):
 
         scaled_tensor = scale_module._scale_tensor(test_tensor, 1.5)
 
-        expected_tensor = torch.tensor([[[[0.0000, 0.5000, 1.0000],
-          [1.0000, 1.5000, 2.0000],
-          [2.0000, 2.5000, 3.0000]]]])
+        expected_tensor = torch.tensor(
+            [
+                [
+                    [
+                        [0.0000, 0.5000, 1.0000],
+                        [1.0000, 1.5000, 2.0000],
+                        [2.0000, 2.5000, 3.0000],
+                    ]
+                ]
+            ]
+        )
 
         assertTensorAlmostEqual(
             self,
@@ -118,6 +136,7 @@ class TestRandomScale(BaseTest):
             0,
         )
 
+
 class TestRandomScaleAffine(BaseTest):
     def test_random_scale_affine_scale(self) -> None:
         scale_module = transforms.RandomScaleAffine(scale=[1, 0.975, 1.025, 0.95, 1.05])
@@ -126,7 +145,9 @@ class TestRandomScaleAffine(BaseTest):
     def test_random_scale_affine_scale_distributions(self) -> None:
         scale = torch.distributions.Uniform(0.95, 1.05)
         scale_module = transforms.RandomScaleAffine(scale=scale)
-        self.assertIsInstance(scale_module.scale, torch.distributions.distribution.Distribution)
+        self.assertIsInstance(
+            scale_module.scale, torch.distributions.distribution.Distribution
+        )
 
     def test_random_scale_affine_downscaling(self) -> None:
         scale_module = transforms.RandomScaleAffine(scale=[0.5])
