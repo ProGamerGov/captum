@@ -334,10 +334,15 @@ def center_crop(
             w_crop = w_crop + 1 if offset_left else w_crop
 
         if size[1] > w or size[0] > h:
-            h_pad = math.ceil(h_crop / 2.0) if size[0] > h else 0
-            w_pad = math.ceil(w_crop / 2.0) if size[1] > w else 0
-            padding = [w_pad, h_pad] * 2
+            # Padding functionality like Torchvision's center crop
+            padding = [
+                (size[1] - w) // 2 if size[1] > w else 0,
+                (size[0] - h) // 2 if size[0] > h else 0,
+                (size[1] - w + 1) // 2 if size[1] > w else 0,
+                (size[0] - h + 1) // 2 if size[0] > h else 0,
+             ]
             input = F.pad(input, padding, mode=padding_mode, value=padding_value)
+
         x = input[..., h_crop - size[0] : h_crop, w_crop - size[1] : w_crop]
     return x
 
