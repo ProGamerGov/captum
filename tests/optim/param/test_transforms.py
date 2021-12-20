@@ -120,20 +120,26 @@ class TestRandomScale(BaseTest):
             )
         scale_module = transforms.RandomScale(scale=[1.5])
         jit_scale_module = torch.jit.script(scale_module)
-        test_tensor = torch.ones(1, 3, 3, 3)
+
+        test_tensor = torch.arange(0, 1 * 1 * 2 * 2).view(1, 1, 2, 2).float()
+        scaled_tensor = jit_scale_module(test_tensor)
+
+        expected_tensor = torch.tensor(
+            [
+                [
+                    [
+                        [0.0000, 0.5000, 1.0000],
+                        [1.0000, 1.5000, 2.0000],
+                        [2.0000, 2.5000, 3.0000],
+                    ]
+                ]
+            ]
+        )
 
         assertTensorAlmostEqual(
             self,
-            jit_scale_module(test_tensor),
-            torch.tensor(
-                [
-                    [0.2500, 0.5000, 0.2500],
-                    [0.5000, 1.0000, 0.5000],
-                    [0.2500, 0.5000, 0.2500],
-                ]
-            )
-            .repeat(3, 1, 1)
-            .unsqueeze(0),
+            scaled_tensor,
+            expected_tensor,
             0,
         )
 
