@@ -582,6 +582,24 @@ class TestCenterCropFunction(BaseTest):
         )
         assertTensorAlmostEqual(self, x, cropped_tensor)
 
+    def test_center_crop_padding(self) -> None:
+        test_tensor = torch.arange(0, 1 * 1 * 4 * 4).view(1, 1, 4, 4).float()
+        crop_vals = [6, 6]
+
+        cropped_tensor = transforms.center_crop(test_tensor, crop_vals)
+
+        expected_tensor = torch.tensor(
+            [
+                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0, 2.0, 3.0, 0.0],
+                [0.0, 4.0, 5.0, 6.0, 7.0, 0.0],
+                [0.0, 8.0, 9.0, 10.0, 11.0, 0.0],
+                [0.0, 12.0, 13.0, 14.0, 15.0, 0.0],
+                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            ]
+        )
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
+
     def test_center_crop_one_number_exact_jit_module(self) -> None:
         if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
