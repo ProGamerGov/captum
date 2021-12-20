@@ -83,7 +83,9 @@ class TestRandomRotation(BaseTest):
     def test_random_rotation_degrees_distributions(self) -> None:
         degrees = torch.distributions.Uniform(0.95, 1.05)
         rotation_module = transforms.RandomRotation(degrees=degrees)
-        self.assertIsInstance(rotation_module.degrees, torch.distributions.distribution.Distribution)
+        self.assertIsInstance(
+            rotation_module.degrees, torch.distributions.distribution.Distribution
+        )
 
     def test_random_rotation_matrix(self) -> None:
         theta = 25.1
