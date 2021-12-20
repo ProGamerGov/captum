@@ -182,13 +182,21 @@ class CenterCrop(torch.nn.Module):
     Center crop a specified amount from a tensor.
     """
 
-    __constants__ = ["size", "pixels_from_edges", "offset_left"]
+    __constants__ = [
+        "size",
+        "pixels_from_edges",
+        "offset_left",
+        "padding_mode",
+        "padding_value",
+    ]
 
     def __init__(
         self,
         size: IntSeqOrIntType = 0,
         pixels_from_edges: bool = False,
         offset_left: bool = False,
+        padding_mode: str = "constant",
+        padding_value: float = 0.0,
     ) -> None:
         """
         Args:
@@ -205,6 +213,13 @@ class CenterCrop(torch.nn.Module):
                 equal in size, offset center by +1 to the left and/or top.
                 This parameter is only valid when `pixels_from_edges` is False.
                 Default: False
+            padding_mode (optional, str): One of "constant", "reflect", "replicate"
+                or "circular". This parameter is only used if the crop size is larger
+                than the image size.
+                Default: "constant"
+            padding_value (float, optional): fill value for "constant" padding. This
+                parameter is only used if the crop size is larger than the image size.
+                Default: 0.0
         """
         super().__init__()
         if not hasattr(size, "__iter__"):
@@ -222,6 +237,8 @@ class CenterCrop(torch.nn.Module):
         self.size = cast(List[int], size)
         self.pixels_from_edges = pixels_from_edges
         self.offset_left = offset_left
+        self.padding_mode = padding_mode
+        self.padding_value = padding_value
 
     @torch.jit.ignore
     def forward(self, input: torch.Tensor) -> torch.Tensor:
@@ -236,7 +253,14 @@ class CenterCrop(torch.nn.Module):
             **tensor** (torch.Tensor): A center cropped *tensor*.
         """
 
-        return center_crop(input, self.size, self.pixels_from_edges, self.offset_left)
+        return center_crop(
+            input,
+            self.size,
+            self.pixels_from_edges,
+            self.offset_left,
+            self.padding_mode,
+            self.padding_value,
+        )
 
 
 def center_crop(
