@@ -311,7 +311,150 @@ def center_crop(
 
 class RandomScale(nn.Module):
     """
-    Apply random rescaling on a NCHW tensor using affine transform matrices.
+    Apply random rescaling on a NCHW tensor using the F.interpolate function.
+    """
+
+    __constants__ = [
+        "scale",
+        "mode",
+        "align_corners",
+        "has_align_corners",
+        "recompute_scale_factor",
+        "has_recompute_scale_factor",
+        "is_distribution",
+    ]
+
+    def __init__(
+        self,
+        scale: NumSeqOrTensorType,
+        mode: str = "bilinear",
+        align_corners: Optional[bool] = False,
+        recompute_scale_factor: bool = False,
+    ) -> None:
+        """
+        Args:
+
+            scale (float, sequence, or torch.distribution): Tuple of rescaling values
+                to randomly select from, or a torch.distributions instance.
+            mode (str, optional): Interpolation mode to use. See documentation of
+                F.interpolate for more details. One of; "bilinear", "nearest", "area",
+                or "bicubic".
+                Default: "bilinear"
+            align_corners (bool, optional): Whether or not to align corners. See
+                documentation of F.interpolate for more details.
+                Default: False
+            recompute_scale_factor (bool, optional): Whether or not to recompute the
+                scale factor See documentation of F.interpolate for more details.
+                Default: False
+        """
+        super().__init__()
+        if isinstance(scale, torch.distributions.distribution.Distribution):
+            # Distributions are not supported by TorchScript / JIT yet
+            self.scale_distribution = scale
+            self.is_distribution = True
+            self.scale = []
+        else:
+            assert hasattr(scale, "__iter__")
+            if torch.is_tensor(scale):
+                assert cast(torch.Tensor, scale).dim() == 1
+                scale = scale.tolist()
+            assert len(scale) > 0
+            self.scale = [float(s) for s in scale]
+            self.is_distribution = False
+        self.mode = mode
+        self.align_corners = align_corners if mode not in ["nearest", "area"] else None
+        self.recompute_scale_factor = recompute_scale_factor
+        self.has_align_corners = torch.__version__ >= "1.3.0"
+        self.has_recompute_scale_factor = torch.__version__ >= "1.6.0"
+
+    def _scale_tensor(self, x: torch.Tensor, scale: float) -> torch.Tensor:
+        """
+        Scale an NCHW image tensor based on a specified scale value.
+
+        Args:
+
+            x (torch.Tensor): The NCHW image tensor to scale.
+            scale (float): The amount to scale the NCHW image by.
+
+        Returns:
+            **x** (torch.Tensor): A scaled NCHW image tensor.
+        """
+        if self.has_align_corners:
+            if self.has_recompute_scale_factor:
+                x = F.interpolate(
+                    x,
+                    scale_factor=scale,
+                    mode=self.mode,
+                    align_corners=self.align_corners,
+                    recompute_scale_factor=self.recompute_scale_factor,
+                )
+            else:
+                x = F.interpolate(
+                    x,
+                    scale_factor=scale,
+                    mode=self.mode,
+                    align_corners=self.align_corners,
+                )
+        else:
+            x = F.interpolate(x, scale_factor=scale, mode=self.mode)
+        return x
+
+    def _get_scale(self, device: torch.device) -> float:
+        """
+        Args:
+
+            device: The device to generate random integers on if using a list of scale
+                values. This parameter is ignored if using torch.distributions.
+
+        Returns:
+            scale_value (float): A single float value to use for scaling.
+        
+        """
+        if self.is_distribution:
+            scale = self.scale_distribution.sample().item()
+        else:
+            n = int(
+                torch.randint(
+                    low=0,
+                    high=len(self.scale),
+                    size=[1],
+                    dtype=torch.int64,
+                    layout=torch.strided,
+                    device=device,
+                ).item()
+            )
+            scale = self.scale[n]
+        return scale
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Randomly scale an NCHW image tensor.
+
+        Args:
+
+            x (torch.Tensor): NCHW image tensor to randomly scale.
+
+        Returns:
+            **x** (torch.Tensor): A randomly scaled NCHW image *tensor*.
+        """
+        assert x.dim() == 4
+
+        scale = self._get_scale(x.device)
+        return self._scale_tensor(x, scale=scale)
+
+
+class RandomScaleAffine(nn.Module):
+    """
+    Apply random rescaling on a NCHW tensor.
+    
+    This random scaling transform utilizes F.affine_grid & F.grid_sample, and as a
+    result has two key differences to the default RandomScale transforms This
+    transform either shrinks an image while adding a background, or center crops image
+    and then resizes it to a larger size. This means that the output image shape is the
+    same shape as the input image.
+    
+    In constrast to RandomScaleAffine, the default RandomScale transform simply resizes
+    the input image using F.interpolate.
     """
 
     __constants__ = [
@@ -320,6 +463,7 @@ class RandomScale(nn.Module):
         "padding_mode",
         "align_corners",
         "has_align_corners",
+        "is_distribution",
     ]
 
     def __init__(
@@ -332,7 +476,8 @@ class RandomScale(nn.Module):
         """
         Args:
 
-            scale (float, sequence): Tuple of rescaling values to randomly select from.
+            scale (float, sequence, or torch.distribution): Tuple of rescaling values
+                to randomly select from, or a torch.distributions instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 F.grid_sample for more details. One of; "bilinear", "nearest", or
                 "bicubic".
@@ -346,12 +491,19 @@ class RandomScale(nn.Module):
                 Default: False
         """
         super().__init__()
-        assert hasattr(scale, "__iter__")
-        if torch.is_tensor(scale):
-            assert cast(torch.Tensor, scale).dim() == 1
-            scale = scale.tolist()
-        assert len(scale) > 0
-        self.scale = [float(s) for s in scale]
+        if isinstance(scale, torch.distributions.distribution.Distribution):
+            # Distributions are not supported by TorchScript / JIT yet
+            self.scale_distribution = scale
+            self.is_distribution = True
+            self.scale = []
+        else:
+            assert hasattr(scale, "__iter__")
+            if torch.is_tensor(scale):
+                assert cast(torch.Tensor, scale).dim() == 1
+                scale = scale.tolist()
+            assert len(scale) > 0
+            self.scale = [float(s) for s in scale]
+            self.is_distribution = False
         self.mode = mode
         self.padding_mode = padding_mode
         self.align_corners = align_corners
@@ -410,31 +562,47 @@ class RandomScale(nn.Module):
             x = F.grid_sample(x, grid, mode=self.mode, padding_mode=self.padding_mode)
         return x
 
-    def forward(self, input: torch.Tensor) -> torch.Tensor:
+    def _get_scale(self, device: torch.device) -> float:
+        """
+        Args:
+
+            device: The device to generate random integers on if using a list of scale
+                values. This parameter is ignored if using torch.distributions.
+
+        Returns:
+            scale_value (float): A single float value to use for scaling.
+        
+        """
+        if self.is_distribution:
+            scale = self.scale_distribution.sample().item()
+        else:
+            n = int(
+                torch.randint(
+                    low=0,
+                    high=len(self.scale),
+                    size=[1],
+                    dtype=torch.int64,
+                    layout=torch.strided,
+                    device=device,
+                ).item()
+            )
+            scale = self.scale[n]
+        return scale
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Randomly scale / zoom in or out of an NCHW image tensor.
 
         Args:
 
-            input (torch.Tensor): NCHW image tensor to randomly scale.
+            x (torch.Tensor): NCHW image tensor to randomly scale.
 
         Returns:
             **tensor** (torch.Tensor): A randomly scaled NCHW image *tensor*.
         """
-        assert input.dim() == 4
-
-        n = int(
-            torch.randint(
-                low=0,
-                high=len(self.scale),
-                size=[1],
-                dtype=torch.int64,
-                layout=torch.strided,
-                device=input.device,
-            ).item()
-        )
-        scale = self.scale[n]
-        return self._scale_tensor(input, scale=scale)
+        assert x.dim() == 4
+        scale = self._get_scale(x.device)
+        return self._scale_tensor(x, scale=scale)
 
 
 class RandomSpatialJitter(torch.nn.Module):
