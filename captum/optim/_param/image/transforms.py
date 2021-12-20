@@ -367,6 +367,27 @@ class RandomScale(nn.Module):
         self.has_align_corners = torch.__version__ >= "1.3.0"
         self.has_recompute_scale_factor = torch.__version__ >= "1.6.0"
 
+    def _get_scale_mat(
+        self,
+        m: float,
+        device: torch.device,
+        dtype: torch.dtype,
+    ) -> torch.Tensor:
+        """
+        Create a rotation matrix tensor.
+
+        Args:
+
+            m (float): The scale value to use.
+
+        Returns:
+            **scale_mat** (torch.Tensor): A scale matrix.
+        """
+        scale_mat = torch.tensor(
+            [[m, 0.0, 0.0], [0.0, m, 0.0]], device=device, dtype=dtype
+        )
+        return scale_mat
+
     def _scale_tensor(self, x: torch.Tensor, scale: float) -> torch.Tensor:
         """
         Scale an NCHW image tensor based on a specified scale value.
