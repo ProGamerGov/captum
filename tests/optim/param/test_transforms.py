@@ -118,11 +118,18 @@ class TestRandomRotation(BaseTest):
         assertTensorAlmostEqual(self, test_output, expected_output, 0.005)
 
     def test_random_rotation_forward(self) -> None:
-        rotate_transform = transforms.RandomRotation(list(range(-25, 25)))
-        x = torch.ones(1, 3, 224, 224)
-        output = rotate_transform(x)
+        degrees = list(range(-25, 25))
+        rotation_module = transforms.RandomRotation(degrees=degrees)
+        test_tensor = torch.ones(1, 3, 10, 10)
+        output_tensor = rotation_module(test_tensor)
+        self.assertEqual(list(output_tensor.shape), list(test_tensor.shape))
 
-        self.assertEqual(output.shape, x.shape)
+    def test_random_rotation_forward_distributions(self) -> None:
+        degrees = torch.distributions.Uniform(-25, 25)
+        rotation_module = transforms.RandomRotation(degrees=degrees)
+        test_tensor = torch.ones(1, 3, 10, 10)
+        output_tensor = rotation_module(test_tensor)
+        self.assertEqual(list(output_tensor.shape), list(test_tensor.shape))
 
     def test_random_rotation_forward_cuda(self) -> None:
         if not torch.cuda.is_available():
