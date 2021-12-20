@@ -408,6 +408,7 @@ class RandomRotation(nn.Module):
     ) -> None:
         """
         Args:
+
             degrees (float, sequence, or torch.distribution): Tuple of degrees values
                 to randomly select from, or a torch.distributions instance.
             mode (str, optional): Interpolation mode to use. See documentation of
@@ -452,6 +453,7 @@ class RandomRotation(nn.Module):
         Create a rotation matrix tensor.
 
         Args:
+
             theta (float): The rotation value in degrees.
 
         Returns:
@@ -473,6 +475,7 @@ class RandomRotation(nn.Module):
         Rotate an NCHW image tensor based on a specified degree value.
 
         Args:
+
             x (torch.Tensor): The NCHW image tensor to rotate.
             theta (float): The amount to rotate the NCHW image, in degrees.
 
@@ -502,6 +505,7 @@ class RandomRotation(nn.Module):
         Randomly rotate an NCHW image tensor.
 
         Args:
+
             x (torch.Tensor): NCHW image tensor to randomly rotate.
 
         Returns:
