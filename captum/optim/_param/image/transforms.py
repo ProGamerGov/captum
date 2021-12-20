@@ -294,12 +294,12 @@ def center_crop(
     else:
         h_crop = h - int(math.ceil((h - size[0]) / 2.0)) if h > size[0] else size[0]
         w_crop = w - int(math.ceil((w - size[1]) / 2.0)) if w > size[1] else size[1]
-        
+
         if h % 2 == 0 and size[0] % 2 != 0 or h % 2 != 0 and size[0] % 2 == 0:
             h_crop = h_crop + 1 if offset_left else h_crop
         if w % 2 == 0 and size[1] % 2 != 0 or w % 2 != 0 and size[1] % 2 == 0:
             w_crop = w_crop + 1 if offset_left else w_crop
-        
+
         if size[1] > w or size[0] > h:
             h_pad = math.ceil(h_crop / 2.0) if size[0] > h else 0
             w_pad = math.ceil(w_crop / 2.0) if size[1] > w else 0
@@ -431,13 +431,13 @@ class RandomScale(nn.Module):
 class RandomScaleAffine(nn.Module):
     """
     Apply random rescaling on a NCHW tensor.
-    
+
     This random scaling transform utilizes F.affine_grid & F.grid_sample, and as a
     result has two key differences to the default RandomScale transforms This
     transform either shrinks an image while adding a background, or center crops image
     and then resizes it to a larger size. This means that the output image shape is the
     same shape as the input image.
-    
+
     In constrast to RandomScaleAffine, the default RandomScale transform simply resizes
     the input image using F.interpolate.
     """
