@@ -200,8 +200,8 @@ def basic_torch_module_op(
     Implement composability for PyTorch operation that take a single tensor or list
     of tensors as it's first input variable.
     See here for possible torch_op choices: https://pytorch.org/docs/stable/torch.html
-    Some built-in Python functions like 'max' and 'min' can also be used as well if
-    supported by PyTorch.
+    Some built-in Python functions like 'sum', 'max', and 'min' can also be used as
+    well if supported by PyTorch.
 
     Args:
 
