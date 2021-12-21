@@ -1,7 +1,7 @@
 import sys
 from typing import Callable, Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
-from torch import Tensor
+from torch import Tensor, __version__
 from torch.nn import Module
 from torch.optim import Optimizer
 
@@ -33,7 +33,7 @@ StopCriteria = Callable[[int, Objective, Iterable[Tensor], Optimizer], bool]
 LossFunction = Callable[[ModuleOutputMapping], Tensor]
 SingleTargetLossFunction = Callable[[Tensor], Tensor]
 
-if torch.__version__ < "1.4.0":
+if __version__ < "1.4.0":
     NumSeqOrTensorOrProbDistType = Union[Sequence[int], Sequence[float], Tensor]
 else:
     NumSeqOrTensorOrProbDistType = Union[
