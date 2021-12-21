@@ -5,9 +5,6 @@ from torch import Tensor, __version__
 from torch.nn import Module
 from torch.optim import Optimizer
 
-if __version__ > "1.4.0":
-    from torch import distributions
-
 if sys.version_info >= (3, 8):
     from typing import Protocol
 else:
@@ -39,6 +36,7 @@ SingleTargetLossFunction = Callable[[Tensor], Tensor]
 if __version__ < "1.4.0":
     NumSeqOrTensorOrProbDistType = Union[Sequence[int], Sequence[float], Tensor]
 else:
+    from torch import distributions
     NumSeqOrTensorOrProbDistType = Union[
         Sequence[int],
         Sequence[float],
