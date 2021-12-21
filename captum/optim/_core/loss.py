@@ -62,6 +62,9 @@ class Loss(ABC):
     def __truediv__(self, other: Union[int, float, "Loss"]) -> "CompositeLoss":
         return module_op(self, other, operator.truediv)
 
+    def __floordiv__(self, other: Union[int, float, "Loss"]) -> "CompositeLoss":
+        return module_op(self, other, operator.floordiv)
+
     def __pow__(self, other: Union[int, float, "Loss"]) -> "CompositeLoss":
         return module_op(self, other, operator.pow)
 
