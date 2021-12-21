@@ -203,7 +203,7 @@ def basic_torch_module_op(
 
     Args:
 
-        loss (loss or list of Loss): A loss objective or list of loss objectives.
+        loss (Loss or list of Loss): A loss objective or list of loss objectives.
         torch_op (Callable): A PyTorch or supported Python function. Ex: torch.mean, torch.sum,
             torch.linalg.norm, torch.sin, torch.cat, torch.stack, max, min, and others.
             Default: torch.mean
