@@ -5,7 +5,7 @@ from torch import Tensor, __version__
 from torch.nn import Module
 from torch.optim import Optimizer
 
-if __version__ >  "1.4.0":
+if __version__ > "1.4.0":
     from torch import distributions
 
 if sys.version_info >= (3, 8):
