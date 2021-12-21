@@ -178,21 +178,22 @@ def module_op(
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
             return math_op(self(module))
 
-        name = self.__name__
+        name = math_op.__name__ + "(" + self.__name__ + ")"
         target = self.target
     elif isinstance(other, (int, float)):
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
             return math_op(self(module), other)
 
-        name = self.__name__
+        name = math_op.__name__ + "(" + self.__name__ + ", " + str(other) + ")"
         target = self.target
     elif isinstance(other, Loss):
         # We take the mean of the output tensor to resolve shape mismatches
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
             return math_op(REDUCTION_OP(self(module)), REDUCTION_OP(other(module)))
 
-        name = f"Compose({', '.join([self.__name__, other.__name__])})"
+        #name = f"Compose({', '.join([self.__name__, other.__name__])})"
+        name = math_op.__name__ + "(" + ', '.join([self.__name__, other.__name__]) + ")"
         target = (
             self.target if hasattr(self.target, "__iter__") else [self.target]
         ) + (other.target if hasattr(other.target, "__iter__") else [other.target])
