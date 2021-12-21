@@ -37,6 +37,7 @@ if __version__ < "1.4.0":
     NumSeqOrTensorOrProbDistType = Union[Sequence[int], Sequence[float], Tensor]
 else:
     from torch import distributions
+
     NumSeqOrTensorOrProbDistType = Union[
         Sequence[int],
         Sequence[float],
