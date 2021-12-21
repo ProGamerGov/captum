@@ -87,14 +87,16 @@ class Loss(ABC):
         """
         Composable torch.mean reduction operator. See torch.mean for more details:
         https://pytorch.org/docs/stable/generated/torch.mean.html
+
         Args:
             dim (int or tuple of int, optional): The dimension or dimensions to reduce.
                 Default: None for all dimension.
             keepdim (bool, optional): Whether the output tensor has dim retained or
                 not.
                 Default: False
+
         Returns:
-            composite_loss (ComposableLoss): A composable loss instance.
+            composite_loss (CompositeLoss): A composable loss instance.
         """
         if dim is None:            
             return basic_torch_module_op(self, torch.mean)
@@ -107,6 +109,7 @@ class Loss(ABC):
         https://pytorch.org/docs/stable/generated/torch.sum.html
 
         Args:
+
             dim (int or tuple of int, optional): The dimension or dimensions to reduce.
                 Default: None for all dimension.
             keepdim (bool, optional): Whether the output tensor has dim retained or
@@ -114,7 +117,7 @@ class Loss(ABC):
                 Default: False
 
         Returns:
-            composite_loss (ComposableLoss): A composable loss instance.
+            composite_loss (CompositeLoss): A composable loss instance.
         """
         if dim is None:            
             return basic_torch_module_op(self, torch.sum)
@@ -190,7 +193,7 @@ def basic_torch_module_op(
     torch_op: Callable[[Union[torch.Tensor, List[torch.Tensor]]], torch.Tensor],
     *args: Any,
     **kwargs: Any,
-) -> CompositeLoss:
+) -> "CompositeLoss":
     """
     Implement composability for PyTorch operation that take a single tensor or list
     of tensors as it's first input variable.
@@ -212,7 +215,7 @@ def basic_torch_module_op(
             Default: A non-op function.
 
         Returns:
-            composite_loss (ComposableLoss): A composable loss instance.
+            composite_loss (CompositeLoss): A composable loss instance.
     """
 
     if isinstance(loss, (tuple, list)):
