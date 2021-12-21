@@ -87,29 +87,19 @@ class Loss(ABC):
         """
         Composable torch.mean reduction operator. See torch.mean for more details:
         https://pytorch.org/docs/stable/generated/torch.mean.html
-
         Args:
             dim (int or tuple of int, optional): The dimension or dimensions to reduce.
                 Default: None for all dimension.
             keepdim (bool, optional): Whether the output tensor has dim retained or
                 not.
                 Default: False
-
         Returns:
             composite_loss (ComposableLoss): A composable loss instance.
         """
-        if dim is None:
-            # dim is equal to all dimensions unless specified
-            def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-                return torch.mean(self(module))
-
+        if dim is None:            
+            return basic_torch_module_op(self, torch.mean)
         else:
-
-            def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-                return torch.mean(self(module), dim=dim, keepdim=keepdim)
-
-        name = "mean(" + self.__name__ + ")"
-        return CompositeLoss(loss_fn, name=name, target=self.target)
+            return basic_torch_module_op(self, torch.mean, dim=dim, keepdim=keepdim)
 
     def sum(self, dim: Optional = None, keepdim: bool = False) -> "CompositeLoss":
         """
@@ -126,18 +116,10 @@ class Loss(ABC):
         Returns:
             composite_loss (ComposableLoss): A composable loss instance.
         """
-        if dim is None:
-            # dim is equal to all dimensions unless specified
-            def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-                return torch.sum(self(module))
-
+        if dim is None:            
+            return basic_torch_module_op(self, torch.sum)
         else:
-
-            def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-                return torch.sum(self(module), dim=dim, keepdim=keepdim)
-
-        name = "sum(" + self.__name__ + ")"
-        return CompositeLoss(loss_fn, name=name, target=self.target)
+            return basic_torch_module_op(self, torch.sum, dim=dim, keepdim=keepdim)
 
 
 def module_op(
@@ -200,6 +182,32 @@ def rmodule_op(
             "Can only apply math operations with int, float or Loss. Received type "
             + str(type(other))
         )
+    return CompositeLoss(loss_fn, name=name, target=target)
+
+
+def basic_torch_module_op(
+    loss: Loss,
+    torch_op: Callable[[torch.Tensor], torch.Tensor] = torch.mean,
+    *args: Any,
+    **kwargs: Any,
+) -> CompositeLoss:
+    """
+    Implement a composability for PyTorch operations.
+    See here for possible torch_op choices: https://pytorch.org/docs/stable/torch.html
+    
+    Args:
+        loss (Loss): A loss function.
+        torch_op (Callable): A PyTorch operator. Ex: torch.mean, torch.sum,
+            torch.linalg.norm, torch.sin, torch.unsqueeze, and others.
+            Default: torch.mean
+        args (Any, optional): Any additional arguments for torch_op.
+        kwargs (Any, optional): Any additional arguments for torch_op.
+    """
+    def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+        return torch_op(loss(module), *args, **kwargs)
+
+    name = torch_op.__name__+ "(" + loss.__name__ + ")"
+    target = loss.target
     return CompositeLoss(loss_fn, name=name, target=target)
 
 
