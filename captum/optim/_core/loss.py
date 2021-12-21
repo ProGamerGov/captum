@@ -186,28 +186,71 @@ def rmodule_op(
 
 
 def basic_torch_module_op(
-    loss: Loss,
-    torch_op: Callable[[torch.Tensor], torch.Tensor] = torch.mean,
+    loss: Union[Loss, List[Loss]],
+    torch_op: Callable[[Union[torch.Tensor, List[torch.Tensor]]], torch.Tensor],
     *args: Any,
     **kwargs: Any,
 ) -> CompositeLoss:
     """
-    Implement a composability for PyTorch operations.
+    Implement composability for PyTorch operation that take a single tensor or list
+    of tensors as it's first input variable.
     See here for possible torch_op choices: https://pytorch.org/docs/stable/torch.html
-    
-    Args:
-        loss (Loss): A loss function.
-        torch_op (Callable): A PyTorch operator. Ex: torch.mean, torch.sum,
-            torch.linalg.norm, torch.sin, torch.unsqueeze, and others.
-            Default: torch.mean
-        args (Any, optional): Any additional arguments for torch_op.
-        kwargs (Any, optional): Any additional arguments for torch_op.
-    """
-    def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-        return torch_op(loss(module), *args, **kwargs)
+    Some built-in Python functions like 'max' and 'min' can also be used as well if
+    supported by PyTorch.
 
-    name = torch_op.__name__+ "(" + loss.__name__ + ")"
-    target = loss.target
+    Args:
+
+        loss (loss or list of Loss): A loss objective or list of loss objectives.
+        torch_op (Callable): A PyTorch or supported Python function. Ex: torch.mean, torch.sum,
+            torch.linalg.norm, torch.sin, torch.cat, torch.stack, max, min, and others.
+            Default: torch.mean
+        args (Any, optional): Any additional arguments.
+        kwargs (Any, optional): Any additional arguments.
+        to_scalar_fn (Callable, optional): A function for converting loss function
+            outputs to scalar values, in order to prevent size mismatches. This is
+            variable only used if more than one loss is given.
+            Default: A non-op function.
+
+        Returns:
+            composite_loss (ComposableLoss): A composable loss instance.
+    """
+
+    if isinstance(loss, (tuple, list)):
+
+        def identity(x: torch.Tensor) -> torch.Tensor:
+            return x
+
+        if "to_scalar_fn" not in kwargs:
+            to_scalar_fn = identity
+        else:
+            to_scalar_fn = kwargs["to_scalar_fn"]
+            del kwargs["to_scalar_fn"]
+
+        def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+            loss_tensors = [to_scalar_fn(loss_obj(module)) for loss_obj in loss]
+            return torch_op(loss_tensors, *args, **kwargs)
+
+        name_list = ", ".join([loss_obj.__name__ for loss_obj in loss])
+        name = torch_op.__name__ + "(" + name_list + ")"
+
+        # Collect targets from losses
+        target = [
+            target
+            for targets in [
+                [loss_obj.target]
+                if not hasattr(loss_obj.target, "__iter__")
+                else loss_obj.target
+                for loss_obj in loss
+            ]
+            for target in targets
+        ]
+    else:
+
+        def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+            return torch_op(loss(module), *args, **kwargs)
+
+        name = torch_op.__name__ + "(" + loss.__name__ + ")"
+        target = loss.target
     return CompositeLoss(loss_fn, name=name, target=target)
 
 
