@@ -33,6 +33,14 @@ StopCriteria = Callable[[int, Objective, Iterable[Tensor], Optimizer], bool]
 LossFunction = Callable[[ModuleOutputMapping], Tensor]
 SingleTargetLossFunction = Callable[[Tensor], Tensor]
 
-NumSeqOrTensorType = Union[Sequence[int], Sequence[float], Tensor]
+if torch.__version__ < "1.4.0":
+    NumSeqOrTensorOrProbDistType = Union[Sequence[int], Sequence[float], Tensor]
+else:
+    NumSeqOrTensorOrProbDistType = Union[
+        Sequence[int],
+        Sequence[float],
+        Tensor,
+        torch.distributions.distribution.Distribution,
+    ]
 IntSeqOrIntType = Union[List[int], Tuple[int], Tuple[int, int], int]
 TupleOfTensorsOrTensorType = Union[Tuple[Tensor, ...], Tensor]
