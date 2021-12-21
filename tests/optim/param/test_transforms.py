@@ -1074,3 +1074,97 @@ class TestRandomCrop(BaseTest):
         x_out = jit_crop_transform(x)
 
         self.assertEqual(list(x_out.shape), [1, 4, 160, 160])
+
+
+class TestTransformationRobustness(BaseTest):
+    def test_transform_robustness_init(self) -> None:
+        transform_robustness = transforms.TransformationRobustness()
+        self.assertIsNone(transform_robustness.padding_transform)
+        self.assertIsInstance(
+            transform_robustness.jitter_transforms, torch.nn.Sequential
+        )
+        for module in transform_robustness.jitter_transforms:
+            self.assertIsInstance(module, transforms.RandomSpatialJitter)
+        self.assertIsInstance(transform_robustness.random_scale, transforms.RandomScale)
+        #self.assertIsInstance(
+        #    transform_robustness.random_rotation, transforms.RandomRotation
+        #)
+        self.assertIsInstance(
+            transform_robustness.final_jitter, transforms.RandomSpatialJitter
+        )
+        self.assertFalse(transform_robustness.crop_or_pad_output)
+
+    def test_transform_robustness_init_single_translate(self) -> None:
+        transform_robustness = transforms.TransformationRobustness(translate=4)
+        self.assertIsInstance(
+            transform_robustness.jitter_transforms, transforms.RandomSpatialJitter
+        )
+
+    def test_transform_robustness_forward(self) -> None:
+        transform_robustness = transforms.TransformationRobustness()
+        test_input = torch.ones(1, 3, 224, 224)
+        test_output = transform_robustness(test_input)
+        self.assertTrue(torch.is_tensor(test_output))
+
+    def test_transform_robustness_forward_padding(self) -> None:
+        pad_module = torch.nn.ConstantPad2d(2, value=0.5)
+        transform_robustness = transforms.TransformationRobustness(
+            padding_transform=pad_module
+        )
+        test_input = torch.ones(1, 3, 224, 224)
+        test_output = transform_robustness(test_input)
+        self.assertTrue(torch.is_tensor(test_output))
+
+    def test_transform_robustness_forward_crop_output(self) -> None:
+        transform_robustness = transforms.TransformationRobustness()
+        test_input = torch.ones(1, 3, 224, 224)
+        test_output = transform_robustness(test_input, crop_or_pad_output=True)
+        self.assertEqual(test_output.shape, test_input.shape)
+
+    def test_transform_robustness_forward_padding_crop_output(self) -> None:
+        pad_module = torch.nn.ConstantPad2d(2, value=0.5)
+        transform_robustness = transforms.TransformationRobustness(
+            padding_transform=pad_module, crop_or_pad_output=True
+        )
+        test_input = torch.ones(1, 3, 224, 224)
+        test_output = transform_robustness(test_input)
+        self.assertEqual(test_output.shape, test_input.shape)
+
+    def test_transform_robustness_forward_all_disabled(self) -> None:
+        transform_robustness = transforms.TransformationRobustness(
+            padding_transform=False,
+            translate=None,
+            scale=None,
+            degrees=None,
+            final_translate=None,
+            crop_or_pad_output=False,
+        )
+        test_input = torch.randn(1, 3, 224, 224)
+        test_output = transform_robustness(test_input)
+        assertTensorAlmostEqual(self, test_output, test_input, 0)
+
+    def test_transform_robustness_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping TransformationRobustness JIT module test due"
+                + " to insufficient Torch version."
+            )
+        transform_robustness = transforms.TransformationRobustness()
+        jit_transform_robustness = torch.jit.script(transform_robustness)
+        test_input = torch.ones(1, 3, 224, 224)
+        test_output = jit_transform_robustness(test_input)
+        self.assertTrue(torch.is_tensor(test_output))
+
+    def test_transform_robustness_forward_padding_crop_output_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping TransformationRobustness with crop or pad output"
+                + " JIT module test due to insufficient Torch version."
+            )
+        pad_module = torch.nn.ConstantPad2d(2, value=0.5)
+        transform_robustness = transforms.TransformationRobustness(
+            padding_transform=pad_module, crop_or_pad_output=True
+        )
+        test_input = torch.ones(1, 3, 224, 224)
+        test_output = transform_robustness(test_input)
+        self.assertEqual(test_output.shape, test_input.shape)
