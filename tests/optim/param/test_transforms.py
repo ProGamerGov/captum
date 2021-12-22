@@ -1232,7 +1232,7 @@ class TestTransformationRobustness(BaseTest):
 
     def test_transform_robustness_forward_all_disabled(self) -> None:
         transform_robustness = transforms.TransformationRobustness(
-            padding_transform=False,
+            padding_transform=None,
             translate=None,
             scale=None,
             degrees=None,
