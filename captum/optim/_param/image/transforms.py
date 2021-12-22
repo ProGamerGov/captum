@@ -1071,7 +1071,7 @@ class TransformationRobustness(nn.Module):
         else:
             self.jitter_transforms = translate
         self.random_scale = None if scale is None else RandomScale(scale)
-        self.random_rotation = None #if degrees is None else RandomRotation(degrees)
+        self.random_rotation = None  # if degrees is None else RandomRotation(degrees)
         self.final_jitter = (
             None if final_translate is None else RandomSpatialJitter(final_translate)
         )
