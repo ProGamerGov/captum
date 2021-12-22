@@ -437,6 +437,47 @@ class TestCenterCrop(BaseTest):
         cropped_tensor = crop_mod(px)
         assertTensorAlmostEqual(self, x, cropped_tensor)
 
+    def test_center_crop_padding(self) -> None:
+        test_tensor = torch.arange(0, 1 * 1 * 4 * 4).view(1, 1, 4, 4).float()
+        crop_vals = [6, 6]
+
+        center_crop_module = transforms.CenterCrop(crop_vals, offset_left=False)
+        cropped_tensor = center_crop_module(test_tensor)
+
+        expected_tensor = torch.tensor(
+            [
+                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0, 2.0, 3.0, 0.0],
+                [0.0, 4.0, 5.0, 6.0, 7.0, 0.0],
+                [0.0, 8.0, 9.0, 10.0, 11.0, 0.0],
+                [0.0, 12.0, 13.0, 14.0, 15.0, 0.0],
+                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            ]
+        )
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
+
+    def test_center_crop_padding_prime_num_pad(self) -> None:
+        test_tensor = torch.arange(0, 1 * 1 * 3 * 3).view(1, 1, 3, 3).float()
+        crop_vals = [6, 6]
+        
+        center_crop_module = transforms.CenterCrop(crop_vals, offset_left=False)
+
+        cropped_tensor = center_crop_module(test_tensor)
+
+        expected_tensor = torch.nn.functional.pad(test_tensor, [2, 1, 2, 1])
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
+
+    def test_center_crop_padding_prime_num_pad_offset_left(self) -> None:
+        test_tensor = torch.arange(0, 1 * 1 * 3 * 3).view(1, 1, 3, 3).float()
+        crop_vals = [6, 6]
+
+        center_crop_module = transforms.CenterCrop(crop_vals, offset_left=True)
+
+        cropped_tensor = center_crop_module(test_tensor)
+
+        expected_tensor = torch.nn.functional.pad(test_tensor, [1, 2, 1, 2])
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
+
     def test_center_crop_one_number_exact_jit_module(self) -> None:
         if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
@@ -469,6 +510,26 @@ class TestCenterCrop(BaseTest):
             ]
             * 3
         ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
+
+    def test_center_crop_padding_jit_module(self) -> None:
+        test_tensor = torch.arange(0, 1 * 1 * 4 * 4).view(1, 1, 4, 4).float()
+        crop_vals = [6, 6]
+
+        center_crop_module = transforms.CenterCrop(crop_vals, offset_left=False)
+        jit_center_crop = torch.jit.script(center_crop_module)
+        cropped_tensor = jit_center_crop(test_tensor)
+
+        expected_tensor = torch.tensor(
+            [
+                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0, 2.0, 3.0, 0.0],
+                [0.0, 4.0, 5.0, 6.0, 7.0, 0.0],
+                [0.0, 8.0, 9.0, 10.0, 11.0, 0.0],
+                [0.0, 12.0, 13.0, 14.0, 15.0, 0.0],
+                [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            ]
+        )
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
 
 
