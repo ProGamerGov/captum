@@ -179,7 +179,8 @@ class ToRGB(nn.Module):
 
 class CenterCrop(torch.nn.Module):
     """
-    Center crop a specified amount from a tensor.
+    Center crop a specified amount from a tensor. If input are smaller than the
+    specified crop size, padding will be applied.
     """
 
     __constants__ = [
@@ -272,7 +273,8 @@ def center_crop(
     padding_value: float = 0.0,
 ) -> torch.Tensor:
     """
-    Center crop a specified amount from a tensor.
+    Center crop a specified amount from a tensor. If input are smaller than the
+    specified crop size, padding will be applied.
 
     Args:
 
