@@ -459,7 +459,7 @@ class TestCenterCrop(BaseTest):
     def test_center_crop_padding_prime_num_pad(self) -> None:
         test_tensor = torch.arange(0, 1 * 1 * 3 * 3).view(1, 1, 3, 3).float()
         crop_vals = [6, 6]
-        
+
         center_crop_module = transforms.CenterCrop(crop_vals, offset_left=False)
 
         cropped_tensor = center_crop_module(test_tensor)
@@ -674,7 +674,9 @@ class TestCenterCropFunction(BaseTest):
         test_tensor = torch.arange(0, 1 * 1 * 3 * 3).view(1, 1, 3, 3).float()
         crop_vals = [6, 6]
 
-        cropped_tensor = transforms.center_crop(test_tensor, crop_vals, offset_left=True)
+        cropped_tensor = transforms.center_crop(
+            test_tensor, crop_vals, offset_left=True
+        )
 
         expected_tensor = torch.nn.functional.pad(test_tensor, [1, 2, 1, 2])
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
@@ -1184,9 +1186,9 @@ class TestTransformationRobustness(BaseTest):
         for module in transform_robustness.jitter_transforms:
             self.assertIsInstance(module, transforms.RandomSpatialJitter)
         self.assertIsInstance(transform_robustness.random_scale, transforms.RandomScale)
-        #self.assertIsInstance(
+        # self.assertIsInstance(
         #    transform_robustness.random_rotation, transforms.RandomRotation
-        #)
+        # )
         self.assertIsInstance(
             transform_robustness.final_jitter, transforms.RandomSpatialJitter
         )
