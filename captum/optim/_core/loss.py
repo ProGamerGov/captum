@@ -101,7 +101,7 @@ class Loss(ABC):
         Returns:
             composite_loss (CompositeLoss): A composable loss instance.
         """
-        if dim is None:            
+        if dim is None:
             return basic_torch_module_op(self, torch.mean)
         else:
             return basic_torch_module_op(self, torch.mean, dim=dim, keepdim=keepdim)
@@ -122,7 +122,7 @@ class Loss(ABC):
         Returns:
             composite_loss (CompositeLoss): A composable loss instance.
         """
-        if dim is None:            
+        if dim is None:
             return basic_torch_module_op(self, torch.sum)
         else:
             return basic_torch_module_op(self, torch.sum, dim=dim, keepdim=keepdim)
