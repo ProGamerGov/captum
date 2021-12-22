@@ -200,14 +200,15 @@ def basic_torch_module_op(
     Implement composability for PyTorch operation that take a single tensor or list
     of tensors as it's first input variable.
     See here for possible torch_op choices: https://pytorch.org/docs/stable/torch.html
-    Some built-in Python functions like 'sum', 'max', and 'min' can also be used as
-    well if supported by PyTorch.
+    Some built-in Python functions like 'sum', 'max', 'min', math.ceil can also be used
+    as well if supported by PyTorch.
 
     Args:
 
         loss (Loss or list of Loss): A loss objective or list of loss objectives.
-        torch_op (Callable): A PyTorch or supported Python function. Ex: torch.mean, torch.sum,
-            torch.linalg.norm, torch.sin, torch.cat, torch.stack, max, min, and others.
+        torch_op (Callable): A PyTorch or supported Python function. Ex: torch.mean,
+             torch.sum,, torch.linalg.norm, torch.sin, torch.cat, torch.stack, max, min,
+             sum, math.ceil, and others.
             Default: torch.mean
         args (Any, optional): Any additional arguments.
         kwargs (Any, optional): Any additional arguments.
