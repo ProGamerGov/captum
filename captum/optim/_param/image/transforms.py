@@ -336,8 +336,8 @@ def center_crop(
         if size[0] > h or size[1] > w:
             # Padding functionality like Torchvision's center crop
             padding = [
-                (size[1] - w) // 2 if size[1] > w else 0,
-                (size[0] - h) // 2 if size[0] > h else 0,
+                math.ceil((size[1] - w) / 2) if size[1] > w else 0,
+                math.ceil((size[0] - h) / 2) if size[0] > h else 0,
                 (size[1] - w + 1) // 2 if size[1] > w else 0,
                 (size[0] - h + 1) // 2 if size[0] > h else 0,
             ]
