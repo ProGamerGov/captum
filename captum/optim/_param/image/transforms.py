@@ -414,7 +414,7 @@ class RandomScale(nn.Module):
         dtype: torch.dtype,
     ) -> torch.Tensor:
         """
-        Create a rotation matrix tensor.
+        Create a scale matrix tensor.
 
         Args:
 
@@ -562,7 +562,7 @@ class RandomScaleAffine(nn.Module):
         dtype: torch.dtype,
     ) -> torch.Tensor:
         """
-        Create a rotation matrix tensor.
+        Create a scale matrix tensor.
 
         Args:
 
