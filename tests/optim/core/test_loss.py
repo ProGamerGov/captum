@@ -284,3 +284,11 @@ class TestCompositeLoss(BaseTest):
 class TestCompositeLossReductionOP(BaseTest):
     def test_reduction_op(self) -> None:
         self.assertEqual(opt_loss.REDUCTION_OP, torch.mean)
+
+
+def TestBasisTorchModuleOP(BaseTest):
+    def test_torch_sum(self) -> None:
+        model = torch.nn.Identity()
+        loss = opt_loss.LayerActivation(model)
+        loss = opt_loss.basic_torch_module_op(loss, torch_op=torch.sum)
+        self.assertAlmostEqual(get_loss_value(model, loss), 3.0, places=1)
