@@ -1015,7 +1015,7 @@ class TransformationRobustness(nn.Module):
     inputs.
     """
 
-    __constants__ = ["crop_output"]
+    __constants__ = ["crop_or_pad_output"]
 
     def __init__(
         self,
