@@ -1216,9 +1216,9 @@ class TestTransformationRobustness(BaseTest):
         self.assertTrue(torch.is_tensor(test_output))
 
     def test_transform_robustness_forward_crop_output(self) -> None:
-        transform_robustness = transforms.TransformationRobustness()
+        transform_robustness = transforms.TransformationRobustness(crop_or_pad_output=True)
         test_input = torch.ones(1, 3, 224, 224)
-        test_output = transform_robustness(test_input, crop_or_pad_output=True)
+        test_output = transform_robustness(test_input)
         self.assertEqual(test_output.shape, test_input.shape)
 
     def test_transform_robustness_forward_padding_crop_output(self) -> None:
