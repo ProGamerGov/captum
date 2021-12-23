@@ -127,6 +127,91 @@ class TestRandomScale(BaseTest):
             0,
         )
 
+    def test_random_forward_exact(self) -> None:
+        scale_module = transforms.RandomScale(scale=[0.5])
+        test_tensor = torch.arange(0, 1 * 1 * 10 * 10).view(1, 1, 10, 10).float()
+
+        scaled_tensor = scale_module(test_tensor)
+
+        expected_tensor = torch.tensor(
+            [
+                [
+                    [
+                        [5.5000, 7.5000, 9.5000, 11.5000, 13.5000],
+                        [25.5000, 27.5000, 29.5000, 31.5000, 33.5000],
+                        [45.5000, 47.5000, 49.5000, 51.5000, 53.5000],
+                        [65.5000, 67.5000, 69.5000, 71.5000, 73.5000],
+                        [85.5000, 87.5000, 89.5000, 91.5000, 93.5000],
+                    ]
+                ]
+            ]
+        )
+
+        assertTensorAlmostEqual(
+            self,
+            scaled_tensor,
+            expected_tensor,
+            0,
+        )
+
+    def test_random_scale_forward_exact_nearest(self) -> None:
+        scale_module = transforms.RandomScale(scale=[0.5], mode="nearest")
+        self.assertIsNone(scale_module.align_corners)
+        self.assertEqual(scale_module.mode, "nearest")
+
+        test_tensor = torch.arange(0, 1 * 1 * 10 * 10).view(1, 1, 10, 10).float()
+
+        scaled_tensor = scale_module(test_tensor)
+
+        expected_tensor = torch.tensor(
+            [
+                [
+                    [
+                        [0.0, 2.0, 4.0, 6.0, 8.0],
+                        [20.0, 22.0, 24.0, 26.0, 28.0],
+                        [40.0, 42.0, 44.0, 46.0, 48.0],
+                        [60.0, 62.0, 64.0, 66.0, 68.0],
+                        [80.0, 82.0, 84.0, 86.0, 88.0],
+                    ]
+                ]
+            ]
+        )
+
+        assertTensorAlmostEqual(
+            self,
+            scaled_tensor,
+            expected_tensor,
+            0,
+        )
+
+    def test_random_scale_forward_exact_align_corners(self) -> None:
+        scale_module = transforms.RandomScale(scale=[0.5], align_corners=True)
+        self.assertTrue(scale_module.align_corners)
+
+        test_tensor = torch.arange(0, 1 * 1 * 10 * 10).view(1, 1, 10, 10).float()
+
+        scaled_tensor = scale_module(test_tensor)
+
+        expected_tensor = torch.tensor(
+            [
+                [
+                    [
+                        [0.0000, 2.2500, 4.5000, 6.7500, 9.0000],
+                        [22.5000, 24.7500, 27.0000, 29.2500, 31.5000],
+                        [45.0000, 47.2500, 49.5000, 51.7500, 54.0000],
+                        [67.5000, 69.7500, 72.0000, 74.2500, 76.5000],
+                        [90.0000, 92.2500, 94.5000, 96.7500, 99.0000],
+                    ]
+                ]
+            ]
+        )
+        assertTensorAlmostEqual(
+            self,
+            scaled_tensor,
+            expected_tensor,
+            0,
+        )
+
     def test_random_scale_forward(self) -> None:
         scale_module = transforms.RandomScale(scale=[0.5])
         test_tensor = torch.ones(1, 3, 10, 10)
