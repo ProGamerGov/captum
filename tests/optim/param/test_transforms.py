@@ -326,7 +326,7 @@ class TestRandomScaleAffine(BaseTest):
         scale_module = transforms.RandomScaleAffine(scale=[1.5])
         test_tensor = torch.arange(0, 1 * 1 * 4 * 4).view(1, 1, 4, 4).float()
 
-        output_tensor = scale_module(test_tensor)
+        scaled_tensor = scale_module(test_tensor)
 
         expected_tensor = torch.tensor(
             [
@@ -352,7 +352,7 @@ class TestRandomScaleAffine(BaseTest):
         self.assertEqual(scale_module.mode, "nearest")
         test_tensor = torch.arange(0, 1 * 1 * 4 * 4).view(1, 1, 4, 4).float()
 
-        output_tensor = scale_module(test_tensor)
+        scaled_tensor = scale_module(test_tensor)
         expected_tensor = torch.tensor(
             [
                 [
