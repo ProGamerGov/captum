@@ -21,6 +21,18 @@ class TestRandomScale(BaseTest):
         self.assertEqual(scale_module.scale, [1.0, 0.975, 1.025, 0.95, 1.05])
         self.assertFalse(scale_module._is_distribution)
 
+    def test_random_scale_tensor_scale(self) -> None:
+        scale = torch.tensor([1, 0.975, 1.025, 0.95, 1.05])
+        scale_module = transforms.RandomScale(scale=scale)
+        self.assertEqual(scale_module.scale, [1.0, 0.975, 1.025, 0.95, 1.05])
+
+    def test_random_scale_int_scale(self) -> None:
+        scale = [1, 2, 3, 4, 5]
+        scale_module = transforms.RandomScale(scale=scale)
+        for s in scale_module.scale:
+            self.assertIsInstance(s, float)
+        self.assertEqual(scale_module.scale, [1.0, 2.0, 3.0, 4.0, 5.0])
+
     def test_random_scale_scale_distributions(self) -> None:
         scale = torch.distributions.Uniform(0.95, 1.05)
         scale_module = transforms.RandomScale(scale=scale)
@@ -162,6 +174,18 @@ class TestRandomScaleAffine(BaseTest):
         scale_module = transforms.RandomScaleAffine(scale=[1, 0.975, 1.025, 0.95, 1.05])
         self.assertEqual(scale_module.scale, [1.0, 0.975, 1.025, 0.95, 1.05])
         self.assertFalse(scale_module._is_distribution)
+
+    def test_random_scale_affine_tensor_scale(self) -> None:
+        scale = torch.tensor([1, 0.975, 1.025, 0.95, 1.05])
+        scale_module = transforms.RandomScaleAffine(scale=scale)
+        self.assertEqual(scale_module.scale, [1.0, 0.975, 1.025, 0.95, 1.05])
+
+    def test_random_scale_affine_int_scale(self) -> None:
+        scale = [1, 2, 3, 4, 5]
+        scale_module = transforms.RandomScaleAffine(scale=scale)
+        for s in scale_module.scale:
+            self.assertIsInstance(s, float)
+        self.assertEqual(scale_module.scale, [1.0, 2.0, 3.0, 4.0, 5.0])
 
     def test_random_scale_affine_scale_distributions(self) -> None:
         scale = torch.distributions.Uniform(0.95, 1.05)
