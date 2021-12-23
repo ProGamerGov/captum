@@ -358,10 +358,10 @@ class RandomScale(nn.Module):
         "scale",
         "mode",
         "align_corners",
-        "has_align_corners",
+        "_has_align_corners",
         "recompute_scale_factor",
-        "has_recompute_scale_factor",
-        "is_distribution",
+        "_has_recompute_scale_factor",
+        "_is_distribution",
     ]
 
     def __init__(
@@ -392,7 +392,7 @@ class RandomScale(nn.Module):
             # Distributions are not supported by TorchScript / JIT yet
             assert scale.batch_shape == torch.Size([])
             self.scale_distribution = scale
-            self.is_distribution = True
+            self._is_distribution = True
             self.scale = []
         else:
             assert hasattr(scale, "__iter__")
@@ -401,12 +401,12 @@ class RandomScale(nn.Module):
                 scale = scale.tolist()
             assert len(scale) > 0
             self.scale = [float(s) for s in scale]
-            self.is_distribution = False
+            self._is_distribution = False
         self.mode = mode
         self.align_corners = align_corners if mode not in ["nearest", "area"] else None
         self.recompute_scale_factor = recompute_scale_factor
-        self.has_align_corners = torch.__version__ >= "1.3.0"
-        self.has_recompute_scale_factor = torch.__version__ >= "1.6.0"
+        self._has_align_corners = torch.__version__ >= "1.3.0"
+        self._has_recompute_scale_factor = torch.__version__ >= "1.6.0"
 
     def _get_scale_mat(
         self,
@@ -441,8 +441,8 @@ class RandomScale(nn.Module):
         Returns:
             **x** (torch.Tensor): A scaled NCHW image tensor.
         """
-        if self.has_align_corners:
-            if self.has_recompute_scale_factor:
+        if self._has_align_corners:
+            if self._has_recompute_scale_factor:
                 x = F.interpolate(
                     x,
                     scale_factor=scale,
@@ -473,8 +473,8 @@ class RandomScale(nn.Module):
             **x** (torch.Tensor): A randomly scaled NCHW image *tensor*.
         """
         assert x.dim() == 4
-        if self.is_distribution:
-            scale = self.scale_distribution.sample().item()
+        if self._is_distribution:
+            scale = float(self.scale_distribution.sample().item())
         else:
             n = int(
                 torch.randint(
@@ -509,8 +509,8 @@ class RandomScaleAffine(nn.Module):
         "mode",
         "padding_mode",
         "align_corners",
-        "has_align_corners",
-        "is_distribution",
+        "_has_align_corners",
+        "_is_distribution",
     ]
 
     def __init__(
@@ -542,7 +542,7 @@ class RandomScaleAffine(nn.Module):
             # Distributions are not supported by TorchScript / JIT yet
             assert scale.batch_shape == torch.Size([])
             self.scale_distribution = scale
-            self.is_distribution = True
+            self._is_distribution = True
             self.scale = []
         else:
             assert hasattr(scale, "__iter__")
@@ -551,11 +551,11 @@ class RandomScaleAffine(nn.Module):
                 scale = scale.tolist()
             assert len(scale) > 0
             self.scale = [float(s) for s in scale]
-            self.is_distribution = False
+            self._is_distribution = False
         self.mode = mode
         self.padding_mode = padding_mode
         self.align_corners = align_corners
-        self.has_align_corners = torch.__version__ >= "1.3.0"
+        self._has_align_corners = torch.__version__ >= "1.3.0"
 
     def _get_scale_mat(
         self,
@@ -593,7 +593,7 @@ class RandomScaleAffine(nn.Module):
         scale_matrix = self._get_scale_mat(scale, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
-        if self.has_align_corners:
+        if self._has_align_corners:
             # Pass align_corners explicitly for torch >= 1.3.0
             grid = F.affine_grid(
                 scale_matrix, x.size(), align_corners=self.align_corners
@@ -622,8 +622,8 @@ class RandomScaleAffine(nn.Module):
             **x** (torch.Tensor): A randomly scaled NCHW image *tensor*.
         """
         assert x.dim() == 4
-        if self.is_distribution:
-            scale = self.scale_distribution.sample().item()
+        if self._is_distribution:
+            scale = float(self.scale_distribution.sample().item())
         else:
             n = int(
                 torch.randint(
