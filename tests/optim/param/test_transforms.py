@@ -27,8 +27,7 @@ class TestRandomScale(BaseTest):
     def test_random_scale_tensor_scale(self) -> None:
         scale = torch.tensor([1, 0.975, 1.025, 0.95, 1.05])
         scale_module = transforms.RandomScale(scale=scale)
-        expected_scale = torch.tensor([1.0, 0.975, 1.025, 0.95, 1.05]).tolist()
-        self.assertEqual(scale_module.scale, expected_scale)
+        self.assertEqual(scale_module.scale, scale.tolist())
 
     def test_random_scale_int_scale(self) -> None:
         scale = [1, 2, 3, 4, 5]
@@ -251,8 +250,7 @@ class TestRandomScaleAffine(BaseTest):
     def test_random_scale_affine_tensor_scale(self) -> None:
         scale = torch.tensor([1, 0.975, 1.025, 0.95, 1.05])
         scale_module = transforms.RandomScaleAffine(scale=scale)
-        expected_scale = torch.tensor([1.0, 0.975, 1.025, 0.95, 1.05]).tolist()
-        self.assertEqual(scale_module.scale, expected_scale)
+        self.assertEqual(scale_module.scale, scale.tolist())
 
     def test_random_scale_affine_int_scale(self) -> None:
         scale = [1, 2, 3, 4, 5]
