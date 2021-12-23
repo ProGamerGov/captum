@@ -108,25 +108,6 @@ class TestRandomScale(BaseTest):
             0,
         )
 
-    def test_random_scale_matrix(self) -> None:
-        scale_module = transforms.RandomScale(scale=[0.5])
-        test_tensor = torch.ones(1, 3, 3, 3)
-        # Test scale matrices
-
-        assertTensorAlmostEqual(
-            self,
-            scale_module._get_scale_mat(0.5, test_tensor.device, test_tensor.dtype),
-            torch.tensor([[0.5000, 0.0000, 0.0000], [0.0000, 0.5000, 0.0000]]),
-            0,
-        )
-
-        assertTensorAlmostEqual(
-            self,
-            scale_module._get_scale_mat(1.24, test_tensor.device, test_tensor.dtype),
-            torch.tensor([[1.2400, 0.0000, 0.0000], [0.0000, 1.2400, 0.0000]]),
-            0,
-        )
-
     def test_random_forward_exact(self) -> None:
         scale_module = transforms.RandomScale(scale=[0.5])
         test_tensor = torch.arange(0, 1 * 1 * 10 * 10).view(1, 1, 10, 10).float()
@@ -292,6 +273,25 @@ class TestRandomScaleAffine(BaseTest):
         _has_align_corners = torch.__version__ >= "1.3.0"
         self.assertEqual(scale_module._has_align_corners, _has_align_corners)
 
+    def test_random_scale_affine_matrix(self) -> None:
+        scale_module = transforms.RandomScaleAffine(scale=[0.5])
+        test_tensor = torch.ones(1, 3, 3, 3)
+        # Test scale matrices
+
+        assertTensorAlmostEqual(
+            self,
+            scale_module._get_scale_mat(0.5, test_tensor.device, test_tensor.dtype),
+            torch.tensor([[0.5000, 0.0000, 0.0000], [0.0000, 0.5000, 0.0000]]),
+            0,
+        )
+
+        assertTensorAlmostEqual(
+            self,
+            scale_module._get_scale_mat(1.24, test_tensor.device, test_tensor.dtype),
+            torch.tensor([[1.2400, 0.0000, 0.0000], [0.0000, 1.2400, 0.0000]]),
+            0,
+        )
+
     def test_random_scale_affine_downscaling(self) -> None:
         scale_module = transforms.RandomScaleAffine(scale=[0.5])
         test_tensor = torch.ones(1, 3, 3, 3)
@@ -319,25 +319,6 @@ class TestRandomScaleAffine(BaseTest):
             )
             .repeat(3, 1, 1)
             .unsqueeze(0),
-            0,
-        )
-
-    def test_random_scale_affine_matrix(self) -> None:
-        scale_module = transforms.RandomScaleAffine(scale=[0.5])
-        test_tensor = torch.ones(1, 3, 3, 3)
-        # Test scale matrices
-
-        assertTensorAlmostEqual(
-            self,
-            scale_module._get_scale_mat(0.5, test_tensor.device, test_tensor.dtype),
-            torch.tensor([[0.5000, 0.0000, 0.0000], [0.0000, 0.5000, 0.0000]]),
-            0,
-        )
-
-        assertTensorAlmostEqual(
-            self,
-            scale_module._get_scale_mat(1.24, test_tensor.device, test_tensor.dtype),
-            torch.tensor([[1.2400, 0.0000, 0.0000], [0.0000, 1.2400, 0.0000]]),
             0,
         )
 
