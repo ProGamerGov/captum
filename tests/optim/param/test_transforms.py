@@ -341,6 +341,57 @@ class TestRandomScaleAffine(BaseTest):
             0,
         )
 
+    def test_random_scale_affine_forward_exact(self) -> None:
+        scale_module = transforms.RandomScaleAffine(scale=[1.5])
+        test_tensor = torch.arange(0, 1 * 1 * 4 * 4).view(1, 1, 4, 4).float()
+
+        output_tensor = scale_module(test_tensor)
+
+        expected_tensor = torch.tensor(
+            [
+                [
+                    [
+                        [0.0000, 0.1875, 0.5625, 0.1875],
+                        [0.7500, 3.7500, 5.2500, 1.5000],
+                        [2.2500, 9.7500, 11.2500, 3.0000],
+                        [0.7500, 3.1875, 3.5625, 0.9375],
+                    ]
+                ]
+            ]
+        )
+        assertTensorAlmostEqual(
+            self,
+            scaled_tensor,
+            expected_tensor,
+            0,
+        )
+
+    def test_random_scale_affine_forward_exact_mode_nearest(self) -> None:
+        scale_module = transforms.RandomScaleAffine(scale=[1.5], mode="nearest")
+        self.assertEqual(scale_module.mode, "nearest")
+        test_tensor = torch.arange(0, 1 * 1 * 4 * 4).view(1, 1, 4, 4).float()
+
+        output_tensor = scale_module(test_tensor)
+        expected_tensor = torch.tensor(
+            [
+                [
+                    [
+                        [0.0, 0.0, 0.0, 0.0],
+                        [0.0, 5.0, 6.0, 0.0],
+                        [0.0, 9.0, 10.0, 0.0],
+                        [0.0, 0.0, 0.0, 0.0],
+                    ]
+                ]
+            ]
+        )
+
+        assertTensorAlmostEqual(
+            self,
+            scaled_tensor,
+            expected_tensor,
+            0,
+        )
+
     def test_random_scale_affine_forward(self) -> None:
         scale_module = transforms.RandomScaleAffine(scale=[0.5])
         test_tensor = torch.ones(1, 3, 10, 10)
