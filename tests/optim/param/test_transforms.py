@@ -1357,7 +1357,7 @@ class TestTransformationRobustness(BaseTest):
     def test_transform_robustness_init(self) -> None:
         transform_robustness = transforms.TransformationRobustness()
         self.assertIsInstance(
-            transform_robustness.padding_transform, nn.ConstantPad2d
+            transform_robustness.padding_transform, torch.nn.ConstantPad2d
         )
         self.assertIsInstance(
             transform_robustness.jitter_transforms, torch.nn.Sequential
