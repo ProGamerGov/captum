@@ -390,7 +390,7 @@ class RandomScale(nn.Module):
         super().__init__()
         if isinstance(scale, torch.distributions.distribution.Distribution):
             # Distributions are not supported by TorchScript / JIT yet
-            assert list(scale.batch_shape) == []
+            assert scale.batch_shape == torch.Size([])
             self.scale_distribution = scale
             self.is_distribution = True
             self.scale = []
@@ -540,6 +540,7 @@ class RandomScaleAffine(nn.Module):
         super().__init__()
         if isinstance(scale, torch.distributions.distribution.Distribution):
             # Distributions are not supported by TorchScript / JIT yet
+            assert scale.batch_shape == torch.Size([])
             self.scale_distribution = scale
             self.is_distribution = True
             self.scale = []
