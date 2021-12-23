@@ -1189,7 +1189,9 @@ class TestRandomCrop(BaseTest):
 class TestTransformationRobustness(BaseTest):
     def test_transform_robustness_init(self) -> None:
         transform_robustness = transforms.TransformationRobustness()
-        self.assertIsNone(transform_robustness.padding_transform)
+        self.assertIsInstance(
+            transform_robustness.padding_transform, nn.ConstantPad2d
+        )
         self.assertIsInstance(
             transform_robustness.jitter_transforms, torch.nn.Sequential
         )
