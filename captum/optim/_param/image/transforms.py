@@ -395,8 +395,8 @@ class RandomRotation(nn.Module):
         "mode",
         "padding_mode",
         "align_corners",
-        "has_align_corners",
-        "is_distribution",
+        "_has_align_corners",
+        "_is_distribution",
     ]
 
     def __init__(
