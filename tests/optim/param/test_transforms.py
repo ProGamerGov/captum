@@ -139,6 +139,26 @@ class TestRandomRotation(BaseTest):
         )
         assertTensorAlmostEqual(self, test_output, expected_output, 0.005)
 
+    def test_random_rotation_forward_exact(self) -> None:
+        rotation_module = transforms.RandomRotation([25.0])
+
+        test_input = torch.eye(4, 4).repeat(3, 1, 1).unsqueeze(0)
+        test_output = rotation_module(test_input)
+
+        expected_output = (
+            torch.tensor(
+                [
+                    [0.1143, 0.0000, 0.0000, 0.0000],
+                    [0.5258, 0.6198, 0.2157, 0.0000],
+                    [0.0000, 0.2157, 0.6198, 0.5258],
+                    [0.0000, 0.0000, 0.0000, 0.1143],
+                ]
+            )
+            .repeat(3, 1, 1)
+            .unsqueeze(0)
+        )
+        assertTensorAlmostEqual(self, test_output, expected_output, 0.005)
+
     def test_random_rotation_forward(self) -> None:
         degrees = list(range(-25, 25))
         rotation_module = transforms.RandomRotation(degrees=degrees)
