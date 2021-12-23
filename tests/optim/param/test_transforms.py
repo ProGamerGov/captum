@@ -16,10 +16,13 @@ from tests.optim.helpers import numpy_transforms
 
 
 class TestRandomScale(BaseTest):
-    def test_random_scale_scale(self) -> None:
+    def test_random_scale_init(self) -> None:
         scale_module = transforms.RandomScale(scale=[1, 0.975, 1.025, 0.95, 1.05])
         self.assertEqual(scale_module.scale, [1.0, 0.975, 1.025, 0.95, 1.05])
         self.assertFalse(scale_module._is_distribution)
+        self.assertEqual(scale_module.mode, "bilinear")
+        self.assertFalse(scale_module.align_corners)
+        self.assertFalse(scale_module.recompute_scale_factor)
 
     def test_random_scale_tensor_scale(self) -> None:
         scale = torch.tensor([1, 0.975, 1.025, 0.95, 1.05])
@@ -170,10 +173,13 @@ class TestRandomScale(BaseTest):
 
 
 class TestRandomScaleAffine(BaseTest):
-    def test_random_scale_affine_scale(self) -> None:
+    def test_random_scale_affine_init(self) -> None:
         scale_module = transforms.RandomScaleAffine(scale=[1, 0.975, 1.025, 0.95, 1.05])
         self.assertEqual(scale_module.scale, [1.0, 0.975, 1.025, 0.95, 1.05])
         self.assertFalse(scale_module._is_distribution)
+        self.assertEqual(scale_module.mode, "bilinear")
+        self.assertEqual(scale_module.padding_mode, "zeros")
+        self.assertFalse(scale_module.align_corners)
 
     def test_random_scale_affine_tensor_scale(self) -> None:
         scale = torch.tensor([1, 0.975, 1.025, 0.95, 1.05])
