@@ -79,6 +79,7 @@ class TestRandomRotation(BaseTest):
         degrees = rotation_module.degrees
         self.assertTrue(hasattr(degrees, "__iter__"))
         self.assertEqual(degrees, test_degrees)
+        self.assertFalse(transforms._is_distribution)
 
     def test_random_rotation_degrees_distributions(self) -> None:
         degrees = torch.distributions.Uniform(0.95, 1.05)
@@ -87,6 +88,12 @@ class TestRandomRotation(BaseTest):
             rotation_module.degrees_distribution,
             torch.distributions.distribution.Distribution,
         )
+        self.assertTrue(transforms._is_distribution)
+
+    def test_random_rotation_version_check(self) -> None:
+        rotation_module = transforms.RandomRotation([1.0])
+        _has_align_corners = torch.__version__ >= "1.3.0"
+        self.assertEqual(rotation_module._has_align_corners, _has_align_corners)
 
     def test_random_rotation_matrix(self) -> None:
         theta = 25.1
