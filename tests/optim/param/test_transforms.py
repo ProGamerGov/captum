@@ -73,13 +73,16 @@ class TestRandomScale(BaseTest):
 
 
 class TestRandomRotation(BaseTest):
-    def test_random_rotation_degrees(self) -> None:
+    def test_random_rotation_init(self) -> None:
         test_degrees = [0.0, 1.0, 2.0, 3.0, 4.0]
         rotation_module = transforms.RandomRotation(test_degrees)
         degrees = rotation_module.degrees
         self.assertTrue(hasattr(degrees, "__iter__"))
         self.assertEqual(degrees, test_degrees)
         self.assertFalse(rotation_module._is_distribution)
+        self.assertEqual(rotation_module.mode, "bilinear")
+        self.assertEqual(rotation_module.padding_mode, "zeros")
+        self.assertFalse(rotation_module.align_corners)
 
     def test_random_rotation_tensor_degrees(self) -> None:
         degrees = torch.tensor([0.0, 1.0, 2.0, 3.0, 4.0])
