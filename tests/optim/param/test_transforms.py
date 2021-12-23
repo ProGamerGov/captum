@@ -162,6 +162,51 @@ class TestRandomRotation(BaseTest):
         )
         assertTensorAlmostEqual(self, test_output, expected_output, 0.005)
 
+    def test_random_rotation_forward_exact_nearest_reflection(self) -> None:
+        rotation_module = transforms.RandomRotation(
+            [45.0], mode="nearest", padding_mode="reflection"
+        )
+        self.assertEqual(rotation_module.mode, "nearest")
+        self.assertEqual(rotation_module.padding_mode, "reflection")
+
+        test_input = torch.arange(0, 1 * 1 * 4 * 4).view(1, 1, 4, 4).float()
+        test_output = rotation_module(test_input)
+
+        expected_output = torch.tensor(
+            [
+                [
+                    [
+                        [2.0, 2.0, 7.0, 11.0],
+                        [1.0, 6.0, 10.0, 11.0],
+                        [4.0, 9.0, 10.0, 14.0],
+                        [8.0, 8.0, 13.0, 14.0],
+                    ]
+                ]
+            ]
+        )
+        assertTensorAlmostEqual(self, test_output, expected_output, 0.0)
+
+    def test_random_rotation_forward_exact_nearest(self) -> None:
+        rotation_module = transforms.RandomRotation([45.0], mode="nearest")
+        self.assertEqual(rotation_module.mode, "nearest")
+        self.assertEqual(rotation_module.padding_mode, "zeros")
+
+        test_input = torch.arange(0, 1 * 1 * 4 * 4).view(1, 1, 4, 4).float()
+        test_output = rotation_module(test_input)
+        expected_output = torch.tensor(
+            [
+                [
+                    [
+                        [0.0, 2.0, 7.0, 0.0],
+                        [1.0, 6.0, 10.0, 11.0],
+                        [4.0, 9.0, 10.0, 14.0],
+                        [0.0, 8.0, 13.0, 0.0],
+                    ]
+                ]
+            ]
+        )
+        assertTensorAlmostEqual(self, test_output, expected_output, 0.0)
+
     def test_random_rotation_forward(self) -> None:
         degrees = list(range(-25, 25))
         rotation_module = transforms.RandomRotation(degrees=degrees)
