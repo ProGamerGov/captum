@@ -19,6 +19,7 @@ class TestRandomScale(BaseTest):
     def test_random_scale_scale(self) -> None:
         scale_module = transforms.RandomScale(scale=[1, 0.975, 1.025, 0.95, 1.05])
         self.assertEqual(scale_module.scale, [1.0, 0.975, 1.025, 0.95, 1.05])
+        self.assertFalse(scale_module._is_distribution)
 
     def test_random_scale_scale_distributions(self) -> None:
         scale = torch.distributions.Uniform(0.95, 1.05)
@@ -27,6 +28,12 @@ class TestRandomScale(BaseTest):
             scale_module.scale_distribution,
             torch.distributions.distribution.Distribution,
         )
+        self.assertTrue(scale_module._is_distribution)
+
+    def test_random_scale_torch_version_check(self) -> None:
+        scale_module = transforms.RandomScale([1.0])
+        _has_align_corners = torch.__version__ >= "1.3.0"
+        self.assertEqual(scale_module._has_align_corners, _has_align_corners)
 
     def test_random_scale_downscaling(self) -> None:
         scale_module = transforms.RandomScale(scale=[0.5])
@@ -148,6 +155,7 @@ class TestRandomScaleAffine(BaseTest):
     def test_random_scale_affine_scale(self) -> None:
         scale_module = transforms.RandomScaleAffine(scale=[1, 0.975, 1.025, 0.95, 1.05])
         self.assertEqual(scale_module.scale, [1.0, 0.975, 1.025, 0.95, 1.05])
+        self.assertFalse(scale_module._is_distribution)
 
     def test_random_scale_affine_scale_distributions(self) -> None:
         scale = torch.distributions.Uniform(0.95, 1.05)
@@ -156,6 +164,12 @@ class TestRandomScaleAffine(BaseTest):
             scale_module.scale_distribution,
             torch.distributions.distribution.Distribution,
         )
+        self.assertTrue(scale_module._is_distribution)
+
+    def test_random_scale_affine_torch_version_check(self) -> None:
+        scale_module = transforms.RandomScaleAffine([1.0])
+        _has_align_corners = torch.__version__ >= "1.3.0"
+        self.assertEqual(scale_module._has_align_corners, _has_align_corners)
 
     def test_random_scale_affine_downscaling(self) -> None:
         scale_module = transforms.RandomScaleAffine(scale=[0.5])
