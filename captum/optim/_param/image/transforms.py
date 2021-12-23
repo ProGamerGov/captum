@@ -426,6 +426,7 @@ class RandomRotation(nn.Module):
         super().__init__()
         if isinstance(degrees, torch.distributions.distribution.Distribution):
             # Distributions are not supported by TorchScript / JIT yet
+            assert degrees.batch_shape == torch.Size([])
             self.degrees_distribution = degrees
             self.is_distribution = True
             self.degrees = []
