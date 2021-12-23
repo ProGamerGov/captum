@@ -87,7 +87,7 @@ class TestRandomRotation(BaseTest):
     def test_random_rotation_tensor_degrees(self) -> None:
         degrees = torch.tensor([0.0, 1.0, 2.0, 3.0, 4.0])
         rotation_module = transforms.RandomRotation(degrees=degrees)
-        self.assertEqual(rotation_module.degrees, [0.0, 1.0, 2.0, 3.0, 4.0])
+        self.assertEqual(rotation_module.degrees, degrees.tolist())
 
     def test_random_rotation_int_degrees(self) -> None:
         degrees = [1, 2, 3, 4, 5]
