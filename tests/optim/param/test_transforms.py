@@ -32,8 +32,14 @@ class TestRandomScale(BaseTest):
 
     def test_random_scale_torch_version_check(self) -> None:
         scale_module = transforms.RandomScale([1.0])
-        _has_align_corners = torch.__version__ >= "1.3.0"
-        self.assertEqual(scale_module._has_align_corners, _has_align_corners)
+
+        has_align_corners = torch.__version__ >= "1.3.0"
+        self.assertEqual(scale_module._has_align_corners, has_align_corners)
+
+        has_recompute_scale_factor = torch.__version__ >= "1.6.0"
+        self.assertEqual(
+            scale_module._has_recompute_scale_factor, has_recompute_scale_factor
+        )
 
     def test_random_scale_downscaling(self) -> None:
         scale_module = transforms.RandomScale(scale=[0.5])
