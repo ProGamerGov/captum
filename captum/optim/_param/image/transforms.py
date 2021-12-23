@@ -1023,7 +1023,7 @@ class TransformationRobustness(nn.Module):
 
     def __init__(
         self,
-        padding_transform: Optional[nn.Module] = None,
+        padding_transform: Optional[nn.Module] = nn.ConstantPad2d(2, value=0.5),
         translate: Optional[Union[int, List[int]]] = [4] * 10,
         scale: Optional[NumSeqOrTensorOrProbDistType] = [
             0.995 ** n for n in range(-5, 80)
@@ -1041,7 +1041,7 @@ class TransformationRobustness(nn.Module):
 
             padding_transform (nn.Module, optional): A padding module instance. No
                 padding will be applied before transforms if set to None.
-                Default: None
+                Default: nn.ConstantPad2d(2, value=0.5)
             translate (int or list of int, optional): The max horizontal and vertical
                  translation to use for each jitter transform.
                  Default: [4] * 10
