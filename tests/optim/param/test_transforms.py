@@ -90,7 +90,7 @@ class TestRandomRotation(BaseTest):
         )
         self.assertTrue(rotation_module._is_distribution)
 
-    def test_random_rotation_version_check(self) -> None:
+    def test_random_rotation_torch_version_check(self) -> None:
         rotation_module = transforms.RandomRotation([1.0])
         _has_align_corners = torch.__version__ >= "1.3.0"
         self.assertEqual(rotation_module._has_align_corners, _has_align_corners)
