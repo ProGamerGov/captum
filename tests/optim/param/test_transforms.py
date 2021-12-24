@@ -526,9 +526,8 @@ class TestCenterCrop(BaseTest):
 
     def test_center_crop_forward_one_number_dim_3(self) -> None:
         pad = (1, 1, 1, 1)
-        test_tensor = (
-            F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1)
-            .repeat(3, 1, 1)
+        test_tensor = F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1).repeat(
+            3, 1, 1
         )
         crop_vals = 3
 
@@ -797,9 +796,8 @@ class TestCenterCropFunction(BaseTest):
 
     def test_center_crop_one_number_dim_3(self) -> None:
         pad = (1, 1, 1, 1)
-        test_tensor = (
-            F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1)
-            .repeat(3, 1, 1)
+        test_tensor = F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1).repeat(
+            3, 1, 1
         )
         crop_vals = 3
 
@@ -1162,7 +1160,7 @@ class TestToRGB(BaseTest):
 
     def test_to_rgb_init_value_error(self) -> None:
         with self.assertRaises(ValueError):
-             transforms.ToRGB(transform="error")
+            transforms.ToRGB(transform="error")
 
     def test_to_rgb_klt_forward(self) -> None:
         if torch.__version__ <= "1.2.0":
