@@ -997,21 +997,32 @@ class TestIgnoreAlpha(BaseTest):
 
 
 class TestToRGB(BaseTest):
+    def test_to_rgb_init(self) -> None:
+        to_rgb = transforms.ToRGB()
+        self.assertEqual(list(to_rgb.transform.shape), [3, 3])
+        transform = torch.tensor([[ 0.5628,  0.1948,  0.0433], [ 0.5845,  0.0000, -0.1082], [ 0.5845, -0.1948,  0.0649]])
+        assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.0)
+
     def test_to_rgb_i1i2i3(self) -> None:
         to_rgb = transforms.ToRGB(transform="i1i2i3")
         to_rgb_np = numpy_transforms.ToRGB(transform="i1i2i3")
         assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
+        transform = torch.tensor([[ 0.3333,  0.3333,  0.3333], [ 0.5000,  0.0000, -0.5000], [-0.2500,  0.5000, -0.2500]])
+        assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.0)
 
     def test_to_rgb_klt(self) -> None:
         to_rgb = transforms.ToRGB(transform="klt")
         to_rgb_np = numpy_transforms.ToRGB(transform="klt")
         assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
+        transform = torch.tensor([[ 0.5628,  0.1948,  0.0433], [ 0.5845,  0.0000, -0.1082], [ 0.5845, -0.1948,  0.0649]])
+        assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.0)
 
     def test_to_rgb_custom(self) -> None:
         matrix = torch.eye(3, 3)
         to_rgb = transforms.ToRGB(transform=matrix)
         to_rgb_np = numpy_transforms.ToRGB(transform=matrix.numpy())
         assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
+        assertTensorAlmostEqual(self, to_rgb.transform, matrix, 0.0)
 
     def test_to_rgb_klt_forward(self) -> None:
         if torch.__version__ <= "1.2.0":
