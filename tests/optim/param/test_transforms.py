@@ -551,6 +551,12 @@ class TestCenterCrop(BaseTest):
         with self.assertRaises(ValueError):
             crop_tensor = transforms.CenterCrop(crop_vals, True)
 
+    def test_center_crop_str_value_error(self) -> None:
+        crop_vals = "error"
+
+        with self.assertRaises(ValueError):
+            crop_tensor = transforms.CenterCrop(crop_vals, True)
+
     def test_center_crop_two_numbers(self) -> None:
         pad = (1, 1, 1, 1)
         test_tensor = (
@@ -796,6 +802,18 @@ class TestCenterCropFunction(BaseTest):
             .unsqueeze(0)
         )
         crop_vals = [3, 3, 3]
+
+        with self.assertRaises(ValueError):
+            cropped_tensor = transforms.center_crop(test_tensor, crop_vals, True)
+
+    def test_center_crop_str_value_error(self) -> None:
+        pad = (1, 1, 1, 1)
+        test_tensor = (
+            F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1)
+            .repeat(3, 1, 1)
+            .unsqueeze(0)
+        )
+        crop_vals = "error"
 
         with self.assertRaises(ValueError):
             cropped_tensor = transforms.center_crop(test_tensor, crop_vals, True)
