@@ -1236,7 +1236,7 @@ class TestGaussianSmoothing(BaseTest):
                 ]
             ]
         ).repeat(4, 1, 1, 1, 1)
-        assertTensorAlmostEqual(self, smoothening_module.weight, weight,  0.01)
+        assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0.01)
 
     def test_gaussian_smoothing_1d(self) -> None:
         channels = 6
