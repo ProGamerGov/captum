@@ -413,6 +413,13 @@ class TestRandomScaleAffine(BaseTest):
 
 
 class TestRandomSpatialJitter(BaseTest):
+    def test_random_spatial_jitter_init(self) -> None:
+        translate = 3
+        spatialjitter = transforms.RandomSpatialJitter(translate)
+        
+        self.assertEqual(spatialjitter.pad_range, translate * 2)
+        self.assertIsInstance(spatialjitter.pad, torch.nn.ReflectionPad2d)
+
     def test_random_spatial_jitter_hw(self) -> None:
         translate_vals = [4, 4]
         t_val = 3
