@@ -1042,6 +1042,11 @@ class TestToRGB(BaseTest):
         assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
         assertTensorAlmostEqual(self, to_rgb.transform, matrix, 0.0)
 
+    def test_to_rgb_init_value_error(self) -> None:
+        with self.assertRaises(ValueError, "transform has to be either 'klt'" +
+             ", 'i1i2i3', or a matrix tensor."):
+             transforms.ToRGB(transform="error")
+
     def test_to_rgb_klt_forward(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
