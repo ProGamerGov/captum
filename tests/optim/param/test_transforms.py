@@ -1020,7 +1020,7 @@ class TestToRGB(BaseTest):
                 [-0.2500, 0.5000, -0.2500],
             ]
         )
-        assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.0)
+        assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.001)
 
     def test_to_rgb_klt(self) -> None:
         to_rgb = transforms.ToRGB(transform="klt")
@@ -1033,7 +1033,7 @@ class TestToRGB(BaseTest):
                 [0.5845, -0.1948, 0.0649],
             ]
         )
-        assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.0)
+        assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.001)
 
     def test_to_rgb_custom(self) -> None:
         matrix = torch.eye(3, 3)
@@ -1184,7 +1184,7 @@ class TestGaussianSmoothing(BaseTest):
         )
         self.assertEqual(smoothening_module.groups, channels)
         weight = torch.tensor([[0.3192, 0.3617, 0.3192]]).repeat(6, 1, 1)
-        assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0)
+        assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0.001)
 
     def test_gaussian_smoothing_init_2d(self) -> None:
         channels = 3
@@ -1204,7 +1204,7 @@ class TestGaussianSmoothing(BaseTest):
                 ]
             ]
         ).repeat(3, 1, 1, 1)
-        assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0)
+        assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0.001)
 
     def test_gaussian_smoothing_init_3d(self) -> None:
         channels = 4
@@ -1236,7 +1236,7 @@ class TestGaussianSmoothing(BaseTest):
                 ]
             ]
         ).repeat(4, 1, 1, 1, 1)
-        assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0)
+        assertTensorAlmostEqual(self, smoothening_module.weight, weight,  0.01)
 
     def test_gaussian_smoothing_1d(self) -> None:
         channels = 6
