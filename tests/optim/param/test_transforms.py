@@ -1007,7 +1007,7 @@ class TestToRGB(BaseTest):
                 [0.5845, -0.1948, 0.0649],
             ]
         )
-        assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.0)
+        assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.001)
 
     def test_to_rgb_i1i2i3(self) -> None:
         to_rgb = transforms.ToRGB(transform="i1i2i3")
