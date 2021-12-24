@@ -569,13 +569,13 @@ class TestCenterCrop(BaseTest):
         crop_vals = [3, 3, 3]
 
         with self.assertRaises(ValueError):
-            crop_tensor = transforms.CenterCrop(crop_vals, True)
+            transforms.CenterCrop(crop_vals, True)
 
     def test_center_crop_str_value_error(self) -> None:
         crop_vals = "error"
 
         with self.assertRaises(ValueError):
-            crop_tensor = transforms.CenterCrop(crop_vals, True)
+            transforms.CenterCrop(crop_vals, True)
 
     def test_center_crop_forward_two_numbers(self) -> None:
         pad = (1, 1, 1, 1)
@@ -1387,9 +1387,7 @@ class TestGaussianSmoothing(BaseTest):
         sigma = 2.0
         dim = 4
         with self.assertRaises(ValueError):
-            smoothening_module = transforms.GaussianSmoothing(
-                channels, kernel_size, sigma, dim
-            )
+            transforms.GaussianSmoothing(channels, kernel_size, sigma, dim)
 
     def test_gaussian_smoothing_1d(self) -> None:
         channels = 6
