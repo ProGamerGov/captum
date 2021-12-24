@@ -1231,6 +1231,10 @@ class TestGaussianSmoothing(BaseTest):
 
 
 class TestScaleInputRange(BaseTest):
+    def test_scale_input_range_init(self) -> None:
+        scale_input = transforms.ScaleInputRange(255)
+        self.assertEqual(scale_input.multiplier, 255)
+
     def test_scale_input_range(self) -> None:
         x = torch.ones(1, 3, 4, 4)
         scale_input = transforms.ScaleInputRange(255)
