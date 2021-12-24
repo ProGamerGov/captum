@@ -1381,12 +1381,12 @@ class TestGaussianSmoothing(BaseTest):
         ).repeat(4, 1, 1, 1, 1)
         assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0.01)
 
-    def test_gaussian_smoothing_init_dim_4_value_error(self) -> None:
+    def test_gaussian_smoothing_init_dim_4_runtime_error(self) -> None:
         channels = 3
         kernel_size = 3
         sigma = 2.0
         dim = 4
-        with self.assertRaises(ValueError):
+        with self.assertRaises(RuntimeError):
             transforms.GaussianSmoothing(channels, kernel_size, sigma, dim)
 
     def test_gaussian_smoothing_1d(self) -> None:
