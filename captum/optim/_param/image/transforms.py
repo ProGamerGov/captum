@@ -514,7 +514,7 @@ class RandomRotation(nn.Module):
         """
         assert x.dim() == 4
         if self._is_distribution:
-            rotate_angle = self.degrees_distribution.sample().item()
+            rotate_angle = float(self.degrees_distribution.sample().item())
         else:
             n = int(
                 torch.randint(
