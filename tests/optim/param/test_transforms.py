@@ -1644,6 +1644,28 @@ class TestTransformationRobustness(BaseTest):
         )
         self.assertFalse(transform_robustness.crop_or_pad_output)
 
+    def test_transform_robustness_init_transform_values(self) -> None:
+        transform_robustness = transforms.TransformationRobustness()
+        self.assertEqual(transform_robustness.padding_transform.padding, 2)
+        self.assertEqual(transform_robustness.padding_transform.value, 0.5)
+
+        self.assertEqual(len(transform_robustness.jitter_transforms), 10)
+        for module in transform_robustness.jitter_transforms:
+            self.assertEqual(module.pad_range, 2 * 4)
+
+        expected_scale = [0.995 ** n for n in range(-5, 80)] + [
+            0.998 ** n for n in 2 * list(range(20, 40))
+        ]
+        self.assertEqual(transform_robustness.random_scale.scale, expected_scale)
+        # expected_degrees = (
+        #    list(range(-20, 20)) + list(range(-10, 10)) + list(range(-5, 5)) + 5 * [0]
+        # )
+        # self.assertEqual(
+        #    transform_robustness.random_rotation.degrees, test_expected_degrees
+        # )
+
+        self.assertEqual(transform_robustness.final_jitter.pad_range, 2 * 2)
+
     def test_transform_robustness_init_single_translate(self) -> None:
         transform_robustness = transforms.TransformationRobustness(translate=4)
         self.assertIsInstance(
