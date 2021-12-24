@@ -1156,6 +1156,18 @@ class TestToRGB(BaseTest):
 
 
 class TestGaussianSmoothing(BaseTest):
+    def test_gaussian_smoothing_init_1d(self) -> None:
+        channels = 6
+        kernel_size = 3
+        sigma = 2.0
+        dim = 1
+        smoothening_module = transforms.GaussianSmoothing(
+            channels, kernel_size, sigma, dim
+        )
+        self.assertEqual(smoothening_module.groups, channels)
+        weight = torch.tensor([[0.3192, 0.3617, 0.3192]]).repeat(6, 1, 1)
+        assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0)
+
     def test_gaussian_smoothing_init_2d(self) -> None:
         channels = 3
         kernel_size = 3
@@ -1166,6 +1178,28 @@ class TestGaussianSmoothing(BaseTest):
         )
         self.assertEqual(smoothening_module.groups, channels)
         weight = torch.tensor([[[0.1019, 0.1154, 0.1019], [0.1154, 0.1308, 0.1154], [0.1019, 0.1154, 0.1019]]]).repeat(3, 1, 1, 1)
+        assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0)
+
+    def test_gaussian_smoothing_init_3d(self) -> None:
+        channels = 4
+        kernel_size = 3
+        sigma = 1.021
+        dim = 3
+        smoothening_module = transforms.GaussianSmoothing(
+            channels, kernel_size, sigma, dim
+        )
+        self.assertEqual(smoothening_module.groups, channels)
+        weight = torch.tensor([[[[0.0212, 0.0342, 0.0212],
+          [0.0342, 0.0552, 0.0342],
+          [0.0212, 0.0342, 0.0212]],
+
+         [[0.0342, 0.0552, 0.0342],
+          [0.0552, 0.0892, 0.0552],
+          [0.0342, 0.0552, 0.0342]],
+
+         [[0.0212, 0.0342, 0.0212],
+          [0.0342, 0.0552, 0.0342],
+          [0.0212, 0.0342, 0.0212]]]]).repeat(4,1,1,1,1)
         assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0)
 
     def test_gaussian_smoothing_1d(self) -> None:
