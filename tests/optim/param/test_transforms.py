@@ -1324,6 +1324,10 @@ class TestSymmetricPadding(BaseTest):
 
 
 class TestNChannelsToRGB(BaseTest):
+    def test_nchannels_to_rgb_init(self) -> None:
+        nchannels_to_rgb = transforms.NChannelsToRGB()
+        self.assertFalse(nchannels_to_rgb.warp)
+
     def test_nchannels_to_rgb_collapse(self) -> None:
         test_input = torch.randn(1, 6, 224, 224)
         nchannels_to_rgb = transforms.NChannelsToRGB()
