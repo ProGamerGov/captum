@@ -927,6 +927,10 @@ class TestCenterCropFunction(BaseTest):
 
 
 class TestBlendAlpha(BaseTest):
+    def test_blend_alpha_init(self) -> None:
+        blend_alpha = transforms.BlendAlpha(background=None)
+        self.assertIsNone(blend_alpha.background)
+
     def test_blend_alpha(self) -> None:
         rgb_tensor = torch.ones(3, 3, 3)
         alpha_tensor = ((torch.eye(3, 3) + torch.eye(3, 3).flip(1)) / 2).repeat(1, 1, 1)
