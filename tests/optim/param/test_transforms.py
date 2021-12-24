@@ -524,6 +524,27 @@ class TestCenterCrop(BaseTest):
         ).unsqueeze(0)
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
 
+    def test_center_crop_one_number_list(self) -> None:
+        pad = (1, 1, 1, 1)
+        test_tensor = (
+            F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1)
+            .repeat(3, 1, 1)
+            .unsqueeze(0)
+        )
+        crop_vals = [3]
+
+        crop_tensor = transforms.CenterCrop(crop_vals, True)
+        cropped_tensor = crop_tensor(test_tensor)
+
+        crop_mod_np = numpy_transforms.CenterCrop(crop_vals, True)
+        cropped_array = crop_mod_np.forward(test_tensor.numpy())
+
+        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        expected_tensor = torch.stack(
+            [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
+
     def test_center_crop_two_numbers(self) -> None:
         pad = (1, 1, 1, 1)
         test_tensor = (
@@ -729,6 +750,26 @@ class TestCenterCropFunction(BaseTest):
             .unsqueeze(0)
         )
         crop_vals = 3
+
+        cropped_tensor = transforms.center_crop(test_tensor, crop_vals, True)
+        cropped_array = numpy_transforms.center_crop(
+            test_tensor.numpy(), crop_vals, True
+        )
+
+        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        expected_tensor = torch.stack(
+            [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
+        ).unsqueeze(0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
+
+    def test_center_crop_one_number_list(self) -> None:
+        pad = (1, 1, 1, 1)
+        test_tensor = (
+            F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1)
+            .repeat(3, 1, 1)
+            .unsqueeze(0)
+        )
+        crop_vals = [3]
 
         cropped_tensor = transforms.center_crop(test_tensor, crop_vals, True)
         cropped_array = numpy_transforms.center_crop(
