@@ -843,7 +843,7 @@ class TestCenterCropFunction(BaseTest):
         crop_vals = [3, 3, 3]
 
         with self.assertRaises(ValueError):
-            cropped_tensor = transforms.center_crop(test_tensor, crop_vals, True)
+            transforms.center_crop(test_tensor, crop_vals, True)
 
     def test_center_crop_str_value_error(self) -> None:
         pad = (1, 1, 1, 1)
@@ -855,7 +855,7 @@ class TestCenterCropFunction(BaseTest):
         crop_vals = "error"
 
         with self.assertRaises(ValueError):
-            cropped_tensor = transforms.center_crop(test_tensor, crop_vals, True)
+            transforms.center_crop(test_tensor, crop_vals, True)
 
     def test_center_crop_two_numbers(self) -> None:
         pad = (1, 1, 1, 1)
