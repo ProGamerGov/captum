@@ -1090,6 +1090,29 @@ class TestToRGB(BaseTest):
             self, inverse_tensor, torch.ones_like(inverse_tensor.rename(None))
         )
 
+    def test_to_rgb_alpha_klt_forward_dim_3(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping ToRGB with Alpha forward dim 3 due to"
+                + " insufficient Torch version."
+            )
+        to_rgb = transforms.ToRGB(transform="klt")
+        test_tensor = torch.ones(4, 4, 4).refine_names("C", "H", "W")
+        rgb_tensor = to_rgb(test_tensor)
+
+        r = torch.ones(4, 4) * 0.8009
+        g = torch.ones(4, 4) * 0.4762
+        b = torch.ones(4, 4) * 0.4546
+        a = torch.ones(4, 4)
+        expected_rgb_tensor = torch.stack([r, g, b, a])
+
+        assertTensorAlmostEqual(self, rgb_tensor, expected_rgb_tensor, 0.002)
+
+        inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
+        assertTensorAlmostEqual(
+            self, inverse_tensor, torch.ones_like(inverse_tensor.rename(None))
+        )
+
     def test_to_rgb_i1i2i3_forward(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
