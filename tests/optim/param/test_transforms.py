@@ -495,6 +495,14 @@ class TestRandomSpatialJitter(BaseTest):
 
 
 class TestCenterCrop(BaseTest):
+    def test_center_crop_init(self) -> None:
+        crop_module = transforms.CenterCrop(3)
+        self.assertEqual(crop_module.size , [[3,3])
+        self.assertFalse(crop_module.pixels_from_edges)
+        self.assertFalse(crop_module.offset_left)
+        self.assertEqual(crop_module.padding_mode, "constant")
+        self.assertEqual(crop_module.padding_value , 0.0)
+
     def test_center_crop_one_number(self) -> None:
         pad = (1, 1, 1, 1)
         test_tensor = (
