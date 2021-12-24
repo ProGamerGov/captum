@@ -416,7 +416,7 @@ class TestRandomSpatialJitter(BaseTest):
     def test_random_spatial_jitter_init(self) -> None:
         translate = 3
         spatialjitter = transforms.RandomSpatialJitter(translate)
-        
+
         self.assertEqual(spatialjitter.pad_range, translate * 2)
         self.assertIsInstance(spatialjitter.pad, torch.nn.ReflectionPad2d)
 
@@ -497,11 +497,11 @@ class TestRandomSpatialJitter(BaseTest):
 class TestCenterCrop(BaseTest):
     def test_center_crop_init(self) -> None:
         crop_module = transforms.CenterCrop(3)
-        self.assertEqual(crop_module.size , [[3,3])
+        self.assertEqual(crop_module.size, [3, 3])
         self.assertFalse(crop_module.pixels_from_edges)
         self.assertFalse(crop_module.offset_left)
         self.assertEqual(crop_module.padding_mode, "constant")
-        self.assertEqual(crop_module.padding_value , 0.0)
+        self.assertEqual(crop_module.padding_value, 0.0)
 
     def test_center_crop_one_number(self) -> None:
         pad = (1, 1, 1, 1)
@@ -1000,21 +1000,39 @@ class TestToRGB(BaseTest):
     def test_to_rgb_init(self) -> None:
         to_rgb = transforms.ToRGB()
         self.assertEqual(list(to_rgb.transform.shape), [3, 3])
-        transform = torch.tensor([[ 0.5628,  0.1948,  0.0433], [ 0.5845,  0.0000, -0.1082], [ 0.5845, -0.1948,  0.0649]])
+        transform = torch.tensor(
+            [
+                [0.5628, 0.1948, 0.0433],
+                [0.5845, 0.0000, -0.1082],
+                [0.5845, -0.1948, 0.0649],
+            ]
+        )
         assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.0)
 
     def test_to_rgb_i1i2i3(self) -> None:
         to_rgb = transforms.ToRGB(transform="i1i2i3")
         to_rgb_np = numpy_transforms.ToRGB(transform="i1i2i3")
         assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
-        transform = torch.tensor([[ 0.3333,  0.3333,  0.3333], [ 0.5000,  0.0000, -0.5000], [-0.2500,  0.5000, -0.2500]])
+        transform = torch.tensor(
+            [
+                [0.3333, 0.3333, 0.3333],
+                [0.5000, 0.0000, -0.5000],
+                [-0.2500, 0.5000, -0.2500],
+            ]
+        )
         assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.0)
 
     def test_to_rgb_klt(self) -> None:
         to_rgb = transforms.ToRGB(transform="klt")
         to_rgb_np = numpy_transforms.ToRGB(transform="klt")
         assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
-        transform = torch.tensor([[ 0.5628,  0.1948,  0.0433], [ 0.5845,  0.0000, -0.1082], [ 0.5845, -0.1948,  0.0649]])
+        transform = torch.tensor(
+            [
+                [0.5628, 0.1948, 0.0433],
+                [0.5845, 0.0000, -0.1082],
+                [0.5845, -0.1948, 0.0649],
+            ]
+        )
         assertTensorAlmostEqual(self, to_rgb.transform, transform, 0.0)
 
     def test_to_rgb_custom(self) -> None:
@@ -1177,7 +1195,15 @@ class TestGaussianSmoothing(BaseTest):
             channels, kernel_size, sigma, dim
         )
         self.assertEqual(smoothening_module.groups, channels)
-        weight = torch.tensor([[[0.1019, 0.1154, 0.1019], [0.1154, 0.1308, 0.1154], [0.1019, 0.1154, 0.1019]]]).repeat(3, 1, 1, 1)
+        weight = torch.tensor(
+            [
+                [
+                    [0.1019, 0.1154, 0.1019],
+                    [0.1154, 0.1308, 0.1154],
+                    [0.1019, 0.1154, 0.1019],
+                ]
+            ]
+        ).repeat(3, 1, 1, 1)
         assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0)
 
     def test_gaussian_smoothing_init_3d(self) -> None:
@@ -1189,17 +1215,27 @@ class TestGaussianSmoothing(BaseTest):
             channels, kernel_size, sigma, dim
         )
         self.assertEqual(smoothening_module.groups, channels)
-        weight = torch.tensor([[[[0.0212, 0.0342, 0.0212],
-          [0.0342, 0.0552, 0.0342],
-          [0.0212, 0.0342, 0.0212]],
-
-         [[0.0342, 0.0552, 0.0342],
-          [0.0552, 0.0892, 0.0552],
-          [0.0342, 0.0552, 0.0342]],
-
-         [[0.0212, 0.0342, 0.0212],
-          [0.0342, 0.0552, 0.0342],
-          [0.0212, 0.0342, 0.0212]]]]).repeat(4,1,1,1,1)
+        weight = torch.tensor(
+            [
+                [
+                    [
+                        [0.0212, 0.0342, 0.0212],
+                        [0.0342, 0.0552, 0.0342],
+                        [0.0212, 0.0342, 0.0212],
+                    ],
+                    [
+                        [0.0342, 0.0552, 0.0342],
+                        [0.0552, 0.0892, 0.0552],
+                        [0.0342, 0.0552, 0.0342],
+                    ],
+                    [
+                        [0.0212, 0.0342, 0.0212],
+                        [0.0342, 0.0552, 0.0342],
+                        [0.0212, 0.0342, 0.0212],
+                    ],
+                ]
+            ]
+        ).repeat(4, 1, 1, 1, 1)
         assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0)
 
     def test_gaussian_smoothing_1d(self) -> None:
