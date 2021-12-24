@@ -545,6 +545,12 @@ class TestCenterCrop(BaseTest):
         ).unsqueeze(0)
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
 
+    def test_center_crop_list_len_3_value_error(self) -> None:
+        crop_vals = [3, 3, 3]
+
+        with self.assertRaises(ValueError):
+            crop_tensor = transforms.CenterCrop(crop_vals, True)
+
     def test_center_crop_two_numbers(self) -> None:
         pad = (1, 1, 1, 1)
         test_tensor = (
@@ -781,6 +787,18 @@ class TestCenterCropFunction(BaseTest):
             [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
         ).unsqueeze(0)
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
+
+    def test_center_crop_list_len_3_value_error(self) -> None:
+        pad = (1, 1, 1, 1)
+        test_tensor = (
+            F.pad(F.pad(torch.ones(2, 2), pad=pad), pad=pad, value=1)
+            .repeat(3, 1, 1)
+            .unsqueeze(0)
+        )
+        crop_vals = [3, 3, 3]
+
+        with self.assertRaises(ValueError):
+            cropped_tensor = transforms.center_crop(test_tensor, crop_vals, True)
 
     def test_center_crop_two_numbers(self) -> None:
         pad = (1, 1, 1, 1)
@@ -1084,8 +1102,7 @@ class TestToRGB(BaseTest):
         assertTensorAlmostEqual(self, to_rgb.transform, matrix, 0.0)
 
     def test_to_rgb_init_value_error(self) -> None:
-        with self.assertRaises(ValueError, "transform has to be either 'klt'" +
-             ", 'i1i2i3', or a matrix tensor."):
+        with self.assertRaises(ValueError):
              transforms.ToRGB(transform="error")
 
     def test_to_rgb_klt_forward(self) -> None:
