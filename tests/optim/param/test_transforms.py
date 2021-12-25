@@ -166,6 +166,11 @@ class TestRandomScale(BaseTest):
         )
 
     def test_random_scale_forward_exact_align_corners(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping RandomScale exact align corners forward due to"
+                + " insufficient Torch version."
+            )
         scale_module = transforms.RandomScale(scale=[0.5], align_corners=True)
         self.assertTrue(scale_module.align_corners)
 
