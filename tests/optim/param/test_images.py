@@ -120,6 +120,16 @@ class TestFFTImage(BaseTest):
 
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
 
+    def test_fftimage_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping FFTImage JIT module test due to insufficient Torch version."
+            )
+        fftimage = images.FFTImage(size=(224, 224))
+        jit_fftimage = torch.jit.script(fftimage)
+        fftimage_tensor = jit_fftimage()
+        self.assertTrue(torch.is_tensor(fftimage_tensor))
+
     def test_fftimage_forward_init_randn_batch(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
@@ -277,6 +287,17 @@ class TestPixelImage(BaseTest):
         self.assertEqual(test_tensor.size(1), channels)
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])
+
+    def test_fftimage_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage JIT module test due to insufficient Torch"
+                + " version."
+            )
+        image_param = images.PixelImage(size=(224, 224), channels=3)
+        jit_image_param = torch.jit.script(image_param)
+        output_Tensor = jit_image_param()
+        self.assertTrue(torch.is_tensor(output_Tensor))
 
     def test_pixelimage_init_forward(self) -> None:
         if torch.__version__ <= "1.2.0":
