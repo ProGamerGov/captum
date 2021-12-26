@@ -218,6 +218,14 @@ class FFTImage(ImageParameterization):
         fx = self.torch_fftfreq(width)[: width // 2 + 1]
         return torch.sqrt((fx * fx) + (fy * fy))
 
+    def torch_irfftn(self, x: torch.Tensor) -> torch.Tensor:
+        """JIT Compatible irfftn function."""
+        if self._supports_is_scripting:
+            if not torch.jit.is_scripting():
+                if type(x) is not torch.complex64:
+                    x = torch.view_as_complex(x)
+        return torch.fft.irfftn(x, s=self.size)  # type: ignore
+
     def get_fft_funcs(self) -> Tuple[Callable, Callable, Callable]:
         """
         Support older versions of PyTorch. This function ensures that the same FFT
@@ -235,10 +243,7 @@ class FFTImage(ImageParameterization):
             def torch_rfft(x: torch.Tensor) -> torch.Tensor:
                 return torch.view_as_real(torch.fft.rfftn(x, s=self.size))
 
-            def torch_irfft(x: torch.Tensor) -> torch.Tensor:
-                if type(x) is not torch.complex64:
-                    x = torch.view_as_complex(x)
-                return torch.fft.irfftn(x, s=self.size)  # type: ignore
+            torch_irfft = torch_irfftn
 
             def torch_fftfreq(v: int, d: float = 1.0) -> torch.Tensor:
                 return torch.fft.fftfreq(v, d)
