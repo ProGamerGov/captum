@@ -663,6 +663,16 @@ class TestNaturalImage(BaseTest):
         image_param = images.NaturalImage().cuda()
         self.assertTrue(image_param().is_cuda)
 
+    def test_natural_image_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage JIT module test due to not supporting CUDA."
+            )
+        image_param = images.NaturalImage()
+        jit_image_param = torch.jit.script(image_param)
+        output_tensor = jit_image_param()
+        self.assertTrue(torch.is_tensor(output_tensor))
+
     def test_natural_image_decorrelation_module_none(self) -> None:
         if torch.__version__ <= "1.3.0":
             raise unittest.SkipTest(
