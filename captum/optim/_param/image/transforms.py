@@ -101,7 +101,7 @@ class ToRGB(nn.Module):
             raise ValueError(
                 "transform has to be either 'klt', 'i1i2i3'," + " or a matrix tensor."
             )
-        # Check whether or not we can use torch.jit.is_scripting()
+        # Check & store whether or not we can use torch.jit.is_scripting()
         self._supports_is_scripting = torch.__version__  >= "1.6.0"
 
     @torch.jit.ignore
@@ -207,8 +207,8 @@ class ToRGB(nn.Module):
 
     def forward(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
         """
-        JIT does not yet support named dimensions, and versions of PyTorch below 1.6.0
-        do not have named dims.
+        JIT does not yet support named dimensions.
+
         Args:
 
             x (torch.tensor):  A CHW or NCHW RGB or RGBA image tensor.
@@ -221,17 +221,8 @@ class ToRGB(nn.Module):
         """    
         if self._supports_is_scripting:
             if torch.jit.is_scripting():
-                x = self._forward_without_named_dims(x, inverse)
-            elif list(x.names) in [[None] * 3, [None] * 4]:
-                x = self._forward_without_named_dims(x, inverse)
-            else:
-                x = self._forward(x, inverse)
-        elif not self._supports_is_scripting:
-            # Input will not have .names property
-            x = self._forward_without_named_dims(x, inverse)
-        else:
-            x = self._forward(x, inverse)
-        return x
+                return self._forward_without_named_dims(x, inverse)
+        return self._forward(x, inverse)
 
 
 class CenterCrop(torch.nn.Module):
