@@ -69,26 +69,9 @@ class IgnoreAlpha(nn.Module):
 
 
 class ToRGB(nn.Module):
-    """Transforms arbitrary channels to RGB. We use this to ensure our
-    image parametrization itself can be decorrelated. So this goes between
-    the image parametrization and the normalization/sigmoid step.
-    We offer two precalculated transforms: Karhunen-Loève (KLT) and I1I2I3.
-    KLT corresponds to the empirically measured channel correlations on imagenet.
-    I1I2I3 corresponds to an approximation for natural images from Ohta et al.[0]
-    [0] Y. Ohta, T. Kanade, and T. Sakai, "Color information for region segmentation,"
-    Computer Graphics and Image Processing, vol. 13, no. 3, pp. 222–241, 1980
-    https://www.sciencedirect.com/science/article/pii/0146664X80900477
-    """
-
+    __constants__ = ["_supports_is_scripting"]
     @staticmethod
     def klt_transform() -> torch.Tensor:
-        """
-        Karhunen-Loève transform (KLT) measured on ImageNet
-
-        Returns:
-            **transform** (torch.Tensor): A Karhunen-Loève transform (KLT) measured on
-                the ImageNet dataset.
-        """
         KLT = [[0.26, 0.09, 0.02], [0.27, 0.00, -0.05], [0.27, -0.09, 0.03]]
         transform = torch.Tensor(KLT).float()
         transform = transform / torch.max(torch.norm(transform, dim=0))
@@ -96,11 +79,6 @@ class ToRGB(nn.Module):
 
     @staticmethod
     def i1i2i3_transform() -> torch.Tensor:
-        """
-        Returns:
-            **transform** (torch.Tensor): An approximation of natural colors transform
-                (i1i2i3).
-        """
         i1i2i3_matrix = [
             [1 / 3, 1 / 3, 1 / 3],
             [1 / 2, 0, -1 / 2],
@@ -109,13 +87,6 @@ class ToRGB(nn.Module):
         return torch.Tensor(i1i2i3_matrix)
 
     def __init__(self, transform: Union[str, torch.Tensor] = "klt") -> None:
-        """
-        Args:
-
-            transform (str or tensor):  Either a string for one of the precalculated
-                transform matrices, or a 3x3 matrix for the 3 RGB channels of input
-                tensors.
-        """
         super().__init__()
         assert isinstance(transform, str) or torch.is_tensor(transform)
         if torch.is_tensor(transform):
@@ -130,9 +101,11 @@ class ToRGB(nn.Module):
             raise ValueError(
                 "transform has to be either 'klt', 'i1i2i3'," + " or a matrix tensor."
             )
+        # Check whether or not we can use torch.jit.is_scripting()
+        self._supports_is_scripting = torch.__version__  >= "1.6.0"
 
     @torch.jit.ignore
-    def forward(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
+    def _forward(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
         """
         Args:
 
@@ -144,8 +117,18 @@ class ToRGB(nn.Module):
             chw (torch.tensor):  A tensor with it's colors recorrelated or
                 decorrelated.
         """
-
         assert x.dim() == 3 or x.dim() == 4
+        if list(x.names) in [[None] * 3, [None] * 4]:
+            x = (
+                x.refine_names("B", "C", "H", "W")
+                if x.dim() == 4
+                else x.refine_names("C", "H", "W")
+            )
+        assert (
+            x.names == ("C", "H", "W")
+            if x.dim() == 3
+            else x.names == ("B", "C", "H", "W")
+        )
 
         # alpha channel is taken off...
         has_alpha = x.size("C") == 4
@@ -175,6 +158,80 @@ class ToRGB(nn.Module):
             chw = torch.cat([chw, alpha_channel], d)
 
         return chw
+
+    def _forward_without_named_dims(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
+        """
+        JIT compatible forward function for ToRGB.
+
+        Args:
+
+            x (torch.tensor):  A CHW pr NCHW RGB or RGBA image tensor.
+            inverse (bool, optional):  Whether to recorrelate or decorrelate colors.
+                Default: False.
+
+        Returns:
+            chw (torch.tensor):  A tensor with it's colors recorrelated or
+                decorrelated.
+        """
+        assert x.dim() == 4 or x.dim() == 3
+        assert x.shape[-3] == 3 or x.shape[-3] == 4
+        
+        # alpha channel is taken off...
+        has_alpha = x.shape[-3] == 4
+        if has_alpha:
+            if x.dim() == 3:
+                x, alpha_channel = x[:3], x[3:]
+            else:
+                x, alpha_channel = x[:, :3], x[:, 3:]
+            assert x.dim() == alpha_channel.dim()  # ensure we "keep_dim"
+        else:
+           # JIT requires a placeholder
+           alpha_channel = torch.tensor([0])
+
+        c_dim = 1 if x.dim() == 4 else 0
+        h, w = x.shape[c_dim+1:]
+        flat = x.reshape(list(x.shape[:c_dim+1]) + [h*w])
+
+        if inverse:
+            correct = torch.inverse(self.transform.to(x.device, x.dtype)) @ flat
+        else:
+            correct = self.transform.to(x.device, x.dtype) @ flat
+        chw = correct.reshape(x.shape)
+
+        # ...alpha channel is concatenated on again.
+        if has_alpha:
+            d = 0 if x.dim() == 3 else 1
+            chw = torch.cat([chw, alpha_channel], d)
+
+        return chw
+
+    def forward(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
+        """
+        JIT does not yet support named dimensions, and versions of PyTorch below 1.6.0
+        do not have named dims.
+        Args:
+
+            x (torch.tensor):  A CHW or NCHW RGB or RGBA image tensor.
+            inverse (bool, optional):  Whether to recorrelate or decorrelate colors.
+                Default: False.
+
+        Returns:
+            chw (torch.tensor):  A tensor with it's colors recorrelated or
+                decorrelated.
+        """    
+        if self._supports_is_scripting:
+            if torch.jit.is_scripting():
+                x = self._forward_without_named_dims(x, inverse)
+            elif list(x.names) in [[None] * 3, [None] * 4]:
+                x = self._forward_without_named_dims(x, inverse)
+            else:
+                x = self._forward(x, inverse)
+        elif not self._supports_is_scripting:
+            # Input will not have .names property
+            x = self._forward_without_named_dims(x, inverse)
+        else:
+            x = self._forward(x, inverse)
+        return x
 
 
 class CenterCrop(torch.nn.Module):
