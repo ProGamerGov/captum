@@ -319,6 +319,7 @@ class PixelImage(ImageParameterization):
             assert init.shape[1] == 3, "PixelImage init should have 3 channels, "
             f"input has {init.shape[1]} channels."
         self.image = nn.Parameter(init)
+
         # Check & store whether or not we can use torch.jit.is_scripting()
         self._supports_is_scripting = torch.__version__  >= "1.6.0"
 
