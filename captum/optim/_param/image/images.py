@@ -626,6 +626,7 @@ class NaturalImage(ImageParameterization):
         """
         super().__init__()
         self.decorrelate = decorrelation_module
+        squash_func = torch.sigmoid if squash_func is None else squash_func
         if init is not None:
             assert init.dim() == 3 or init.dim() == 4
             if decorrelate_init and self.decorrelate is not None:
@@ -637,25 +638,28 @@ class NaturalImage(ImageParameterization):
                 init = self.decorrelate(init, inverse=True).rename(None)
             if squash_func is None:
 
-                def squash_func(x: torch.Tensor) -> torch.Tensor:
-                    return x.clamp(0, 1)
-
-        else:
-            if squash_func is None:
-
-                squash_func = torch.sigmoid
+                squash_func = self._clamp_squash_func
 
         self.squash_func = squash_func
         self.parameterization = parameterization(
             size=size, channels=channels, batch=batch, init=init
         )
 
+    def _clamp_squash_func(self, x: torch.Tensor) -> torch.Tensor:
+        """JIT supported squash function."""
+        return x.clamp(0, 1)
+
+    @torch.jit.ignore
+    def _to_image_tensor(x: torch.Tensor) -> torch.Tensor:
+        """Wrap ImageTensor in torch.jit.ignore for JIT support"""
+        return ImageTensor(x)
+
     def forward(self) -> torch.Tensor:
         image = self.parameterization()
         if self.decorrelate is not None:
             image = self.decorrelate(image)
         image = image.rename(None)  # TODO: the world is not yet ready
-        return ImageTensor(self.squash_func(image))
+        return self._to_image_tensor(self.squash_func(image))
 
 
 __all__ = [
