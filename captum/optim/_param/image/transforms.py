@@ -84,6 +84,7 @@ class ToRGB(nn.Module):
     def klt_transform() -> torch.Tensor:
         """
         Karhunen-Loève transform (KLT) measured on ImageNet
+
         Returns:
             **transform** (torch.Tensor): A Karhunen-Loève transform (KLT) measured on
                 the ImageNet dataset.
@@ -110,6 +111,7 @@ class ToRGB(nn.Module):
     def __init__(self, transform: Union[str, torch.Tensor] = "klt") -> None:
         """
         Args:
+
             transform (str or tensor):  Either a string for one of the precalculated
                 transform matrices, or a 3x3 matrix for the 3 RGB channels of input
                 tensors.
