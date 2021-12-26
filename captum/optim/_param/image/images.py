@@ -220,9 +220,8 @@ class FFTImage(ImageParameterization):
 
     def torch_irfft(self, x: torch.Tensor) -> torch.Tensor:
         """JIT Compatible irfftn function."""
-        if not torch.jit.is_scripting():
-            if type(x) is not torch.complex64:
-                x = torch.view_as_complex(x)
+        if x.dtype != torch.complex64:
+            x = torch.view_as_complex(x)
         return torch.fft.irfftn(x, s=self.size)  # type: ignore
 
     def get_fft_funcs(self) -> Tuple[Callable, Callable, Callable]:
