@@ -69,9 +69,25 @@ class IgnoreAlpha(nn.Module):
 
 
 class ToRGB(nn.Module):
-    __constants__ = ["_supports_is_scripting"]
+    """Transforms arbitrary channels to RGB. We use this to ensure our
+    image parametrization itself can be decorrelated. So this goes between
+    the image parametrization and the normalization/sigmoid step.
+    We offer two precalculated transforms: Karhunen-Loève (KLT) and I1I2I3.
+    KLT corresponds to the empirically measured channel correlations on imagenet.
+    I1I2I3 corresponds to an approximation for natural images from Ohta et al.[0]
+    [0] Y. Ohta, T. Kanade, and T. Sakai, "Color information for region segmentation,"
+    Computer Graphics and Image Processing, vol. 13, no. 3, pp. 222–241, 1980
+    https://www.sciencedirect.com/science/article/pii/0146664X80900477
+    """
+
     @staticmethod
     def klt_transform() -> torch.Tensor:
+        """
+        Karhunen-Loève transform (KLT) measured on ImageNet
+        Returns:
+            **transform** (torch.Tensor): A Karhunen-Loève transform (KLT) measured on
+                the ImageNet dataset.
+        """
         KLT = [[0.26, 0.09, 0.02], [0.27, 0.00, -0.05], [0.27, -0.09, 0.03]]
         transform = torch.Tensor(KLT).float()
         transform = transform / torch.max(torch.norm(transform, dim=0))
@@ -79,6 +95,11 @@ class ToRGB(nn.Module):
 
     @staticmethod
     def i1i2i3_transform() -> torch.Tensor:
+        """
+        Returns:
+            **transform** (torch.Tensor): An approximation of natural colors transform
+                (i1i2i3).
+        """
         i1i2i3_matrix = [
             [1 / 3, 1 / 3, 1 / 3],
             [1 / 2, 0, -1 / 2],
@@ -87,6 +108,12 @@ class ToRGB(nn.Module):
         return torch.Tensor(i1i2i3_matrix)
 
     def __init__(self, transform: Union[str, torch.Tensor] = "klt") -> None:
+        """
+        Args:
+            transform (str or tensor):  Either a string for one of the precalculated
+                transform matrices, or a 3x3 matrix for the 3 RGB channels of input
+                tensors.
+        """
         super().__init__()
         assert isinstance(transform, str) or torch.is_tensor(transform)
         if torch.is_tensor(transform):
