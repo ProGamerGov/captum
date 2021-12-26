@@ -242,7 +242,7 @@ class FFTImage(ImageParameterization):
             def torch_rfft(x: torch.Tensor) -> torch.Tensor:
                 return torch.view_as_real(torch.fft.rfftn(x, s=self.size))
 
-            torch_irfft = torch_irfftn
+            torch_irfft = self.torch_irfftn
 
             def torch_fftfreq(v: int, d: float = 1.0) -> torch.Tensor:
                 return torch.fft.fftfreq(v, d)
