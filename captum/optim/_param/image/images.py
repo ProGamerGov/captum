@@ -239,6 +239,7 @@ class FFTImage(ImageParameterization):
 
         if TORCH_VERSION >= "1.7.0":
             if TORCH_VERSION < "1.8.0":
+                global torch
                 import torch.fft
 
             def torch_rfft(x: torch.Tensor) -> torch.Tensor:
@@ -250,8 +251,6 @@ class FFTImage(ImageParameterization):
                 return torch.fft.fftfreq(v, d)
 
         else:
-            import torch
-
             def torch_rfft(x: torch.Tensor) -> torch.Tensor:
                 return torch.rfft(x, signal_ndim=2)
 
