@@ -708,7 +708,7 @@ class TestNaturalImage(BaseTest):
             )
         image_param = images.NaturalImage(size=(4, 4))
         self.assertIsInstance(image_param.parameterization, images.FFTImage)
-        self.assertIsInstance(image_param.decorrelation_module, ToRGB)
+        self.assertIsInstance(image_param.decorrelate, ToRGB)
         self.assertEqual(image_param.squash_func, torch.sigmoid)
 
     def test_natural_image_init_func_fft_image(self) -> None:
@@ -719,7 +719,7 @@ class TestNaturalImage(BaseTest):
             )
         image_param = images.NaturalImage(size=(4, 4), parameterization=images.FFTImage)
         self.assertIsInstance(image_param.parameterization, images.FFTImage)
-        self.assertIsInstance(image_param.decorrelation_module, ToRGB)
+        self.assertIsInstance(image_param.decorrelate, ToRGB)
         self.assertEqual(image_param.squash_func, torch.sigmoid)
 
     def test_natural_image_init_func_pixel_image(self) -> None:
@@ -728,9 +728,9 @@ class TestNaturalImage(BaseTest):
                 "Skipping NaturalImage PixelImage init func test due to insufficient"
                 + " Torch version."
             )
-        image_param = images.NaturalImage(size=(4, 4), parameterization=images.FFTImage)
+        image_param = images.NaturalImage(size=(4, 4), parameterization=images.PixelImage)
         self.assertIsInstance(image_param.parameterization, images.PixelImage)
-        self.assertIsInstance(image_param.decorrelation_module, ToRGB)
+        self.assertIsInstance(image_param.decorrelate, ToRGB)
         self.assertEqual(image_param.squash_func, torch.sigmoid)
 
     def test_natural_image_init_func_default_init_tensor(self) -> None:
@@ -741,7 +741,7 @@ class TestNaturalImage(BaseTest):
             )
         image_param = images.NaturalImage(init=torch.ones(1, 3, 1, 1))
         self.assertIsInstance(image_param.parameterization, images.FFTImage)
-        self.assertIsInstance(image_param.decorrelation_module, ToRGB)
+        self.assertIsInstance(image_param.decorrelate, ToRGB)
         self.assertEqual(image_param.squash_func, image_param._clamp_image)
 
     def test_natural_image_init_tensor_pixel_image_sf_sigmoid(self) -> None:
