@@ -633,7 +633,6 @@ class NaturalImage(ImageParameterization):
         """
         super().__init__()
         self.decorrelate = decorrelation_module
-        squash_func = torch.sigmoid if squash_func is None else squash_func
         if init is not None:
             assert init.dim() == 3 or init.dim() == 4
             if decorrelate_init and self.decorrelate is not None:
@@ -643,11 +642,11 @@ class NaturalImage(ImageParameterization):
                     else init.refine_names("C", "H", "W")
                 )
                 init = self.decorrelate(init, inverse=True).rename(None)
-            if squash_func is None:
 
+            if squash_func is None:
                 squash_func = self._clamp_image
 
-        self.squash_func = squash_func
+        self.squash_func = torch.sigmoid if squash_func is None else squash_func
         self.parameterization = parameterization(
             size=size, channels=channels, batch=batch, init=init
         )
