@@ -164,22 +164,44 @@ class TestFFTImage(BaseTest):
         spectrum_scale = scale[None, :, :, None]
         assertTensorAlmostEqual(self, image_param.spectrum_scale, spectrum_scale, delta=0.0009)
 
-    def test_init_fourier_coeffs_init_tensor(self) -> None:
+    def test_init_fourier_coeffs_init_tensor_after_v1_7_0(self) -> None:
+        if torch.__version__ >= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping FFTImage test due to insufficient Torch version."
+            )
+        size = (4, 4)
+        init_tensor = torch.ones(1, 3, size[0], size[1])
+        image_param = images.FFTImage(init=init_tensor.clone())
+
+        torch_rfft_init = torch.view_as_real(torch.fft.rfftn(init_tensor, s=size))
+
+        scale = torch.tensor(
+            [
+                [4.0000, 4.0000, 2.0000],
+                [4.0000, 2.8284, 1.7889],
+                [2.0000, 1.7889, 1.4142],
+                [4.0000, 2.8284, 1.7889],
+            ]
+        )
+        scale = scale * ((size[0] * size[1]) ** (1 / 2))
+        spectrum_scale = scale[None, :, :, None]
+
+        fourier_coeffs = torch_rfft_init * spectrum_scale
+        assertTensorAlmostEqual(self, image_param.fourier_coeffs, fourier_coeffs)
+        self.assertTrue(image_param.fourier_coeffs.requires_grad)
+
+    def test_init_fourier_coeffs_init_tensor_before_v1_7_0(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping FFTImage test due to newer Torch version."
+            )
         import torch
 
         size = (4, 4)
         init_tensor = torch.ones(1, 3, size[0], size[1])
         image_param = images.FFTImage(init=init_tensor.clone())
 
-        if torch.__version__ >= "1.7.0":
-            import torch.fft
-
-            torch_rfft_init = torch.view_as_real(torch.fft.rfftn(init_tensor, s=size))
-
-        else:
-            import torch
-
-            torch_rfft_init = torch.rfft(init_tensor, signal_ndim=2)
+        torch_rfft_init = torch.rfft(init_tensor, signal_ndim=2)
 
         scale = torch.tensor(
             [
