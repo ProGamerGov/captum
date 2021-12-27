@@ -728,7 +728,9 @@ class TestNaturalImage(BaseTest):
                 "Skipping NaturalImage PixelImage init func test due to insufficient"
                 + " Torch version."
             )
-        image_param = images.NaturalImage(size=(4, 4), parameterization=images.PixelImage)
+        image_param = images.NaturalImage(
+            size=(4, 4), parameterization=images.PixelImage
+        )
         self.assertIsInstance(image_param.parameterization, images.PixelImage)
         self.assertIsInstance(image_param.decorrelate, ToRGB)
         self.assertEqual(image_param.squash_func, torch.sigmoid)
