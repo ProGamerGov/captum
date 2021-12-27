@@ -162,7 +162,7 @@ class TestFFTImage(BaseTest):
         )
         scale = scale * ((size[0] * size[1]) ** (1 / 2))
         spectrum_scale = scale[None, :, :, None]
-        assertTensorAlmostEqual(self, image_param.spectrum_scale, spectrum_scale)
+        assertTensorAlmostEqual(self, image_param.spectrum_scale, spectrum_scale, delta=0.0009)
 
     def test_init_fourier_coeffs_init_tensor(self) -> None:
         size = (4, 4)
