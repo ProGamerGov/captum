@@ -651,6 +651,7 @@ class NaturalImage(ImageParameterization):
             size=size, channels=channels, batch=batch, init=init
         )
 
+    @torch.jit.export
     def _clamp_image(self, x: torch.Tensor) -> torch.Tensor:
         """JIT supported squash function."""
         return x.clamp(0, 1)
