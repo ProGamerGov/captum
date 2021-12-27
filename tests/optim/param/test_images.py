@@ -165,6 +165,8 @@ class TestFFTImage(BaseTest):
         assertTensorAlmostEqual(self, image_param.spectrum_scale, spectrum_scale, delta=0.0009)
 
     def test_init_fourier_coeffs_init_tensor(self) -> None:
+        import torch
+
         size = (4, 4)
         init_tensor = torch.ones(1, 3, size[0], size[1])
         image_param = images.FFTImage(init=init_tensor.clone())
