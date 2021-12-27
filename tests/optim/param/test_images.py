@@ -687,12 +687,24 @@ class TestNaturalImage(BaseTest):
     def test_natural_image_jit_module(self) -> None:
         if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
-                "Skipping NaturalImage JIT module test due to not supporting CUDA."
+                "Skipping NaturalImage JIT module test due to"
+                + " insufficient Torch version."
             )
         image_param = images.NaturalImage()
         jit_image_param = torch.jit.script(image_param)
         output_tensor = jit_image_param()
         self.assertTrue(torch.is_tensor(output_tensor))
+
+    def test_natural_image_jit_module_init_tensor(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage init tensor JIT module test due to"
+                + " insufficient Torch version."
+            )
+        image_param = images.NaturalImage(init=torch.ones(3, 1, 1))
+        jit_image_param = torch.jit.script(image_param)
+        output_tensor = jit_image_param()
+        assertTensorAlmostEqual(self, output_tensor, torch.ones_like(output_tensor))
 
     def test_natural_image_decorrelation_module_none(self) -> None:
         if torch.__version__ <= "1.3.0":
