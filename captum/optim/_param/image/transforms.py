@@ -147,6 +147,7 @@ class ToRGB(nn.Module):
                 decorrelated.
         """
         assert x.dim() == 3 or x.dim() == 4
+        assert x.shape[-3] >= 3
         assert (
             x.names == ("C", "H", "W")
             if x.dim() == 3
@@ -199,7 +200,7 @@ class ToRGB(nn.Module):
                 decorrelated.
         """
         assert x.dim() == 4 or x.dim() == 3
-        assert x.shape[-3] == 3 or x.shape[-3] == 4
+        assert x.shape[-3] >= 3
 
         # alpha channel is taken off...
         has_alpha = x.shape[-3] == 4
