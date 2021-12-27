@@ -238,7 +238,8 @@ class FFTImage(ImageParameterization):
         """
 
         if TORCH_VERSION >= "1.7.0":
-            import torch.fft
+            if TORCH_VERSION < "1.8.0":
+                import torch.fft
 
             def torch_rfft(x: torch.Tensor) -> torch.Tensor:
                 return torch.view_as_real(torch.fft.rfftn(x, s=self.size))
