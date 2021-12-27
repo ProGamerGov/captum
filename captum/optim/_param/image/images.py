@@ -655,7 +655,16 @@ class NaturalImage(ImageParameterization):
 
     @torch.jit.ignore
     def _to_image_tensor(self, x: torch.Tensor) -> torch.Tensor:
-        """Wrap ImageTensor in torch.jit.ignore for JIT support"""
+        """
+        Wrap ImageTensor in torch.jit.ignore for JIT support.
+
+        Args:
+
+            x (torch.tensor): An input tensor.
+
+        Returns:
+            x (ImageTensor): An instance of ImageTensor with the input tensor.
+        """
         return ImageTensor(x)
 
     def forward(self) -> torch.Tensor:
