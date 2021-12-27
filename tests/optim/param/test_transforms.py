@@ -1305,7 +1305,7 @@ class TestToRGB(BaseTest):
             )
         to_rgb = transforms.ToRGB(transform="klt")
         jit_to_rgb = torch.jit.script(to_rgb)
-        test_tensor = torch.ones(3, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
+        test_tensor = torch.ones(3, 4, 4).unsqueeze(0)
         rgb_tensor = jit_to_rgb(test_tensor)
 
         r = torch.ones(4, 4) * 0.8009
