@@ -131,7 +131,7 @@ class ToRGB(nn.Module):
                 "transform has to be either 'klt', 'i1i2i3'," + " or a matrix tensor."
             )
         # Check & store whether or not we can use torch.jit.is_scripting()
-        self._supports_is_scripting = torch.__version__  >= "1.6.0"
+        self._supports_is_scripting = torch.__version__ >= "1.6.0"
 
     @torch.jit.ignore
     def _forward(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
@@ -182,7 +182,9 @@ class ToRGB(nn.Module):
 
         return chw
 
-    def _forward_without_named_dims(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
+    def _forward_without_named_dims(
+        self, x: torch.Tensor, inverse: bool = False
+    ) -> torch.Tensor:
         """
         JIT compatible forward function for ToRGB.
 
@@ -198,7 +200,7 @@ class ToRGB(nn.Module):
         """
         assert x.dim() == 4 or x.dim() == 3
         assert x.shape[-3] == 3 or x.shape[-3] == 4
-        
+
         # alpha channel is taken off...
         has_alpha = x.shape[-3] == 4
         if has_alpha:
@@ -208,12 +210,12 @@ class ToRGB(nn.Module):
                 x, alpha_channel = x[:, :3], x[:, 3:]
             assert x.dim() == alpha_channel.dim()  # ensure we "keep_dim"
         else:
-           # JIT requires a placeholder
-           alpha_channel = torch.tensor([0])
+            # JIT requires a placeholder
+            alpha_channel = torch.tensor([0])
 
         c_dim = 1 if x.dim() == 4 else 0
-        h, w = x.shape[c_dim+1:]
-        flat = x.reshape(list(x.shape[:c_dim+1]) + [h*w])
+        h, w = x.shape[c_dim + 1 :]
+        flat = x.reshape(list(x.shape[: c_dim + 1]) + [h * w])
 
         if inverse:
             correct = torch.inverse(self.transform.to(x.device, x.dtype)) @ flat
@@ -241,7 +243,7 @@ class ToRGB(nn.Module):
         Returns:
             chw (torch.tensor):  A tensor with it's colors recorrelated or
                 decorrelated.
-        """    
+        """
         if self._supports_is_scripting:
             if torch.jit.is_scripting():
                 return self._forward_without_named_dims(x, inverse)

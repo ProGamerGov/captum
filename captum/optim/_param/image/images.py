@@ -137,6 +137,7 @@ class FFTImage(ImageParameterization):
     """
     Parameterize an image using inverse real 2D FFT
     """
+
     __constants__ = ["size", "_supports_is_scripting"]
 
     def __init__(
@@ -199,7 +200,7 @@ class FFTImage(ImageParameterization):
         self.fourier_coeffs = nn.Parameter(fourier_coeffs)
 
         # Check & store whether or not we can use torch.jit.is_scripting()
-        self._supports_is_scripting = torch.__version__  >= "1.6.0"
+        self._supports_is_scripting = torch.__version__ >= "1.6.0"
 
     def rfft2d_freqs(self, height: int, width: int) -> torch.Tensor:
         """
@@ -286,6 +287,7 @@ class PixelImage(ImageParameterization):
     """
     Parameterize a simple pixel image tensor that requires no additional transforms.
     """
+
     __constants__ = ["_supports_is_scripting"]
 
     def __init__(
@@ -322,7 +324,7 @@ class PixelImage(ImageParameterization):
         self.image = nn.Parameter(init)
 
         # Check & store whether or not we can use torch.jit.is_scripting()
-        self._supports_is_scripting = torch.__version__  >= "1.6.0"
+        self._supports_is_scripting = torch.__version__ >= "1.6.0"
 
     def forward(self) -> torch.Tensor:
         if self._supports_is_scripting:
