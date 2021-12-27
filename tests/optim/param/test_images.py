@@ -166,17 +166,18 @@ class TestFFTImage(BaseTest):
 
     def test_init_fourier_coeffs_init_tensor(self) -> None:
         size = (4, 4)
-        image_param = images.FFTImage(init=torch.ones(1, 3, size[0], size[1]))
-        torch_rfft_init = torch.tensor(
-            [
-                [
-                    [[16.0, 0.0], [0.0, -0.0], [0.0, 0.0]],
-                    [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
-                    [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
-                    [[0.0, 0.0], [0.0, 0.0], [0.0, 0.0]],
-                ]
-            ]
-        ).repeat(1, 3, 1, 1, 1)
+        init_tensor = torch.ones(1, 3, size[0], size[1])
+        image_param = images.FFTImage(init=init_tensor.clone())
+
+        if torch.__version__ >= "1.7.0":
+            import torch.fft
+
+            torch_rfft_init = torch.view_as_real(torch.fft.rfftn(init_tensor, s=size))
+
+        else:
+            import torch
+
+            torch_rfft_init = torch.rfft(init_tensor, signal_ndim=2)
 
         scale = torch.tensor(
             [
@@ -188,9 +189,6 @@ class TestFFTImage(BaseTest):
         )
         scale = scale * ((size[0] * size[1]) ** (1 / 2))
         spectrum_scale = scale[None, :, :, None]
-
-        if torch.__version__ < "1.7.0":
-            torch_rfft_init = abs(torch_rfft_init)
 
         fourier_coeffs = torch_rfft_init * spectrum_scale
         assertTensorAlmostEqual(self, image_param.fourier_coeffs, fourier_coeffs)
