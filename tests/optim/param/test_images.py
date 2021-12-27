@@ -744,17 +744,23 @@ class TestNaturalImage(BaseTest):
         self.assertIsInstance(image_param.decorrelation_module, ToRGB)
         self.assertEqual(image_param.squash_func, image_param._clamp_image)
 
-   def test_natural_image_init_tensor_pixel_image_sf_sigmoid(self) -> None:
+    def test_natural_image_init_tensor_pixel_image_sf_sigmoid(self) -> None:
         if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
                 "Skipping NaturalImage PixelImage init tensor with sigmoid"
                 + " test due to insufficient Torch version."
-           )
-        image_param = images.NaturalImage(init=torch.ones(1, 3, 1, 1), parameterization=images.PixelImage, squash_func=torch.sigmoid)
+            )
+        image_param = images.NaturalImage(
+            init=torch.ones(1, 3, 1, 1),
+            parameterization=images.PixelImage,
+            squash_func=torch.sigmoid,
+        )
         output_tensor = image_param()
 
         self.assertEqual(image_param.squash_func, torch.sigmoid)
-        assertTensorAlmostEqual(self, output_tensor, torch.ones_like(output_tensor) * 0.7310586)
+        assertTensorAlmostEqual(
+            self, output_tensor, torch.ones_like(output_tensor) * 0.7310586
+        )
 
     def test_natural_image_0(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -810,7 +816,9 @@ class TestNaturalImage(BaseTest):
                 "Skipping NaturalImage PixelImage init tensor JIT module"
                 + " test due to insufficient Torch version."
             )
-        image_param = images.NaturalImage(init=torch.ones(1, 3, 1, 1), parameterization=images.PixelImage)
+        image_param = images.NaturalImage(
+            init=torch.ones(1, 3, 1, 1), parameterization=images.PixelImage
+        )
         jit_image_param = torch.jit.script(image_param)
         output_tensor = jit_image_param()
         assertTensorAlmostEqual(self, output_tensor, torch.ones_like(output_tensor))
