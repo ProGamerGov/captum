@@ -202,7 +202,7 @@ class TestFFTImage(BaseTest):
 
         fftimage_tensor = fftimage.forward()
         fftimage_array = fftimage_np.forward()
-
+        self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
 
     def test_fftimage_forward_jit_module(self) -> None:
@@ -272,6 +272,7 @@ class TestFFTImage(BaseTest):
         fftimage_tensor = fftimage.forward()
         fftimage_array = fftimage_np.forward()
 
+        self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
         assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array, 25.0)
 
@@ -290,6 +291,7 @@ class TestFFTImage(BaseTest):
         fftimage_tensor = fftimage.forward()
         fftimage_array = fftimage_np.forward()
 
+        self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
         assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array, 25.0)
 
@@ -309,6 +311,7 @@ class TestFFTImage(BaseTest):
         fftimage_tensor = fftimage.forward()
         fftimage_array = fftimage_np.forward()
 
+        self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
         assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array, 25.0)
 
