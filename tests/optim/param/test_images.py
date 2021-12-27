@@ -832,5 +832,5 @@ class TestNaturalImage(BaseTest):
             init=torch.ones(1, 3, 4, 4), decorrelation_module=None
         )
         image = image_param.forward().detach()
-        self.assertIsNone(image_param.decorrelation_module)
+        self.assertIsNone(image_param.decorrelate)
         assertTensorAlmostEqual(self, image, torch.ones_like(image))
