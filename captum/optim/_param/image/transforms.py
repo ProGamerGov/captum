@@ -146,6 +146,7 @@ class ToRGB(nn.Module):
             chw (torch.tensor):  A tensor with it's colors recorrelated or
                 decorrelated.
         """
+
         assert x.dim() == 3 or x.dim() == 4
         assert x.shape[-3] >= 3
         assert (
@@ -199,6 +200,7 @@ class ToRGB(nn.Module):
             chw (torch.tensor):  A tensor with it's colors recorrelated or
                 decorrelated.
         """
+
         assert x.dim() == 4 or x.dim() == 3
         assert x.shape[-3] >= 3
 
