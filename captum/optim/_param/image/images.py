@@ -218,7 +218,7 @@ class FFTImage(ImageParameterization):
         fx = self.torch_fftfreq(width)[: width // 2 + 1]
         return torch.sqrt((fx * fx) + (fy * fy))
 
-    def torch_irfft(self, x: torch.Tensor) -> torch.Tensor:
+    def torch_irfftn(self, x: torch.Tensor) -> torch.Tensor:
         """JIT Compatible irfftn function."""
         if x.dtype != torch.complex64:
             x = torch.view_as_complex(x)
@@ -241,7 +241,7 @@ class FFTImage(ImageParameterization):
             def torch_rfft(x: torch.Tensor) -> torch.Tensor:
                 return torch.view_as_real(torch.fft.rfftn(x, s=self.size))
 
-            torch_irfft = self.torch_irfft
+            torch_irfftn = self.torch_irfftn
 
             def torch_fftfreq(v: int, d: float = 1.0) -> torch.Tensor:
                 return torch.fft.fftfreq(v, d)
@@ -252,7 +252,7 @@ class FFTImage(ImageParameterization):
             def torch_rfft(x: torch.Tensor) -> torch.Tensor:
                 return torch.rfft(x, signal_ndim=2)
 
-            def torch_irfft(x: torch.Tensor) -> torch.Tensor:
+            def torch_irfftn(x: torch.Tensor) -> torch.Tensor:
                 return torch.irfft(x, signal_ndim=2)[
                     :, :, : self.size[0], : self.size[1]
                 ]
@@ -265,7 +265,7 @@ class FFTImage(ImageParameterization):
                 results[s:] = torch.arange(-(v // 2), 0)
                 return results * (1.0 / (v * d))
 
-        return torch_rfft, torch_irfft, torch_fftfreq
+        return torch_rfft, torch_irfftn, torch_fftfreq
 
     def forward(self) -> torch.Tensor:
         """
