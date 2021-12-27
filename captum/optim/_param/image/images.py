@@ -645,14 +645,14 @@ class NaturalImage(ImageParameterization):
                 init = self.decorrelate(init, inverse=True).rename(None)
             if squash_func is None:
 
-                squash_func = self._clamp_squash_func
+                squash_func = self._clamp_image
 
         self.squash_func = squash_func
         self.parameterization = parameterization(
             size=size, channels=channels, batch=batch, init=init
         )
 
-    def _clamp_squash_func(self, x: torch.Tensor) -> torch.Tensor:
+    def _clamp_image(self, x: torch.Tensor) -> torch.Tensor:
         """JIT supported squash function."""
         return x.clamp(0, 1)
 
