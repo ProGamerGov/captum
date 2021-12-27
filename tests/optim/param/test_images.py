@@ -209,7 +209,7 @@ class TestFFTImage(BaseTest):
         init_tensor = torch.ones(1, 3, size[0], size[1])
         image_param = images.FFTImage(init=init_tensor.clone())
 
-        torch_rfft_init = torch.rfft(init_tensor, signal_ndim=2)
+        torch_rfft_init = torch.rfft(init_tensor, signal_ndim=2)  # type: ignore
 
         scale = torch.tensor(
             [
