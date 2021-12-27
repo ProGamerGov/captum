@@ -116,7 +116,7 @@ class TestFFTImage(BaseTest):
 
         test_output = image.torch_irfft(test_fft_tensor)
 
-        if TORCH_VERSION >= "1.7.0":
+        if torch.__version__ >= "1.7.0":
             # torch.fft.irfftn output
             expected_tensor = torch.tensor(
                 [
