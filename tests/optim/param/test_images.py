@@ -700,28 +700,50 @@ class TestSharedImage(BaseTest):
 
 
 class TestNaturalImage(BaseTest):
-    def test_natural_image_fft_image(self) -> None:
+    def test_natural_image_init_func_default(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
                 "Skipping NaturalImage FFTImage init func test due to insufficient"
                 + " Torch version."
             )
-        image_param = images.NaturalImage(size=(4,4), parameterization=images.FFTImage)
+        image_param = images.NaturalImage(size=(4, 4))
         self.assertIsInstance(image_param.parameterization, images.FFTImage)
         self.assertIsInstance(image_param.decorrelation_module, ToRGB)
         self.assertEqual(image_param.squash_func, torch.sigmoid)
 
-    def test_natural_image_pixel_image(self) -> None:
+    def test_natural_image_init_func_fft_image(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage FFTImage init func test due to insufficient"
+                + " Torch version."
+            )
+        image_param = images.NaturalImage(size=(4, 4), parameterization=images.FFTImage)
+        self.assertIsInstance(image_param.parameterization, images.FFTImage)
+        self.assertIsInstance(image_param.decorrelation_module, ToRGB)
+        self.assertEqual(image_param.squash_func, torch.sigmoid)
+
+    def test_natural_image_init_func_pixel_image(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
                 "Skipping NaturalImage PixelImage init func test due to insufficient"
                 + " Torch version."
             )
-        image_param = images.NaturalImage(size=(4,4), parameterization=images.FFTImage)
+        image_param = images.NaturalImage(size=(4, 4), parameterization=images.FFTImage)
         self.assertIsInstance(image_param.parameterization, images.PixelImage)
         self.assertIsInstance(image_param.decorrelation_module, ToRGB)
         self.assertEqual(image_param.squash_func, torch.sigmoid)
-        
+
+    def test_natural_image_init_func_default_init_tensor(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage FFTImage init func test due to insufficient"
+                + " Torch version."
+            )
+        image_param = images.NaturalImage(init=torch.ones(1, 3, 1, 1))
+        self.assertIsInstance(image_param.parameterization, images.FFTImage)
+        self.assertIsInstance(image_param.decorrelation_module, ToRGB)
+        self.assertEqual(image_param.squash_func, image_param._clamp_tensor)
+
     def test_natural_image_0(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
