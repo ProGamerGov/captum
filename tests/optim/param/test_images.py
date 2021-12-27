@@ -167,7 +167,8 @@ class TestFFTImage(BaseTest):
     def test_init_fourier_coeffs_init_tensor_after_v1_7_0(self) -> None:
         if torch.__version__ >= "1.8.0":
             raise unittest.SkipTest(
-                "Skipping FFTImage test due to insufficient Torch version."
+                "Skipping FFTImage fourier_coeffs with init tensor test due to"
+                + " insufficient Torch version."
             )
         size = (4, 4)
         init_tensor = torch.ones(1, 3, size[0], size[1])
@@ -193,9 +194,9 @@ class TestFFTImage(BaseTest):
     def test_init_fourier_coeffs_init_tensor_before_v1_7_0(self) -> None:
         if torch.__version__ < "1.7.0":
             raise unittest.SkipTest(
-                "Skipping FFTImage test due to newer Torch version."
+                "Skipping FFTImage fourier_coeffs with init tensor test due to newer"
+                + " Torch version."
             )
-        import torch
 
         size = (4, 4)
         init_tensor = torch.ones(1, 3, size[0], size[1])
