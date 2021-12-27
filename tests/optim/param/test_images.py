@@ -105,6 +105,48 @@ class TestFFTImage(BaseTest):
             torch.tensor([[0.0000, 0.3333], [0.5000, 0.6009]]),
         )
 
+    def test_irfftn(self) -> None:
+        size = (4, 4)
+        image = images.FFTImage(size)
+        test_fft_tensor = (
+            torch.arange(0, 1 * 1 * size[1] * size[0] * 2)
+            .view(1, 1, size[1], size[0], 2)
+            .float()
+        )
+
+        test_output = image.torch_irfft(test_fft_tensor)
+
+        if TORCH_VERSION >= "1.7.0":
+            # torch.fft.irfftn output
+            expected_tensor = torch.tensor(
+                [
+                    [
+                        [
+                            [14.0000, -8.5000, 0.0000, 6.5000],
+                            [0.0000, 4.0000, 0.0000, -4.0000],
+                            [-4.0000, 2.0000, 0.0000, -2.0000],
+                            [-8.0000, 0.0000, 0.0000, 0.0000],
+                        ]
+                    ]
+                ]
+            )
+
+        else:
+            # torch.irfft output
+            expected_tensor = torch.tensor(
+                [
+                    [
+                        [
+                            [14.8571, -12.4554, 1.5140, -4.1097],
+                            [-1.2143, 3.7929, -1.7647, 0.2188],
+                            [-3.4286, 3.0750, 0.2962, 1.2880],
+                            [-6.7857, 1.2143, 1.2143, 1.2143],
+                        ]
+                    ]
+                ]
+            )
+        assertTensorAlmostEqual(self, test_output, expected_tensor)
+
     def test_fftimage_forward_randn_init(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
