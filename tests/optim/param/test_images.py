@@ -167,7 +167,7 @@ class TestFFTImage(BaseTest):
         )
 
     @unittest.skipIf(
-        torch.__version__ >= "1.8.0",
+        torch.__version__ < "1.8.0",
         "Skipping FFTImage fourier_coeffs with init"
         + " tensor test due to newer Torch version.",
     )
