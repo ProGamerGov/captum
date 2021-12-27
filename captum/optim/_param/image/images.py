@@ -250,6 +250,7 @@ class FFTImage(ImageParameterization):
                 return torch.fft.fftfreq(v, d)
 
         else:
+
             def torch_rfft(x: torch.Tensor) -> torch.Tensor:
                 return torch.rfft(x, signal_ndim=2)
 
