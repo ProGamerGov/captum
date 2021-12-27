@@ -147,12 +147,6 @@ class ToRGB(nn.Module):
                 decorrelated.
         """
         assert x.dim() == 3 or x.dim() == 4
-        if list(x.names) in [[None] * 3, [None] * 4]:
-            x = (
-                x.refine_names("B", "C", "H", "W")
-                if x.dim() == 4
-                else x.refine_names("C", "H", "W")
-            )
         assert (
             x.names == ("C", "H", "W")
             if x.dim() == 3
