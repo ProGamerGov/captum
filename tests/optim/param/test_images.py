@@ -6,7 +6,7 @@ import numpy as np
 import torch
 
 from captum.optim._param.image import images
-from captum.optim._param.image.transforms import SymmetricPadding
+from captum.optim._param.image.transforms import SymmetricPadding, ToRGB
 from tests.helpers.basic import (
     BaseTest,
     assertArraysAlmostEqual,
@@ -700,6 +700,28 @@ class TestSharedImage(BaseTest):
 
 
 class TestNaturalImage(BaseTest):
+    def test_natural_image_fft_image(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage FFTImage init func test due to insufficient"
+                + " Torch version."
+            )
+        image_param = images.NaturalImage(size=(4,4), parameterization=images.FFTImage)
+        self.assertIsInstance(image_param.parameterization, images.FFTImage)
+        self.assertIsInstance(image_param.decorrelation_module, ToRGB)
+        self.assertEqual(image_param.squash_func, torch.sigmoid)
+
+    def test_natural_image_pixel_image(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage PixelImage init func test due to insufficient"
+                + " Torch version."
+            )
+        image_param = images.NaturalImage(size=(4,4), parameterization=images.FFTImage)
+        self.assertIsInstance(image_param.parameterization, images.PixelImage)
+        self.assertIsInstance(image_param.decorrelation_module, ToRGB)
+        self.assertEqual(image_param.squash_func, torch.sigmoid)
+        
     def test_natural_image_0(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
@@ -768,4 +790,5 @@ class TestNaturalImage(BaseTest):
             init=torch.ones(1, 3, 4, 4), decorrelation_module=None
         )
         image = image_param.forward().detach()
+        self.assertIsNone(image_param.decorrelation_module)
         assertTensorAlmostEqual(self, image, torch.ones_like(image))
