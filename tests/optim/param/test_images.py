@@ -189,7 +189,7 @@ class TestFFTImage(BaseTest):
         scale = scale * ((size[0] * size[1]) ** (1 / 2))
         spectrum_scale = scale[None, :, :, None]
 
-        fourier_coeffs = torch_rfft_init * spectrum_scale
+        fourier_coeffs = torch_rfft_init / spectrum_scale
         assertTensorAlmostEqual(self, image_param.fourier_coeffs, fourier_coeffs)
         self.assertTrue(image_param.fourier_coeffs.requires_grad)
 
