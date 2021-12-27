@@ -188,7 +188,8 @@ class TestFFTImage(BaseTest):
             expected_torch_rfft_init = abs(expected_torch_rfft_init)
         
         expected_tensor = expected_torch_rfft_init * expected_scale
-        assertTensorAlmostEqual(self, image_param.spectrum_scale, expected_tensor)
+        assertTensorAlmostEqual(self, image_param.fourier_coeffs, expected_tensor)
+        self.assertTrue(image_param.fourier_coeffs.requires_grad)
 
     def test_fftimage_forward_randn_init(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -204,6 +205,7 @@ class TestFFTImage(BaseTest):
         fftimage_array = fftimage_np.forward()
         self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
+        self.assertTrue(fftimage.fourier_coeffs.requires_grad)
 
     def test_fftimage_forward_jit_module(self) -> None:
         if torch.__version__ <= "1.8.0":
@@ -331,6 +333,7 @@ class TestPixelImage(BaseTest):
         self.assertEqual(image_param.image.size(1), channels)
         self.assertEqual(image_param.image.size(2), size[0])
         self.assertEqual(image_param.image.size(3), size[1])
+        self.assertTrue(image_param.image.requires_grad)
 
     def test_pixelimage_init(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -348,6 +351,7 @@ class TestPixelImage(BaseTest):
         self.assertEqual(image_param.image.size(2), size[0])
         self.assertEqual(image_param.image.size(3), size[1])
         assertTensorAlmostEqual(self, image_param.image, init_tensor, 0)
+        self.assertTrue(image_param.image.requires_grad)
 
     def test_pixelimage_init_error(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -384,8 +388,8 @@ class TestPixelImage(BaseTest):
             )
         image_param = images.PixelImage(size=(224, 224), channels=3)
         jit_image_param = torch.jit.script(image_param)
-        output_Tensor = jit_image_param()
-        self.assertTrue(torch.is_tensor(output_Tensor))
+        output_tensor = jit_image_param()
+        self.assertTrue(torch.is_tensor(output_tensor))
 
     def test_pixelimage_init_forward(self) -> None:
         if torch.__version__ <= "1.2.0":
