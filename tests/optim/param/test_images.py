@@ -130,6 +130,7 @@ class TestFFTImage(BaseTest):
                     ]
                 ]
             )
+            delta = 0.0001
 
         else:
             # torch.irfft output
@@ -145,7 +146,8 @@ class TestFFTImage(BaseTest):
                     ]
                 ]
             )
-        assertTensorAlmostEqual(self, test_output, expected_tensor)
+            delta = 0.0004
+        assertTensorAlmostEqual(self, test_output, expected_tensor, delta=delta)
 
     def test_fftimage_forward_randn_init(self) -> None:
         if torch.__version__ <= "1.2.0":
