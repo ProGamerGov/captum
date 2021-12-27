@@ -742,7 +742,7 @@ class TestNaturalImage(BaseTest):
         image_param = images.NaturalImage(init=torch.ones(1, 3, 1, 1))
         self.assertIsInstance(image_param.parameterization, images.FFTImage)
         self.assertIsInstance(image_param.decorrelation_module, ToRGB)
-        self.assertEqual(image_param.squash_func, image_param._clamp_tensor)
+        self.assertEqual(image_param.squash_func, image_param._clamp_image)
 
     def test_natural_image_0(self) -> None:
         if torch.__version__ <= "1.2.0":
