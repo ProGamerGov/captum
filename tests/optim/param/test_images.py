@@ -288,7 +288,7 @@ class TestPixelImage(BaseTest):
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])
 
-    def test_fftimage_forward_jit_module(self) -> None:
+    def test_pixelimage_forward_jit_module(self) -> None:
         if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
                 "Skipping PixelImage JIT module test due to insufficient Torch"
@@ -696,12 +696,23 @@ class TestNaturalImage(BaseTest):
         self.assertTrue(torch.is_tensor(output_tensor))
 
     def test_natural_image_jit_module_init_tensor(self) -> None:
-        if torch.__version__ <= "1.2.0":
+        if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
                 "Skipping NaturalImage init tensor JIT module test due to"
                 + " insufficient Torch version."
             )
-        image_param = images.NaturalImage(init=torch.ones(3, 1, 1))
+        image_param = images.NaturalImage(init=torch.ones(1, 3, 1, 1))
+        jit_image_param = torch.jit.script(image_param)
+        output_tensor = jit_image_param()
+        assertTensorAlmostEqual(self, output_tensor, torch.ones_like(output_tensor))
+
+    def test_natural_image_jit_module_init_tensor_pixel_image(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage PixelImage init tensor JIT module"
+                + " test due to insufficient Torch version."
+            )
+        image_param = images.NaturalImage(init=torch.ones(1, 3, 1, 1), parameterization=images.PixelImage)
         jit_image_param = torch.jit.script(image_param)
         output_tensor = jit_image_param()
         assertTensorAlmostEqual(self, output_tensor, torch.ones_like(output_tensor))
