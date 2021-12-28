@@ -65,3 +65,19 @@ class TestActivationFetcher(BaseTest):
 
 
 class TestRemoveAllForwardHooks(BaseTest):
+    def test_forward_hook_removal(self) -> None:
+        def forward_hook(self, input: Tuple[torch.Tensor], output: torch.Tensor) -> None:
+            pass
+        layer = torch.nn.Sequential(*[torch.nn.Identity()] * 2)
+        model = torch.nn.Sequential(*[layer]*2)
+
+        model.register_forward_hook(forward_hook)
+        model[1].register_forward_hook(forward_hook)
+        model[0][1].register_forward_hook(forward_hook)
+
+        n_hooks = _count_forward_hooks(model)
+        self.assertEqual(n_hooks, 3)
+
+        output_hook._remove_all_forward_hooks(model)
+        n_hooks = _count_forward_hooks(model)
+        self.assertEqual(n_hooks, 0)
