@@ -27,15 +27,15 @@ def _count_forward_hooks(model: torch.nn.Module) -> int:
         num_hooks (int): The number of active hooks in the specified module.
     """
     num_hooks = 0
-    if hasattr(model, "_forward_hooks"):
-        if model._forward_hooks != OrderedDict():
-            num_hooks +=1
     for name, child in model._modules.items():
         if child is not None:
             if hasattr(child, "_forward_hooks"):
                 if child._forward_hooks != OrderedDict():
                     num_hooks +=1
             _count_forward_hooks(child)
+    if hasattr(model, "_forward_hooks"):
+        if model._forward_hooks != OrderedDict():
+            num_hooks +=1
     return num_hooks
 
 
