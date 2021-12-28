@@ -8,6 +8,7 @@ import captum.optim._core.output_hook as output_hook
 from captum.optim.models import googlenet
 from tests.helpers.basic import BaseTest
 
+class TestModuleOutputsHook(BaseTest):
 
 class TestActivationFetcher(BaseTest):
     def test_activation_fetcher(self) -> None:
