@@ -146,11 +146,11 @@ def _remove_all_forward_hooks(model: torch.nn.Module) -> None:
         model (nn.Module): The model instance or target module instance to remove
             forward hooks from.
     """
-    if hasattr(model, "_forward_hooks"):
-        if model._forward_hooks != OrderedDict():
-            model._forward_hooks: Dict[int, Callable] = OrderedDict()
     for name, child in model._modules.items():
         if child is not None:
             if hasattr(child, "_forward_hooks"):
                 child._forward_hooks: Dict[int, Callable] = OrderedDict()
             _remove_all_forward_hooks(child)
+    if hasattr(model, "_forward_hooks"):
+        if model._forward_hooks != OrderedDict():
+            model._forward_hooks: Dict[int, Callable] = OrderedDict()
