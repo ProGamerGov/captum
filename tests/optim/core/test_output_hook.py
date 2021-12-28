@@ -47,6 +47,7 @@ class TestModuleOutputsHook(BaseTest):
         n_hooks = _count_forward_hooks(model)
         self.assertEqual(n_hooks, 1)
 
+
 class TestActivationFetcher(BaseTest):
     def test_activation_fetcher(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -61,3 +62,6 @@ class TestActivationFetcher(BaseTest):
         self.assertIsInstance(activ_out, dict)
         m4d_activ = activ_out[model.mixed4d]
         self.assertEqual(list(cast(torch.Tensor, m4d_activ).shape), [1, 528, 14, 14])
+
+
+class TestRemoveAllForwardHooks(BaseTest):
