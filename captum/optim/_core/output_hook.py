@@ -1,5 +1,6 @@
 import warnings
-from typing import Callable, Iterable, Tuple
+from collections import OrderedDict
+from typing import Callable, Dict, Iterable, Tuple
 from warnings import warn
 
 import torch
@@ -130,3 +131,21 @@ class ActivationFetcher:
         finally:
             self.layers.remove_hooks()
         return activations_dict
+
+
+def _remove_all_forward_hooks(model: torch.nn.Module) -> None:
+    """
+    This function removes all forward hooks in the specified model, without requiring
+    any hook handles. This lets us clean up / remove any hooks that weren't property
+    deleted.
+    
+    Args:
+
+        model (nn.Module): The model instance or target module instance to remove
+            forward hooks from.
+    """
+    for name, child in model._modules.items():
+        if child is not None:
+            if hasattr(child, "_forward_hooks"):
+                child._forward_hooks: Dict[int, Callable] = OrderedDict()
+            _remove_all_forward_hooks(child)
