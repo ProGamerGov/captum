@@ -136,7 +136,7 @@ class ActivationFetcher:
 def _remove_all_forward_hooks(model: torch.nn.Module) -> None:
     """
     This function removes all forward hooks in the specified model, without requiring
-    any hook handles. This lets us clean up / remove any hooks that weren't property
+    any hook handles. This lets us clean up & remove any hooks that weren't property
     deleted.
     
     Args:
