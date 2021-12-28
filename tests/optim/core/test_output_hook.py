@@ -14,7 +14,7 @@ def _count_forward_hooks(model: torch.nn.Module) -> int:
     """
     Count the number of active forward hooks on the specified model or module.
     By default nn.Module instance do not have a "_forward_hooks" attribute, and
-    we can only remove the hooks without their handles by be setting them to their
+    we can only remove the hooks without their handles by setting them to their
     default of 'OrderedDict()'. So just because a module has the right attribute,
     doesn't mean that we need to count it.
 
