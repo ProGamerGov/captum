@@ -10,7 +10,7 @@ from captum.optim.models import googlenet
 from tests.helpers.basic import BaseTest
 
 
-def _count_forward_hooks(model: torch.nn.Module) -> int:
+def _count_forward_hooks(model: torch.nn.Module, hook_name: Optional[str] = None) -> int:
     """
     Count the number of active forward hooks on the specified model or module.
     By default nn.Module instance do not have a "_forward_hooks" attribute, and
@@ -22,20 +22,37 @@ def _count_forward_hooks(model: torch.nn.Module) -> int:
 
         model (nn.Module): The model instance or target module instance to count
             the number of forward hooks on.
+        name (str, optional): Optionally only remove specific forward hooks based on
+            their function's __name__ attribute.
+            Default: None
 
     Returns:
         num_hooks (int): The number of active hooks in the specified module.
     """
+
     num_hooks = 0
     for name, child in model._modules.items():
         if child is not None:
             if hasattr(child, "_forward_hooks"):
                 if child._forward_hooks != OrderedDict():
-                    num_hooks +=1
-            _count_forward_hooks(child)
+                    if hook_name is not None:
+                        dict_items = list(child._forward_hooks.items())
+                        for i, fn in dict_items:
+                            if fn.__name__ == hook_name:
+                                num_hooks +=1
+                    else:
+                        num_hooks +=1
+            _count_forward_hooks(child, hook_name)
     if hasattr(model, "_forward_hooks"):
         if model._forward_hooks != OrderedDict():
-            num_hooks +=1
+            if model._forward_hooks != OrderedDict():
+                if hook_name is not None:
+                    dict_items = list(model._forward_hooks.items())
+                    for i, fn in dict_items:
+                        if fn.__name__ == hook_name:
+                            num_hooks +=1
+                else:
+                    num_hooks +=1
     return num_hooks
 
 
