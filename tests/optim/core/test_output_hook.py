@@ -37,8 +37,6 @@ def _count_forward_hooks(
                     for i, fn in dict_items:
                         if hook_name is None or fn.__name__ == hook_name:
                             num_hooks += 1
-                elif hook_name is None:
-                    num_hooks += 1
             _count_forward_hooks(child, hook_name)
     if hasattr(module, "_forward_hooks"):
         if module._forward_hooks != OrderedDict():
@@ -47,8 +45,6 @@ def _count_forward_hooks(
                 for i, fn in dict_items:
                     if hook_name is None or fn.__name__ == hook_name:
                         num_hooks += 1
-            elif hook_name is None:
-                num_hooks += 1
     return num_hooks
 
 
