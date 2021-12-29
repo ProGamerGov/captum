@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import unittest
 from collections import OrderedDict
-from typing import cast
+from typing import Optional, cast
 
 import torch
 
@@ -22,7 +22,7 @@ def _count_forward_hooks(model: torch.nn.Module, hook_name: Optional[str] = None
 
         model (nn.Module): The model instance or target module instance to count
             the number of forward hooks on.
-        name (str, optional): Optionally only remove specific forward hooks based on
+        name (str, optional): Optionally only count specific forward hooks based on
             their function's __name__ attribute.
             Default: None
 
@@ -35,24 +35,22 @@ def _count_forward_hooks(model: torch.nn.Module, hook_name: Optional[str] = None
         if child is not None:
             if hasattr(child, "_forward_hooks"):
                 if child._forward_hooks != OrderedDict():
-                    if hook_name is not None:
-                        dict_items = list(child._forward_hooks.items())
-                        for i, fn in dict_items:
-                            if fn.__name__ == hook_name:
-                                num_hooks +=1
-                    else:
-                        num_hooks +=1
+                    dict_items = list(child._forward_hooks.items())
+                    for i, fn in dict_items:
+                        if hook_name is None or fn.__name__ == hook_name:            
+                            num_hooks +=1
+                elif hook_name is not None:
+                    num_hooks +=1
             _count_forward_hooks(child, hook_name)
     if hasattr(model, "_forward_hooks"):
         if model._forward_hooks != OrderedDict():
             if model._forward_hooks != OrderedDict():
-                if hook_name is not None:
-                    dict_items = list(model._forward_hooks.items())
-                    for i, fn in dict_items:
-                        if fn.__name__ == hook_name:
-                            num_hooks +=1
-                else:
-                    num_hooks +=1
+                dict_items = list(model._forward_hooks.items())
+                for i, fn in dict_items:
+                    if hook_name is None or fn.__name__ == hook_name:            
+                        num_hooks +=1
+            elif hook_name is not None:
+                num_hooks +=1
     return num_hooks
 
 
