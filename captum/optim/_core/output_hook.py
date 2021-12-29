@@ -174,7 +174,6 @@ def _remove_all_forward_hooks(
     def _remove_child_hooks(
         target_module: torch.nn.Module, hook_name: Optional[str] = None
     ) -> None:
-
         for name, child in target_module._modules.items():
             if child is not None:
                 _remove_hooks(child, hook_name)
