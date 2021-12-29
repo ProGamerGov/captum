@@ -183,4 +183,4 @@ def _remove_all_forward_hooks(
     _remove_child_hooks(module, hook_fn_name)
 
     # Remove hooks from the target module
-    _remove_hooks(model, hook_fn_name)
+    _remove_hooks(module, hook_fn_name)
