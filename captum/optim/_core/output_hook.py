@@ -136,27 +136,24 @@ class ActivationFetcher:
 
 
 def _remove_all_forward_hooks(
-    module: torch.nn.Module, hook_name: Optional[str] = None
+    module: torch.nn.Module, hook_fn_name: Optional[str] = None
 ) -> None:
     """
     This function removes all forward hooks in the specified module, without requiring
     any hook handles. This lets us clean up & remove any hooks that weren't property
     deleted.
-
     Warning: Various PyTorch modules and systems make use of hooks, and thus extreme
     caution should be exercised when removing all hooks. Users are recommended to give
     their hook function a unique name that can be used to safely identify and only
     remove the target forward hooks.
-
     Args:
-
         module (nn.Module): The module instance to remove forward hooks from.
-        name (str, optional): Optionally only remove specific forward hooks based on
-            their function's __name__ attribute.
+        hook_fn_name (str, optional): Optionally only remove specific forward hooks
+            based on their function's __name__ attribute.
             Default: None
     """
 
-    if hook_name is None or hook_name == "":
+    if hook_fn_name is None or hook_fn_name == "":
         warn("Removing all active hooks can break some PyTorch modules & systems.")
 
     def _remove_forward_hooks(
@@ -197,4 +194,4 @@ def _remove_all_forward_hooks(
                     else:
                         module._forward_hooks: Dict[int, Callable] = OrderedDict()
 
-    _remove_forward_hooks(module, hook_name)
+    _remove_forward_hooks(module, hook_fn_name)
