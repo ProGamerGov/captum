@@ -159,7 +159,7 @@ def _remove_all_forward_hooks(
     if hook_fn_name is None or hook_fn_name == "":
         warn("Removing all active hooks can break some PyTorch modules & systems.")
 
-    def _remove_hooks(m: nn.Module, name: Optional[str] = None) -> None 
+    def _remove_hooks(m: nn.Module, name: Optional[str] = None) -> None:
         if hasattr(module, "_forward_hooks"):
             if m._forward_hooks != OrderedDict():
                 if m._forward_hooks != OrderedDict():
@@ -172,7 +172,7 @@ def _remove_all_forward_hooks(
                         m._forward_hooks: Dict[int, Callable] = OrderedDict()
 
     def _remove_child_hooks(
-        target_module: torch.nn.Module, hook_name: Optional[str] = None
+        target_module: torch.nn.Module, hook_name: Optional[str] = None:
     ) -> None:
         for name, child in target_module._modules.items():
             if child is not None:
