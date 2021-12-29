@@ -1,6 +1,6 @@
 import warnings
 from collections import OrderedDict
-from typing import Callable, Dict, Iterable, Tuple
+from typing import Callable, Dict, Iterable, Optional, Tuple
 from warnings import warn
 
 import torch
