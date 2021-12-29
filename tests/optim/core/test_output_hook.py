@@ -10,13 +10,13 @@ from captum.optim.models import googlenet
 from tests.helpers.basic import BaseTest
 
 
-def _count_forward_hooks(model: torch.nn.Module, hook_name: Optional[str] = None) -> int:
+def _count_forward_hooks(module: torch.nn.Module, hook_name: Optional[str] = None) -> int:
     """
     Count the number of active forward hooks on the specified model or module.
 
     Args:
 
-        model (nn.Module): The model instance or target module instance to count
+        module (nn.Module): The model instance or target module instance to count
             the number of forward hooks on.
         name (str, optional): Optionally only count specific forward hooks based on
             their function's __name__ attribute.
@@ -27,7 +27,7 @@ def _count_forward_hooks(model: torch.nn.Module, hook_name: Optional[str] = None
     """
 
     num_hooks = 0
-    for name, child in model._modules.items():
+    for name, child in module._modules.items():
         if child is not None:
             if hasattr(child, "_forward_hooks"):
                 if child._forward_hooks != OrderedDict():
@@ -38,9 +38,9 @@ def _count_forward_hooks(model: torch.nn.Module, hook_name: Optional[str] = None
                 elif hook_name is not None:
                     num_hooks +=1
             _count_forward_hooks(child, hook_name)
-    if hasattr(model, "_forward_hooks"):
-        if model._forward_hooks != OrderedDict():
-            if model._forward_hooks != OrderedDict():
+    if hasattr(module, "_forward_hooks"):
+        if module._forward_hooks != OrderedDict():
+            if module._forward_hooks != OrderedDict():
                 dict_items = list(model._forward_hooks.items())
                 for i, fn in dict_items:
                     if hook_name is None or fn.__name__ == hook_name:            
