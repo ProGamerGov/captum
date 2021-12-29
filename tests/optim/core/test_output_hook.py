@@ -77,18 +77,51 @@ class TestActivationFetcher(BaseTest):
 
 class TestRemoveAllForwardHooks(BaseTest):
     def test_forward_hook_removal(self) -> None:
-        def forward_hook(self, input: Tuple[torch.Tensor], output: torch.Tensor) -> None:
+        def forward_hook_unique_fn(self, input: Tuple[torch.Tensor], output: torch.Tensor) -> None:
             pass
         layer = torch.nn.Sequential(*[torch.nn.Identity()] * 2)
         model = torch.nn.Sequential(*[layer]*2)
 
-        model.register_forward_hook(forward_hook)
-        model[1].register_forward_hook(forward_hook)
-        model[0][1].register_forward_hook(forward_hook)
+        model.register_forward_hook(forward_hook_unique_fn)
+        model[1].register_forward_hook(forward_hook_unique_fn)
+        model[0][1].register_forward_hook(forward_hook_unique_fn)
 
-        n_hooks = _count_forward_hooks(model)
+        n_hooks = _count_forward_hooks(model, "forward_hook_unique_fn")
         self.assertEqual(n_hooks, 3)
 
-        output_hook._remove_all_forward_hooks(model)
+        output_hook._remove_all_forward_hooks(model, "forward_hook_unique_fn")
         n_hooks = _count_forward_hooks(model)
         self.assertEqual(n_hooks, 0)
+
+    def test_forward_hook_removal_unique_fn(self) -> None:
+        def forward_hook_unique_fn_1(self, input: Tuple[torch.Tensor], output: torch.Tensor) -> None:
+            pass
+        def forward_hook_unique_fn_2(self, input: Tuple[torch.Tensor], output: torch.Tensor) -> None:
+            pass
+
+        layer = torch.nn.Sequential(*[torch.nn.Identity()] * 2)
+        model = torch.nn.Sequential(*[layer]*2)
+
+        model.register_forward_hook(forward_hook_unique_fn_1)
+        model[1].register_forward_hook(forward_hook_unique_fn_1)
+        model[0][1].register_forward_hook(forward_hook_unique_fn_1)
+        
+        model.register_forward_hook(forward_hook_unique_fn_2)
+        model[1][0].register_forward_hook(forward_hook_unique_fn_2)
+
+        n_hooks = _count_forward_hooks(model, "forward_hook_unique_fn_1")
+        self.assertEqual(n_hooks, 3)
+        n_hooks = _count_forward_hooks(model, "forward_hook_unique_fn_2")
+        self.assertEqual(n_hooks, 2)
+
+        n_hooks = _count_forward_hooks(model)
+        self.assertEqual(n_hooks, 5)
+
+        output_hook._remove_all_forward_hooks(model, "forward_hook_unique_fn_1")
+        n_hooks = _count_forward_hooks(model)
+        self.assertEqual(n_hooks, 2)
+
+        output_hook._remove_all_forward_hooks(model, "forward_hook_unique_fn_2")
+        n_hooks = _count_forward_hooks(model)
+        self.assertEqual(n_hooks, 0)
+
