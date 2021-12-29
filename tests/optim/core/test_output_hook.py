@@ -47,7 +47,7 @@ def _count_forward_hooks(
                 _count_hooks(child, hook_name)
                 _count_child_hooks(child, hook_name)
 
-    _count_num_forward_hooks(module, hook_fn_name)
+    _count_child_hooks(module, hook_fn_name)
     _count_hooks(module, hook_fn_name)
     return num_hooks[0]
 
