@@ -145,8 +145,8 @@ def _remove_all_forward_hooks(
     
     Warning: Various PyTorch modules and systems make use of hooks, and thus extreme
     caution should be exercised when removing all hooks. Users are recommended to give
-    their hook function a unique name that can be used to safetly identify and remove
-    the hook.
+    their hook function a unique name that can be used to safely identify and only
+    remove the target forward hooks.
 
     Args:
 
