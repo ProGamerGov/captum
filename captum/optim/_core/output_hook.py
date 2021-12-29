@@ -142,7 +142,7 @@ def _remove_all_forward_hooks(
     This function removes all forward hooks in the specified model, without requiring
     any hook handles. This lets us clean up & remove any hooks that weren't property
     deleted.
-    
+
     Args:
 
         module (nn.Module): The module instance to remove forward hooks from.
@@ -151,9 +151,11 @@ def _remove_all_forward_hooks(
             Default: None
     """
     if hook_name is None or hook_name == "":
-        warn("Warning modules like weight_norm will be broken by removing all hooks."
+        warn(
+            "Warning modules like weight_norm will be broken by removing all hooks."
             + " Please specify the full & unique function name of the target hook to"
-            + " avoid errors")
+            + " avoid errors"
+        )
 
     # Remove hooks from target submodules
     for name, child in module._modules.items():
