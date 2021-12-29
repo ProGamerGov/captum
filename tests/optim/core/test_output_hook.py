@@ -15,15 +15,12 @@ def _count_forward_hooks(
 ) -> int:
     """
     Count the number of active forward hooks on the specified module instance.
-
     Args:
-
         module (nn.Module): The model module instance to count the number of
             forward hooks on.
         name (str, optional): Optionally only count specific forward hooks based on
             their function's __name__ attribute.
             Default: None
-
     Returns:
         num_hooks (int): The number of active hooks in the specified module.
     """
@@ -48,7 +45,7 @@ def _count_forward_hooks(
                 _count_hooks(child, hook_name)
                 _count_child_hooks(child, hook_name)
 
-    _count_num_forward_hooks(module, hook_fn_name)
+    _count_child_hooks(module, hook_fn_name)
     _count_hooks(module, hook_fn_name)
     return num_hooks[0]
 
