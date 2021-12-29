@@ -197,4 +197,4 @@ def _remove_all_forward_hooks(
                     else:
                         module._forward_hooks: Dict[int, Callable] = OrderedDict()
 
-    _remove_forward_hooks(module, name)
+    _remove_forward_hooks(module, hook_name)
