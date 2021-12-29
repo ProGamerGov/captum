@@ -36,10 +36,10 @@ class ModuleOutputsHook:
 
     def _forward_hook(self) -> Callable:
         """
-        Return the forward_hook function.
+        Return the module_outputs_forward_hook forward hook function.
 
         Returns:
-            forward_hook (Callable): The forward_hook function.
+            forward_hook (Callable): The module_outputs_forward_hook function.
         """
 
         def module_outputs_forward_hook(
