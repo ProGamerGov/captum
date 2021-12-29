@@ -10,7 +10,9 @@ from captum.optim.models import googlenet
 from tests.helpers.basic import BaseTest
 
 
-def _count_forward_hooks(module: torch.nn.Module, hook_name: Optional[str] = None) -> int:
+def _count_forward_hooks(
+    module: torch.nn.Module, hook_name: Optional[str] = None
+) -> int:
     """
     Count the number of active forward hooks on the specified model or module.
 
@@ -33,20 +35,20 @@ def _count_forward_hooks(module: torch.nn.Module, hook_name: Optional[str] = Non
                 if child._forward_hooks != OrderedDict():
                     dict_items = list(child._forward_hooks.items())
                     for i, fn in dict_items:
-                        if hook_name is None or fn.__name__ == hook_name:            
-                            num_hooks +=1
+                        if hook_name is None or fn.__name__ == hook_name:
+                            num_hooks += 1
                 elif hook_name is not None:
-                    num_hooks +=1
+                    num_hooks += 1
             _count_forward_hooks(child, hook_name)
     if hasattr(module, "_forward_hooks"):
         if module._forward_hooks != OrderedDict():
             if module._forward_hooks != OrderedDict():
                 dict_items = list(module._forward_hooks.items())
                 for i, fn in dict_items:
-                    if hook_name is None or fn.__name__ == hook_name:            
-                        num_hooks +=1
+                    if hook_name is None or fn.__name__ == hook_name:
+                        num_hooks += 1
             elif hook_name is not None:
-                num_hooks +=1
+                num_hooks += 1
     return num_hooks
 
 
@@ -77,10 +79,13 @@ class TestActivationFetcher(BaseTest):
 
 class TestRemoveAllForwardHooks(BaseTest):
     def test_forward_hook_removal(self) -> None:
-        def forward_hook_unique_fn(self, input: Tuple[torch.Tensor], output: torch.Tensor) -> None:
+        def forward_hook_unique_fn(
+            self, input: Tuple[torch.Tensor], output: torch.Tensor
+        ) -> None:
             pass
+
         layer = torch.nn.Sequential(*[torch.nn.Identity()] * 2)
-        model = torch.nn.Sequential(*[layer]*2)
+        model = torch.nn.Sequential(*[layer] * 2)
 
         model.register_forward_hook(forward_hook_unique_fn)
         model[1].register_forward_hook(forward_hook_unique_fn)
@@ -94,18 +99,23 @@ class TestRemoveAllForwardHooks(BaseTest):
         self.assertEqual(n_hooks, 0)
 
     def test_forward_hook_removal_unique_fn(self) -> None:
-        def forward_hook_unique_fn_1(self, input: Tuple[torch.Tensor], output: torch.Tensor) -> None:
+        def forward_hook_unique_fn_1(
+            self, input: Tuple[torch.Tensor], output: torch.Tensor
+        ) -> None:
             pass
-        def forward_hook_unique_fn_2(self, input: Tuple[torch.Tensor], output: torch.Tensor) -> None:
+
+        def forward_hook_unique_fn_2(
+            self, input: Tuple[torch.Tensor], output: torch.Tensor
+        ) -> None:
             pass
 
         layer = torch.nn.Sequential(*[torch.nn.Identity()] * 2)
-        model = torch.nn.Sequential(*[layer]*2)
+        model = torch.nn.Sequential(*[layer] * 2)
 
         model.register_forward_hook(forward_hook_unique_fn_1)
         model[1].register_forward_hook(forward_hook_unique_fn_1)
         model[0][1].register_forward_hook(forward_hook_unique_fn_1)
-        
+
         model.register_forward_hook(forward_hook_unique_fn_2)
         model[1][0].register_forward_hook(forward_hook_unique_fn_2)
 
@@ -124,4 +134,3 @@ class TestRemoveAllForwardHooks(BaseTest):
         output_hook._remove_all_forward_hooks(model, "forward_hook_unique_fn_2")
         n_hooks = _count_forward_hooks(model)
         self.assertEqual(n_hooks, 0)
-
