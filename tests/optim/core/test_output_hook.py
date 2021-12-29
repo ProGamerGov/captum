@@ -16,8 +16,8 @@ def _count_forward_hooks(module: torch.nn.Module, hook_name: Optional[str] = Non
 
     Args:
 
-        module (nn.Module): The model instance or target module instance to count
-            the number of forward hooks on.
+        module (nn.Module): The model module instance to count the number of
+            forward hooks on.
         name (str, optional): Optionally only count specific forward hooks based on
             their function's __name__ attribute.
             Default: None
@@ -41,7 +41,7 @@ def _count_forward_hooks(module: torch.nn.Module, hook_name: Optional[str] = Non
     if hasattr(module, "_forward_hooks"):
         if module._forward_hooks != OrderedDict():
             if module._forward_hooks != OrderedDict():
-                dict_items = list(model._forward_hooks.items())
+                dict_items = list(module._forward_hooks.items())
                 for i, fn in dict_items:
                     if hook_name is None or fn.__name__ == hook_name:            
                         num_hooks +=1
