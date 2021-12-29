@@ -29,27 +29,32 @@ def _count_forward_hooks(
     """
 
     num_hooks: List[int] = [0]
-
-    def _count_hooks(m: torch.nn.Module, name: Optional[str] = None) -> None:
-        if hasattr(m, "_forward_hooks"):
-            if m._forward_hooks != OrderedDict():
-                dict_items = list(m._forward_hooks.items())
-                for i, fn in dict_items:
-                    if hook_fn_name is None or fn.__name__ == name:
-                        num_hooks[0] += 1
-
-    def _count_child_hooks(
+    def _count_num_forward_hooks(
         target_module: torch.nn.Module,
         hook_name: Optional[str] = None,
     ) -> None:
+
         for name, child in target_module._modules.items():
             if child is not None:
-                _count_hooks(child, hook_name)
-                _count_child_hooks(child, hook_name)
+                if hasattr(child, "_forward_hooks"):
+                    if child._forward_hooks != OrderedDict():
+                        dict_items = list(child._forward_hooks.items())
+                        for i, fn in dict_items:
+                            if hook_name is None or fn.__name__ == hook_name:
+                                num_hooks[0] += 1
+                _count_num_forward_hooks(child, hook_name)
 
-    _count_child_hooks(module, hook_fn_name)
-    _count_hooks(module, hook_fn_name)
-    return num_hooks[0]
+    _count_num_forward_hooks(module, hook_fn_name)
+    num_hooks = num_hooks[0]
+
+    if hasattr(module, "_forward_hooks"):
+        if module._forward_hooks != OrderedDict():
+            if module._forward_hooks != OrderedDict():
+                dict_items = list(module._forward_hooks.items())
+                for i, fn in dict_items:
+                    if hook_fn_name is None or fn.__name__ == hook_fn_name:
+                        num_hooks += 1
+    return num_hooks
 
 
 class TestModuleOutputsHook(BaseTest):
