@@ -11,41 +11,46 @@ from tests.helpers.basic import BaseTest
 
 
 def _count_forward_hooks(
-    module: torch.nn.Module, hook_name: Optional[str] = None
+    module: torch.nn.Module, hook_fn_name: Optional[str] = None
 ) -> int:
     """
     Count the number of active forward hooks on the specified model or module.
-
     Args:
-
         module (nn.Module): The model module instance to count the number of
             forward hooks on.
         name (str, optional): Optionally only count specific forward hooks based on
             their function's __name__ attribute.
             Default: None
-
     Returns:
         num_hooks (int): The number of active hooks in the specified module.
     """
 
-    num_hooks = 0
-    for name, child in module._modules.items():
-        if child is not None:
-            if hasattr(child, "_forward_hooks"):
-                if child._forward_hooks != OrderedDict():
-                    dict_items = list(child._forward_hooks.items())
+    def _count_num_forward_hooks(
+        target_module: torch.nn.Module,
+        hook_name: Optional[str] = None,
+        num_hooks: int = 0,
+    ) -> int:
+
+        for name, child in target_module._modules.items():
+            if child is not None:
+                if hasattr(child, "_forward_hooks"):
+                    if child._forward_hooks != OrderedDict():
+                        dict_items = list(child._forward_hooks.items())
+                        for i, fn in dict_items:
+                            if hook_name is None or fn.__name__ == hook_name:
+                                num_hooks += 1
+                _count_num_forward_hooks(child, hook_name, num_hooks)
+
+        if hasattr(target_module, "_forward_hooks"):
+            if target_module._forward_hooks != OrderedDict():
+                if target_module._forward_hooks != OrderedDict():
+                    dict_items = list(target_module._forward_hooks.items())
                     for i, fn in dict_items:
                         if hook_name is None or fn.__name__ == hook_name:
                             num_hooks += 1
-            _count_forward_hooks(child, hook_name)
-    if hasattr(module, "_forward_hooks"):
-        if module._forward_hooks != OrderedDict():
-            if module._forward_hooks != OrderedDict():
-                dict_items = list(module._forward_hooks.items())
-                for i, fn in dict_items:
-                    if hook_name is None or fn.__name__ == hook_name:
-                        num_hooks += 1
-    return num_hooks
+        return num_hooks
+
+    return _count_num_forward_hooks(module, hook_fn_name)
 
 
 class TestModuleOutputsHook(BaseTest):
