@@ -139,9 +139,14 @@ def _remove_all_forward_hooks(
     module: torch.nn.Module, hook_name: Optional[str] = None
 ) -> None:
     """
-    This function removes all forward hooks in the specified model, without requiring
+    This function removes all forward hooks in the specified module, without requiring
     any hook handles. This lets us clean up & remove any hooks that weren't property
     deleted.
+    
+    Warning: Various PyTorch modules and systems make use of hooks, and thus extreme
+    caution should be exercised when removing all hooks. Users are recommended to give
+    their hook function a unique name that can be used to safetly identify and remove
+    the hook.
 
     Args:
 
