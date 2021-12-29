@@ -162,14 +162,13 @@ def _remove_all_forward_hooks(
     def _remove_hooks(m: torch.nn.Module, name: Optional[str] = None) -> None:
         if hasattr(module, "_forward_hooks"):
             if m._forward_hooks != OrderedDict():
-                if m._forward_hooks != OrderedDict():
-                    if name is not None:
-                        dict_items = list(m._forward_hooks.items())
-                        m._forward_hooks = OrderedDict(
-                            [(i, fn) for i, fn in dict_items if fn.__name__ != name]
-                        )
-                    else:
-                        m._forward_hooks: Dict[int, Callable] = OrderedDict()
+                if name is not None:
+                    dict_items = list(m._forward_hooks.items())
+                    m._forward_hooks = OrderedDict(
+                        [(i, fn) for i, fn in dict_items if fn.__name__ != name]
+                    )
+                else:
+                    m._forward_hooks: Dict[int, Callable] = OrderedDict()
 
     def _remove_child_hooks(
         target_module: torch.nn.Module, hook_name: Optional[str] = None
