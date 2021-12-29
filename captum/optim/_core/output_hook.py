@@ -134,8 +134,29 @@ class ActivationFetcher:
             self.layers.remove_hooks()
         return activations_dict
 
+
+def _remove_all_forward_hooks(
+    module: torch.nn.Module, hook_name: Optional[str] = None
+) -> None:
+    """
+    This function removes all forward hooks in the specified model, without requiring
+    any hook handles. This lets us clean up & remove any hooks that weren't property
+    deleted.
+    
+    Args:
+
+        module (nn.Module): The module instance to remove forward hooks from.
+        name (str, optional): Optionally only remove specific forward hooks based on
+            their function's __name__ attribute.
+            Default: None
+    """
+    if hook_name is None or hook_name == "":
+        warn("Warning modules like weight_norm will be broken by removing all hooks."
+            + " Please specify the full & unique function name of the target hook to"
+            + " avoid errors")
+
     # Remove hooks from target submodules
-    for name, child in model._modules.items():
+    for name, child in module._modules.items():
         if child is not None:
             if hasattr(child, "_forward_hooks"):
                 if child._forward_hooks != OrderedDict():
@@ -151,14 +172,15 @@ class ActivationFetcher:
                     else:
                         child._forward_hooks: Dict[int, Callable] = OrderedDict()
             _remove_all_forward_hooks(child, hook_name)
-    # Remove hooks from the target
-    if hasattr(model, "_forward_hooks"):
-        if model._forward_hooks != OrderedDict():
-            if model._forward_hooks != OrderedDict():
+
+    # Remove hooks from the target module
+    if hasattr(module, "_forward_hooks"):
+        if module._forward_hooks != OrderedDict():
+            if module._forward_hooks != OrderedDict():
                 if hook_name is not None:
-                    dict_items = list(model._forward_hooks.items())
-                    model._forward_hooks = OrderedDict(
+                    dict_items = list(module._forward_hooks.items())
+                    module._forward_hooks = OrderedDict(
                         [(i, fn) for i, fn in dict_items if fn.__name__ != hook_name]
                     )
                 else:
-                    model._forward_hooks: Dict[int, Callable] = OrderedDict()
+                    module._forward_hooks: Dict[int, Callable] = OrderedDict()
