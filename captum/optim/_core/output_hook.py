@@ -17,7 +17,7 @@ class ModuleOutputsHook:
             target_modules (Iterable of nn.Module): A list of nn.Module targets.
         """
         for module in target_modules:
-            _remove_all_forward_hooks(module)
+            _remove_all_forward_hooks(module, "module_outputs_forward_hook")
         self.outputs: ModuleOutputMapping = dict.fromkeys(target_modules, None)
         self.hooks = [
             module.register_forward_hook(self._forward_hook())
@@ -42,7 +42,7 @@ class ModuleOutputsHook:
             forward_hook (Callable): The forward_hook function.
         """
 
-        def forward_hook(
+        def module_outputs_forward_hook(
             module: nn.Module, input: Tuple[torch.Tensor], output: torch.Tensor
         ) -> None:
             assert module in self.outputs.keys()
@@ -60,7 +60,7 @@ class ModuleOutputsHook:
                     "that you are passing model layers in your losses."
                 )
 
-        return forward_hook
+        return module_outputs_forward_hook
 
     def consume_outputs(self) -> ModuleOutputMapping:
         """
