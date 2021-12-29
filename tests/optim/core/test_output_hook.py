@@ -55,7 +55,7 @@ def _count_forward_hooks(
 
 class TestModuleOutputsHook(BaseTest):
     def test_init_hook_duplication_fix(self) -> None:
-        model = torch.nn.Sequential(*[torch.nn.Identity()] * 2)
+        model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         for i in range(5):
             _ = output_hook.ModuleOutputsHook([model[1]])
         n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
@@ -85,8 +85,9 @@ class TestRemoveAllForwardHooks(BaseTest):
         ) -> None:
             pass
 
-        layer = torch.nn.Sequential(*[torch.nn.Identity()] * 2)
-        model = torch.nn.Sequential(*[layer] * 2)
+        layer1 = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        layer2 = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        model = torch.nn.Sequential(layer1, layer2)
 
         model.register_forward_hook(forward_hook_unique_fn)
         model[1].register_forward_hook(forward_hook_unique_fn)
@@ -110,8 +111,9 @@ class TestRemoveAllForwardHooks(BaseTest):
         ) -> None:
             pass
 
-        layer = torch.nn.Sequential(*[torch.nn.Identity()] * 2)
-        model = torch.nn.Sequential(*[layer] * 2)
+        layer1 = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        layer2 = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        model = torch.nn.Sequential(layer1, layer2)
 
         model.register_forward_hook(forward_hook_unique_fn_1)
         model[1].register_forward_hook(forward_hook_unique_fn_1)
