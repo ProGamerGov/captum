@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import unittest
 from collections import OrderedDict
-from typing import Optional, cast
+from typing import Optional, Tuple, cast
 
 import torch
 
