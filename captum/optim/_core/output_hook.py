@@ -159,38 +159,29 @@ def _remove_all_forward_hooks(
     if hook_fn_name is None or hook_fn_name == "":
         warn("Removing all active hooks can break some PyTorch modules & systems.")
 
-    def _remove_forward_hooks(
+    def _remove_hooks(m: nn.Module, name: Optional[str] = None) -> None 
+        if hasattr(module, "_forward_hooks"):
+            if m._forward_hooks != OrderedDict():
+                if m._forward_hooks != OrderedDict():
+                    if name is not None:
+                        dict_items = list(m._forward_hooks.items())
+                        m._forward_hooks = OrderedDict(
+                            [(i, fn) for i, fn in dict_items if fn.__name__ != name]
+                        )
+                    else:
+                        m._forward_hooks: Dict[int, Callable] = OrderedDict()
+
+    def _remove_child_hooks(
         target_module: torch.nn.Module, hook_name: Optional[str] = None
     ) -> None:
 
         for name, child in target_module._modules.items():
             if child is not None:
-                if hasattr(child, "_forward_hooks"):
-                    if child._forward_hooks != OrderedDict():
-                        if hook_name is not None:
-                            dict_items = list(child._forward_hooks.items())
-                            child._forward_hooks = OrderedDict(
-                                [
-                                    (i, fn)
-                                    for i, fn in dict_items
-                                    if fn.__name__ != hook_name
-                                ]
-                            )
-                        else:
-                            child._forward_hooks: Dict[int, Callable] = OrderedDict()
-                _remove_forward_hooks(child, hook_name)
+                _remove_hooks(child, hook_name)
+                _remove_child_hooks(child, hook_name)
 
     # Remove hooks from target submodules
-    _remove_forward_hooks(module, hook_fn_name)
+    _remove_child_hooks(module, hook_fn_name)
 
     # Remove hooks from the target module
-    if hasattr(module, "_forward_hooks"):
-        if module._forward_hooks != OrderedDict():
-            if module._forward_hooks != OrderedDict():
-                if hook_fn_name is not None:
-                    dict_items = list(module._forward_hooks.items())
-                    module._forward_hooks = OrderedDict(
-                        [(i, fn) for i, fn in dict_items if fn.__name__ != hook_fn_name]
-                    )
-                else:
-                    module._forward_hooks: Dict[int, Callable] = OrderedDict()
+    _remove_hooks(model, hook_fn_name)
