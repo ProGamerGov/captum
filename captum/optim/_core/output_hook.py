@@ -157,11 +157,11 @@ def _remove_all_forward_hooks(
         warn("Removing all active hooks can break some PyTorch modules & systems.")
 
     def _remove_forward_hooks(
-        module: torch.nn.Module, hook_name: Optional[str] = None
+        target_module: torch.nn.Module, hook_name: Optional[str] = None
     ) -> None:
 
         # Remove hooks from target submodules
-        for name, child in module._modules.items():
+        for name, child in target_module._modules.items():
             if child is not None:
                 if hasattr(child, "_forward_hooks"):
                     if child._forward_hooks != OrderedDict():
@@ -179,12 +179,12 @@ def _remove_all_forward_hooks(
                 _remove_forward_hooks(child, hook_name)
 
         # Remove hooks from the target module
-        if hasattr(module, "_forward_hooks"):
-            if module._forward_hooks != OrderedDict():
-                if module._forward_hooks != OrderedDict():
+        if hasattr(target_module, "_forward_hooks"):
+            if target_module._forward_hooks != OrderedDict():
+                if target_module._forward_hooks != OrderedDict():
                     if hook_name is not None:
-                        dict_items = list(module._forward_hooks.items())
-                        module._forward_hooks = OrderedDict(
+                        dict_items = list(target_module._forward_hooks.items())
+                        target_module._forward_hooks = OrderedDict(
                             [
                                 (i, fn)
                                 for i, fn in dict_items
@@ -192,6 +192,6 @@ def _remove_all_forward_hooks(
                             ]
                         )
                     else:
-                        module._forward_hooks: Dict[int, Callable] = OrderedDict()
+                        target_module._forward_hooks: Dict[int, Callable] = OrderedDict()
 
     _remove_forward_hooks(module, hook_fn_name)
