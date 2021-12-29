@@ -151,6 +151,11 @@ def _remove_all_forward_hooks(
             their function's __name__ attribute.
             Default: None
     """
+    if hook_name is None or hook_name == "":
+        warn("Warning modules like weight_norm will be broken by removing all hooks."
+            + " Please specify the full & unique function name of the target hook to"
+            + " avoid errors")
+
     for name, child in model._modules.items():
         if child is not None:
             if hasattr(child, "_forward_hooks"):
