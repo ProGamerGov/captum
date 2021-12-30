@@ -166,6 +166,25 @@ class TestModuleOutputsHook(BaseTest):
         expected_outputs = dict.fromkeys(target_modules, None)
         self.assertEqual(hook_module.outputs, expected_outputs)
 
+    def test_consume_outputs_warning(self) -> None:
+        model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        target_modules = [model[0], model[1]]
+        test_input = torch.randn(1, 3, 4, 4)
+
+        hook_module = output_hook.ModuleOutputsHook(target_modules)
+        self.assertFalse(hook_module.is_ready)
+
+        _ = model(test_input)
+
+        self.assertTrue(hook_module.is_ready)
+
+        hook_module._reset_outputs()
+
+        self.assertFalse(hook_module.is_ready)
+
+        with self.assertWarns(Warning):
+            _ = hook_module.consume_outputs()
+
 
 class TestActivationFetcher(BaseTest):
     def test_activation_fetcher_simple_model(self) -> None:
