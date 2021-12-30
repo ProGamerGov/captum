@@ -66,6 +66,7 @@ class TestModuleOutputsHook(BaseTest):
 
         outputs = dict.fromkeys(target_modules, None)
         self.assertEqual(outputs, hook_module.outputs)
+        self.assertEqual(list(hook_module.targets), target_modules)
 
     def test_init_multiple_targets(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
@@ -79,6 +80,7 @@ class TestModuleOutputsHook(BaseTest):
 
         outputs = dict.fromkeys(target_modules, None)
         self.assertEqual(outputs, hook_module.outputs)
+        self.assertEqual(list(hook_module.targets), target_modules)
 
     def test_init_hook_duplication_fix(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
@@ -86,6 +88,34 @@ class TestModuleOutputsHook(BaseTest):
             _ = output_hook.ModuleOutputsHook([model[1]])
         n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
         self.assertEqual(n_hooks, 1)
+
+    def test_init_multiple_targets_remove_hooks(self) -> None:
+        model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        target_modules = [model[0], model[1]]
+        
+        hook_module = output_hook.ModuleOutputsHook(target_modules)
+
+        n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
+        self.assertEqual(n_hooks, len(target_modules))
+
+        hook_module.remove_hooks()
+
+        n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
+        self.assertEqual(n_hooks, 0)
+
+    def test_init_multiple_targets_del(self) -> None:
+        model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        target_modules = [model[0], model[1]]
+        
+        hook_module = output_hook.ModuleOutputsHook(target_modules)
+
+        n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
+        self.assertEqual(n_hooks, len(target_modules))
+
+        del hook_module
+
+        n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
+        self.assertEqual(n_hooks, 0)
 
     def test_consume_outputs_multiple_targets(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
