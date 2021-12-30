@@ -439,6 +439,7 @@ class SharedImage(ImageParameterization):
     Mordvintsev, et al., "Differentiable Image Parameterizations", Distill, 2018.
     https://distill.pub/2018/differentiable-parameterizations/
     """
+    __constants__ = ["offset", "_supports_is_scripting"]
 
     def __init__(
         self,
@@ -469,6 +470,9 @@ class SharedImage(ImageParameterization):
         self.shared_init = torch.nn.ParameterList(A)
         self.parameterization = parameterization
         self.offset = self._get_offset(offset, len(A)) if offset is not None else None
+
+        # Check & store whether or not we can use torch.jit.is_scripting()
+        self._supports_is_scripting = torch.__version__ >= "1.6.0"
 
     def _get_offset(self, offset: Union[int, Tuple[int]], n: int) -> List[List[int]]:
         """
@@ -580,7 +584,12 @@ class SharedImage(ImageParameterization):
         ]
         if self.offset is not None:
             x = self._apply_offset(x)
-        return (image + sum(x)).refine_names("B", "C", "H", "W")
+        output = image + sum(x)
+
+        if self._supports_is_scripting:
+            if torch.jit.is_scripting():
+                return output
+        return output.refine_names("B", "C", "H", "W")
 
 
 class NaturalImage(ImageParameterization):
