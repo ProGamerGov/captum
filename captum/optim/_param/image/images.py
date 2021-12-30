@@ -633,11 +633,13 @@ class NaturalImage(ImageParameterization):
         """
         super().__init__()
         if not isinstance(parameterization, ImageParameterization)
+            # Verify unitialized class is correct type
             assert issubclass(parameterization, ImageParameterization)
         else:
             assert isinstance(parameterization, ImageParameterization)
+
         self.decorrelate = decorrelation_module
-        if init is not None:
+        if init is not None and not isinstance(parameterization, ImageParameterization):
             assert init.dim() == 3 or init.dim() == 4
             if decorrelate_init and self.decorrelate is not None:
                 init = (
