@@ -105,20 +105,6 @@ class TestModuleOutputsHook(BaseTest):
         n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
         self.assertEqual(n_hooks, 0)
 
-    def test_init_multiple_targets_del(self) -> None:
-        model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
-        target_modules = [model[0], model[1]]
-
-        hook_module = output_hook.ModuleOutputsHook(target_modules)
-
-        n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
-        self.assertEqual(n_hooks, len(target_modules))
-
-        del hook_module
-
-        n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
-        self.assertEqual(n_hooks, 0)
-
     def test_reset_outputs_multiple_targets(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         target_modules = [model[0], model[1]]
