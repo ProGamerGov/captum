@@ -840,6 +840,37 @@ class TestSharedImage(BaseTest):
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])
 
+    def test_sharedimage_multiple_shapes_diff_len_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping SharedImage JIT module test due to insufficient Torch version."
+            )
+
+        shared_shapes = (
+            (128 // 2, 128 // 2),
+            (7, 3, 128 // 4, 128 // 4),
+            (3, 128 // 8, 128 // 8),
+            (2, 4, 128 // 8, 128 // 8),
+            (1, 3, 128 // 16, 128 // 16),
+            (2, 2, 128 // 16, 128 // 16),
+        )
+        batch = 6
+        channels = 3
+        size = (224, 224)
+        test_input = torch.ones(batch, channels, size[0], size[1])  # noqa: E731
+        test_param = images.SimpleTensorParameterization(test_input)
+        image_param = images.SharedImage(
+            shapes=shared_shapes, parameterization=test_param
+        )
+        jit_image_param = torch.jit.script(image_param)
+        test_tensor = jit_image_param()
+
+        self.assertEqual(test_tensor.dim(), 4)
+        self.assertEqual(test_tensor.size(0), batch)
+        self.assertEqual(test_tensor.size(1), channels)
+        self.assertEqual(test_tensor.size(2), size[0])
+        self.assertEqual(test_tensor.size(3), size[1])
+
 
 class TestNaturalImage(BaseTest):
     def test_natural_image_init_func_default(self) -> None:
