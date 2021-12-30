@@ -171,8 +171,13 @@ class TestModuleOutputsHook(BaseTest):
 
         self.assertFalse(hook_module.is_ready)
 
+        i = 0
+        for target, activations in test_output.items():
+            self.assertEqual(target, target_modules[i])
+            assertTensorAlmostEqual(self, activations, test_input)
+            i += 1
+
         expected_outputs = dict.fromkeys(target_modules, None)
-        self.assertEqual(test_output, expected_outputs)
         self.assertEqual(hook_module.outputs, expected_outputs)
 
 
