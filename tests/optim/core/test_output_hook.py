@@ -136,7 +136,7 @@ class TestModuleOutputsHook(BaseTest):
         for target, activations in outputs_dict.items():
             self.assertEqual(target, target_modules[i])
             assertTensorAlmostEqual(self, activations, test_input)
-            i+=1
+            i += 1
 
         hook_module._reset_outputs()
 
@@ -165,7 +165,7 @@ class TestModuleOutputsHook(BaseTest):
         for target, activations in test_outputs_dict.items():
             self.assertEqual(target, target_modules[i])
             assertTensorAlmostEqual(self, activations, test_input)
-            i+=1
+            i += 1
 
         test_output = hook_module.consume_outputs()
 
