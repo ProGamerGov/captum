@@ -157,7 +157,7 @@ def _remove_all_forward_hooks(
             Default: None
     """
 
-    if hook_fn_name is None or hook_fn_name == "":
+    if hook_fn_name is None:
         warn("Removing all active hooks can break some PyTorch modules & systems.")
 
     def _remove_hooks(m: torch.nn.Module, name: Optional[str] = None) -> None:
