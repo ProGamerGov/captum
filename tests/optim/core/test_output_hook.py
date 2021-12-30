@@ -168,7 +168,7 @@ class TestModuleOutputsHook(BaseTest):
 
 
 class TestActivationFetcher(BaseTest):
-    def test_activation_fetcher(self) -> None:
+    def test_activation_fetcher_single_target(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
                 "Skipping ActivationFetcher test due to insufficient Torch version."
@@ -179,8 +179,28 @@ class TestActivationFetcher(BaseTest):
         activ_out = catch_activ(torch.zeros(1, 3, 224, 224))
 
         self.assertIsInstance(activ_out, dict)
+        self.assertEqual(len(activ_out), 1)
         m4d_activ = activ_out[model.mixed4d]
         self.assertEqual(list(cast(torch.Tensor, m4d_activ).shape), [1, 528, 14, 14])
+
+    def test_activation_fetcher_multiple_targets(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping ActivationFetcher test due to insufficient Torch version."
+            )
+        model = googlenet(pretrained=True)
+
+        catch_activ = output_hook.ActivationFetcher(model, targets=[model.mixed4d, model.mixed5b])
+        activ_out = catch_activ(torch.zeros(1, 3, 224, 224))
+
+        self.assertIsInstance(activ_out, dict)
+        self.assertEqual(len(activ_out), 2)
+
+        m4d_activ = activ_out[model.mixed4d]
+        self.assertEqual(list(cast(torch.Tensor, m4d_activ).shape), [1, 528, 14, 14])
+
+        m5b_activ = activ_out[model.mixed5b]
+        self.assertEqual(list(cast(torch.Tensor, m5b_activ).shape), [1, 1024, 7, 7])
 
 
 class TestRemoveAllForwardHooks(BaseTest):
