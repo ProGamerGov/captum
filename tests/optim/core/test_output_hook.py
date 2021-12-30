@@ -87,6 +87,31 @@ class TestModuleOutputsHook(BaseTest):
         n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
         self.assertEqual(n_hooks, 1)
 
+    def test_consume_outputs_multiple_targets(self) -> None:
+        model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        target_modules = [model[0], model[1]]
+        test_input = torch.randn(1, 3, 4, 4)
+        
+        hook_module = output_hook.ModuleOutputsHook(target_modules)
+        _ = model(test_input)
+        
+        test_outputs = hook_module.outputs
+        self.assertIsInstance(test_outputs, dict)
+        self.assertEqual(len(test_outputs), len(target_modules))
+
+        for target, activations, i in zip(test_outputs.items(), list(range(len(target_modules))):
+            self.assertEqual(target, target_modules[i])
+            assertTensorAlmostEqual(self, target_activations, test_input)
+
+        self.assertFalse(hook_module.is_ready)
+
+        outputs_dict = hook_module.consume_outputs()
+        
+        outputs = dict.fromkeys(target_modules, None)
+        self.assertEqual(outputs, hook_module.outputs)
+
+        self.assertTrue(hook_module.is_ready)
+
 
 class TestActivationFetcher(BaseTest):
     def test_activation_fetcher(self) -> None:
