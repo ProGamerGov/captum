@@ -425,6 +425,34 @@ class LaplacianImage(ImageParameterization):
         return torch.stack(A).refine_names("B", "C", "H", "W")
 
 
+class SimpleTensorParameterization(ImageParameterization):
+    """
+    Parameterize a simple tensor with or without it requiring grad.
+    Compared to PixelImage, this parameterization has no specific shape requirements
+    and does not wrap inputs in nn.Parameter.
+    
+    This parameterization can for example be combined with StackImage for batch
+    dimensions that both require and don't require gradients.
+    
+    This parameterization can also be combined with nn.ModuleList as workaround for
+    TorchScript / JIT not supporting nn.ParameterList. SharedImage uses this module
+    internally for this purpose.
+    """
+
+    def __init__(self, tensor: torch.Tensor = None) -> None:
+        """
+        Args:
+
+            tensor (torch.tensor): The tensor to return everytime this module is called.
+        """
+        super().__init__()
+        assert isinstance(tensor, torch.Tensor)
+        self.tensor = tensor
+
+    def forward(self) -> torch.Tensor:
+        return self.tensor
+
+
 class SharedImage(ImageParameterization):
     """
     Share some image parameters across the batch to increase spatial alignment,
@@ -464,8 +492,9 @@ class SharedImage(ImageParameterization):
             assert len(shape) >= 2 and len(shape) <= 4
             shape = ([1] * (4 - len(shape))) + list(shape)
             batch, channels, height, width = shape
-            A.append(torch.nn.Parameter(torch.randn([batch, channels, height, width])))
-        self.shared_init = torch.nn.ParameterList(A)
+            shape_param = torch.nn.Parameter(torch.randn([batch, channels, height, width]))
+            A.append(SimpleTensorParameterization(shape_param))
+        self.shared_init = torch.nn.ModuleList(A)
         self.parameterization = parameterization
         self.offset = self._get_offset(offset, len(A)) if offset is not None else None
 
