@@ -633,7 +633,7 @@ class NaturalImage(ImageParameterization):
         """
         super().__init__()
         if not isinstance(parameterization, ImageParameterization)
-            # Verify unitialized class is correct type
+            # Verify uninitialized class is correct type
             assert issubclass(parameterization, ImageParameterization)
         else:
             assert isinstance(parameterization, ImageParameterization)
