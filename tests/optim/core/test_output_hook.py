@@ -242,7 +242,7 @@ class TestRemoveAllForwardHooks(BaseTest):
             self, input: Tuple[torch.Tensor], output: torch.Tensor
         ) -> None:
             pass
-        
+
         fn_name = forward_hook_unique_fn.__name__
 
         layer1 = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
