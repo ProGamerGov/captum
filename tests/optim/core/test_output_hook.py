@@ -139,7 +139,7 @@ class TestModuleOutputsHook(BaseTest):
 
         expected_outputs = dict.fromkeys(target_modules, None)
         self.assertEqual(test_output, expected_outputs)
-        self.assertEqual(test_output, hook_module.outputs)
+        self.assertEqual(hook_module.outputs, expected_outputs)
 
         self.assertTrue(hook_module.is_ready)
 
