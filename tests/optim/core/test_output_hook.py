@@ -125,18 +125,22 @@ class TestModuleOutputsHook(BaseTest):
         hook_module = output_hook.ModuleOutputsHook(target_modules)
         _ = model(test_input)
         
-        test_outputs = hook_module.outputs
-        self.assertIsInstance(test_outputs, dict)
-        self.assertEqual(len(test_outputs), len(target_modules))
+        test_outputs_dict = hook_module.outputs
+        self.assertIsInstance(test_outputs_dict, dict)
+        self.assertEqual(len(test_outputs_dict), len(target_modules))
 
-        for target, activations, i in zip(test_outputs.items(), list(range(len(target_modules))):
+        for target, activations, i in zip(test_outputs_dict.items(), list(range(len(target_modules))):
             self.assertEqual(target, target_modules[i])
             assertTensorAlmostEqual(self, target_activations, test_input)
 
         self.assertFalse(hook_module.is_ready)
 
-        outputs_dict = hook_module.consume_outputs()
-        
+        test_output = hook_module.consume_outputs()
+
+        for target, activations, i in zip(test_output.items(), list(range(len(target_modules))):
+            self.assertEqual(target, target_modules[i])
+            self.assertIsNone(target_activations)
+
         outputs = dict.fromkeys(target_modules, None)
         self.assertEqual(outputs, hook_module.outputs)
 
