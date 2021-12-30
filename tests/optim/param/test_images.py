@@ -813,7 +813,7 @@ class TestNaturalImage(BaseTest):
                 "Skipping NaturalImage FFTImage init func FFTImage instance test due"
                 + " to insufficient Torch version."
             )
-            
+
         fft_param = images.FFTImage(size=(4, 4))
         image_param = images.NaturalImage(parameterization=fft_param)
         self.assertIsInstance(image_param.parameterization, images.FFTImage)
