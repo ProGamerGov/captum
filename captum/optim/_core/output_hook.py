@@ -17,6 +17,7 @@ class ModuleOutputsHook:
             target_modules (Iterable of nn.Module): A list of nn.Module targets.
         """
         for module in target_modules:
+            # Clean up any old hooks that weren't properly deleted
             _remove_all_forward_hooks(module, "module_outputs_forward_hook")
         self.outputs: ModuleOutputMapping = dict.fromkeys(target_modules, None)
         self.hooks = [
