@@ -132,11 +132,11 @@ class TestModuleOutputsHook(BaseTest):
         self.assertFalse(hook_module.is_ready)
 
         outputs_dict = hook_module.outputs
-        for target, activations, i in zip(
-            outputs_dict.items(), list(range(len(target_modules)))
-        ):
+        i = 0
+        for target, activations in outputs_dict.items():
             self.assertEqual(target, target_modules[i])
             assertTensorAlmostEqual(self, activations, test_input)
+            i+=1
 
         hook_module._reset_outputs()
 
@@ -161,11 +161,11 @@ class TestModuleOutputsHook(BaseTest):
         self.assertIsInstance(test_outputs_dict, dict)
         self.assertEqual(len(test_outputs_dict), len(target_modules))
 
-        for target, activations, i in zip(
-            test_outputs_dict.items(), list(range(len(target_modules)))
-        ):
+        i = 0
+        for target, activations in test_outputs_dict.items():
             self.assertEqual(target, target_modules[i])
             assertTensorAlmostEqual(self, activations, test_input)
+            i+=1
 
         test_output = hook_module.consume_outputs()
 
