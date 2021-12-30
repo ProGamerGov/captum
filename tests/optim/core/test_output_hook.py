@@ -168,6 +168,18 @@ class TestModuleOutputsHook(BaseTest):
 
 
 class TestActivationFetcher(BaseTest):
+    def test_activation_fetcher_simple_model(self) -> None:
+        model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+
+        catch_activ = output_hook.ActivationFetcher(model, targets=[model[0]])
+        test_input = torch.randn(1, 3, 224, 224)
+        activ_out = catch_activ(test_input)
+
+        self.assertIsInstance(activ_out, dict)
+        self.assertEqual(len(activ_out), 1)
+        activ = activ_out[model[0]]
+        assertTensorAlmostEqual(self, activ, test_input)
+
     def test_activation_fetcher_single_target(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
