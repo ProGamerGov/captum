@@ -137,12 +137,9 @@ class TestModuleOutputsHook(BaseTest):
 
         test_output = hook_module.consume_outputs()
 
-        for target, activations, i in zip(test_output.items(), list(range(len(target_modules))):
-            self.assertEqual(target, target_modules[i])
-            self.assertIsNone(target_activations)
-
-        outputs = dict.fromkeys(target_modules, None)
-        self.assertEqual(outputs, hook_module.outputs)
+        expected_outputs = dict.fromkeys(target_modules, None)
+        self.assertEqual(test_output, expected_outputs)
+        self.assertEqual(test_output, hook_module.outputs)
 
         self.assertTrue(hook_module.is_ready)
 
