@@ -7,7 +7,7 @@ import torch
 
 import captum.optim._core.output_hook as output_hook
 from captum.optim.models import googlenet
-from tests.helpers.basic import BaseTest
+from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 
 def _count_forward_hooks(
