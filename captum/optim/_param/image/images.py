@@ -497,6 +497,7 @@ class SharedImage(ImageParameterization):
         assert all([all([type(o) is int for o in v]) for v in offset])
         return offset
 
+    @torch.jit.ignore
     def _apply_offset(self, x_list: List[torch.Tensor]) -> List[torch.Tensor]:
         """
         Apply list of offsets to list of tensors.
@@ -530,6 +531,7 @@ class SharedImage(ImageParameterization):
             A.append(x)
         return A
 
+    @torch.jit.ignore
     def _interpolate_tensor(
         self, x: torch.Tensor, batch: int, channels: int, height: int, width: int
     ) -> torch.Tensor:
@@ -582,7 +584,7 @@ class SharedImage(ImageParameterization):
         ]
         if self.offset is not None:
             x = self._apply_offset(x)
-        output = image + sum(x)
+        output = image + torch.cat(x, 0).sum(0, keepdim=True)
 
         if self._supports_is_scripting:
             if torch.jit.is_scripting():
