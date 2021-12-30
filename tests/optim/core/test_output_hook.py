@@ -57,7 +57,7 @@ class TestModuleOutputsHook(BaseTest):
     def test_init_single_target(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         target_modules = [model[0]]
-        
+
         hook_module = output_hook.ModuleOutputsHook(target_modules)
         self.assertEqual(len(hook_module.hooks), len(target_modules))
 
@@ -72,7 +72,7 @@ class TestModuleOutputsHook(BaseTest):
     def test_init_multiple_targets(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         target_modules = [model[0], model[1]]
-        
+
         hook_module = output_hook.ModuleOutputsHook(target_modules)
         self.assertEqual(len(hook_module.hooks), len(target_modules))
 
@@ -94,7 +94,7 @@ class TestModuleOutputsHook(BaseTest):
     def test_init_multiple_targets_remove_hooks(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         target_modules = [model[0], model[1]]
-        
+
         hook_module = output_hook.ModuleOutputsHook(target_modules)
 
         n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
@@ -108,7 +108,7 @@ class TestModuleOutputsHook(BaseTest):
     def test_init_multiple_targets_del(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         target_modules = [model[0], model[1]]
-        
+
         hook_module = output_hook.ModuleOutputsHook(target_modules)
 
         n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
@@ -123,7 +123,7 @@ class TestModuleOutputsHook(BaseTest):
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         target_modules = [model[0], model[1]]
         test_input = torch.randn(1, 3, 4, 4)
-        
+
         hook_module = output_hook.ModuleOutputsHook(target_modules)
         self.assertTrue(hook_module.is_ready)
 
@@ -132,9 +132,11 @@ class TestModuleOutputsHook(BaseTest):
         self.assertFalse(hook_module.is_ready)
 
         outputs_dict = hook_module.outputs
-        for target, activations, i in zip(outputs_dict.items(), list(range(len(target_modules))):
+        for target, activations, i in zip(
+            outputs_dict.items(), list(range(len(target_modules)))
+        ):
             self.assertEqual(target, target_modules[i])
-            assertTensorAlmostEqual(self, target_activations, test_input)
+            assertTensorAlmostEqual(self, activations, test_input)
 
         hook_module._reset_outputs()
 
@@ -147,21 +149,23 @@ class TestModuleOutputsHook(BaseTest):
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         target_modules = [model[0], model[1]]
         test_input = torch.randn(1, 3, 4, 4)
-        
+
         hook_module = output_hook.ModuleOutputsHook(target_modules)
         self.assertTrue(hook_module.is_ready)
 
         _ = model(test_input)
-        
+
         self.assertFalse(hook_module.is_ready)
-        
+
         test_outputs_dict = hook_module.outputs
         self.assertIsInstance(test_outputs_dict, dict)
         self.assertEqual(len(test_outputs_dict), len(target_modules))
 
-        for target, activations, i in zip(test_outputs_dict.items(), list(range(len(target_modules))):
+        for target, activations, i in zip(
+            test_outputs_dict.items(), list(range(len(target_modules)))
+        ):
             self.assertEqual(target, target_modules[i])
-            assertTensorAlmostEqual(self, target_activations, test_input)
+            assertTensorAlmostEqual(self, activations, test_input)
 
         test_output = hook_module.consume_outputs()
 
