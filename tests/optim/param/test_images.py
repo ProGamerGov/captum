@@ -493,6 +493,42 @@ class TestSimpleTensorParameterization(BaseTest):
         assertTensorAlmostEqual(self, test_output, test_input, 0.0)
         self.assertFalse(image_param.tensor.requires_grad)
 
+    def test_simple_tensor_parameterization_with_grad(self) -> None:
+        test_input = torch.nn.Parameter(torch.randn(1, 3, 4, 4))
+        image_param = images.SimpleTensorParameterization(test_input)
+        assertTensorAlmostEqual(self, image_param.tensor, test_input, 0.0)
+        self.assertTrue(image_param.tensor.requires_grad)
+
+        test_output = image_param()
+        assertTensorAlmostEqual(self, test_output, test_input, 0.0)
+        self.assertTrue(image_param.tensor.requires_grad)
+
+    def test_simple_tensor_parameterization_jit_module_with_grad(self) -> None:
+        test_input = torch.nn.Parameter(torch.randn(1, 3, 4, 4))
+        image_param = images.SimpleTensorParameterization(test_input)
+        jit_image_param = torch.jit.script(image_param)
+
+        test_output = image_param()
+        assertTensorAlmostEqual(self, test_output, test_input, 0.0)
+        self.assertTrue(image_param.tensor.requires_grad)
+
+    def test_simple_tensor_parameterization_cuda(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping SimpleTensorParameterization CUDA test due to not supporting"
+                + " CUDA."
+            )
+        test_input = torch.randn(1, 3, 4, 4).cuda()
+        image_param = images.SimpleTensorParameterization(test_input)
+        self.assertTrue(image_param.tensor.is_cuda)
+        assertTensorAlmostEqual(self, image_param.tensor, test_input, 0.0)
+        self.assertFalse(image_param.tensor.requires_grad)
+
+        test_output = image_param()
+        self.assertTrue(test_output.is_cuda)
+        assertTensorAlmostEqual(self, test_output, test_input, 0.0)
+        self.assertFalse(image_param.tensor.requires_grad)
+
 
 class TestSharedImage(BaseTest):
     def test_sharedimage_get_offset_single_number(self) -> None:
