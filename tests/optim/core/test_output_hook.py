@@ -221,7 +221,9 @@ class TestActivationFetcher(BaseTest):
             )
         model = googlenet(pretrained=True)
 
-        catch_activ = output_hook.ActivationFetcher(model, targets=[model.mixed4d, model.mixed5b])
+        catch_activ = output_hook.ActivationFetcher(
+            model, targets=[model.mixed4d, model.mixed5b]
+        )
         activ_out = catch_activ(torch.zeros(1, 3, 224, 224))
 
         self.assertIsInstance(activ_out, dict)
