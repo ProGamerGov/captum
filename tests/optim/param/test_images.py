@@ -473,6 +473,27 @@ class TestLaplacianImage(BaseTest):
         assertArraysAlmostEqual(np.ones_like(test_np) * 0.5, test_np)
 
 
+class TestSimpleTensorParameterization(BaseTest):
+    def test_simple_tensor_parameterization_no_grad(self) -> None:
+        test_input = torch.randn(1, 3, 4, 4)
+        image_param = images.SimpleTensorParameterization(test_input)
+        assertTensorAlmostEqual(self, image_param.tensor, test_input, 0.0)
+        self.assertFalse(image_param.tensor.requires_grad)
+
+        test_output = image_param()
+        assertTensorAlmostEqual(self, test_output, test_input, 0.0)
+        self.assertFalse(image_param.tensor.requires_grad)
+
+    def test_simple_tensor_parameterization_jit_module_no_grad(self) -> None:
+        test_input = torch.randn(1, 3, 4, 4)
+        image_param = images.SimpleTensorParameterization(test_input)
+        jit_image_param = torch.jit.script(image_param)
+
+        test_output = image_param()
+        assertTensorAlmostEqual(self, test_output, test_input, 0.0)
+        self.assertFalse(image_param.tensor.requires_grad)
+
+
 class TestSharedImage(BaseTest):
     def test_sharedimage_get_offset_single_number(self) -> None:
         if torch.__version__ <= "1.2.0":
