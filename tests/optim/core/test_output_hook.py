@@ -54,6 +54,32 @@ def _count_forward_hooks(
 
 
 class TestModuleOutputsHook(BaseTest):
+    def test_init_single_target(self) -> None:
+        model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        target_modules = [model[0]]
+        
+        hook_module = output_hook.ModuleOutputsHook(target_modules)
+        self.assertEqual(len(hook_module.hooks), len(target_modules))
+
+        n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
+        self.assertEqual(n_hooks, len(target_modules))
+
+        outputs = dict.fromkeys(target_modules, None)
+        self.assertEqual(outputs, hook_module.outputs)
+
+    def test_init_multiple_targets(self) -> None:
+        model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        target_modules = [model[0], model[1]]
+        
+        hook_module = output_hook.ModuleOutputsHook(target_modules)
+        self.assertEqual(len(hook_module.hooks), len(target_modules))
+
+        n_hooks = _count_forward_hooks(model, "module_outputs_forward_hook")
+        self.assertEqual(n_hooks, len(target_modules))
+
+        outputs = dict.fromkeys(target_modules, None)
+        self.assertEqual(outputs, hook_module.outputs)
+
     def test_init_hook_duplication_fix(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         for i in range(5):
