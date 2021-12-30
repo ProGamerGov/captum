@@ -603,7 +603,7 @@ class SharedImage(ImageParameterization):
         image = self.parameterization()
         x = [
             self._interpolate_tensor(
-                shared_tensor,
+                shared_tensor(),
                 image.size(0),
                 image.size(1),
                 image.size(2),
