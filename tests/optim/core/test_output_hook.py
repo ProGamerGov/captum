@@ -67,7 +67,7 @@ class TestModuleOutputsHook(BaseTest):
         outputs = dict.fromkeys(target_modules, None)
         self.assertEqual(outputs, hook_module.outputs)
         self.assertEqual(list(hook_module.targets), target_modules)
-        self.assertTrue(hook_module.is_ready)
+        self.assertFalse(hook_module.is_ready)
 
     def test_init_multiple_targets(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
@@ -82,7 +82,7 @@ class TestModuleOutputsHook(BaseTest):
         outputs = dict.fromkeys(target_modules, None)
         self.assertEqual(outputs, hook_module.outputs)
         self.assertEqual(list(hook_module.targets), target_modules)
-        self.assertTrue(hook_module.is_ready)
+        self.assertFalse(hook_module.is_ready)
 
     def test_init_hook_duplication_fix(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
@@ -125,11 +125,11 @@ class TestModuleOutputsHook(BaseTest):
         test_input = torch.randn(1, 3, 4, 4)
 
         hook_module = output_hook.ModuleOutputsHook(target_modules)
-        self.assertTrue(hook_module.is_ready)
+        self.assertFalse(hook_module.is_ready)
 
         _ = model(test_input)
 
-        self.assertFalse(hook_module.is_ready)
+        self.assertTrue(hook_module.is_ready)
 
         outputs_dict = hook_module.outputs
         i = 0
@@ -140,7 +140,7 @@ class TestModuleOutputsHook(BaseTest):
 
         hook_module._reset_outputs()
 
-        self.assertTrue(hook_module.is_ready)
+        self.assertFalse(hook_module.is_ready)
 
         expected_outputs = dict.fromkeys(target_modules, None)
         self.assertEqual(hook_module.outputs, expected_outputs)
@@ -151,11 +151,11 @@ class TestModuleOutputsHook(BaseTest):
         test_input = torch.randn(1, 3, 4, 4)
 
         hook_module = output_hook.ModuleOutputsHook(target_modules)
-        self.assertTrue(hook_module.is_ready)
+        self.assertFalse(hook_module.is_ready)
 
         _ = model(test_input)
 
-        self.assertFalse(hook_module.is_ready)
+        self.assertTrue(hook_module.is_ready)
 
         test_outputs_dict = hook_module.outputs
         self.assertIsInstance(test_outputs_dict, dict)
@@ -169,7 +169,7 @@ class TestModuleOutputsHook(BaseTest):
 
         test_output = hook_module.consume_outputs()
 
-        self.assertTrue(hook_module.is_ready)
+        self.assertFalse(hook_module.is_ready)
 
         expected_outputs = dict.fromkeys(target_modules, None)
         self.assertEqual(test_output, expected_outputs)
