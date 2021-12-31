@@ -13,7 +13,7 @@ from captum.optim._utils.typing import ModuleOutputMapping, TupleOfTensorsOrTens
 def get_model_layers(model: nn.Module) -> List[str]:
     """
     Return a list of hookable layers for the target model.
-    
+
     Args:
 
         model (nn.Module): A PyTorch model or module instance to collect layers from.
@@ -207,7 +207,7 @@ class Conv2dSame(nn.Conv2d):
         Args:
 
             x (torch.tensor): The input tensor to apply 2D convolution to.
-        
+
         Returns
             x (torch.Tensor): The input tensor after the 2D convolution was applied.
         """
@@ -238,7 +238,7 @@ def collect_activations(
 ) -> ModuleOutputMapping:
     """
     Collect target activations for a model.
-    
+
     Args:
 
         model (nn.Module): A PyTorch model instance.
@@ -247,7 +247,7 @@ def collect_activations(
         model_input (torch.Tensor or tuple of torch.Tensor, optional): Optionally
             provide an input tensor to use when collecting the target activations.
             Default: torch.zeros(1, 3, 224, 224)
-    
+
     Returns:
         activ_dict (ModuleOutputMapping): A dictionary of collected activations where
             the keys are the target layers.
