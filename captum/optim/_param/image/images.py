@@ -412,8 +412,10 @@ class SimpleTensorParameterization(ImageParameterization):
     Parameterize a simple tensor with or without it requiring grad.
     Compared to PixelImage, this parameterization has no specific shape requirements
     and does not wrap inputs in nn.Parameter.
+
     This parameterization can for example be combined with StackImage for batch
     dimensions that both require and don't require gradients.
+
     This parameterization can also be combined with nn.ModuleList as workaround for
     TorchScript / JIT not supporting nn.ParameterList. SharedImage uses this module
     internally for this purpose.
@@ -438,8 +440,10 @@ class SharedImage(ImageParameterization):
     Share some image parameters across the batch to increase spatial alignment,
     by using interpolated lower resolution tensors.
     This is sort of like a laplacian pyramid but more general.
+
     Offsets are similar to phase in Fourier transforms, and can be applied to
     any dimension.
+
     Mordvintsev, et al., "Differentiable Image Parameterizations", Distill, 2018.
     https://distill.pub/2018/differentiable-parameterizations/
     """
@@ -616,6 +620,7 @@ class StackImage(ImageParameterization):
     ) -> None:
         """
         Args:
+
             parameterizations (list of ImageParameterization and torch.Tensor): A list
                  of image parameterizations to stack across their batch dimensions.
             output_device (torch.device): If the parameterizations are on different
