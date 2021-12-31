@@ -76,7 +76,7 @@ def get_neuron_pos(
         y (int, optional): Optionally specify and exact y location of the neuron. If
             set to None, then the center y location will be used.
             Default: None
-    
+
     Return:
         Tuple[_x, _y] (Tuple[int, int]): The x and y dimensions of the neuron.
     """
