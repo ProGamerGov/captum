@@ -108,6 +108,9 @@ class TestAugmentedImageParameterization(BaseTest):
 
 
 class TestFFTImage(BaseTest):
+    def test_subclass(self) -> None:
+        self.assertIsSubClass(images.FFTImage, images.ImageParameterization)
+
     def test_pytorch_fftfreq(self) -> None:
         image = images.FFTImage((1, 1))
         _, _, fftfreq = image.get_fft_funcs()
@@ -238,6 +241,9 @@ class TestFFTImage(BaseTest):
 
 
 class TestPixelImage(BaseTest):
+    def test_subclass(self) -> None:
+        self.assertIsSubClass(images.PixelImage, images.ImageParameterization)
+
     def test_pixelimage_random(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
@@ -345,6 +351,11 @@ class TestLaplacianImage(BaseTest):
 
 
 class TestSimpleTensorParameterization(BaseTest):
+    def test_subclass(self) -> None:
+        self.assertIsSubClass(
+            images.SimpleTensorParameterization, images.ImageParameterization
+        )
+
     def test_simple_tensor_parameterization_no_grad(self) -> None:
         test_input = torch.randn(1, 3, 4, 4)
         image_param = images.SimpleTensorParameterization(test_input)
@@ -402,6 +413,11 @@ class TestSimpleTensorParameterization(BaseTest):
 
 
 class TestSharedImage(BaseTest):
+    def test_subclass(self) -> None:
+        self.assertIsSubClass(
+            images.SharedImage, images.AugmentedImageParameterization
+        )
+
     def test_sharedimage_get_offset_single_number(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
@@ -745,6 +761,11 @@ class TestSharedImage(BaseTest):
 
 
 class TestStackImage(BaseTest):
+    def test_subclass(self) -> None:
+        self.assertIsSubClass(
+            images.StackImage, images.AugmentedImageParameterization
+        )
+
     def test_stackimage_init(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
@@ -959,6 +980,9 @@ class TestStackImage(BaseTest):
 
 
 class TestNaturalImage(BaseTest):
+    def test_subclass(self) -> None:
+        self.assertIsSubClass(images.NaturalImage, images.ImageParameterization)
+
     def test_natural_image_0(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
