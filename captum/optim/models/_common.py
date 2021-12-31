@@ -158,6 +158,30 @@ class Conv2dSame(nn.Conv2d):
         groups: int = 1,
         bias: bool = True,
     ) -> None:
+        """
+        See nn.Conv2d for more details on the possible arguments:
+        https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html
+
+        Args:
+
+           in_channels (int): The expected number of channels in the input tensor.
+           out_channels (int): The desired number of channels in the output tensor.
+           kernel_size (int or tuple of int): The desired kernel size to use.
+           stride (int or tuple of int, optional): The desired stride for the
+               cross-correlation.
+               Default: 1
+           padding (int or tuple of int, optional):
+               Default: 0
+           dilation (int or tuple of int, optional): The desired spacing between the
+               kernel points.
+               Default: 1
+           groups (int, optional): Number of blocked connections from input channels
+               to output channels. Both in_channels and out_channels must be divisable
+               by groups.
+               Default: 1
+           bias (bool, optional): Whether or not to apply a learnable bias to the
+               output.
+        """
         super().__init__(
             in_channels, out_channels, kernel_size, stride, 0, dilation, groups, bias
         )
