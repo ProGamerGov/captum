@@ -325,6 +325,63 @@ class TestLaplacianImage(BaseTest):
         assertArraysAlmostEqual(np.ones_like(test_np) * 0.5, test_np)
 
 
+class TestSimpleTensorParameterization(BaseTest):
+    def test_simple_tensor_parameterization_no_grad(self) -> None:
+        test_input = torch.randn(1, 3, 4, 4)
+        image_param = images.SimpleTensorParameterization(test_input)
+        assertTensorAlmostEqual(self, image_param.tensor, test_input, 0.0)
+        self.assertFalse(image_param.tensor.requires_grad)
+
+        test_output = image_param()
+        assertTensorAlmostEqual(self, test_output, test_input, 0.0)
+        self.assertFalse(image_param.tensor.requires_grad)
+
+    def test_simple_tensor_parameterization_jit_module_no_grad(self) -> None:
+        test_input = torch.randn(1, 3, 4, 4)
+        image_param = images.SimpleTensorParameterization(test_input)
+        jit_image_param = torch.jit.script(image_param)
+
+        test_output = image_param()
+        assertTensorAlmostEqual(self, test_output, test_input, 0.0)
+        self.assertFalse(image_param.tensor.requires_grad)
+
+    def test_simple_tensor_parameterization_with_grad(self) -> None:
+        test_input = torch.nn.Parameter(torch.randn(1, 3, 4, 4))
+        image_param = images.SimpleTensorParameterization(test_input)
+        assertTensorAlmostEqual(self, image_param.tensor, test_input, 0.0)
+        self.assertTrue(image_param.tensor.requires_grad)
+
+        test_output = image_param()
+        assertTensorAlmostEqual(self, test_output, test_input, 0.0)
+        self.assertTrue(image_param.tensor.requires_grad)
+
+    def test_simple_tensor_parameterization_jit_module_with_grad(self) -> None:
+        test_input = torch.nn.Parameter(torch.randn(1, 3, 4, 4))
+        image_param = images.SimpleTensorParameterization(test_input)
+        jit_image_param = torch.jit.script(image_param)
+
+        test_output = image_param()
+        assertTensorAlmostEqual(self, test_output, test_input, 0.0)
+        self.assertTrue(image_param.tensor.requires_grad)
+
+    def test_simple_tensor_parameterization_cuda(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping SimpleTensorParameterization CUDA test due to not supporting"
+                + " CUDA."
+            )
+        test_input = torch.randn(1, 3, 4, 4).cuda()
+        image_param = images.SimpleTensorParameterization(test_input)
+        self.assertTrue(image_param.tensor.is_cuda)
+        assertTensorAlmostEqual(self, image_param.tensor, test_input, 0.0)
+        self.assertFalse(image_param.tensor.requires_grad)
+
+        test_output = image_param()
+        self.assertTrue(test_output.is_cuda)
+        assertTensorAlmostEqual(self, test_output, test_input, 0.0)
+        self.assertFalse(image_param.tensor.requires_grad)
+
+
 class TestSharedImage(BaseTest):
     def test_sharedimage_get_offset_single_number(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -502,9 +559,9 @@ class TestSharedImage(BaseTest):
         test_tensor = image_param.forward()
 
         self.assertIsNone(image_param.offset)
-        self.assertEqual(image_param.shared_init[0].dim(), 4)
+        self.assertEqual(image_param.shared_init[0]().dim(), 4)
         self.assertEqual(
-            list(image_param.shared_init[0].shape), [1, 1] + list(shared_shapes)
+            list(image_param.shared_init[0]().shape), [1, 1] + list(shared_shapes)
         )
         self.assertEqual(test_tensor.dim(), 4)
         self.assertEqual(test_tensor.size(0), batch)
@@ -529,9 +586,9 @@ class TestSharedImage(BaseTest):
         test_tensor = image_param.forward()
 
         self.assertIsNone(image_param.offset)
-        self.assertEqual(image_param.shared_init[0].dim(), 4)
+        self.assertEqual(image_param.shared_init[0]().dim(), 4)
         self.assertEqual(
-            list(image_param.shared_init[0].shape), [1] + list(shared_shapes)
+            list(image_param.shared_init[0]().shape), [1] + list(shared_shapes)
         )
         self.assertEqual(test_tensor.dim(), 4)
         self.assertEqual(test_tensor.size(0), batch)
@@ -556,8 +613,8 @@ class TestSharedImage(BaseTest):
         test_tensor = image_param.forward()
 
         self.assertIsNone(image_param.offset)
-        self.assertEqual(image_param.shared_init[0].dim(), 4)
-        self.assertEqual(list(image_param.shared_init[0].shape), list(shared_shapes))
+        self.assertEqual(image_param.shared_init[0]().dim(), 4)
+        self.assertEqual(list(image_param.shared_init[0]().shape), list(shared_shapes))
         self.assertEqual(test_tensor.dim(), 4)
         self.assertEqual(test_tensor.size(0), batch)
         self.assertEqual(test_tensor.size(1), channels)
@@ -589,9 +646,9 @@ class TestSharedImage(BaseTest):
 
         self.assertIsNone(image_param.offset)
         for i in range(len(shared_shapes)):
-            self.assertEqual(image_param.shared_init[i].dim(), 4)
+            self.assertEqual(image_param.shared_init[i]().dim(), 4)
             self.assertEqual(
-                list(image_param.shared_init[i].shape), list(shared_shapes[i])
+                list(image_param.shared_init[i]().shape), list(shared_shapes[i])
             )
         self.assertEqual(test_tensor.dim(), 4)
         self.assertEqual(test_tensor.size(0), batch)
@@ -624,10 +681,42 @@ class TestSharedImage(BaseTest):
 
         self.assertIsNone(image_param.offset)
         for i in range(len(shared_shapes)):
-            self.assertEqual(image_param.shared_init[i].dim(), 4)
+            self.assertEqual(image_param.shared_init[i]().dim(), 4)
             s_shape = list(shared_shapes[i])
             s_shape = ([1] * (4 - len(s_shape))) + list(s_shape)
-            self.assertEqual(list(image_param.shared_init[i].shape), s_shape)
+            self.assertEqual(list(image_param.shared_init[i]().shape), s_shape)
+
+        self.assertEqual(test_tensor.dim(), 4)
+        self.assertEqual(test_tensor.size(0), batch)
+        self.assertEqual(test_tensor.size(1), channels)
+        self.assertEqual(test_tensor.size(2), size[0])
+        self.assertEqual(test_tensor.size(3), size[1])
+
+    def test_sharedimage_multiple_shapes_diff_len_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping SharedImage JIT module test due to insufficient Torch"
+                + " version."
+            )
+
+        shared_shapes = (
+            (128 // 2, 128 // 2),
+            (7, 3, 128 // 4, 128 // 4),
+            (3, 128 // 8, 128 // 8),
+            (2, 4, 128 // 8, 128 // 8),
+            (1, 3, 128 // 16, 128 // 16),
+            (2, 2, 128 // 16, 128 // 16),
+        )
+        batch = 6
+        channels = 3
+        size = (224, 224)
+        test_input = torch.ones(batch, channels, size[0], size[1])  # noqa: E731
+        test_param = images.SimpleTensorParameterization(test_input)
+        image_param = images.SharedImage(
+            shapes=shared_shapes, parameterization=test_param
+        )
+        jit_image_param = torch.jit.script(image_param)
+        test_tensor = jit_image_param()
 
         self.assertEqual(test_tensor.dim(), 4)
         self.assertEqual(test_tensor.size(0), batch)
