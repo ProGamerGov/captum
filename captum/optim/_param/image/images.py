@@ -630,7 +630,7 @@ class StackImage(opt.images.ImageParameterization):
         assert len(parameterizations) > 0
         assert isinstance(parameterizations, (list, tuple))
         assert all([isinstance(param, (opt.images.ImageParameterization, torch.Tensor)) for param in parameterizations])
-        parameterizations = [SimpleTensorParameterization(p) for p in parameterizations if isinstance(p, torch.Tensor) else p]
+        parameterizations = [SimpleTensorParameterization(p) if isinstance(p, torch.Tensor) else p for p in parameterizations]
         self.parameterizations = torch.nn.ModuleList(parameterizations)
         self.output_device = output_device
 
