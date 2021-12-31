@@ -78,7 +78,7 @@ def get_neuron_pos(
             Default: None
     
     Return:
-        (x, y) (Tuple[int, int]): The x and y dimensions of the neuron.
+        Tuple[_x, _y] (Tuple[int, int]): The x and y dimensions of the neuron.
     """
     if x is None:
         _x = W // 2
