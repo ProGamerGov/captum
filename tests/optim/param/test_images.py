@@ -88,6 +88,25 @@ class TestImageTensor(BaseTest):
         self.assertTrue(image_t.is_cuda)
 
 
+class TestInputParameterization(BaseTest):
+    def test_subclass(self) -> None:
+        self.assertIsSubClass(images.InputParameterization, torch.nn.Module)
+
+
+class TestImageParameterization(BaseTest):
+    def test_subclass(self) -> None:
+        self.assertIsSubClass(
+            images.ImageParameterization, images.InputParameterization
+        )
+
+
+class TestAugmentedImageParameterization(BaseTest):
+    def test_subclass(self) -> None:
+        self.assertIsSubClass(
+            images.AugmentedImageParameterization, images.ImageParameterization
+        )
+
+
 class TestFFTImage(BaseTest):
     def test_pytorch_fftfreq(self) -> None:
         image = images.FFTImage((1, 1))
