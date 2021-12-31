@@ -725,6 +725,125 @@ class TestSharedImage(BaseTest):
         self.assertEqual(test_tensor.size(3), size[1])
 
 
+class TestStackImage(BaseTest):
+    def test_stackimage_init(self) -> None:
+        size = (4, 4)
+        fft_param_1 = images.FFTImage(size=size)
+        fft_param_2 = images.FFTImage(size=size)
+        param_list = [fft_param_1, fft_param_2]
+        stack_param = StackImage(parameterizations=param_list)
+        for image_param in stack_param.parameterizations:
+            self.assertIsInstance(image_param, images.FFTImage)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertTrue(image_param().requires_grad)
+
+    def test_stackimage_forward(self) -> None:
+        size = (4, 4)
+        fft_param_1 = images.FFTImage(size=size)
+        fft_param_2 = images.FFTImage(size=size)
+        param_list = [fft_param_1, fft_param_2]
+        stack_param = StackImage(parameterizations=param_list)
+        for image_param in stack_param.parameterizations:
+            self.assertIsInstance(image_param, images.FFTImage)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertTrue(image_param().requires_grad)
+        
+        output_tensor = stack_param()
+        self.assertEqual(list(output_tensor.shape), [2, 3] + list(size))
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertIsNone(stack_param.output_device)
+
+    def test_stackimage_forward_diff_image_params(self) -> None:
+        size = (4, 4)
+        fft_param = images.FFTImage(size=size)
+        pixel_param = images.PixelImage(size=size)
+        param_list = [fft_param, pixel_param]
+
+        stack_param = StackImage(parameterizations=param_list)
+
+        type_list = [images.FFTImage, images.PixelImage]
+        for image_param, expected_type in zip(stack_param.parameterizations, type_list):
+            self.assertIsInstance(image_param, expected_type)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertTrue(image_param().requires_grad)
+        
+        output_tensor = stack_param()
+        self.assertEqual(list(output_tensor.shape), [2, 3] + list(size))
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertIsNone(stack_param.output_device)
+
+    def test_stackimage_forward_multi_gpu(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping StackImage multi GPU test due to not supporting CUDA."
+            )
+        if torch.cuda.device_count() == 1:
+            raise unittest.SkipTest(
+                "Skipping StackImage multi GPU device test due to not having enough"
+                + " GPUs available."
+            )
+        size = (4, 4)
+        
+        num_cuda_devices = torch.cuda.device_count()
+        param_list, device_list = [], []
+ 
+        fft_param = images.FFTImage(size=size).cpu()
+        param_list.append(fft_param)
+        device_list.append(torch.device("cpu"))
+ 
+        for i in range(num_cuda_devices-1):
+            device = torch.device("cuda:" + str(i))
+            device_list.append(device)
+            fft_param = images.FFTImage(size=size).to(device)
+            param_list.append(fft_param)
+
+        output_device = torch.device("cuda:" + num_cuda_devices-1)
+        stack_param = images.StackImage(parameterizations=param_list, output_device=output_device)
+
+        for image_param, torch_device in zip(stack_param.parameterizations, device_list):
+            self.assertIsInstance(image_param, images.FFTImage)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertEqual(image_param().device, torch_device)
+            self.assertTrue(image_param().requires_grad)
+        
+        output_tensor = stack_param()
+        self.assertEqual(list(output_tensor.shape), list(len(param_list)) + [3] + list(size))
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertEqual(stack_param().device, output_device)
+
+    def test_stackimage_forward_multi_device_cpu_gpu(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping StackImage multi device test due to not supporting CUDA."
+            )
+        size = (4, 4)
+        param_list, device_list = [], []
+ 
+        fft_param = images.FFTImage(size=size).cpu()
+        param_list.append(fft_param)
+        device_list.append(torch.device("cpu"))
+ 
+
+        device = torch.device("cuda:0")
+        device_list.append(device)
+        fft_param = images.FFTImage(size=size).to(device)
+        param_list.append(fft_param)
+
+        output_device = torch.device("cuda:0")
+        stack_param = images.StackImage(parameterizations=param_list, output_device=output_device)
+
+        for image_param, torch_device in zip(stack_param.parameterizations, device_list):
+            self.assertIsInstance(image_param, images.FFTImage)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertEqual(image_param().device, torch_device)
+            self.assertTrue(image_param().requires_grad)       
+        
+        output_tensor = stack_param()
+        self.assertEqual(list(output_tensor.shape), list(len(param_list)) + [3] + list(size))
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertEqual(stack_param().device, output_device)
+
+
 class TestNaturalImage(BaseTest):
     def test_natural_image_0(self) -> None:
         if torch.__version__ <= "1.2.0":
