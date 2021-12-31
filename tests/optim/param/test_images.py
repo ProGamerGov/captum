@@ -341,7 +341,7 @@ class TestSimpleTensorParameterization(BaseTest):
         image_param = images.SimpleTensorParameterization(test_input)
         jit_image_param = torch.jit.script(image_param)
 
-        test_output = image_param()
+        test_output = jit_image_param()
         assertTensorAlmostEqual(self, test_output, test_input, 0.0)
         self.assertFalse(image_param.tensor.requires_grad)
 
@@ -360,7 +360,7 @@ class TestSimpleTensorParameterization(BaseTest):
         image_param = images.SimpleTensorParameterization(test_input)
         jit_image_param = torch.jit.script(image_param)
 
-        test_output = image_param()
+        test_output = jit_image_param()
         assertTensorAlmostEqual(self, test_output, test_input, 0.0)
         self.assertTrue(image_param.tensor.requires_grad)
 
