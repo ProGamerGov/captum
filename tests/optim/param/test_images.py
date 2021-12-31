@@ -90,27 +90,26 @@ class TestImageTensor(BaseTest):
 
 class TestInputParameterization(BaseTest):
     def test_subclass(self) -> None:
-        test = assertIsSubclass(images.InputParameterization, torch.nn.Module)
-        self.assertTrue(test)
+        self.assertTrue(assertIsSubclass(images.InputParameterization, torch.nn.Module))
 
 
 class TestImageParameterization(BaseTest):
     def test_subclass(self) -> None:
-        self.assertIsSubclass(
+        self.assertTrue(assertIsSubclass(
             images.ImageParameterization, images.InputParameterization
-        )
+        ))
 
 
 class TestAugmentedImageParameterization(BaseTest):
     def test_subclass(self) -> None:
-        self.assertIsSubclass(
+        self.assertTrue(assertIsSubclass(
             images.AugmentedImageParameterization, images.ImageParameterization
-        )
+        ))
 
 
 class TestFFTImage(BaseTest):
     def test_subclass(self) -> None:
-        self.assertIsSubclass(images.FFTImage, images.ImageParameterization)
+        self.assertTrue(assertIsSubclass(images.FFTImage, images.ImageParameterization))
 
     def test_pytorch_fftfreq(self) -> None:
         image = images.FFTImage((1, 1))
@@ -243,7 +242,7 @@ class TestFFTImage(BaseTest):
 
 class TestPixelImage(BaseTest):
     def test_subclass(self) -> None:
-        self.assertIsSubclass(images.PixelImage, images.ImageParameterization)
+        self.assertTrue(assertIsSubclass(images.PixelImage, images.ImageParameterization))
 
     def test_pixelimage_random(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -325,7 +324,7 @@ class TestPixelImage(BaseTest):
 
 class TestLaplacianImage(BaseTest):
     def test_subclass(self) -> None:
-        self.assertIsSubclass(images.LaplacianImage, images.ImageParameterization)
+        self.assertTrue(assertIsSubclass(images.LaplacianImage, images.ImageParameterization))
 
     def test_laplacianimage_random_forward(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -356,9 +355,9 @@ class TestLaplacianImage(BaseTest):
 
 class TestSimpleTensorParameterization(BaseTest):
     def test_subclass(self) -> None:
-        self.assertIsSubclass(
+        self.assertTrue(assertIsSubclass(
             images.SimpleTensorParameterization, images.ImageParameterization
-        )
+        ))
 
     def test_simple_tensor_parameterization_no_grad(self) -> None:
         test_input = torch.randn(1, 3, 4, 4)
@@ -428,9 +427,9 @@ class TestSimpleTensorParameterization(BaseTest):
 
 class TestSharedImage(BaseTest):
     def test_subclass(self) -> None:
-        self.assertIsSubclass(
+        self.assertTrue(assertIsSubclass(
             images.SharedImage, images.AugmentedImageParameterization
-        )
+        ))
 
     def test_sharedimage_get_offset_single_number(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -776,9 +775,9 @@ class TestSharedImage(BaseTest):
 
 class TestStackImage(BaseTest):
     def test_subclass(self) -> None:
-        self.assertIsSubclass(
+        self.assertTrue(assertIsSubclass(
             images.StackImage, images.AugmentedImageParameterization
-        )
+        ))
 
     def test_stackimage_init(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -995,7 +994,7 @@ class TestStackImage(BaseTest):
 
 class TestNaturalImage(BaseTest):
     def test_subclass(self) -> None:
-        self.assertIsSubclass(images.NaturalImage, images.ImageParameterization)
+        self.assertTrue(assertIsSubclass(images.NaturalImage, images.ImageParameterization))
 
     def test_natural_image_0(self) -> None:
         if torch.__version__ <= "1.2.0":
