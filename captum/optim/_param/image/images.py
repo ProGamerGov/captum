@@ -309,8 +309,6 @@ class PixelImage(ImageParameterization):
             assert init.dim() == 3 or init.dim() == 4
             if init.dim() == 3:
                 init = init.unsqueeze(0)
-            assert init.shape[1] == 3, "PixelImage init should have 3 channels, "
-            f"input has {init.shape[1]} channels."
         self.image = nn.Parameter(init)
 
     def forward(self) -> torch.Tensor:
