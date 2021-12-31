@@ -762,9 +762,11 @@ __all__ = [
     "ImageTensor",
     "InputParameterization",
     "ImageParameterization",
+    "AugmentedImageParameterization",
     "FFTImage",
     "PixelImage",
     "LaplacianImage",
     "SharedImage",
+    "StackImage",
     "NaturalImage",
 ]
