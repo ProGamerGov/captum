@@ -412,10 +412,10 @@ class SimpleTensorParameterization(ImageParameterization):
     Parameterize a simple tensor with or without it requiring grad.
     Compared to PixelImage, this parameterization has no specific shape requirements
     and does not wrap inputs in nn.Parameter.
-    
+
     This parameterization can for example be combined with StackImage for batch
     dimensions that both require and don't require gradients.
-    
+
     This parameterization can also be combined with nn.ModuleList as workaround for
     TorchScript / JIT not supporting nn.ParameterList. SharedImage uses this module
     internally for this purpose.
@@ -447,6 +447,7 @@ class SharedImage(ImageParameterization):
     Mordvintsev, et al., "Differentiable Image Parameterizations", Distill, 2018.
     https://distill.pub/2018/differentiable-parameterizations/
     """
+
     __constants__ = ["offset", "_supports_is_scripting"]
 
     def __init__(
@@ -474,7 +475,9 @@ class SharedImage(ImageParameterization):
             assert len(shape) >= 2 and len(shape) <= 4
             shape = ([1] * (4 - len(shape))) + list(shape)
             batch, channels, height, width = shape
-            shape_param = torch.nn.Parameter(torch.randn([batch, channels, height, width]))
+            shape_param = torch.nn.Parameter(
+                torch.randn([batch, channels, height, width])
+            )
             A.append(SimpleTensorParameterization(shape_param))
         self.shared_init = torch.nn.ModuleList(A)
         self.parameterization = parameterization
@@ -629,8 +632,16 @@ class StackImage(ImageParameterization):
         super().__init__()
         assert len(parameterizations) > 0
         assert isinstance(parameterizations, (list, tuple))
-        assert all([isinstance(param, (ImageParameterization, torch.Tensor)) for param in parameterizations])
-        parameterizations = [SimpleTensorParameterization(p) if isinstance(p, torch.Tensor) else p for p in parameterizations]
+        assert all(
+            [
+                isinstance(param, (ImageParameterization, torch.Tensor))
+                for param in parameterizations
+            ]
+        )
+        parameterizations = [
+            SimpleTensorParameterization(p) if isinstance(p, torch.Tensor) else p
+            for p in parameterizations
+        ]
         self.parameterizations = torch.nn.ModuleList(parameterizations)
         self.output_device = output_device
 
@@ -652,7 +663,7 @@ class StackImage(ImageParameterization):
 
         assert P[0].dim() == 4
         assert all([im.shape == P[0].shape for im in P])
-        assert all([im.device == P[0].device for im in P])  
+        assert all([im.device == P[0].device for im in P])
 
         image = torch.cat(P, 0)
         if self._supports_is_scripting:
