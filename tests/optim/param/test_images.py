@@ -772,6 +772,49 @@ class TestStackImage(BaseTest):
         self.assertTrue(output_tensor.requires_grad)
         self.assertIsNone(stack_param.output_device)
 
+    def test_stackimage_forward_diff_image_params_and_tensor_with_grad(self) -> None:
+        size = (4, 4)
+        fft_param = images.FFTImage(size=size)
+        pixel_param = images.PixelImage(size=size)
+        test_tensor = torch.nn.Parameter(torch.ones(1, 3, size[0], size[1]))
+        param_list = [fft_param, pixel_param, test_tensor]
+
+        stack_param = images.StackImage(parameterizations=param_list)
+
+        type_list = [images.FFTImage, images.PixelImage, images.SimpleTensorParameterization]
+        for image_param, expected_type in zip(stack_param.parameterizations, type_list):
+            self.assertIsInstance(image_param, expected_type)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertTrue(image_param().requires_grad)
+
+        output_tensor = stack_param()
+        self.assertEqual(list(output_tensor.shape), [3, 3] + list(size))
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertIsNone(stack_param.output_device)
+
+    def test_stackimage_forward_diff_image_params_and_tensor_no_grad(self) -> None:
+        size = (4, 4)
+        fft_param = images.FFTImage(size=size)
+        pixel_param = images.PixelImage(size=size)
+        test_tensor = torch.ones(1, 3, size[0], size[1])
+        param_list = [fft_param, pixel_param, test_tensor]
+
+        stack_param = images.StackImage(parameterizations=param_list)
+
+        type_list = [images.FFTImage, images.PixelImage, images.SimpleTensorParameterization]
+        for image_param, expected_type in zip(stack_param.parameterizations, type_list):
+            self.assertIsInstance(image_param, expected_type)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+
+        self.assertTrue(stack_param.parameterizations[0]().requires_grad)
+        self.assertTrue(stack_param.parameterizations[1]().requires_grad)
+        self.assertFalse(stack_param.parameterizations[2]().requires_grad)
+
+        output_tensor = stack_param()
+        self.assertEqual(list(output_tensor.shape), [3, 3] + list(size))
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertIsNone(stack_param.output_device)
+
     def test_stackimage_forward_multi_gpu(self) -> None:
         if not torch.cuda.is_available():
             raise unittest.SkipTest(
