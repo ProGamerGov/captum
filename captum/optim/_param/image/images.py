@@ -649,9 +649,7 @@ class SharedImage(AugmentedImageParameterization):
             x = self._interpolate_trilinear(x, size=size)
         if x.size(0) != batch:
             x = x.permute(1, 0, 2, 3)
-            x = self._interpolate_trilinear(
-                size=(batch, x.size(2), x.size(3)),
-            )
+            x = self._interpolate_trilinear(x, size=(batch, x.size(2), x.size(3)))
             x = x.permute(1, 0, 2, 3)
         return x
 
