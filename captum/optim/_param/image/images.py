@@ -556,7 +556,7 @@ class SharedImage(AugmentedImageParameterization):
     def _interpolate(
         self,
         x: torch.Tensor,
-        size: Union[Tuple[int, int], Tuple[int, int, int]],
+        size: Tuple[int, int, int],
         mode: str,
     ) -> torch.Tensor:
         """
