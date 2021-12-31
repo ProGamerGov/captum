@@ -553,11 +553,10 @@ class SharedImage(AugmentedImageParameterization):
             A.append(x)
         return A
 
-    def _interpolate(
+    def _interpolate_bilinear(
         self,
         x: torch.Tensor,
-        size: Tuple[int, int, int],
-        mode: str,
+        size: Tuple[int, int],
     ) -> torch.Tensor:
         """
         Perform interpolation without any warnings.
@@ -565,36 +564,63 @@ class SharedImage(AugmentedImageParameterization):
         Args:
 
             x (torch.Tensor): The NCHW tensor to resize.
-            size (tuple of 2 or 3 int): The desired output size to resize the input
+            size (tuple of int): The desired output size to resize the input
                 to.
-            mode (str): The resizing mode to use. Either "bilinear" or "trilinear".
 
         Returns:
             x (torch.Tensor): A resized NCHW tensor.
         """
-        assert x.dim() == 4 or x.dim() == 5
-        assert mode in ["bilinear", "trilinear"]
-        if mode == "bilinear":
-            new_size = torch.jit.annotate(Tuple[int, int], size[1:])
-            assert len(size) == 2
-        else:
-            assert len(size) == 3
-            new_size = size
+        assert x.dim() == 4
+        assert len(size) == 2
 
         if self._has_align_corners:
             if self._has_recompute_scale_factor:
                 x = F.interpolate(
                     x,
-                    size=new_size,
-                    mode=mode,
+                    size=size,
+                    mode="bilinear",
                     align_corners=False,
                     recompute_scale_factor=False,
                 )
             else:
-                x = F.interpolate(x, size=new_size, mode=mode, align_corners=False)
+                x = F.interpolate(x, size=size, mode="bilinear", align_corners=False)
         else:
-            x = F.interpolate(x, size=new_size, mode=mode)
+            x = F.interpolate(x, size=size, mode="bilinear")
         return x
+
+    def _interpolate_trilinear(
+        self,
+        x: torch.Tensor,
+        size: Tuple[int, int, int],
+    ) -> torch.Tensor:
+        """
+        Perform interpolation without any warnings.
+
+        Args:
+
+            x (torch.Tensor): The NCHW tensor to resize.
+            size (tuple of int): The desired output size to resize the input
+                to.
+
+        Returns:
+            x (torch.Tensor): A resized NCHW tensor.
+        """
+        x = x.unsqueeze(0)
+        assert x.dim() == 5
+        if self._has_align_corners:
+            if self._has_recompute_scale_factor:
+                x = F.interpolate(
+                    x,
+                    size=size,
+                    mode="trilinear",
+                    align_corners=False,
+                    recompute_scale_factor=False,
+                )
+            else:
+                x = F.interpolate(x, size=size, mode="trilinear", align_corners=False)
+        else:
+            x = F.interpolate(x, size=size, mode="trilinear")
+        return x.squeeze(0)
 
     def _interpolate_tensor(
         self, x: torch.Tensor, batch: int, channels: int, height: int, width: int
@@ -616,17 +642,14 @@ class SharedImage(AugmentedImageParameterization):
         """
 
         if x.size(1) == channels:
-            mode = "bilinear"
-            size = (channels, height, width)
+            size = (height, width)
+            x = self._interpolate_bilinear(x, size=size)
         else:
-            mode = "trilinear"
-            x = x.unsqueeze(0)
             size = (channels, height, width)
-        x = self._interpolate(x, size=size, mode=mode)
-        x = x.squeeze(0) if len(size) == 3 else x
+            x = self._interpolate_trilinear(x, size=size)
         if x.size(0) != batch:
             x = x.permute(1, 0, 2, 3)
-            x = self._interpolate(
+            x = self._interpolate_trilinear(
                 x.unsqueeze(0),
                 size=(batch, x.size(2), x.size(3)),
                 mode="trilinear",
