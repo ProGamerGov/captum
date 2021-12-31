@@ -133,6 +133,10 @@ class ImageParameterization(InputParameterization):
     pass
 
 
+class AugmentedImageParameterization(InputParameterization):
+    pass
+
+
 class FFTImage(ImageParameterization):
     """
     Parameterize an image using inverse real 2D FFT
@@ -435,7 +439,7 @@ class SimpleTensorParameterization(ImageParameterization):
         return self.tensor
 
 
-class SharedImage(ImageParameterization):
+class SharedImage(AugmentedImageParameterization):
     """
     Share some image parameters across the batch to increase spatial alignment,
     by using interpolated lower resolution tensors.
@@ -606,7 +610,7 @@ class SharedImage(ImageParameterization):
         return output.refine_names("B", "C", "H", "W")
 
 
-class StackImage(ImageParameterization):
+class StackImage(AugmentedImageParameterization):
     """
     Stack multiple NCHW image parameterizations along their batch dimensions.
     """
