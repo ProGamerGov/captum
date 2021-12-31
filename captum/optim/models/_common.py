@@ -13,6 +13,10 @@ from captum.optim._utils.typing import ModuleOutputMapping, TupleOfTensorsOrTens
 def get_model_layers(model: nn.Module) -> List[str]:
     """
     Return a list of hookable layers for the target model.
+    
+    Args:
+
+        model (nn.Module): A PyTorch model or module instance to collect layers from.
     """
     layers = []
 
