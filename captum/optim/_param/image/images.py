@@ -603,6 +603,64 @@ class SharedImage(ImageParameterization):
         return output.refine_names("B", "C", "H", "W")
 
 
+class StackImage(opt.images.ImageParameterization):
+    """
+    Stack multiple NCHW image parameterizations along their batch dimensions.
+    """
+
+    __constants__ = ["_supports_is_scripting", "output_device"]
+
+    def __init__(
+        self,
+        parameterizations: List[Union[opt.images.ImageParameterization, torch.Tensor]],
+        output_device: Optional[torch.device] = None,
+    ) -> None:
+        """
+        Args:
+
+            parameterizations (list of ImageParameterization and torch.Tensor): A list
+                 of image parameterizations to stack across their batch dimensions.
+            output_device (torch.device): If the parameterizations are on different
+                devices, then their outputs will be moved to the device specified by
+                this variable. Default is set to None with the expectation that all
+                parameterizations are on the same device.
+                Default: None
+        """
+        super().__init__()
+        assert len(parameterizations) > 0
+        assert isinstance(parameterizations, (list, tuple))
+        assert all([isinstance(param, (opt.images.ImageParameterization, torch.Tensor)) for param in parameterizations])
+        parameterizations = [SimpleTensorParameterization(p) for p in parameterizations if isinstance(p, torch.Tensor) else p]
+        self.parameterizations = torch.nn.ModuleList(parameterizations)
+        self.output_device = output_device
+
+        # Check & store whether or not we can use torch.jit.is_scripting()
+        self._supports_is_scripting = torch.__version__ >= "1.6.0"
+
+    def forward(self) -> torch.Tensor:
+        """
+        Returns:
+            image (torch.Tensor): A set of NCHW image parameterization outputs stacked
+                along the batch dimension.
+        """
+        P = []
+        for image_param in self.parameterizations:
+            img = image_param()
+            if self.output_device is not None:
+                img = img.to(self.output_device, dtype=img.dtype)
+            P.append(img)
+
+        assert P[0].dim() == 4
+        assert all([im.shape == P[0].shape for im in P])
+        assert all([im.device == P[0].device for im in P])  
+
+        image = torch.cat(P, 0)
+        if self._supports_is_scripting:
+            if torch.jit.is_scripting():
+                return image
+        return image.refine_names("B", "C", "H", "W")
+
+
 class NaturalImage(ImageParameterization):
     r"""Outputs an optimizable input image.
 
