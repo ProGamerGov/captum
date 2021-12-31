@@ -693,7 +693,9 @@ class NaturalImage(ImageParameterization):
         channels: int = 3,
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
-        parameterization: ImageParameterization = FFTImage,
+        parameterization: Union[
+            ImageParameterization, AugmentedImageParameterization
+        ] = FFTImage,
         squash_func: Optional[Callable[[torch.Tensor], torch.Tensor]] = None,
         decorrelation_module: Optional[nn.Module] = ToRGB(transform="klt"),
         decorrelate_init: bool = True,
