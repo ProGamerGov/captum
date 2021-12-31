@@ -781,7 +781,11 @@ class TestStackImage(BaseTest):
 
         stack_param = images.StackImage(parameterizations=param_list)
 
-        type_list = [images.FFTImage, images.PixelImage, images.SimpleTensorParameterization]
+        type_list = [
+            images.FFTImage,
+            images.PixelImage,
+            images.SimpleTensorParameterization,
+        ]
         for image_param, expected_type in zip(stack_param.parameterizations, type_list):
             self.assertIsInstance(image_param, expected_type)
             self.assertEqual(list(image_param().shape), [1, 3] + list(size))
@@ -801,7 +805,11 @@ class TestStackImage(BaseTest):
 
         stack_param = images.StackImage(parameterizations=param_list)
 
-        type_list = [images.FFTImage, images.PixelImage, images.SimpleTensorParameterization]
+        type_list = [
+            images.FFTImage,
+            images.PixelImage,
+            images.SimpleTensorParameterization,
+        ]
         for image_param, expected_type in zip(stack_param.parameterizations, type_list):
             self.assertIsInstance(image_param, expected_type)
             self.assertEqual(list(image_param().shape), [1, 3] + list(size))
