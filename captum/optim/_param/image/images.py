@@ -454,7 +454,12 @@ class SharedImage(AugmentedImageParameterization):
     https://distill.pub/2018/differentiable-parameterizations/
     """
 
-    __constants__ = ["offset", "_supports_is_scripting", "_has_align_corners", "_has_recompute_scale_factor"]
+    __constants__ = [
+        "offset",
+        "_supports_is_scripting",
+        "_has_align_corners",
+        "_has_recompute_scale_factor",
+    ]
 
     def __init__(
         self,
