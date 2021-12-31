@@ -179,6 +179,14 @@ class Conv2dSame(nn.Conv2d):
         return max((math.ceil(i / s) - 1) * s + (k - 1) * d + 1 - i, 0)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+
+            x (torch.tensor): The input tensor to apply 2D convolution to.
+        
+        Returns
+            x (torch.Tensor): The input tensor after the 2D convolution was applied.
+        """
         ih, iw = x.size()[-2:]
         kh, kw = self.weight.size()[-2:]
         pad_h = self.calc_same_pad(i=ih, k=kh, s=self.stride[0], d=self.dilation[0])
