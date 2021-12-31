@@ -163,6 +163,19 @@ class Conv2dSame(nn.Conv2d):
         )
 
     def calc_same_pad(self, i: int, k: int, s: int, d: int) -> int:
+        """
+        Calculate the required padding for a dimension.
+
+        Args:
+
+            i (int): The specific size of the tensor dimension requiring padding.
+            k (int): The size of the Conv2d weight dimension.
+            s (int): The Conv2d stride value for the dimension.
+            d (int): The Conv2d dilation value for the dimension.
+
+        Returns:
+            padding_vale (int): The calculated padding value.
+        """
         return max((math.ceil(i / s) - 1) * s + (k - 1) * d + 1 - i, 0)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
