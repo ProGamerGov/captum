@@ -79,7 +79,7 @@ class TestImageTensor(BaseTest):
         self.assertTrue(torch.is_tensor(new_tensor))
         assertTensorAlmostEqual(self, image_tensor, new_tensor)
 
-    def test_natural_image_cuda(self) -> None:
+    def test_image_tensor_cuda(self) -> None:
         if not torch.cuda.is_available():
             raise unittest.SkipTest(
                 "Skipping ImageTensor CUDA test due to not supporting CUDA."
@@ -90,7 +90,8 @@ class TestImageTensor(BaseTest):
 
 class TestInputParameterization(BaseTest):
     def test_subclass(self) -> None:
-        self.assertIsSubclass(images.InputParameterization, torch.nn.Module)
+        test = assertIsSubclass(images.InputParameterization, torch.nn.Module)
+        self.assertTrue(test)
 
 
 class TestImageParameterization(BaseTest):
