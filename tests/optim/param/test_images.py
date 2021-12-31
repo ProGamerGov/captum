@@ -370,6 +370,11 @@ class TestSimpleTensorParameterization(BaseTest):
         self.assertFalse(image_param.tensor.requires_grad)
 
     def test_simple_tensor_parameterization_jit_module_no_grad(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping SimpleTensorParameterization JIT module test due to"
+                + "  insufficient Torch version."
+            )
         test_input = torch.randn(1, 3, 4, 4)
         image_param = images.SimpleTensorParameterization(test_input)
         jit_image_param = torch.jit.script(image_param)
@@ -389,6 +394,11 @@ class TestSimpleTensorParameterization(BaseTest):
         self.assertTrue(image_param.tensor.requires_grad)
 
     def test_simple_tensor_parameterization_jit_module_with_grad(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping SimpleTensorParameterization JIT module test due to"
+                + "  insufficient Torch version."
+            )
         test_input = torch.nn.Parameter(torch.randn(1, 3, 4, 4))
         image_param = images.SimpleTensorParameterization(test_input)
         jit_image_param = torch.jit.script(image_param)
