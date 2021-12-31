@@ -572,7 +572,7 @@ class SharedImage(AugmentedImageParameterization):
         Returns:
             x (torch.Tensor): A resized NCHW tensor.
         """
-        assert x.dim() == 4
+        assert x.dim() == 4 or x.dim() == 5
         assert mode in ["bilinear", "trilinear"]
 
         if self._has_align_corners:
