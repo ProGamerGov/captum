@@ -747,7 +747,7 @@ class TestStackImage(BaseTest):
             self.assertIsInstance(image_param, images.FFTImage)
             self.assertEqual(list(image_param().shape), [1, 3] + list(size))
             self.assertTrue(image_param().requires_grad)
-        
+
         output_tensor = stack_param()
         self.assertEqual(list(output_tensor.shape), [2, 3] + list(size))
         self.assertTrue(output_tensor.requires_grad)
@@ -766,7 +766,7 @@ class TestStackImage(BaseTest):
             self.assertIsInstance(image_param, expected_type)
             self.assertEqual(list(image_param().shape), [1, 3] + list(size))
             self.assertTrue(image_param().requires_grad)
-        
+
         output_tensor = stack_param()
         self.assertEqual(list(output_tensor.shape), [2, 3] + list(size))
         self.assertTrue(output_tensor.requires_grad)
@@ -783,31 +783,37 @@ class TestStackImage(BaseTest):
                 + " GPUs available."
             )
         size = (4, 4)
-        
+
         num_cuda_devices = torch.cuda.device_count()
         param_list, device_list = [], []
- 
+
         fft_param = images.FFTImage(size=size).cpu()
         param_list.append(fft_param)
         device_list.append(torch.device("cpu"))
- 
-        for i in range(num_cuda_devices-1):
+
+        for i in range(num_cuda_devices - 1):
             device = torch.device("cuda:" + str(i))
             device_list.append(device)
             fft_param = images.FFTImage(size=size).to(device)
             param_list.append(fft_param)
 
-        output_device = torch.device("cuda:" + num_cuda_devices-1)
-        stack_param = images.StackImage(parameterizations=param_list, output_device=output_device)
+        output_device = torch.device("cuda:" + num_cuda_devices - 1)
+        stack_param = images.StackImage(
+            parameterizations=param_list, output_device=output_device
+        )
 
-        for image_param, torch_device in zip(stack_param.parameterizations, device_list):
+        for image_param, torch_device in zip(
+            stack_param.parameterizations, device_list
+        ):
             self.assertIsInstance(image_param, images.FFTImage)
             self.assertEqual(list(image_param().shape), [1, 3] + list(size))
             self.assertEqual(image_param().device, torch_device)
             self.assertTrue(image_param().requires_grad)
-        
+
         output_tensor = stack_param()
-        self.assertEqual(list(output_tensor.shape), list(len(param_list)) + [3] + list(size))
+        self.assertEqual(
+            list(output_tensor.shape), list(len(param_list)) + [3] + list(size)
+        )
         self.assertTrue(output_tensor.requires_grad)
         self.assertEqual(stack_param().device, output_device)
 
@@ -818,11 +824,10 @@ class TestStackImage(BaseTest):
             )
         size = (4, 4)
         param_list, device_list = [], []
- 
+
         fft_param = images.FFTImage(size=size).cpu()
         param_list.append(fft_param)
         device_list.append(torch.device("cpu"))
- 
 
         device = torch.device("cuda:0")
         device_list.append(device)
@@ -830,16 +835,22 @@ class TestStackImage(BaseTest):
         param_list.append(fft_param)
 
         output_device = torch.device("cuda:0")
-        stack_param = images.StackImage(parameterizations=param_list, output_device=output_device)
+        stack_param = images.StackImage(
+            parameterizations=param_list, output_device=output_device
+        )
 
-        for image_param, torch_device in zip(stack_param.parameterizations, device_list):
+        for image_param, torch_device in zip(
+            stack_param.parameterizations, device_list
+        ):
             self.assertIsInstance(image_param, images.FFTImage)
             self.assertEqual(list(image_param().shape), [1, 3] + list(size))
             self.assertEqual(image_param().device, torch_device)
-            self.assertTrue(image_param().requires_grad)       
-        
+            self.assertTrue(image_param().requires_grad)
+
         output_tensor = stack_param()
-        self.assertEqual(list(output_tensor.shape), list(len(param_list)) + [3] + list(size))
+        self.assertEqual(
+            list(output_tensor.shape), list(len(param_list)) + [3] + list(size)
+        )
         self.assertTrue(output_tensor.requires_grad)
         self.assertEqual(stack_param().device, output_device)
 
