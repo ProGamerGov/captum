@@ -574,10 +574,11 @@ class SharedImage(AugmentedImageParameterization):
         """
         assert x.dim() == 4 or x.dim() == 5
         assert mode in ["bilinear", "trilinear"]
-        assert len(size) == 2 if mode == "bilinear" or len(size) == 3 if mode == "trilinear"
         if mode == "bilinear":
+            assert len(size) == 2
             size = torch.jit.annotate(Tuple[int, int], size)
         elif mode == "trilinear":
+            assert len(size) == 3
             size = torch.jit.annotate(Tuple[int, int, int], size)
 
         if self._has_align_corners:
