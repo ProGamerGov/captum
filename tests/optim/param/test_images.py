@@ -797,7 +797,7 @@ class TestStackImage(BaseTest):
             fft_param = images.FFTImage(size=size).to(device)
             param_list.append(fft_param)
 
-        output_device = torch.device("cuda:" + num_cuda_devices - 1)
+        output_device = torch.device("cuda:" + str(num_cuda_devices - 1))
         stack_param = images.StackImage(
             parameterizations=param_list, output_device=output_device
         )
