@@ -693,7 +693,7 @@ class TestSharedImage(BaseTest):
         self.assertEqual(test_tensor.size(3), size[1])
 
     def test_sharedimage_multiple_shapes_diff_len_forward_jit_module(self) -> None:
-        if torch.__version__ <= "1.2.0":
+        if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
                 "Skipping SharedImage JIT module test due to insufficient Torch"
                 + " version."
