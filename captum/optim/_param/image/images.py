@@ -612,10 +612,12 @@ class SharedImage(AugmentedImageParameterization):
         if x.size(1) == channels:
             mode = "bilinear"
             size = (height, width)
+            size = torch.jit.annotate(Tuple[int, int], size)
         else:
             mode = "trilinear"
             x = x.unsqueeze(0)
             size = (channels, height, width)
+            size = torch.jit.annotate(Tuple[int, int, int], size)
         x = self._interpolate(x, size=size, mode=mode)
         x = x.squeeze(0) if len(size) == 3 else x
         if x.size(0) != batch:
