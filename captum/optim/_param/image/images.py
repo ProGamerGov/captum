@@ -133,7 +133,7 @@ class ImageParameterization(InputParameterization):
     pass
 
 
-class AugmentedImageParameterization(InputParameterization):
+class AugmentedImageParameterization(ImageParameterization):
     pass
 
 
