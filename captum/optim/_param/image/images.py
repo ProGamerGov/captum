@@ -603,7 +603,7 @@ class SharedImage(ImageParameterization):
         return output.refine_names("B", "C", "H", "W")
 
 
-class StackImage(opt.images.ImageParameterization):
+class StackImage(ImageParameterization):
     """
     Stack multiple NCHW image parameterizations along their batch dimensions.
     """
@@ -612,7 +612,7 @@ class StackImage(opt.images.ImageParameterization):
 
     def __init__(
         self,
-        parameterizations: List[Union[opt.images.ImageParameterization, torch.Tensor]],
+        parameterizations: List[Union[ImageParameterization, torch.Tensor]],
         output_device: Optional[torch.device] = None,
     ) -> None:
         """
@@ -629,7 +629,7 @@ class StackImage(opt.images.ImageParameterization):
         super().__init__()
         assert len(parameterizations) > 0
         assert isinstance(parameterizations, (list, tuple))
-        assert all([isinstance(param, (opt.images.ImageParameterization, torch.Tensor)) for param in parameterizations])
+        assert all([isinstance(param, (ImageParameterization, torch.Tensor)) for param in parameterizations])
         parameterizations = [SimpleTensorParameterization(p) if isinstance(p, torch.Tensor) else p for p in parameterizations]
         self.parameterizations = torch.nn.ModuleList(parameterizations)
         self.output_device = output_device
