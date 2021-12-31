@@ -577,7 +577,7 @@ class SharedImage(AugmentedImageParameterization):
         if mode == "bilinear":
             new_size = torch.jit.annotate(Tuple[int, int], size[1:])
             assert len(size) == 2
-        elif mode == "trilinear":
+        else:
             assert len(size) == 3
             new_size = size
 
