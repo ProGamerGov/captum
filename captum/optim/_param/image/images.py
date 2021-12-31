@@ -454,7 +454,7 @@ class SharedImage(AugmentedImageParameterization):
     https://distill.pub/2018/differentiable-parameterizations/
     """
 
-    __constants__ = ["offset", "_supports_is_scripting"]
+    __constants__ = ["offset", "_supports_is_scripting", "_has_align_corners", "_has_recompute_scale_factor"]
 
     def __init__(
         self,
@@ -491,6 +491,8 @@ class SharedImage(AugmentedImageParameterization):
 
         # Check & store whether or not we can use torch.jit.is_scripting()
         self._supports_is_scripting = torch.__version__ >= "1.6.0"
+        self._has_align_corners = torch.__version__ >= "1.3.0"
+        self._has_recompute_scale_factor = torch.__version__ >= "1.6.0"
 
     def _get_offset(self, offset: Union[int, Tuple[int]], n: int) -> List[List[int]]:
         """
