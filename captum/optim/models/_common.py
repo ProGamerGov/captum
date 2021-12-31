@@ -170,7 +170,7 @@ class Conv2dSame(nn.Conv2d):
            stride (int or tuple of int, optional): The desired stride for the
                cross-correlation.
                Default: 1
-           padding (int or tuple of int, optional):
+           padding (int or tuple of int, optional): This value is always set to 0.
                Default: 0
            dilation (int or tuple of int, optional): The desired spacing between the
                kernel points.
