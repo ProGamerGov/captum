@@ -193,12 +193,25 @@ def collect_activations(
 ) -> ModuleOutputMapping:
     """
     Collect target activations for a model.
+    
+    Args:
+
+        model (nn.Module): A PyTorch model instance.
+        targets (nn.Module or list of nn.Module): One or more layer targets for the
+            given model.
+        model_input (torch.Tensor or tuple of torch.Tensor, optional): Optionally
+            provide an input tensor to use when collecting the target activations.
+            Default: torch.zeros(1, 3, 224, 224)
+    
+    Returns:
+        activ_dict (ModuleOutputMapping): A dictionary of collected activations where
+            the keys are the target layers.
     """
     if not hasattr(targets, "__iter__"):
         targets = [targets]
     catch_activ = ActivationFetcher(model, targets)
-    activ_out = catch_activ(model_input)
-    return activ_out
+    activ_dict = catch_activ(model_input)
+    return activ_dict
 
 
 class SkipLayer(torch.nn.Module):
