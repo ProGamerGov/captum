@@ -434,6 +434,10 @@ class SimpleTensorParameterization(ImageParameterization):
         self.tensor = tensor
 
     def forward(self) -> torch.Tensor:
+        """
+        Returns:
+            tensor (torch.Tensor): The tensor stored during initialization.
+        """
         return self.tensor
 
 
@@ -587,6 +591,10 @@ class SharedImage(AugmentedImageParameterization):
         return x
 
     def forward(self) -> torch.Tensor:
+        """
+        Returns:
+            output (torch.Tensor): An NCHW image parameterization output.
+        """
         image = self.parameterization()
         x = [
             self._interpolate_tensor(
