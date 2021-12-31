@@ -731,7 +731,7 @@ class TestStackImage(BaseTest):
         fft_param_1 = images.FFTImage(size=size)
         fft_param_2 = images.FFTImage(size=size)
         param_list = [fft_param_1, fft_param_2]
-        stack_param = StackImage(parameterizations=param_list)
+        stack_param = images.StackImage(parameterizations=param_list)
         for image_param in stack_param.parameterizations:
             self.assertIsInstance(image_param, images.FFTImage)
             self.assertEqual(list(image_param().shape), [1, 3] + list(size))
@@ -742,7 +742,7 @@ class TestStackImage(BaseTest):
         fft_param_1 = images.FFTImage(size=size)
         fft_param_2 = images.FFTImage(size=size)
         param_list = [fft_param_1, fft_param_2]
-        stack_param = StackImage(parameterizations=param_list)
+        stack_param = images.StackImage(parameterizations=param_list)
         for image_param in stack_param.parameterizations:
             self.assertIsInstance(image_param, images.FFTImage)
             self.assertEqual(list(image_param().shape), [1, 3] + list(size))
@@ -759,7 +759,7 @@ class TestStackImage(BaseTest):
         pixel_param = images.PixelImage(size=size)
         param_list = [fft_param, pixel_param]
 
-        stack_param = StackImage(parameterizations=param_list)
+        stack_param = images.StackImage(parameterizations=param_list)
 
         type_list = [images.FFTImage, images.PixelImage]
         for image_param, expected_type in zip(stack_param.parameterizations, type_list):
