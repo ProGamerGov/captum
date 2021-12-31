@@ -863,7 +863,7 @@ class TestStackImage(BaseTest):
 
         output_tensor = stack_param()
         self.assertEqual(
-            list(output_tensor.shape), list(len(param_list)) + [3] + list(size)
+            list(output_tensor.shape), [len(param_list)] + [3] + list(size)
         )
         self.assertTrue(output_tensor.requires_grad)
         self.assertEqual(stack_param().device, output_device)
@@ -900,7 +900,7 @@ class TestStackImage(BaseTest):
 
         output_tensor = stack_param()
         self.assertEqual(
-            list(output_tensor.shape), list(len(param_list)) + [3] + list(size)
+            list(output_tensor.shape), [len(param_list)] + [3] + list(size)
         )
         self.assertTrue(output_tensor.requires_grad)
         self.assertEqual(stack_param().device, output_device)
