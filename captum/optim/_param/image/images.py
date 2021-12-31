@@ -575,24 +575,25 @@ class SharedImage(AugmentedImageParameterization):
         assert x.dim() == 4 or x.dim() == 5
         assert mode in ["bilinear", "trilinear"]
         if mode == "bilinear":
-            size = torch.jit.annotate(Tuple[int, int], size[1:])
+            new_size = torch.jit.annotate(Tuple[int, int], size[1:])
             assert len(size) == 2
         elif mode == "trilinear":
             assert len(size) == 3
+            new_size = size
 
         if self._has_align_corners:
             if self._has_recompute_scale_factor:
                 x = F.interpolate(
                     x,
-                    size=size,
+                    size=new_size,
                     mode=mode,
                     align_corners=False,
                     recompute_scale_factor=False,
                 )
             else:
-                x = F.interpolate(x, size=size, mode=mode, align_corners=False)
+                x = F.interpolate(x, size=new_size, mode=mode, align_corners=False)
         else:
-            x = F.interpolate(x, size=size, mode=mode)
+            x = F.interpolate(x, size=new_size, mode=mode)
         return x
 
     def _interpolate_tensor(
