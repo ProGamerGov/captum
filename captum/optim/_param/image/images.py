@@ -553,7 +553,43 @@ class SharedImage(AugmentedImageParameterization):
             A.append(x)
         return A
 
-    @torch.jit.ignore
+    def _interpolate(
+        self,
+        x: torch.Tensor,
+        size: Union[Tuple[int, int], Tuple[int, int, int]],
+        mode: str,
+    ) -> torch.Tensor:
+        """
+        Perform interpolation without any warnings.
+
+        Args:
+
+            x (torch.Tensor): The NCHW tensor to resize.
+            size (tuple of 2 or 3 int): The desired output size to resize the input
+                to.
+            mode (str): The resizing mode to use. Either "bilinear" or "trilinear".
+
+        Returns:
+            x (torch.Tensor): A resized NCHW tensor.
+        """
+        assert x.dim() == 4
+        assert mode in ["bilinear", "trilinear"]
+
+        if self._has_align_corners:
+            if self._has_recompute_scale_factor:
+                x = F.interpolate(
+                    x,
+                    size=size,
+                    mode=mode,
+                    align_corners=False,
+                    recompute_scale_factor=False,
+                )
+            else:
+                x = F.interpolate(x, size=size, mode=mode, align_corners=False)
+        else:
+            x = F.interpolate(x, size=size, mode=mode)
+        return x
+
     def _interpolate_tensor(
         self, x: torch.Tensor, batch: int, channels: int, height: int, width: int
     ) -> torch.Tensor:
@@ -580,11 +616,11 @@ class SharedImage(AugmentedImageParameterization):
             mode = "trilinear"
             x = x.unsqueeze(0)
             size = (channels, height, width)
-        x = F.interpolate(x, size=size, mode=mode)
+        x = self._interpolate(x, size=size, mode=mode)
         x = x.squeeze(0) if len(size) == 3 else x
         if x.size(0) != batch:
             x = x.permute(1, 0, 2, 3)
-            x = F.interpolate(
+            x = self._interpolate(
                 x.unsqueeze(0),
                 size=(batch, x.size(2), x.size(3)),
                 mode="trilinear",
