@@ -434,14 +434,16 @@ class TestSharedImage(BaseTest):
         shared_param = images.SharedImage(
             shapes=shared_shapes, parameterization=test_param
         )
-        
+
         self.assertIsInstance(shared_param.shared_init, torch.nn.ModuleList)
         self.assertEqual(len(shared_param.shared_init), len(shared_shapes))
         for shared_init, shape in zip(shared_param.shared_init, shared_shapes):
             self.assertIsInstance(shared_init, images.SimpleTensorParameterization)
             self.assertEqual(list(shared_init().shape), list(shape))
-        
-        self.assertIsInstance(shared_param.parameterization, images.SimpleTensorParameterization)
+
+        self.assertIsInstance(
+            shared_param.parameterization, images.SimpleTensorParameterization
+        )
         self.assertIsNone(shared_param.offset)
 
     def test_sharedimage_interpolate_bilinear(self) -> None:
@@ -894,9 +896,9 @@ class TestStackImage(BaseTest):
         img_param_b = images.SimpleTensorParameterization(torch.ones(1, 1, 4, 4))
         param_list = [img_param_r, img_param_g, img_param_b]
         stack_param = images.StackImage(parameterizations=param_list, dim=1)
-        
+
         self.assertEqual(stack_param.dim, 1)
-        
+
         test_output = stack_param()
         self.assertEqual(list(test_output.shape), [1, 3, 4, 4])
 
