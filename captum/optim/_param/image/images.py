@@ -708,7 +708,7 @@ class StackImage(AugmentedImageParameterization):
             output_device (torch.device, optional): If the parameterizations are on
                 different devices, then their outputs will be moved to the device
                 specified by this variable. Default is set to None with the expectation
-                 that all parameterizations are on the same device.
+                that all parameterizations are on the same device.
                 Default: None
         """
         super().__init__()
