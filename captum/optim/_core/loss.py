@@ -232,7 +232,12 @@ def basic_torch_module_op(
             del kwargs["to_scalar_fn"]
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-            loss_tensors = [to_scalar_fn(loss_obj(module)) for loss_obj in loss]
+            loss_tensors = [
+                to_scalar_fn(loss_obj(module))
+                if not isinstance(loss_obj, torch.Tensor)
+                else loss_obj
+                for loss_obj in loss
+            ]
             return torch_op(loss_tensors, *args, **kwargs)
 
         name_list = ", ".join([loss_obj.__name__ for loss_obj in loss])
