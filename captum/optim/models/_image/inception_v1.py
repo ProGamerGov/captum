@@ -165,7 +165,7 @@ class InceptionV1(nn.Module):
     def _transform_input(self, x: torch.Tensor) -> torch.Tensor:
         if self.transform_input:
             assert x.dim() == 3 or x.dim() == 4
-            assert x.min() >= 0.0 and x.max() <= 1.0
+            #assert x.min() >= 0.0 and x.max() <= 1.0
             x = x.unsqueeze(0) if x.dim() == 3 else x
             x = x * 255 - 117
             x = x[:, [2, 1, 0]] if self.bgr_transform else x
