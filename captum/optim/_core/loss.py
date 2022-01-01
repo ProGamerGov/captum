@@ -197,14 +197,17 @@ def basic_torch_module_op(
     **kwargs: Any,
 ) -> "CompositeLoss":
     """
-    Implement composability for PyTorch operation that take a single tensor or list
-    of tensors as it's first input variable.
+    Implement composability for functions like PyTorch operations that take a single
+    tensor or list of tensors as their first input variable.
+
     See here for possible torch_op choices: https://pytorch.org/docs/stable/torch.html
-    Some built-in Python functions can also be used as well if supported by PyTorch.
+    In addition to custom user defined functions, built-in Python functions can also be
+    used as well if supported by PyTorch.
 
     Args:
 
-        loss (Loss or list of Loss): A loss objective or list of loss objectives.
+        loss (Loss or list of Loss and torch.Tensor): A loss objective or list of loss
+            objectives and tensors.
         torch_op (Callable): A PyTorch or supported Python function. Ex: torch.mean,
              torch.sum,, torch.linalg.norm, torch.sin, torch.cat, torch.stack, max, min,
              sum, math.ceil, and others.
