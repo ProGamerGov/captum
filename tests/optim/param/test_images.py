@@ -353,15 +353,13 @@ class TestSimpleTensorParameterization(BaseTest):
         )
 
     def test_stackimage_torch_version_check(self) -> None:
-        img_param_1 = images.SimpleTensorParameterization(torch.ones(1,3,4,4))
-        img_param_2 = images.SimpleTensorParameterization(torch.ones(1,3,4,4))
+        img_param_1 = images.SimpleTensorParameterization(torch.ones(1, 3, 4, 4))
+        img_param_2 = images.SimpleTensorParameterization(torch.ones(1, 3, 4, 4))
         param_list = [img_param_1, img_param_2]
         stack_param = images.StackImage(parameterizations=param_list)
 
         supports_is_scripting = torch.__version__ >= "1.6.0"
-        self.assertEqual(
-            stack_param._supports_is_scripting, supports_is_scripting
-        )
+        self.assertEqual(stack_param._supports_is_scripting, supports_is_scripting)
 
     def test_simple_tensor_parameterization_no_grad(self) -> None:
         test_input = torch.randn(1, 3, 4, 4)
@@ -441,18 +439,18 @@ class TestSharedImage(BaseTest):
         image_param = images.SharedImage(
             shapes=shared_shapes, parameterization=test_param
         )
-        
+
         size = (224, 128)
         test_input = torch.randn(1, 3, 128, 128)
-       
-        test_output = image_param._interpolate_bilinear(test_input.clone(), size=size)    
+
+        test_output = image_param._interpolate_bilinear(test_input.clone(), size=size)
         expected_output = F.interpolate(x, size=size, mode="bilinear")
         assertTensorAlmostEqual(self, test_output, expected_output, 0.0)
 
         size = (128, 128)
         test_input = torch.randn(1, 3, 224, 224)
-       
-        test_output = image_param._interpolate_bilinear(test_input.clone(), size=size)    
+
+        test_output = image_param._interpolate_bilinear(test_input.clone(), size=size)
         expected_output = F.interpolate(x, size=size, mode="bilinear")
         assertTensorAlmostEqual(self, test_output, expected_output, 0.0)
 
@@ -462,19 +460,23 @@ class TestSharedImage(BaseTest):
         image_param = images.SharedImage(
             shapes=shared_shapes, parameterization=test_param
         )
-        
+
         size = (3, 224, 128)
         test_input = torch.randn(1, 1, 128, 128)
-       
-        test_output = image_param._interpolate_trilinear(test_input.clone(), size=size)    
-        expected_output = F.interpolate(x.unsqueeze(0), size=size, mode="trilinear").squeeze(0) 
+
+        test_output = image_param._interpolate_trilinear(test_input.clone(), size=size)
+        expected_output = F.interpolate(
+            x.unsqueeze(0), size=size, mode="trilinear"
+        ).squeeze(0)
         assertTensorAlmostEqual(self, test_output, expected_output, 0.0)
 
         size = (2, 128, 128)
         test_input = torch.randn(1, 4, 224, 224)
-       
-        test_output = image_param._interpolate_trilinear(test_input.clone(), size=size)    
-        expected_output = F.interpolate(x.unsqueeze(0), size=size, mode="trilinear").squeeze(0) 
+
+        test_output = image_param._interpolate_trilinear(test_input.clone(), size=size)
+        expected_output = F.interpolate(
+            x.unsqueeze(0), size=size, mode="trilinear"
+        ).squeeze(0)
         assertTensorAlmostEqual(self, test_output, expected_output, 0.0)
 
     def test_torch_version_check(self) -> None:
@@ -491,11 +493,9 @@ class TestSharedImage(BaseTest):
         self.assertEqual(
             image_param._has_recompute_scale_factor, has_recompute_scale_factor
         )
-        
+
         supports_is_scripting = torch.__version__ >= "1.6.0"
-        self.assertEqual(
-            image_param._supports_is_scripting, supports_is_scripting
-        )
+        self.assertEqual(image_param._supports_is_scripting, supports_is_scripting)
 
     def test_sharedimage_get_offset_single_number(self) -> None:
         if torch.__version__ <= "1.2.0":
