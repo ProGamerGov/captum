@@ -709,11 +709,12 @@ class StackImage(AugmentedImageParameterization):
     Stack multiple NCHW image parameterizations along their batch dimensions.
     """
 
-    __constants__ = ["_supports_is_scripting", "output_device"]
+    __constants__ = ["_supports_is_scripting", "output_device", "dim"]
 
     def __init__(
         self,
         parameterizations: List[Union[ImageParameterization, torch.Tensor]],
+        dim: int = 0,
         output_device: Optional[torch.device] = None,
     ) -> None:
         """
@@ -741,6 +742,7 @@ class StackImage(AugmentedImageParameterization):
             for p in parameterizations
         ]
         self.parameterizations = torch.nn.ModuleList(parameterizations)
+        self.dim = dim
         self.output_device = output_device
 
         # Check & store whether or not we can use torch.jit.is_scripting()
@@ -763,7 +765,7 @@ class StackImage(AugmentedImageParameterization):
         assert all([im.shape == P[0].shape for im in P])
         assert all([im.device == P[0].device for im in P])
 
-        image = torch.cat(P, 0)
+        image = torch.cat(P, dim=self.dim)
         if self._supports_is_scripting:
             if torch.jit.is_scripting():
                 return image
