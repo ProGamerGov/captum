@@ -570,7 +570,7 @@ class SharedImage(AugmentedImageParameterization):
 
             x (torch.Tensor): The NCHW tensor to resize.
             size (tuple of int): The desired output size to resize the input
-                to.
+                to, with a format of: [height, width].
 
         Returns:
             x (torch.Tensor): A resized NCHW tensor.
@@ -605,7 +605,7 @@ class SharedImage(AugmentedImageParameterization):
 
             x (torch.Tensor): The NCHW tensor to resize.
             size (tuple of int): The desired output size to resize the input
-                to.
+                to, with a format of: [channels, height, width].
 
         Returns:
             x (torch.Tensor): A resized NCHW tensor.
