@@ -444,14 +444,18 @@ class TestSharedImage(BaseTest):
         test_input = torch.randn(1, 3, 128, 128)
 
         test_output = image_param._interpolate_bilinear(test_input.clone(), size=size)
-        expected_output = torch.nn.functional.interpolate(test_input.clone(), size=size, mode="bilinear")
+        expected_output = torch.nn.functional.interpolate(
+            test_input.clone(), size=size, mode="bilinear"
+        )
         assertTensorAlmostEqual(self, test_output, expected_output, 0.0)
 
         size = (128, 128)
         test_input = torch.randn(1, 3, 224, 224)
 
         test_output = image_param._interpolate_bilinear(test_input.clone(), size=size)
-        expected_output = torch.nn.functional.interpolate(test_input.clone(), size=size, mode="bilinear")
+        expected_output = torch.nn.functional.interpolate(
+            test_input.clone(), size=size, mode="bilinear"
+        )
         assertTensorAlmostEqual(self, test_output, expected_output, 0.0)
 
     def test_sharedimage_interpolate_trilinear(self) -> None:
