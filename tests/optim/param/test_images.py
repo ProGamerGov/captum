@@ -424,6 +424,26 @@ class TestSharedImage(BaseTest):
             issubclass(images.SharedImage, images.AugmentedImageParameterization)
         )
 
+    def test_sharedimage_init(self) -> None:
+        shared_shapes = (
+            (1, 3, 128 // 2, 128 // 2),
+            (1, 3, 128 // 4, 128 // 4),
+            (1, 3, 128 // 8, 128 // 8),
+        )
+        test_param = images.SimpleTensorParameterization(torch.ones(4, 3, 4, 4))
+        shared_param = images.SharedImage(
+            shapes=shared_shapes, parameterization=test_param
+        )
+        
+        self.assertIsInstance(shared_param.shared_init, torch.nn.ModuleList)
+        self.assertEqual(len(shared_param.shared_init), len(shared_shapes))
+        for shared_init, shape in zip(shared_param.shared_init, shared_shapes):
+            self.assertIsInstance(shared_init, images.SimpleTensorParameterization)
+            self.assertEqual(list(shared_init().shape), list(shape))
+        
+        self.assertIsInstance(shared_param.parameterization, images.SimpleTensorParameterization)
+        self.assertIsNone(shared_param.offset)
+
     def test_sharedimage_interpolate_bilinear(self) -> None:
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
