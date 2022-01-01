@@ -859,10 +859,26 @@ class TestStackImage(BaseTest):
         fft_param_2 = images.FFTImage(size=size)
         param_list = [fft_param_1, fft_param_2]
         stack_param = images.StackImage(parameterizations=param_list)
+
+        self.assertIsInstance(stack_param.parameterization, torch.nn.ModuleList)
+        self.assertEqual(stack_param.dim, 0)
+
         for image_param in stack_param.parameterizations:
             self.assertIsInstance(image_param, images.FFTImage)
             self.assertEqual(list(image_param().shape), [1, 3] + list(size))
             self.assertTrue(image_param().requires_grad)
+
+    def test_stackimage_dim(self) -> None:
+        img_param_r = images.SimpleTensorParameterization(torch.ones(1, 1, 4, 4))
+        img_param_g = images.SimpleTensorParameterization(torch.ones(1, 1, 4, 4))
+        img_param_b = images.SimpleTensorParameterization(torch.ones(1, 1, 4, 4))
+        param_list = [img_param_r, img_param_g, img_param_b]
+        stack_param = images.StackImage(parameterizations=param_list, dim=1)
+        
+        self.assertEqual(stack_param.dim, 1)
+        
+        test_output = stack_param()
+        self.assertEqual(list(test_output.shape), [1, 3, 4, 4])
 
     def test_stackimage_forward(self) -> None:
         if torch.__version__ <= "1.2.0":
