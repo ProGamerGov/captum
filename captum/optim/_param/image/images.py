@@ -133,6 +133,10 @@ class ImageParameterization(InputParameterization):
     pass
 
 
+class AugmentedImageParameterization(ImageParameterization):
+    pass
+
+
 class FFTImage(ImageParameterization):
     """
     Parameterize an image using inverse real 2D FFT
@@ -319,8 +323,6 @@ class PixelImage(ImageParameterization):
             assert init.dim() == 3 or init.dim() == 4
             if init.dim() == 3:
                 init = init.unsqueeze(0)
-            assert init.shape[1] == 3, "PixelImage init should have 3 channels, "
-            f"input has {init.shape[1]} channels."
         self.image = nn.Parameter(init)
 
         # Check & store whether or not we can use torch.jit.is_scripting()
@@ -427,7 +429,39 @@ class LaplacianImage(ImageParameterization):
         return torch.stack(A).refine_names("B", "C", "H", "W")
 
 
-class SharedImage(ImageParameterization):
+class SimpleTensorParameterization(ImageParameterization):
+    """
+    Parameterize a simple tensor with or without it requiring grad.
+    Compared to PixelImage, this parameterization has no specific shape requirements
+    and does not wrap inputs in nn.Parameter.
+
+    This parameterization can for example be combined with StackImage for batch
+    dimensions that both require and don't require gradients.
+
+    This parameterization can also be combined with nn.ModuleList as workaround for
+    TorchScript / JIT not supporting nn.ParameterList. SharedImage uses this module
+    internally for this purpose.
+    """
+
+    def __init__(self, tensor: torch.Tensor = None) -> None:
+        """
+        Args:
+
+            tensor (torch.tensor): The tensor to return everytime this module is called.
+        """
+        super().__init__()
+        assert isinstance(tensor, torch.Tensor)
+        self.tensor = tensor
+
+    def forward(self) -> torch.Tensor:
+        """
+        Returns:
+            tensor (torch.Tensor): The tensor stored during initialization.
+        """
+        return self.tensor
+
+
+class SharedImage(AugmentedImageParameterization):
     """
     Share some image parameters across the batch to increase spatial alignment,
     by using interpolated lower resolution tensors.
@@ -439,6 +473,13 @@ class SharedImage(ImageParameterization):
     Mordvintsev, et al., "Differentiable Image Parameterizations", Distill, 2018.
     https://distill.pub/2018/differentiable-parameterizations/
     """
+
+    __constants__ = [
+        "offset",
+        "_supports_is_scripting",
+        "_has_align_corners",
+        "_has_recompute_scale_factor",
+    ]
 
     def __init__(
         self,
@@ -465,10 +506,18 @@ class SharedImage(ImageParameterization):
             assert len(shape) >= 2 and len(shape) <= 4
             shape = ([1] * (4 - len(shape))) + list(shape)
             batch, channels, height, width = shape
-            A.append(torch.nn.Parameter(torch.randn([batch, channels, height, width])))
-        self.shared_init = torch.nn.ParameterList(A)
+            shape_param = torch.nn.Parameter(
+                torch.randn([batch, channels, height, width])
+            )
+            A.append(SimpleTensorParameterization(shape_param))
+        self.shared_init = torch.nn.ModuleList(A)
         self.parameterization = parameterization
         self.offset = self._get_offset(offset, len(A)) if offset is not None else None
+
+        # Check & store whether or not we can use torch.jit.is_scripting()
+        self._supports_is_scripting = torch.__version__ >= "1.6.0"
+        self._has_align_corners = torch.__version__ >= "1.3.0"
+        self._has_recompute_scale_factor = torch.__version__ >= "1.6.0"
 
     def _get_offset(self, offset: Union[int, Tuple[int]], n: int) -> List[List[int]]:
         """
@@ -495,6 +544,7 @@ class SharedImage(ImageParameterization):
         assert all([all([type(o) is int for o in v]) for v in offset])
         return offset
 
+    @torch.jit.ignore
     def _apply_offset(self, x_list: List[torch.Tensor]) -> List[torch.Tensor]:
         """
         Apply list of offsets to list of tensors.
@@ -528,6 +578,75 @@ class SharedImage(ImageParameterization):
             A.append(x)
         return A
 
+    def _interpolate_bilinear(
+        self,
+        x: torch.Tensor,
+        size: Tuple[int, int],
+    ) -> torch.Tensor:
+        """
+        Perform interpolation without any warnings.
+
+        Args:
+
+            x (torch.Tensor): The NCHW tensor to resize.
+            size (tuple of int): The desired output size to resize the input
+                to, with a format of: [height, width].
+
+        Returns:
+            x (torch.Tensor): A resized NCHW tensor.
+        """
+        assert x.dim() == 4
+        assert len(size) == 2
+
+        if self._has_align_corners:
+            if self._has_recompute_scale_factor:
+                x = F.interpolate(
+                    x,
+                    size=size,
+                    mode="bilinear",
+                    align_corners=False,
+                    recompute_scale_factor=False,
+                )
+            else:
+                x = F.interpolate(x, size=size, mode="bilinear", align_corners=False)
+        else:
+            x = F.interpolate(x, size=size, mode="bilinear")
+        return x
+
+    def _interpolate_trilinear(
+        self,
+        x: torch.Tensor,
+        size: Tuple[int, int, int],
+    ) -> torch.Tensor:
+        """
+        Perform interpolation without any warnings.
+
+        Args:
+
+            x (torch.Tensor): The NCHW tensor to resize.
+            size (tuple of int): The desired output size to resize the input
+                to, with a format of: [channels, height, width].
+
+        Returns:
+            x (torch.Tensor): A resized NCHW tensor.
+        """
+        x = x.unsqueeze(0)
+        assert x.dim() == 5
+        if self._has_align_corners:
+            if self._has_recompute_scale_factor:
+                x = F.interpolate(
+                    x,
+                    size=size,
+                    mode="trilinear",
+                    align_corners=False,
+                    recompute_scale_factor=False,
+                )
+            else:
+                x = F.interpolate(x, size=size, mode="trilinear", align_corners=False)
+        else:
+            x = F.interpolate(x, size=size, mode="trilinear")
+        return x.squeeze(0)
+
     def _interpolate_tensor(
         self, x: torch.Tensor, batch: int, channels: int, height: int, width: int
     ) -> torch.Tensor:
@@ -548,29 +667,26 @@ class SharedImage(ImageParameterization):
         """
 
         if x.size(1) == channels:
-            mode = "bilinear"
             size = (height, width)
+            x = self._interpolate_bilinear(x, size=size)
         else:
-            mode = "trilinear"
-            x = x.unsqueeze(0)
             size = (channels, height, width)
-        x = F.interpolate(x, size=size, mode=mode)
-        x = x.squeeze(0) if len(size) == 3 else x
+            x = self._interpolate_trilinear(x, size=size)
         if x.size(0) != batch:
             x = x.permute(1, 0, 2, 3)
-            x = F.interpolate(
-                x.unsqueeze(0),
-                size=(batch, x.size(2), x.size(3)),
-                mode="trilinear",
-            ).squeeze(0)
+            x = self._interpolate_trilinear(x, size=(batch, x.size(2), x.size(3)))
             x = x.permute(1, 0, 2, 3)
         return x
 
     def forward(self) -> torch.Tensor:
+        """
+        Returns:
+            output (torch.Tensor): An NCHW image parameterization output.
+        """
         image = self.parameterization()
         x = [
             self._interpolate_tensor(
-                shared_tensor,
+                shared_tensor(),
                 image.size(0),
                 image.size(1),
                 image.size(2),
@@ -580,7 +696,78 @@ class SharedImage(ImageParameterization):
         ]
         if self.offset is not None:
             x = self._apply_offset(x)
-        return (image + sum(x)).refine_names("B", "C", "H", "W")
+        output = image + torch.cat(x, 0).sum(0, keepdim=True)
+
+        if self._supports_is_scripting:
+            if torch.jit.is_scripting():
+                return output
+        return output.refine_names("B", "C", "H", "W")
+
+
+class StackImage(AugmentedImageParameterization):
+    """
+    Stack multiple NCHW image parameterizations along their batch dimensions.
+    """
+
+    __constants__ = ["_supports_is_scripting", "output_device"]
+
+    def __init__(
+        self,
+        parameterizations: List[Union[ImageParameterization, torch.Tensor]],
+        output_device: Optional[torch.device] = None,
+    ) -> None:
+        """
+        Args:
+
+            parameterizations (list of ImageParameterization and torch.Tensor): A list
+                 of image parameterizations to stack across their batch dimensions.
+            output_device (torch.device): If the parameterizations are on different
+                devices, then their outputs will be moved to the device specified by
+                this variable. Default is set to None with the expectation that all
+                parameterizations are on the same device.
+                Default: None
+        """
+        super().__init__()
+        assert len(parameterizations) > 0
+        assert isinstance(parameterizations, (list, tuple))
+        assert all(
+            [
+                isinstance(param, (ImageParameterization, torch.Tensor))
+                for param in parameterizations
+            ]
+        )
+        parameterizations = [
+            SimpleTensorParameterization(p) if isinstance(p, torch.Tensor) else p
+            for p in parameterizations
+        ]
+        self.parameterizations = torch.nn.ModuleList(parameterizations)
+        self.output_device = output_device
+
+        # Check & store whether or not we can use torch.jit.is_scripting()
+        self._supports_is_scripting = torch.__version__ >= "1.6.0"
+
+    def forward(self) -> torch.Tensor:
+        """
+        Returns:
+            image (torch.Tensor): A set of NCHW image parameterization outputs stacked
+                along the batch dimension.
+        """
+        P = []
+        for image_param in self.parameterizations:
+            img = image_param()
+            if self.output_device is not None:
+                img = img.to(self.output_device, dtype=img.dtype)
+            P.append(img)
+
+        assert P[0].dim() == 4
+        assert all([im.shape == P[0].shape for im in P])
+        assert all([im.device == P[0].device for im in P])
+
+        image = torch.cat(P, 0)
+        if self._supports_is_scripting:
+            if torch.jit.is_scripting():
+                return image
+        return image.refine_names("B", "C", "H", "W")
 
 
 class NaturalImage(ImageParameterization):
@@ -602,7 +789,9 @@ class NaturalImage(ImageParameterization):
         channels: int = 3,
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
-        parameterization: ImageParameterization = FFTImage,
+        parameterization: Union[
+            ImageParameterization, AugmentedImageParameterization
+        ] = FFTImage,
         squash_func: Optional[Callable[[torch.Tensor], torch.Tensor]] = None,
         decorrelation_module: Optional[nn.Module] = ToRGB(transform="klt"),
         decorrelate_init: bool = True,
@@ -690,9 +879,11 @@ __all__ = [
     "ImageTensor",
     "InputParameterization",
     "ImageParameterization",
+    "AugmentedImageParameterization",
     "FFTImage",
     "PixelImage",
     "LaplacianImage",
     "SharedImage",
+    "StackImage",
     "NaturalImage",
 ]
