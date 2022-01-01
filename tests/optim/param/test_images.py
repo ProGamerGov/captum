@@ -352,15 +352,6 @@ class TestSimpleTensorParameterization(BaseTest):
             )
         )
 
-    def test_stackimage_torch_version_check(self) -> None:
-        img_param_1 = images.SimpleTensorParameterization(torch.ones(1, 3, 4, 4))
-        img_param_2 = images.SimpleTensorParameterization(torch.ones(1, 3, 4, 4))
-        param_list = [img_param_1, img_param_2]
-        stack_param = images.StackImage(parameterizations=param_list)
-
-        supports_is_scripting = torch.__version__ >= "1.6.0"
-        self.assertEqual(stack_param._supports_is_scripting, supports_is_scripting)
-
     def test_simple_tensor_parameterization_no_grad(self) -> None:
         test_input = torch.randn(1, 3, 4, 4)
         image_param = images.SimpleTensorParameterization(test_input)
@@ -848,6 +839,15 @@ class TestStackImage(BaseTest):
         self.assertTrue(
             issubclass(images.StackImage, images.AugmentedImageParameterization)
         )
+
+    def test_stackimage_torch_version_check(self) -> None:
+        img_param_1 = images.SimpleTensorParameterization(torch.ones(1, 3, 4, 4))
+        img_param_2 = images.SimpleTensorParameterization(torch.ones(1, 3, 4, 4))
+        param_list = [img_param_1, img_param_2]
+        stack_param = images.StackImage(parameterizations=param_list)
+
+        supports_is_scripting = torch.__version__ >= "1.6.0"
+        self.assertEqual(stack_param._supports_is_scripting, supports_is_scripting)
 
     def test_stackimage_init(self) -> None:
         if torch.__version__ <= "1.2.0":
