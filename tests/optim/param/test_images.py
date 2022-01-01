@@ -882,7 +882,8 @@ class TestStackImage(BaseTest):
         param_list = [fft_param_1, fft_param_2]
         stack_param = images.StackImage(parameterizations=param_list)
 
-        self.assertIsInstance(stack_param.parameterization, torch.nn.ModuleList)
+        self.assertIsInstance(stack_param.parameterizations, torch.nn.ModuleList)
+        self.assertEqual(len(stack_param.parameterizations), 2)
         self.assertEqual(stack_param.dim, 0)
 
         for image_param in stack_param.parameterizations:
