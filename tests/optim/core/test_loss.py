@@ -300,3 +300,10 @@ def TestBasisTorchModuleOP(BaseTest):
             loss_list, torch_op=sum, to_scalar_fn=torch.mean
         )
         self.assertAlmostEqual(get_loss_value(model, loss), 5.0, places=1)
+
+    def test_python_max(self) -> None:
+        model = torch.nn.Identity()
+        loss = opt_loss.LayerActivation(model)
+        loss = opt_loss.basic_torch_module_op([loss, torch.zeros(1, 3, 1, 1)], torch_op=max)
+        loss = loss.sum()
+        self.assertAlmostEqual(get_loss_value(model, loss), 3.0, places=1)
