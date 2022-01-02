@@ -695,7 +695,7 @@ class StackImage(AugmentedImageParameterization):
 
     def __init__(
         self,
-        parameterizations: List[Union[ImageParameterization, torch.Tensor]],
+        parameterizations: List[Union[ImageParameterization, AugmentedImageParameterization, torch.Tensor]],
         dim: int = 0,
         output_device: Optional[torch.device] = None,
     ) -> None:
