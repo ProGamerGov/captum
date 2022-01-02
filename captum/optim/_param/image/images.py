@@ -464,7 +464,9 @@ class SharedImage(AugmentedImageParameterization):
     def __init__(
         self,
         shapes: Union[Tuple[Tuple[int]], Tuple[int]] = None,
-        parameterization: ImageParameterization = None,
+        parameterization: Union[
+            ImageParameterization, AugmentedImageParameterization
+        ] = None,
         offset: Union[int, Tuple[int], Tuple[Tuple[int]], None] = None,
     ) -> None:
         """
@@ -473,7 +475,7 @@ class SharedImage(AugmentedImageParameterization):
             shapes (list of int or list of list of ints): The shapes of the shared
                 tensors to use for creating the nn.Parameter tensors.
             parameterization (ImageParameterization): An image parameterization
-                instance.
+                or augmented image parameterization instance.
             offset (int or list of int or list of list of ints , optional): The offsets
                 to use for the shared tensors.
                 Default: None
