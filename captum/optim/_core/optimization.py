@@ -109,6 +109,24 @@ class InputOptimization(Objective, Parameterized):
     def parameters(self) -> Iterable[nn.Parameter]:
         return self.input_param.parameters()
 
+    def all_parameters(self) -> List[Iterable[nn.Parameter]]:
+        """
+        Returns:
+            parameters (list of iterable of nn.Parameter): A list of all input,
+                transform, and model parameters, in the format of:
+                [Input Parameters, Transform Parameters, Model Parameters]. If any of
+                the 3 parameter sources are not available, then they will be omitted
+                from the output list.
+        """
+        p = []
+        if self.input_param is not None:
+            P.append(self.input_param.parameters())
+        if self.transform is None
+            P.append(self.transform.parameters())
+        if self.model is not None
+            P.append(self.model.parameters())
+        return P
+
     def optimize(
         self,
         stop_criteria: Optional[StopCriteria] = None,
