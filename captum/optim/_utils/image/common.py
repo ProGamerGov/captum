@@ -50,7 +50,7 @@ def save_tensor_as_image(x: torch.Tensor, filename: str, scale: float = 255.0, c
         scale (float, optional): Value to multiply the input tensor by so that
             it's value range is [0-255] for saving.
         colorspace (str, optional): A PIL / Pillow supported colorspace. Default is
-            set to None for RGB / RGBA
+            set to None for automatic RGB / RGBA detection and usage.
             Default: None
     """
 
