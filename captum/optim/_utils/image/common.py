@@ -55,7 +55,7 @@ def save_tensor_as_image(x: torch.Tensor, filename: str, scale: float = 255.0) -
         raise ValueError(
             f"Incompatible number of dimensions. x.dim() = {x.dim()}; should be 3 or 4."
         )
-    x = x[0] if x.dim() == 4 else x
+    x = torch.cat([t[0] for t in x.split(1)], dim=2) if x.dim() == 4 else x
     x = x.clone().cpu().detach().permute(1, 2, 0) * scale
     colorspace = "RGB" if x.shape[2] == 3 else "RGBA"
     im = Image.fromarray(x.numpy().astype(np.uint8), colorspace)
