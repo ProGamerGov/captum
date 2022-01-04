@@ -40,7 +40,7 @@ def show(
     plt.show()
 
 
-def save_tensor_as_image(x: torch.Tensor, filename: str, scale: float = 255.0) -> None:
+def save_tensor_as_image(x: torch.Tensor, filename: str, scale: float = 255.0, colorspace: Optional[str] = None) -> None:
     """
     Save RGB & RGBA image tensors with a shape of CHW or NCHW as images.
 
@@ -49,6 +49,9 @@ def save_tensor_as_image(x: torch.Tensor, filename: str, scale: float = 255.0) -
         filename (str): The filename to use when saving the image.
         scale (float, optional): Value to multiply the input tensor by so that
             it's value range is [0-255] for saving.
+        colorspace (str, optional): A PIL / Pillow supported colorspace. Default is
+            set to None for RGB / RGBA
+            Default: None
     """
 
     if x.dim() not in [3, 4]:
@@ -57,7 +60,8 @@ def save_tensor_as_image(x: torch.Tensor, filename: str, scale: float = 255.0) -
         )
     x = x[0] if x.dim() == 4 else x
     x = x.clone().cpu().detach().permute(1, 2, 0) * scale
-    colorspace = "RGB" if x.shape[2] == 3 else "RGBA"
+    if colorspace is None:
+        colorspace = "RGB" if x.shape[2] == 3 else "RGBA"
     im = Image.fromarray(x.numpy().astype(np.uint8), colorspace)
     im.save(filename)
 
