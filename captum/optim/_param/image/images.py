@@ -109,7 +109,9 @@ class ImageTensor(torch.Tensor):
         """
         show(self, figsize=figsize, scale=scale)
 
-    def export(self, filename: str, scale: float = 255.0, colorspace: Optional[str] = None) -> None:
+    def export(
+        self, filename: str, scale: float = 255.0, colorspace: Optional[str] = None
+    ) -> None:
         """
         Save an `ImageTensor` as an image file.
 
