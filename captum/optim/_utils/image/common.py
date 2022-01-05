@@ -40,7 +40,12 @@ def show(
     plt.show()
 
 
-def save_tensor_as_image(x: torch.Tensor, filename: str, scale: float = 255.0, colorspace: Optional[str] = None) -> None:
+def save_tensor_as_image(
+    x: torch.Tensor,
+    filename: str,
+    scale: float = 255.0,
+    colorspace: Optional[str] = None,
+) -> None:
     """
     Save RGB & RGBA image tensors with a shape of CHW or NCHW as images.
 
