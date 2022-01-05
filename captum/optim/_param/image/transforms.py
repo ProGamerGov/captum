@@ -252,7 +252,7 @@ class ToRGB(nn.Module):
         if self._supports_is_scripting:
             if torch.jit.is_scripting():
                 return self._forward_without_named_dims(x, inverse)
-        elif self._supports_named_dims:
+        if self._supports_named_dims:
             if list(x.names) in [[None] * 3, [None] * 4]:
                 return self._forward_without_named_dims(x, inverse)
         return self._forward(x, inverse)
