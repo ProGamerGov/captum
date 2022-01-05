@@ -1182,6 +1182,7 @@ class TestToRGB(BaseTest):
         expected_rgb_tensor = torch.stack([r, g, b]).unsqueeze(0)
 
         assertTensorAlmostEqual(self, rgb_tensor, expected_rgb_tensor, 0.002)
+        self.assertEqual(list(rgb_tensor.names), ["B", "C", "H", "W"])
 
         inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
         assertTensorAlmostEqual(
@@ -1204,6 +1205,7 @@ class TestToRGB(BaseTest):
         expected_rgb_tensor = torch.stack([r, g, b, a]).unsqueeze(0)
 
         assertTensorAlmostEqual(self, rgb_tensor, expected_rgb_tensor, 0.002)
+        self.assertEqual(list(rgb_tensor.names), ["B", "C", "H", "W"])
 
         inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
         assertTensorAlmostEqual(
@@ -1227,6 +1229,7 @@ class TestToRGB(BaseTest):
         expected_rgb_tensor = torch.stack([r, g, b, a])
 
         assertTensorAlmostEqual(self, rgb_tensor, expected_rgb_tensor, 0.002)
+        self.assertEqual(list(rgb_tensor.names), ["C", "H", "W"])
 
         inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
         assertTensorAlmostEqual(
