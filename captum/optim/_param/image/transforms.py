@@ -132,6 +132,7 @@ class ToRGB(nn.Module):
             )
         # Check & store whether or not we can use torch.jit.is_scripting()
         self._supports_is_scripting = torch.__version__ >= "1.6.0"
+        self._supports_named_dims = torch.__version__ >= "1.3.0"
 
     @torch.jit.ignore
     def _forward(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
@@ -249,6 +250,9 @@ class ToRGB(nn.Module):
         """
         if self._supports_is_scripting:
             if torch.jit.is_scripting():
+                return self._forward_without_named_dims(x, inverse)
+        elif self._supports_named_dims:
+            if list(x.names) in [[None] * 3, [None] * 4]:
                 return self._forward_without_named_dims(x, inverse)
         return self._forward(x, inverse)
 
