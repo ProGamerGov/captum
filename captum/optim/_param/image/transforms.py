@@ -79,6 +79,7 @@ class ToRGB(nn.Module):
     Computer Graphics and Image Processing, vol. 13, no. 3, pp. 222–241, 1980
     https://www.sciencedirect.com/science/article/pii/0146664X80900477
     """
+
     __constants__ = ["_supports_is_scripting", "_supports_named_dims"]
 
     @staticmethod
