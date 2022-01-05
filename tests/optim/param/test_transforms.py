@@ -1264,7 +1264,7 @@ class TestToRGB(BaseTest):
                 "Skipping ToRGB with Alpha forward due to insufficient Torch version."
             )
         to_rgb = transforms.ToRGB(transform="klt")
-        test_tensor = torch.ones(1, 4, 4, 4).refine_names("B", "C", "H", "W")
+        test_tensor = torch.ones(1, 4, 4, 4)
         rgb_tensor = to_rgb(test_tensor)
 
         r = torch.ones(4, 4) * 0.8009
