@@ -1173,7 +1173,7 @@ class TestToRGB(BaseTest):
                 "Skipping ToRGB forward due to insufficient Torch version."
             )
         to_rgb = transforms.ToRGB(transform="klt")
-        test_tensor = torch.ones(3, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
+        test_tensor = torch.ones(1, 3, 4, 4).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
 
         r = torch.ones(4, 4) * 0.8009
@@ -1195,7 +1195,7 @@ class TestToRGB(BaseTest):
                 "Skipping ToRGB with Alpha forward due to insufficient Torch version."
             )
         to_rgb = transforms.ToRGB(transform="klt")
-        test_tensor = torch.ones(4, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
+        test_tensor = torch.ones(1, 4, 4, 4).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
 
         r = torch.ones(4, 4) * 0.8009
@@ -1242,7 +1242,7 @@ class TestToRGB(BaseTest):
                 "Skipping ToRGB forward due to insufficient Torch version."
             )
         to_rgb = transforms.ToRGB(transform="i1i2i3")
-        test_tensor = torch.ones(3, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
+        test_tensor = torch.ones(1, 3, 4, 4).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
 
         r = torch.ones(4, 4)
@@ -1263,7 +1263,7 @@ class TestToRGB(BaseTest):
                 "Skipping ToRGB with Alpha forward due to insufficient Torch version."
             )
         to_rgb = transforms.ToRGB(transform="i1i2i3")
-        test_tensor = torch.ones(4, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
+        test_tensor = torch.ones(1, 4, 4, 4).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
 
         r = torch.ones(4, 4)
@@ -1286,7 +1286,7 @@ class TestToRGB(BaseTest):
             )
         matrix = torch.eye(3, 3)
         to_rgb = transforms.ToRGB(transform=matrix)
-        test_tensor = torch.ones(3, 4, 4).unsqueeze(0).refine_names("B", "C", "H", "W")
+        test_tensor = torch.ones(1, 3, 4, 4).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
 
         to_rgb_np = numpy_transforms.ToRGB(transform=matrix.numpy())
@@ -1308,7 +1308,7 @@ class TestToRGB(BaseTest):
             )
         to_rgb = transforms.ToRGB(transform="klt")
         jit_to_rgb = torch.jit.script(to_rgb)
-        test_tensor = torch.ones(3, 4, 4).unsqueeze(0)
+        test_tensor = torch.ones(1, 3, 4, 4)
         rgb_tensor = jit_to_rgb(test_tensor)
 
         r = torch.ones(4, 4) * 0.8009
