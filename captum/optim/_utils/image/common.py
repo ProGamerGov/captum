@@ -117,6 +117,7 @@ def save_tensor_as_image(
     x: torch.Tensor,
     filename: str,
     scale: float = 255.0,
+    colorspace: Optional[str] = None,
     nrow: Optional[int] = None,
     padding: int = 2,
     pad_value: float = 0.0,
