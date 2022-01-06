@@ -40,6 +40,7 @@ def make_grid_image(
     if isinstance(tiles, (list, tuple)):
         assert all([t.device == tiles[0].device for t in tiles])
         tiles = [tiles.unsqueeze(0) if t.dim() == 3 else t for t in tiles]
+        assert all([t.dim() == 4 for t in tiles])
         tiles = torch.cat(tiles, 0)
     elif isinstance(tiles, torch.Tensor):
         tiles = tiles.unsqueeze(0) if tiles.dim() == 3 else tiles
