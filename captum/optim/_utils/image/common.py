@@ -53,7 +53,8 @@ def make_grid_image(
     base_height = ((H + padding) * y_rows) + padding
     base_width = ((W + padding) * x_rows) + padding
 
-    grid_img = torch.ones(1, C, base_height, base_width, device=x.device) * pad_value
+    grid_img = torch.ones(1, C, base_height, base_width, device=tiles.device)
+    grid_img = grid_img * pad_value
 
     n = 0
     for y in range(y_rows):
