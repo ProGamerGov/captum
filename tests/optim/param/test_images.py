@@ -6,7 +6,7 @@ import numpy as np
 import torch
 
 from captum.optim._param.image import images
-from captum.optim._param.image.transforms import SymmetricPadding
+from captum.optim._param.image.transforms import SymmetricPadding, ToRGB
 from tests.helpers.basic import (
     BaseTest,
     assertArraysAlmostEqual,
@@ -129,6 +129,127 @@ class TestFFTImage(BaseTest):
             torch.tensor([[0.0000, 0.3333], [0.5000, 0.6009]]),
         )
 
+    def test_irfftn(self) -> None:
+        size = (4, 4)
+        image = images.FFTImage(size)
+        test_fft_tensor = (
+            torch.arange(0, 1 * 1 * size[1] * size[0] * 2)
+            .view(1, 1, size[1], size[0], 2)
+            .float()
+        )
+
+        test_output = image.torch_irfft(test_fft_tensor)
+
+        if torch.__version__ >= "1.7.0":
+            # torch.fft.irfftn output
+            expected_tensor = torch.tensor(
+                [
+                    [
+                        [
+                            [14.0000, -8.5000, 0.0000, 6.5000],
+                            [0.0000, 4.0000, 0.0000, -4.0000],
+                            [-4.0000, 2.0000, 0.0000, -2.0000],
+                            [-8.0000, 0.0000, 0.0000, 0.0000],
+                        ]
+                    ]
+                ]
+            )
+            delta = 0.0001
+
+        else:
+            # torch.irfft output
+            expected_tensor = torch.tensor(
+                [
+                    [
+                        [
+                            [14.8571, -12.4554, 1.5140, -4.1097],
+                            [-1.2143, 3.7929, -1.7647, 0.2188],
+                            [-3.4286, 3.0750, 0.2962, 1.2880],
+                            [-6.7857, 1.2143, 1.2143, 1.2143],
+                        ]
+                    ]
+                ]
+            )
+            delta = 0.0004
+        assertTensorAlmostEqual(self, test_output, expected_tensor, delta=delta)
+
+    def test_init_spectrum_scale_init_tensor(self) -> None:
+        size = (4, 4)
+        image_param = images.FFTImage(init=torch.ones(1, 3, size[0], size[1]))
+        scale = torch.tensor(
+            [
+                [4.0000, 4.0000, 2.0000],
+                [4.0000, 2.8284, 1.7889],
+                [2.0000, 1.7889, 1.4142],
+                [4.0000, 2.8284, 1.7889],
+            ]
+        )
+        scale = scale * ((size[0] * size[1]) ** (1 / 2))
+        spectrum_scale = scale[None, :, :, None]
+        assertTensorAlmostEqual(
+            self, image_param.spectrum_scale, spectrum_scale, delta=0.0009
+        )
+
+    @unittest.skipIf(
+        torch.__version__ < "1.8.0",
+        "Skipping FFTImage fourier_coeffs with init"
+        + " tensor test due to newer Torch version.",
+    )
+    def test_init_fourier_coeffs_init_tensor_after_v1_7_0(self) -> None:
+        size = (4, 4)
+        init_tensor = torch.ones(1, 3, size[0], size[1])
+        image_param = images.FFTImage(init=init_tensor.clone())
+
+        torch_rfft_init = torch.view_as_real(torch.fft.rfftn(init_tensor, s=size))
+
+        scale = torch.tensor(
+            [
+                [4.0000, 4.0000, 2.0000],
+                [4.0000, 2.8284, 1.7889],
+                [2.0000, 1.7889, 1.4142],
+                [4.0000, 2.8284, 1.7889],
+            ]
+        )
+        scale = scale * ((size[0] * size[1]) ** (1 / 2))
+        spectrum_scale = scale[None, :, :, None]
+
+        fourier_coeffs = torch_rfft_init / spectrum_scale
+        assertTensorAlmostEqual(self, image_param.fourier_coeffs, fourier_coeffs)
+        self.assertTrue(image_param.fourier_coeffs.requires_grad)
+
+    @unittest.skipUnless(
+        torch.__version__ < "1.7.0",
+        "Skipping FFTImage fourier_coeffs with init"
+        + " tensor test due to newer Torch version.",
+    )
+    def test_init_fourier_coeffs_init_tensor_before_v1_7_0(self) -> None:
+        if torch.__version__ < "1.7.0":
+            raise unittest.SkipTest(
+                "Skipping FFTImage fourier_coeffs with init tensor test due to newer"
+                + " Torch version."
+            )
+
+        size = (4, 4)
+        init_tensor = torch.ones(1, 3, size[0], size[1])
+        image_param = images.FFTImage(init=init_tensor.clone())
+
+        torch_rfft_init = torch.rfft(init_tensor, signal_ndim=2)  # type: ignore
+
+        scale = torch.tensor(
+            [
+                [4.0000, 4.0000, 2.0000],
+                [4.0000, 2.8284, 1.7889],
+                [2.0000, 1.7889, 1.4142],
+                [4.0000, 2.8284, 1.7889],
+            ]
+        )
+        scale = scale * ((size[0] * size[1]) ** (1 / 2))
+        spectrum_scale = scale[None, :, :, None]
+
+        fourier_coeffs = torch_rfft_init * spectrum_scale
+        assertTensorAlmostEqual(self, image_param.fourier_coeffs, fourier_coeffs)
+        self.assertTrue(image_param.fourier_coeffs.requires_grad)
+
     def test_fftimage_forward_randn_init(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
@@ -141,8 +262,19 @@ class TestFFTImage(BaseTest):
 
         fftimage_tensor = fftimage.forward()
         fftimage_array = fftimage_np.forward()
-
+        self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
+        self.assertTrue(fftimage.fourier_coeffs.requires_grad)
+
+    def test_fftimage_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping FFTImage JIT module test due to insufficient Torch version."
+            )
+        fftimage = images.FFTImage(size=(224, 224))
+        jit_fftimage = torch.jit.script(fftimage)
+        fftimage_tensor = jit_fftimage()
+        self.assertTrue(torch.is_tensor(fftimage_tensor))
 
     def test_fftimage_forward_init_randn_batch(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -201,6 +333,7 @@ class TestFFTImage(BaseTest):
         fftimage_tensor = fftimage.forward()
         fftimage_array = fftimage_np.forward()
 
+        self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
         assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array, 25.0)
 
@@ -219,6 +352,7 @@ class TestFFTImage(BaseTest):
         fftimage_tensor = fftimage.forward()
         fftimage_array = fftimage_np.forward()
 
+        self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
         assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array, 25.0)
 
@@ -238,6 +372,7 @@ class TestFFTImage(BaseTest):
         fftimage_tensor = fftimage.forward()
         fftimage_array = fftimage_np.forward()
 
+        self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
         assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array, 25.0)
 
@@ -260,6 +395,7 @@ class TestPixelImage(BaseTest):
         self.assertEqual(image_param.image.size(1), channels)
         self.assertEqual(image_param.image.size(2), size[0])
         self.assertEqual(image_param.image.size(3), size[1])
+        self.assertTrue(image_param.image.requires_grad)
 
     def test_pixelimage_init(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -277,6 +413,7 @@ class TestPixelImage(BaseTest):
         self.assertEqual(image_param.image.size(2), size[0])
         self.assertEqual(image_param.image.size(3), size[1])
         assertTensorAlmostEqual(self, image_param.image, init_tensor, 0)
+        self.assertTrue(image_param.image.requires_grad)
 
     def test_pixelimage_random_forward(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -293,6 +430,17 @@ class TestPixelImage(BaseTest):
         self.assertEqual(test_tensor.size(1), channels)
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])
+
+    def test_pixelimage_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping PixelImage JIT module test due to insufficient Torch"
+                + " version."
+            )
+        image_param = images.PixelImage(size=(224, 224), channels=3)
+        jit_image_param = torch.jit.script(image_param)
+        output_tensor = jit_image_param()
+        self.assertTrue(torch.is_tensor(output_tensor))
 
     def test_pixelimage_init_forward(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -855,6 +1003,38 @@ class TestSharedImage(BaseTest):
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])
 
+    def test_sharedimage_multiple_shapes_diff_len_forward_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping SharedImage JIT module test due to insufficient Torch"
+                + " version."
+            )
+
+        shared_shapes = (
+            (128 // 2, 128 // 2),
+            (7, 3, 128 // 4, 128 // 4),
+            (3, 128 // 8, 128 // 8),
+            (2, 4, 128 // 8, 128 // 8),
+            (1, 3, 128 // 16, 128 // 16),
+            (2, 2, 128 // 16, 128 // 16),
+        )
+        batch = 6
+        channels = 3
+        size = (224, 224)
+        test_input = torch.ones(batch, channels, size[0], size[1])  # noqa: E731
+        test_param = images.SimpleTensorParameterization(test_input)
+        image_param = images.SharedImage(
+            shapes=shared_shapes, parameterization=test_param
+        )
+        jit_image_param = torch.jit.script(image_param)
+        test_tensor = jit_image_param()
+
+        self.assertEqual(test_tensor.dim(), 4)
+        self.assertEqual(test_tensor.size(0), batch)
+        self.assertEqual(test_tensor.size(1), channels)
+        self.assertEqual(test_tensor.size(2), size[0])
+        self.assertEqual(test_tensor.size(3), size[1])
+
 
 class TestStackImage(BaseTest):
     def test_subclass(self) -> None:
@@ -1105,9 +1285,314 @@ class TestStackImage(BaseTest):
         self.assertEqual(stack_param().device, output_device)
 
 
+class TestStackImage(BaseTest):
+    def test_subclass(self) -> None:
+        self.assertTrue(
+            issubclass(images.StackImage, images.AugmentedImageParameterization)
+        )
+
+    def test_stackimage_torch_version_check(self) -> None:
+        img_param_1 = images.SimpleTensorParameterization(torch.ones(1, 3, 4, 4))
+        img_param_2 = images.SimpleTensorParameterization(torch.ones(1, 3, 4, 4))
+        param_list = [img_param_1, img_param_2]
+        stack_param = images.StackImage(parameterizations=param_list)
+
+        supports_is_scripting = torch.__version__ >= "1.6.0"
+        self.assertEqual(stack_param._supports_is_scripting, supports_is_scripting)
+
+    def test_stackimage_init(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping StackImage init test due to insufficient Torch version."
+            )
+        size = (4, 4)
+        fft_param_1 = images.FFTImage(size=size)
+        fft_param_2 = images.FFTImage(size=size)
+        param_list = [fft_param_1, fft_param_2]
+        stack_param = images.StackImage(parameterizations=param_list)
+        for image_param in stack_param.parameterizations:
+            self.assertIsInstance(image_param, images.FFTImage)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertTrue(image_param().requires_grad)
+
+    def test_stackimage_forward(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping StackImage forward test due to insufficient Torch version."
+            )
+        size = (4, 4)
+        fft_param_1 = images.FFTImage(size=size)
+        fft_param_2 = images.FFTImage(size=size)
+        param_list = [fft_param_1, fft_param_2]
+        stack_param = images.StackImage(parameterizations=param_list)
+        for image_param in stack_param.parameterizations:
+            self.assertIsInstance(image_param, images.FFTImage)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertTrue(image_param().requires_grad)
+
+        output_tensor = stack_param()
+        self.assertEqual(list(output_tensor.shape), [2, 3] + list(size))
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertIsNone(stack_param.output_device)
+
+    def test_stackimage_forward_diff_image_params(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping StackImage forward with diff image params test due to"
+                + " insufficient Torch version."
+            )
+        size = (4, 4)
+        fft_param = images.FFTImage(size=size)
+        pixel_param = images.PixelImage(size=size)
+        param_list = [fft_param, pixel_param]
+
+        stack_param = images.StackImage(parameterizations=param_list)
+
+        type_list = [images.FFTImage, images.PixelImage]
+        for image_param, expected_type in zip(stack_param.parameterizations, type_list):
+            self.assertIsInstance(image_param, expected_type)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertTrue(image_param().requires_grad)
+
+        output_tensor = stack_param()
+        self.assertEqual(list(output_tensor.shape), [2, 3] + list(size))
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertIsNone(stack_param.output_device)
+
+    def test_stackimage_forward_diff_image_params_and_tensor_with_grad(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping StackImage forward with diff image params and tensor with"
+                + " grad test due to insufficient Torch version."
+            )
+        size = (4, 4)
+        fft_param = images.FFTImage(size=size)
+        pixel_param = images.PixelImage(size=size)
+        test_tensor = torch.nn.Parameter(torch.ones(1, 3, size[0], size[1]))
+        param_list = [fft_param, pixel_param, test_tensor]
+
+        stack_param = images.StackImage(parameterizations=param_list)
+
+        type_list = [
+            images.FFTImage,
+            images.PixelImage,
+            images.SimpleTensorParameterization,
+        ]
+        for image_param, expected_type in zip(stack_param.parameterizations, type_list):
+            self.assertIsInstance(image_param, expected_type)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertTrue(image_param().requires_grad)
+
+        output_tensor = stack_param()
+        self.assertEqual(list(output_tensor.shape), [3, 3] + list(size))
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertIsNone(stack_param.output_device)
+
+    def test_stackimage_forward_diff_image_params_and_tensor_no_grad(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping StackImage forward with diff image params and tensor with"
+                + " no grad test due to insufficient Torch version."
+            )
+        size = (4, 4)
+        fft_param = images.FFTImage(size=size)
+        pixel_param = images.PixelImage(size=size)
+        test_tensor = torch.ones(1, 3, size[0], size[1])
+        param_list = [fft_param, pixel_param, test_tensor]
+
+        stack_param = images.StackImage(parameterizations=param_list)
+
+        type_list = [
+            images.FFTImage,
+            images.PixelImage,
+            images.SimpleTensorParameterization,
+        ]
+        for image_param, expected_type in zip(stack_param.parameterizations, type_list):
+            self.assertIsInstance(image_param, expected_type)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+
+        self.assertTrue(stack_param.parameterizations[0]().requires_grad)
+        self.assertTrue(stack_param.parameterizations[1]().requires_grad)
+        self.assertFalse(stack_param.parameterizations[2]().requires_grad)
+
+        output_tensor = stack_param()
+        self.assertEqual(list(output_tensor.shape), [3, 3] + list(size))
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertIsNone(stack_param.output_device)
+
+    def test_stackimage_forward_multi_gpu(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping StackImage forward multi GPU test due to insufficient"
+                + " Torch version."
+            )
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping StackImage multi GPU test due to not supporting CUDA."
+            )
+        if torch.cuda.device_count() == 1:
+            raise unittest.SkipTest(
+                "Skipping StackImage multi GPU device test due to not having enough"
+                + " GPUs available."
+            )
+        size = (4, 4)
+
+        num_cuda_devices = torch.cuda.device_count()
+        param_list, device_list = [], []
+
+        fft_param = images.FFTImage(size=size).cpu()
+        param_list.append(fft_param)
+        device_list.append(torch.device("cpu"))
+
+        for i in range(num_cuda_devices - 1):
+            device = torch.device("cuda:" + str(i))
+            device_list.append(device)
+            fft_param = images.FFTImage(size=size).to(device)
+            param_list.append(fft_param)
+
+        output_device = torch.device("cuda:" + str(num_cuda_devices - 1))
+        stack_param = images.StackImage(
+            parameterizations=param_list, output_device=output_device
+        )
+
+        for image_param, torch_device in zip(
+            stack_param.parameterizations, device_list
+        ):
+            self.assertIsInstance(image_param, images.FFTImage)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertEqual(image_param().device, torch_device)
+            self.assertTrue(image_param().requires_grad)
+
+        output_tensor = stack_param()
+        self.assertEqual(
+            list(output_tensor.shape), [len(param_list)] + [3] + list(size)
+        )
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertEqual(stack_param().device, output_device)
+
+    def test_stackimage_forward_multi_device_cpu_gpu(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping StackImage forward multi device test due to insufficient"
+                + " Torch version."
+            )
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping StackImage multi device test due to not supporting CUDA."
+            )
+        size = (4, 4)
+        param_list, device_list = [], []
+
+        fft_param = images.FFTImage(size=size).cpu()
+        param_list.append(fft_param)
+        device_list.append(torch.device("cpu"))
+
+        device = torch.device("cuda:0")
+        device_list.append(device)
+        fft_param = images.FFTImage(size=size).to(device)
+        param_list.append(fft_param)
+
+        output_device = torch.device("cuda:0")
+        stack_param = images.StackImage(
+            parameterizations=param_list, output_device=output_device
+        )
+
+        for image_param, torch_device in zip(
+            stack_param.parameterizations, device_list
+        ):
+            self.assertIsInstance(image_param, images.FFTImage)
+            self.assertEqual(list(image_param().shape), [1, 3] + list(size))
+            self.assertEqual(image_param().device, torch_device)
+            self.assertTrue(image_param().requires_grad)
+
+        output_tensor = stack_param()
+        self.assertEqual(
+            list(output_tensor.shape), [len(param_list)] + [3] + list(size)
+        )
+        self.assertTrue(output_tensor.requires_grad)
+        self.assertEqual(stack_param().device, output_device)
+
+
 class TestNaturalImage(BaseTest):
     def test_subclass(self) -> None:
         self.assertTrue(issubclass(images.NaturalImage, images.ImageParameterization))
+
+    def test_natural_image_init_func_default(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage FFTImage init func test due to insufficient"
+                + " Torch version."
+            )
+        image_param = images.NaturalImage(size=(4, 4))
+        self.assertIsInstance(image_param.parameterization, images.FFTImage)
+        self.assertIsInstance(image_param.decorrelate, ToRGB)
+        self.assertEqual(image_param.squash_func, torch.sigmoid)
+
+    def test_natural_image_init_func_fftimage(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage FFTImage init func test due to insufficient"
+                + " Torch version."
+            )
+        image_param = images.NaturalImage(size=(4, 4), parameterization=images.FFTImage)
+        self.assertIsInstance(image_param.parameterization, images.FFTImage)
+        self.assertIsInstance(image_param.decorrelate, ToRGB)
+        self.assertEqual(image_param.squash_func, torch.sigmoid)
+
+    def test_natural_image_init_func_fftimage_instance(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage FFTImage init func FFTImage instance test due"
+                + " to insufficient Torch version."
+            )
+
+        fft_param = images.FFTImage(size=(4, 4))
+        image_param = images.NaturalImage(parameterization=fft_param)
+        self.assertIsInstance(image_param.parameterization, images.FFTImage)
+        self.assertIsInstance(image_param.decorrelate, ToRGB)
+        self.assertEqual(image_param.squash_func, torch.sigmoid)
+
+    def test_natural_image_init_func_pixelimage(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage PixelImage init func test due to insufficient"
+                + " Torch version."
+            )
+        image_param = images.NaturalImage(
+            size=(4, 4), parameterization=images.PixelImage
+        )
+        self.assertIsInstance(image_param.parameterization, images.PixelImage)
+        self.assertIsInstance(image_param.decorrelate, ToRGB)
+        self.assertEqual(image_param.squash_func, torch.sigmoid)
+
+    def test_natural_image_init_func_default_init_tensor(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage FFTImage init func test due to insufficient"
+                + " Torch version."
+            )
+        image_param = images.NaturalImage(init=torch.ones(1, 3, 1, 1))
+        self.assertIsInstance(image_param.parameterization, images.FFTImage)
+        self.assertIsInstance(image_param.decorrelate, ToRGB)
+        self.assertEqual(image_param.squash_func, image_param._clamp_image)
+
+    def test_natural_image_init_tensor_pixelimage_sf_sigmoid(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage PixelImage init tensor with sigmoid"
+                + " test due to insufficient Torch version."
+            )
+        image_param = images.NaturalImage(
+            init=torch.ones(1, 3, 1, 1),
+            parameterization=images.PixelImage,
+            squash_func=torch.sigmoid,
+        )
+        output_tensor = image_param()
+
+        self.assertEqual(image_param.squash_func, torch.sigmoid)
+        assertTensorAlmostEqual(
+            self, output_tensor, torch.ones_like(output_tensor) * 0.7310586
+        )
 
     def test_natural_image_0(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -1135,6 +1620,41 @@ class TestNaturalImage(BaseTest):
         image_param = images.NaturalImage().cuda()
         self.assertTrue(image_param().is_cuda)
 
+    def test_natural_image_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage JIT module test due to"
+                + " insufficient Torch version."
+            )
+        image_param = images.NaturalImage()
+        jit_image_param = torch.jit.script(image_param)
+        output_tensor = jit_image_param()
+        self.assertTrue(torch.is_tensor(output_tensor))
+
+    def test_natural_image_jit_module_init_tensor(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage init tensor JIT module test due to"
+                + " insufficient Torch version."
+            )
+        image_param = images.NaturalImage(init=torch.ones(1, 3, 1, 1))
+        jit_image_param = torch.jit.script(image_param)
+        output_tensor = jit_image_param()
+        assertTensorAlmostEqual(self, output_tensor, torch.ones_like(output_tensor))
+
+    def test_natural_image_jit_module_init_tensor_pixelimage(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage PixelImage init tensor JIT module"
+                + " test due to insufficient Torch version."
+            )
+        image_param = images.NaturalImage(
+            init=torch.ones(1, 3, 1, 1), parameterization=images.PixelImage
+        )
+        jit_image_param = torch.jit.script(image_param)
+        output_tensor = jit_image_param()
+        assertTensorAlmostEqual(self, output_tensor, torch.ones_like(output_tensor))
+
     def test_natural_image_decorrelation_module_none(self) -> None:
         if torch.__version__ <= "1.3.0":
             raise unittest.SkipTest(
@@ -1144,4 +1664,5 @@ class TestNaturalImage(BaseTest):
             init=torch.ones(1, 3, 4, 4), decorrelation_module=None
         )
         image = image_param.forward().detach()
+        self.assertIsNone(image_param.decorrelate)
         assertTensorAlmostEqual(self, image, torch.ones_like(image))
