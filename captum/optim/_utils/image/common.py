@@ -61,8 +61,8 @@ def make_grid_image(
         for x in range(x_rows):
             if n >= B:
                 break
-            y_idx = (height + padding) * y if y > 0 else padding
-            x_idx = (width + padding) * x if x > 0 else padding
+            y_idx = (H + padding) * y if y > 0 else padding
+            x_idx = (W + padding) * x if x > 0 else padding
             grid_img[..., y_idx : y_idx + H, x_idx : x_idx + W] = tiles[n : n + 1]
             n += 1
     return grid_img
