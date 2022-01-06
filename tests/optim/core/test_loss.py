@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import unittest
 from typing import List, Union
 
 import numpy as np
@@ -193,6 +194,25 @@ class TestCompositeLoss(BaseTest):
             get_loss_value(model, loss), -CHANNEL_ACTIVATION_0_LOSS, places=6
         )
 
+    def test_positive(self) -> None:
+        if torch.__version__ <= "1.3.0":
+            raise unittest.SkipTest(
+                "Skipping postive CompositeLoss test due to insufficient"
+                + " Torch version."
+            )
+        model = BasicModel_ConvNet_Optim()
+        loss = +opt_loss.ChannelActivation(model.layer, 0)
+        self.assertAlmostEqual(
+            get_loss_value(model, loss), CHANNEL_ACTIVATION_0_LOSS, places=6
+        )
+
+    def test_abs(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        loss = abs(-opt_loss.ChannelActivation(model.layer, 0))
+        self.assertAlmostEqual(
+            get_loss_value(model, loss), CHANNEL_ACTIVATION_0_LOSS, places=6
+        )
+
     def test_addition(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = (
@@ -250,6 +270,13 @@ class TestCompositeLoss(BaseTest):
     #             model.layer, 1
     #         )
 
+    def test_floor_division(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        loss = opt_loss.ChannelActivation(model.layer, 0) // 10
+        self.assertAlmostEqual(
+            get_loss_value(model, loss), CHANNEL_ACTIVATION_0_LOSS // 10
+        )
+
     def test_pow(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.ChannelActivation(model.layer, 0) ** 2
@@ -267,6 +294,44 @@ class TestCompositeLoss(BaseTest):
     #         opt_loss.ChannelActivation(model.layer, 0) ** opt_loss.ChannelActivation(
     #             model.layer, 1
     #         )
+
+    def test_sum(self) -> None:
+        model = torch.nn.Identity()
+        loss = opt_loss.LayerActivation(model).sum()
+        self.assertAlmostEqual(get_loss_value(model, loss), 3.0, places=1)
+
+    def test_mean(self) -> None:
+        model = torch.nn.Identity()
+        loss = opt_loss.LayerActivation(model).mean()
+        self.assertAlmostEqual(get_loss_value(model, loss), 1.0, places=1)
+
+
+class TestCompositeLossReductionOP(BaseTest):
+    def test_reduction_op(self) -> None:
+        self.assertEqual(opt_loss.REDUCTION_OP, torch.mean)
+
+
+def TestBasisTorchModuleOP(BaseTest):
+    def test_torch_sum(self) -> None:
+        model = torch.nn.Identity()
+        loss = opt_loss.LayerActivation(model)
+        loss = opt_loss.basic_torch_module_op(loss, torch_op=torch.sum)
+        self.assertAlmostEqual(get_loss_value(model, loss), 3.0, places=1)
+
+    def test_sum_list_with_scalar_fn(self) -> None:
+        model = torch.nn.Identity()
+        loss_list = [opt_loss.LayerActivation(model)] * 5
+        loss = opt_loss.basic_torch_module_op(
+            loss_list, torch_op=sum, to_scalar_fn=torch.mean
+        )
+        self.assertAlmostEqual(get_loss_value(model, loss), 5.0, places=1)
+
+    def test_python_max(self) -> None:
+        model = torch.nn.Identity()
+        loss = opt_loss.LayerActivation(model)
+        loss = opt_loss.basic_torch_module_op([loss, torch.zeros(1, 3, 1, 1)], torch_op=max)
+        loss = loss.sum()
+        self.assertAlmostEqual(get_loss_value(model, loss), 3.0, places=1)
 
     def test_sum_loss_list(self) -> None:
         n_batch = 400
