@@ -282,6 +282,7 @@ class BaseLoss(Loss):
             self._batch_index = tuple(batch_index)
         else:
             self._batch_index = (batch_index, batch_index + 1)
+        assert all([isinstance(b, (int, type(None))) for b in self._batch_index])
 
     @property
     def target(self) -> Union[nn.Module, List[nn.Module]]:
