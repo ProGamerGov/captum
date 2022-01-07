@@ -271,7 +271,7 @@ class BaseLoss(Loss):
     def __init__(
         self,
         target: Union[nn.Module, List[nn.Module]] = [],
-        batch_index: Optional[int, List[int]] = None,
+        batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
         super(BaseLoss, self).__init__()
         self._target = target
