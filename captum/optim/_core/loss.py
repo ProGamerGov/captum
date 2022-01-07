@@ -271,12 +271,15 @@ class BaseLoss(Loss):
     def __init__(
         self,
         target: Union[nn.Module, List[nn.Module]] = [],
-        batch_index: Optional[int] = None,
+        batch_index: Optional[int, List[int]] = None,
     ) -> None:
         super(BaseLoss, self).__init__()
         self._target = target
         if batch_index is None:
             self._batch_index = (None, None)
+        elif isinstance(batch_index, (list, tuple)):
+            assert len(batch_index) == 2
+            self._batch_index = tuple(batch_index)
         else:
             self._batch_index = (batch_index, batch_index + 1)
 
@@ -472,6 +475,7 @@ class Diversity(BaseLoss):
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
+        activations = activations[self.batch_index[0] : self.batch_index[1]]
         batch, channels = activations.shape[:2]
         flattened = activations.view(batch, channels, -1)
         grams = torch.matmul(flattened, torch.transpose(flattened, 1, 2))
