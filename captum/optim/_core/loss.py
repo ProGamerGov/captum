@@ -261,7 +261,9 @@ def basic_torch_module_op(
 
 class BaseLoss(Loss):
     def __init__(
-        self, target: nn.Module = [], batch_index: Optional[Union[int, List[int]]] = None
+        self,
+        target: nn.Module = [],
+        batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
         super(BaseLoss, self).__init__()
         self._target = target
@@ -538,7 +540,12 @@ class Alignment(BaseLoss):
     https://distill.pub/2017/feature-visualization/#Interaction-between-Neurons
     """
 
-    def __init__(self, target: nn.Module, decay_ratio: float = 2.0, batch_index: Optional[List[int]] = None) -> None:
+    def __init__(
+        self,
+        target: nn.Module,
+        decay_ratio: float = 2.0,
+        batch_index: Optional[List[int]] = None,
+    ) -> None:
         BaseLoss.__init__(self, target, batch_index)
         self.decay_ratio = decay_ratio
 
