@@ -26,7 +26,7 @@ def image_cov(x: torch.Tensor) -> torch.Tensor:
     assert x.dim() > 1
     x = x.reshape(x.size(0), -1, x.size(1)) 
     x = x - x.mean(1, keepdim=True)
-    return 1 / (x.size(1) - 1) * x.permute(0, 2, 1) @ x
+    return 1.0 / (x.size(1) - 1) * x.permute(0, 2, 1) @ x
 
 
 def dataset_cov_matrix(
