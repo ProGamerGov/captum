@@ -102,9 +102,9 @@ class Loss(ABC):
             composite_loss (CompositeLoss): A composable loss instance.
         """
         if dim is None:
-            return basic_torch_module_op(self, torch.mean)
+            return custom_composable_op(self, torch.mean)
         else:
-            return basic_torch_module_op(self, torch.mean, dim=dim, keepdim=keepdim)
+            return custom_composable_op(self, torch.mean, dim=dim, keepdim=keepdim)
 
     def sum(self, dim: Optional = None, keepdim: bool = False) -> "CompositeLoss":
         """
@@ -123,9 +123,9 @@ class Loss(ABC):
             composite_loss (CompositeLoss): A composable loss instance.
         """
         if dim is None:
-            return basic_torch_module_op(self, torch.sum)
+            return custom_composable_op(self, torch.sum)
         else:
-            return basic_torch_module_op(self, torch.sum, dim=dim, keepdim=keepdim)
+            return custom_composable_op(self, torch.sum, dim=dim, keepdim=keepdim)
 
 
 def module_op(
@@ -190,31 +190,30 @@ def rmodule_op(
     return CompositeLoss(loss_fn, name=name, target=target)
 
 
-def basic_torch_module_op(
+def custom_composable_op(
     loss,
     torch_op: Callable,
     *args: Any,
     **kwargs: Any,
 ) -> "CompositeLoss":
     """
-    Implement composability for PyTorch operation that take a single tensor or list
-    of tensors as it's first input variable.
-    See here for possible torch_op choices: https://pytorch.org/docs/stable/torch.html
-    Some built-in Python functions can also be used as well if supported by PyTorch.
+    Implement composability for operations that take a single tensor or list
+    of tensors. Custom user defined functions can be used in addition to some built-in
+    Python functions and PyTorch operations.
 
     Args:
 
         loss (Loss or list of Loss): A loss objective or list of loss objectives.
         torch_op (Callable): A PyTorch or supported Python function. Ex: torch.mean,
              torch.sum,, torch.linalg.norm, torch.sin, torch.cat, torch.stack, max, min,
-             sum, math.ceil, and others.
+             sum, math.ceil, or custom user defined functions.
             Default: torch.mean
-        args (Any, optional): Any additional arguments.
-        kwargs (Any, optional): Any additional arguments.
+        args (Any, optional): Any additional arguments to pass to torch_op.
+        kwargs (Any, optional): Any additional arguments to pass to torch_op.
         to_scalar_fn (Callable, optional): A function for converting loss function
             outputs to scalar values, in order to prevent size mismatches. This is
             variable only used if more than one loss is given.
-            Default: A non-op function.
+            Default: None
 
         Returns:
             composite_loss (CompositeLoss): A composable loss instance.
@@ -226,13 +225,15 @@ def basic_torch_module_op(
             return x
 
         if "to_scalar_fn" not in kwargs:
-            to_scalar_fn = identity
+            to_scalar_fn = None
         else:
             to_scalar_fn = kwargs["to_scalar_fn"]
             del kwargs["to_scalar_fn"]
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-            loss_tensors = [to_scalar_fn(loss_obj(module)) for loss_obj in loss]
+            loss_tensors = [loss_obj(module) for loss_obj in loss]
+            if scalar_fn is not None:
+                loss_tensors = [to_scalar_fn(tensor) for tensor in loss_tensors]
             return torch_op(loss_tensors, *args, **kwargs)
 
         name_list = ", ".join([loss_obj.__name__ for loss_obj in loss])
