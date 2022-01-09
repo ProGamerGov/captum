@@ -295,7 +295,13 @@ def TestCustomComposableOP(BaseTest):
 
     def test_sum_list_with_scalar_fn(self) -> None:
         model = torch.nn.Identity()
-        loss_list = [opt_loss.LayerActivation(model)] * 5
+        loss_list = [
+            opt_loss.LayerActivation(model),
+            opt_loss.LayerActivation(model),
+            opt_loss.LayerActivation(model),
+            opt_loss.LayerActivation(model),
+            opt_loss.LayerActivation(model),
+        ]
         loss = opt_loss.custom_composable_op(
             loss_list, torch_op=sum, to_scalar_fn=torch.mean
         )
