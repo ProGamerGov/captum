@@ -323,7 +323,7 @@ def TestCustomComposableOP(BaseTest):
 
     def test_custom_op_list(self) -> None:
         def custom_op_list_fn(
-            losses: List[torch.tensor], add_val: float = 1.0, mul_val: float = 1.0
+            losses: List[torch.Tensor], add_val: float = 1.0, mul_val: float = 1.0
         ) -> torch.Tensor:
             return torch.cat(
                 [torch.sum(loss) + add_val * mul_val for loss in losses], 0
