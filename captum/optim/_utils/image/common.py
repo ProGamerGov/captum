@@ -118,7 +118,7 @@ def save_tensor_as_image(
     x: torch.Tensor,
     filename: str,
     scale: float = 255.0,
-    colorspace: Optional[str] = None,
+    mode: Optional[str] = None,
     nrow: Optional[int] = None,
     padding: int = 2,
     pad_value: float = 0.0,
@@ -132,7 +132,7 @@ def save_tensor_as_image(
         filename (str): The filename to use when saving the image.
         scale (float, optional): Value to multiply the input tensor by so that
             it's value range is [0-255] for saving.
-        colorspace (str, optional): A PIL / Pillow supported colorspace. Default is
+        mode (str, optional): A PIL / Pillow supported colorspace. Default is
             set to None for automatic RGB / RGBA detection and usage.
             Default: None
         nrow (int, optional): The number of rows to use for the grid image. Default
@@ -155,9 +155,9 @@ def save_tensor_as_image(
     else:
         x = torch.cat([t[0] for t in x.split(1)], dim=2) if x.dim() == 4 else x
     x = x.clone().cpu().detach().permute(1, 2, 0) * scale
-    if colorspace is None:
-        colorspace = "RGB" if x.shape[2] == 3 else "RGBA"
-    im = Image.fromarray(x.numpy().astype(np.uint8), colorspace)
+    if mode is None:
+        mode = "RGB" if x.shape[2] == 3 else "RGBA"
+    im = Image.fromarray(x.numpy().astype(np.uint8), mode=mode)
     im.save(filename)
 
 
