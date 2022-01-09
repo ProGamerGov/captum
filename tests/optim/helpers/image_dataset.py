@@ -29,21 +29,6 @@ class ImageTestDataset(torch.utils.data.Dataset):
         return len(self.tensors)
 
 
-def image_cov_np(array: np.ndarray) -> np.ndarray:
-    """
-    Calculate an array's RGB covariance matrix.
-
-    Args:
-        array (array):  An NCHW image array.
-    Returns:
-        *array*:  An RGB covariance matrix for the specified array.
-    """
-
-    array = array.reshape(-1, 3)
-    array = array - array.mean(0, keepdims=True)
-    return 1 / (array.shape[0] - 1) * array.T @ array
-
-
 def cov_matrix_to_klt_np(
     cov_mtx: np.ndarray, normalize: bool = False, epsilon: float = 1e-10
 ) -> np.ndarray:
