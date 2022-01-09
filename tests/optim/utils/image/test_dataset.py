@@ -91,7 +91,7 @@ class TestDatasetCovMatrix(BaseTest):
                 [0.0047, 0.0047, 0.0047],
             ]
         )
-        assertTensorAlmostEqual(self, output_mtx, expected_mtx)
+        assertTensorAlmostEqual(self, output_mtx, expected_mtx, delta=0.0003)
 
 
 class TestCovMatrixToKLT(BaseTest):
@@ -111,7 +111,7 @@ class TestCovMatrixToKLT(BaseTest):
                 [-0.1749, -0.1056, 0.0124],
             ]
         )
-        assertTensorAlmostEqual(self, output_mtx.numpy(), expected_mtx, delta=0.0003)
+        assertTensorAlmostEqual(self, output_mtx, expected_mtx, delta=0.0003)
 
 
 class TestDatasetKLTMatrix(BaseTest):
