@@ -175,7 +175,7 @@ def rmodule_op(
     if isinstance(other, (int, float)):
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-            return math_op(other, REDUCTION_OP(self(module)))
+            return math_op(other, self(module))
 
         name = self.__name__
         target = self.target
