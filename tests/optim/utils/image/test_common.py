@@ -191,7 +191,7 @@ class TestDotCossim(BaseTest):
                 ]
             ]
         )
-        assertTensorAlmostEqual(self, test_output, expected_output)
+        assertTensorAlmostEqual(self, test_output, expected_output, delta=0.0005)
 
 
 class TestNChannelsToRGB(BaseTest):
