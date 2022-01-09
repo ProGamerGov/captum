@@ -11,19 +11,40 @@ from tests.optim.helpers import image_dataset as dataset_helpers
 
 
 class TestImageCov(BaseTest):
-    def test_image_cov(self) -> None:
-        test_tensor = torch.cat(
+    def test_image_cov_3_channels(self) -> None:
+        test_input = torch.cat(
             [
-                torch.ones(1, 4, 4) * 0.1,
-                torch.ones(1, 4, 4) * 0.2,
-                torch.ones(1, 4, 4) * 0.3,
+                torch.ones(1, 1, 4, 4) * 0.1,
+                torch.ones(1, 1, 4, 4) * 0.2,
+                torch.ones(1, 1, 4, 4) * 0.3,
             ],
-            0,
+            1,
         )
 
-        output_tensor = dataset_utils.image_cov(test_tensor)
-        expected_output = dataset_helpers.image_cov_np(test_tensor.numpy())
-        assertArraysAlmostEqual(output_tensor.numpy(), expected_output, 0.01)
+        test_output = image_cov(test_input)
+        expected_output = torch.tensor(
+            [
+                [
+                    [0.0073, 0.0067, 0.0067],
+                    [0.0067, 0.0067, 0.0067],
+                    [0.0067, 0.0067, 0.0073],
+                ]
+            ]
+        )
+        self.assertEqual(list(test_output.shape), [3, 3])
+        ssertTensorAlmostEqual(self, test_output, expected_output)
+
+    def test_image_cov_2_channels(self) -> None:
+        test_input = torch.randn(1, 2, 5, 5)
+
+        test_output = image_cov(test_input)
+        self.assertEqual(list(test_output.shape), [2, 2])
+
+    def test_image_cov_4_channels(self) -> None:
+        test_input = torch.randn(1, 4, 5, 5)
+
+        test_output = image_cov(test_input)
+        self.assertEqual(list(test_output.shape), [2, 2])
 
 
 class TestDatasetCovMatrix(BaseTest):
