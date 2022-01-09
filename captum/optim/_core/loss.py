@@ -197,7 +197,7 @@ def rmodule_op(
 
 def custom_composable_op(
     loss,
-    torch_op: Callable,
+    loss_op_fn: Callable,
     *args: Any,
     **kwargs: Any,
 ) -> "CompositeLoss":
@@ -209,12 +209,12 @@ def custom_composable_op(
     Args:
 
         loss (Loss or list of Loss): A loss objective or list of loss objectives.
-        torch_op (Callable): A PyTorch or supported Python function. Ex: torch.mean,
+        loss_op_fn (Callable): A PyTorch or supported Python function. Ex: torch.mean,
              torch.sum,, torch.linalg.norm, torch.sin, torch.cat, torch.stack, max, min,
              sum, math.ceil, or custom user defined functions.
             Default: torch.mean
-        args (Any, optional): Any additional arguments to pass to torch_op.
-        kwargs (Any, optional): Any additional arguments to pass to torch_op.
+        args (Any, optional): Any additional arguments to pass to loss_op_fn.
+        kwargs (Any, optional): Any additional arguments to pass to loss_op_fn.
         to_scalar_fn (Callable, optional): A function for converting loss function
             outputs to scalar values, in order to prevent size mismatches. This is
             variable only used if more than one loss is given.
@@ -235,10 +235,10 @@ def custom_composable_op(
             loss_tensors = [loss_obj(module) for loss_obj in loss]
             if to_scalar_fn is not None:
                 loss_tensors = [to_scalar_fn(tensor) for tensor in loss_tensors]
-            return torch_op(loss_tensors, *args, **kwargs)
+            return loss_op_fn(loss_tensors, *args, **kwargs)
 
         name_list = ", ".join([loss_obj.__name__ for loss_obj in loss])
-        name = torch_op.__name__ + "(" + name_list + ")"
+        name = loss_op_fn.__name__ + "(" + name_list + ")"
 
         # Collect targets from losses
         target = [
@@ -254,9 +254,9 @@ def custom_composable_op(
     else:
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
-            return torch_op(loss(module), *args, **kwargs)
+            return loss_op_fn(loss(module), *args, **kwargs)
 
-        name = torch_op.__name__ + "(" + loss.__name__ + ")"
+        name = loss_op_fn.__name__ + "(" + loss.__name__ + ")"
         target = loss.target
     return CompositeLoss(loss_fn, name=name, target=target)
 
