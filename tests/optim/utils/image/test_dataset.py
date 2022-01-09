@@ -21,7 +21,7 @@ class TestImageCov(BaseTest):
             1,
         )
 
-        test_output = image_cov(test_input)
+        test_output = dataset_utils.image_cov(test_input)
         expected_output = torch.tensor(
             [
                 [
@@ -44,7 +44,7 @@ class TestImageCov(BaseTest):
             1,
         )
 
-        test_output = image_cov(test_input)
+        test_output = dataset_utils.image_cov(test_input)
         expected_output = torch.tensor(
             [
                 [
@@ -60,13 +60,13 @@ class TestImageCov(BaseTest):
     def test_image_cov_2_channels(self) -> None:
         test_input = torch.randn(1, 2, 5, 5)
 
-        test_output = image_cov(test_input)
+        test_output = dataset_utils.image_cov(test_input)
         self.assertEqual(list(test_output.shape), [2, 2])
 
     def test_image_cov_4_channels(self) -> None:
         test_input = torch.randn(1, 4, 5, 5)
 
-        test_output = image_cov(test_input)
+        test_output = dataset_utils.image_cov(test_input)
         self.assertEqual(list(test_output.shape), [2, 2])
 
 
