@@ -306,3 +306,41 @@ def TestCustomComposableOP(BaseTest):
             loss_list, torch_op=sum, to_scalar_fn=torch.mean
         )
         self.assertAlmostEqual(get_loss_value(model, loss), 5.0, places=1)
+
+    def test_custom_op(self) -> None:
+        def custom_op_fn(
+            losses: torch.Tensor, add_val: float = 1.0, mul_val: float = 1.0
+        ) -> torch.Tensor:
+            return torch.sum(losses) + add_val * mul_val
+
+        model = torch.nn.Identity()
+        loss = opt_loss.LayerActivation(model)
+
+        loss = opt_loss.custom_composable_op(
+            loss, torch_op=custom_op_fn, add_val=2.0, mul_val=2.0
+        )
+        self.assertAlmostEqual(get_loss_value(model, loss), 7.0, places=1)
+
+    def test_custom_op_list(self) -> None:
+        def custom_op_list_fn(
+            losses: List[torch.tensor], add_val: float = 1.0, mul_val: float = 1.0
+        ) -> torch.Tensor:
+            return torch.cat(
+                [torch.sum(loss) + add_val * mul_val for loss in losses], 0
+            ).sum()
+
+        model = torch.nn.Identity()
+        loss_list = [
+            opt_loss.LayerActivation(model),
+            opt_loss.LayerActivation(model),
+            opt_loss.LayerActivation(model),
+            opt_loss.LayerActivation(model),
+            opt_loss.LayerActivation(model),
+        ]
+        loss = opt_loss.custom_composable_op(
+            loss_list,
+            torch_op=custom_op_list_fn,
+            add_val=2.0,
+            mul_val=2.0,
+        )
+        self.assertAlmostEqual(get_loss_value(model, loss), 35.0, places=1)
