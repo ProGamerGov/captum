@@ -197,9 +197,9 @@ def custom_composable_op(
     **kwargs: Any,
 ) -> "CompositeLoss":
     """
-    Implement composability for operations that take a single tensor or list
-    of tensors. Custom user defined functions can be used in addition to some built-in
-    Python functions and PyTorch operations.
+    Implement composability for operations that take a single tensor or list of tensors
+    and then return a single tensor. Custom user defined functions can be used in
+    addition to some built-in Python functions and PyTorch operations.
 
     Args:
 
