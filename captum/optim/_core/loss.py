@@ -232,7 +232,7 @@ def custom_composable_op(
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
             loss_tensors = [loss_obj(module) for loss_obj in loss]
-            if scalar_fn is not None:
+            if to_scalar_fn is not None:
                 loss_tensors = [to_scalar_fn(tensor) for tensor in loss_tensors]
             return torch_op(loss_tensors, *args, **kwargs)
 
