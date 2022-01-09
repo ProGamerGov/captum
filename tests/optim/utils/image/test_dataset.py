@@ -71,24 +71,24 @@ class TestDatasetCovMatrix(BaseTest):
         def create_tensor() -> torch.Tensor:
             return torch.cat(
                 [
-                    torch.ones(1, 224, 224) * 0.1,
-                    torch.ones(1, 224, 224) * 0.2,
-                    torch.ones(1, 224, 224) * 0.3,
+                    torch.ones(1, 224, 224) * 0.9,
+                    torch.ones(1, 224, 224) * 0.5,
+                    torch.ones(1, 224, 224) * 0.4,
                 ],
                 0,
             )
 
         dataset_tensors = [create_tensor() for x in range(num_tensors)]
-        test_dataset = dataset_helpers.ImageTestDataset(dataset_tensors)
+        test_dataset = ImageTestDataset(dataset_tensors)
         dataset_loader = torch.utils.data.DataLoader(
             test_dataset, batch_size=10, num_workers=0, shuffle=False
         )
         output_mtx = dataset_utils.dataset_cov_matrix(dataset_loader)
         expected_mtx = torch.tensor(
             [
-                [4.9961e-14, 9.9922e-14, -6.6615e-14],
-                [9.9922e-14, 1.9984e-13, -1.3323e-13],
-                [-6.6615e-14, -1.3323e-13, 8.8820e-14],
+                [0.0047, 0.0047, 0.0047],
+                [0.0047, 0.0047, 0.0047],
+                [0.0047, 0.0047, 0.0047],
             ]
         )
         assertTensorAlmostEqual(self, output_mtx, expected_mtx)
