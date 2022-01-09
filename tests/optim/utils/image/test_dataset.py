@@ -34,6 +34,29 @@ class TestImageCov(BaseTest):
         self.assertEqual(list(test_output.shape), [3, 3])
         ssertTensorAlmostEqual(self, test_output, expected_output)
 
+    def test_image_cov_3_channels_batch_5(self) -> None:
+        test_input = torch.cat(
+            [
+                torch.ones(5, 1, 4, 4) * 0.1,
+                torch.ones(5, 1, 4, 4) * 0.2,
+                torch.ones(5, 1, 4, 4) * 0.3,
+            ],
+            1,
+        )
+
+        test_output = image_cov(test_input)
+        expected_output = torch.tensor(
+            [
+                [
+                    [0.0073, 0.0067, 0.0067],
+                    [0.0067, 0.0067, 0.0067],
+                    [0.0067, 0.0067, 0.0073],
+                ]
+            ]
+        )
+        self.assertEqual(list(test_output.shape), [3, 3])
+        ssertTensorAlmostEqual(self, test_output, expected_output)
+
     def test_image_cov_2_channels(self) -> None:
         test_input = torch.randn(1, 2, 5, 5)
 
