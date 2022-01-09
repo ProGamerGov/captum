@@ -128,24 +128,6 @@ class TestMakeGridImage(BaseTest):
         assertTensorAlmostEqual(self, test_output, expected_output, 0)
 
 
-class TestSaveTensorAsImage(BaseTest):
-    def test_save_tensor_as_image_jpg(self) -> None:
-        try:
-            from PIL import Image  # noqa: F401
-            from os import path  # noqa: F401
-
-        except (ImportError, AssertionError):
-            raise unittest.SkipTest(
-                "Module Pillow / PIL not found, skipping save_tensor_as_image"
-                + " test"
-            )
-
-        filename = "test_image_jpg_1.jpg"
-        image_tensor = torch.randn(1, 3, 5, 5).clamp(0, 1)
-        common.save_tensor_as_image(image_tensor, filename=filename)
-        self.assertTrue(path.isfile(filename))
-
-
 class TestGetNeuronPos(BaseTest):
     def test_get_neuron_pos_hw(self) -> None:
         W, H = 128, 128
