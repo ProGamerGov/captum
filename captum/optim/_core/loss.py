@@ -209,9 +209,7 @@ def custom_composable_op(
     Args:
 
         loss (Loss or list of Loss): A loss objective or list of loss objectives.
-        loss_op_fn (Callable): A PyTorch or supported Python function. Ex: torch.mean,
-             torch.sum,, torch.linalg.norm, torch.sin, torch.cat, torch.stack, max, min,
-             sum, math.ceil, or custom user defined functions.
+        loss_op_fn (Callable): A supported PyTorch, Python, or custom function.
             Default: torch.mean
         args (Any, optional): Any additional arguments to pass to loss_op_fn.
         kwargs (Any, optional): Any additional arguments to pass to loss_op_fn.
