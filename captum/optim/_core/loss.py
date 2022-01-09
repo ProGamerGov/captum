@@ -17,6 +17,7 @@ def _make_arg_str(arg: Any) -> str:
 
 
 # Reduction op for CompositeLoss loss composability size mismatch avoidance
+# REDUCTION_OP is only used for binary math operations using two Loss instances
 REDUCTION_OP: Callable[[torch.Tensor], torch.Tensor] = torch.mean
 
 
