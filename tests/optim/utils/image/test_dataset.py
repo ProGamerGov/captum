@@ -7,7 +7,7 @@ from tests.helpers.basic import (
     assertArraysAlmostEqual,
     assertTensorAlmostEqual,
 )
-from tests.optim.helpers import image_dataset as dataset_helpers
+from tests.optim.helpers.image_dataset import ImageTestDataset
 
 
 class TestImageCov(BaseTest):
