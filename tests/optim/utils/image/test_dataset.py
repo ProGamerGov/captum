@@ -32,7 +32,7 @@ class TestImageCov(BaseTest):
             ]
         )
         self.assertEqual(list(test_output.shape), [3, 3])
-        ssertTensorAlmostEqual(self, test_output, expected_output)
+        assertTensorAlmostEqual(self, test_output, expected_output)
 
     def test_image_cov_3_channels_batch_5(self) -> None:
         test_input = torch.cat(
@@ -55,19 +55,17 @@ class TestImageCov(BaseTest):
             ]
         )
         self.assertEqual(list(test_output.shape), [3, 3])
-        ssertTensorAlmostEqual(self, test_output, expected_output)
+        assertTensorAlmostEqual(self, test_output, expected_output)
 
     def test_image_cov_2_channels(self) -> None:
         test_input = torch.randn(1, 2, 5, 5)
-
         test_output = dataset_utils.image_cov(test_input)
         self.assertEqual(list(test_output.shape), [2, 2])
 
     def test_image_cov_4_channels(self) -> None:
         test_input = torch.randn(1, 4, 5, 5)
-
         test_output = dataset_utils.image_cov(test_input)
-        self.assertEqual(list(test_output.shape), [2, 2])
+        self.assertEqual(list(test_output.shape), [4, 4])
 
 
 class TestDatasetCovMatrix(BaseTest):
