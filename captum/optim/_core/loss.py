@@ -86,7 +86,7 @@ class Loss(ABC):
     def __rpow__(self, other: Union[int, float, "Loss"]) -> "CompositeLoss":
         rmodule_op(self, other, operator.pow)
 
-    def mean(self, dim: Optional = None, keepdim: bool = False) -> "CompositeLoss":
+    def mean(self, dim: Optional[Union[int, Tuple[int, ...]]] = None, keepdim: bool = False) -> "CompositeLoss":
         """
         Composable torch.mean reduction operator. See torch.mean for more details:
         https://pytorch.org/docs/stable/generated/torch.mean.html
@@ -106,7 +106,7 @@ class Loss(ABC):
         else:
             return custom_composable_op(self, torch.mean, dim=dim, keepdim=keepdim)
 
-    def sum(self, dim: Optional = None, keepdim: bool = False) -> "CompositeLoss":
+    def sum(self, dim: Optional[Union[int, Tuple[int, ...]]] = None, keepdim: bool = False) -> "CompositeLoss":
         """
         Composable torch.sum reduction operator. See torch.sum for more details:
         https://pytorch.org/docs/stable/generated/torch.sum.html
