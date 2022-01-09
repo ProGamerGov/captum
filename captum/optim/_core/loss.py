@@ -220,10 +220,6 @@ def custom_composable_op(
     """
 
     if isinstance(loss, (tuple, list)):
-
-        def identity(x: torch.Tensor) -> torch.Tensor:
-            return x
-
         if "to_scalar_fn" not in kwargs:
             to_scalar_fn = None
         else:
