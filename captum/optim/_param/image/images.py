@@ -134,7 +134,7 @@ class ImageTensor(torch.Tensor):
         self,
         filename: str,
         scale: float = 255.0,
-        colorspace: Optional[str] = None,
+        mode: Optional[str] = None,
         nrow: Optional[int] = None,
         padding: int = 2,
         pad_value: float = 0.0,
@@ -149,7 +149,7 @@ class ImageTensor(torch.Tensor):
             scale (float, optional): Value to multiply the `ImageTensor` by so that
                 it's value range is [0-255] for saving.
                 Default: 255.0
-            colorspace (str, optional): A PIL / Pillow supported colorspace. Default is
+            mode (str, optional): A PIL / Pillow supported colorspace. Default is
                 set to None for automatic RGB / RGBA detection and usage.
                 Default: None
             nrow (int, optional): The number of rows to use for the grid image. Default
@@ -166,7 +166,7 @@ class ImageTensor(torch.Tensor):
             self,
             filename=filename,
             scale=scale,
-            colorspace=colorspace,
+            mode=mode,
             nrow=nrow,
             padding=padding,
             pad_value=pad_value,
