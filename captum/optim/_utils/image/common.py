@@ -25,8 +25,8 @@ def make_grid_image(
 
     Args:
 
-        tiles (torch.Tensor or list of torch.Tensor): A stack of NCHW tensors or a
-            list of NCHW or CHW tensors to create a grid from.
+        tiles (torch.Tensor or list of torch.Tensor): A stack of NCHW image tensors or
+            a list of NCHW image tensors to create a grid from.
         nrow (int, optional): The number of rows to use for the grid image.
             Default: 4
         padding (int, optional): The amount of padding between images in the grid
@@ -40,11 +40,8 @@ def make_grid_image(
     """
     if isinstance(tiles, (list, tuple)):
         assert all([t.device == tiles[0].device for t in tiles])
-        tiles = [tiles.unsqueeze(0) if t.dim() == 3 else t for t in tiles]
         assert all([t.dim() == 4 for t in tiles])
         tiles = torch.cat(tiles, 0)
-    elif isinstance(tiles, torch.Tensor):
-        tiles = tiles.unsqueeze(0) if tiles.dim() == 3 else tiles
     assert tiles.dim() == 4
 
     B, C, H, W = tiles.shape
