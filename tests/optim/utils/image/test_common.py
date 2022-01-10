@@ -102,7 +102,7 @@ class TestNChannelsToRGB(BaseTest):
                 ]
             ]
         )
-        assertTensorAlmostEqual(self, test_output, expected_output, delta=0)
+        assertTensorAlmostEqual(self, test_output, expected_output, delta=0.005)
 
     def test_nchannels_to_rgb_collapse_warp_false(self) -> None:
         test_input = torch.arange(0, 1 * 4 * 4 * 4).view(1, 4, 4, 4).float()
@@ -131,7 +131,7 @@ class TestNChannelsToRGB(BaseTest):
                 ]
             ]
         )
-        assertTensorAlmostEqual(self, test_output, expected_output, delta=0.001)
+        assertTensorAlmostEqual(self, test_output, expected_output, delta=0.005)
 
     def test_nchannels_to_rgb_increase(self) -> None:
         test_input = torch.arange(0, 1 * 2 * 4 * 4).view(1, 2, 4, 4).float()
@@ -160,7 +160,7 @@ class TestNChannelsToRGB(BaseTest):
                 ]
             ]
         )
-        assertTensorAlmostEqual(self, test_output, expected_output, delta=0.001)
+        assertTensorAlmostEqual(self, test_output, expected_output, delta=0.005)
 
     def test_nchannels_to_rgb_cuda(self) -> None:
         if not torch.cuda.is_available():
