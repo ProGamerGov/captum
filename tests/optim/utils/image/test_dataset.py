@@ -28,7 +28,7 @@ class TestImageCov(BaseTest):
             ]
         )
         self.assertEqual(list(test_output.shape), [3, 3])
-        assertTensorAlmostEqual(self, test_output, expected_output, delta=0.0002)
+        assertTensorAlmostEqual(self, test_output, expected_output, delta=0.001)
 
     def test_image_cov_3_channels_batch_5(self) -> None:
         test_input = torch.cat(
@@ -51,7 +51,7 @@ class TestImageCov(BaseTest):
             ]
         )
         self.assertEqual(list(test_output.shape), [3, 3])
-        assertTensorAlmostEqual(self, test_output, expected_output, delta=0.0002)
+        assertTensorAlmostEqual(self, test_output, expected_output, delta=0.001)
 
     def test_image_cov_2_channels(self) -> None:
         test_input = torch.randn(1, 2, 5, 5)
@@ -111,7 +111,7 @@ class TestCovMatrixToKLT(BaseTest):
                 [-0.1749, -0.1056, 0.0124],
             ]
         )
-        assertTensorAlmostEqual(self, output_mtx, expected_mtx, delta=0.0003)
+        assertTensorAlmostEqual(self, output_mtx, expected_mtx, delta=0.001)
 
 
 class TestDatasetKLTMatrix(BaseTest):
@@ -143,7 +143,7 @@ class TestDatasetKLTMatrix(BaseTest):
                 [-0.0978, -0.0006, 0.0003],
             ]
         )
-        assertTensorAlmostEqual(self, klt_transform, expected_mtx, delta=0.00032)
+        assertTensorAlmostEqual(self, klt_transform, expected_mtx, delta=0.001)
 
     def test_dataset_klt_matrix_randn(self) -> None:
         num_tensors = 100
