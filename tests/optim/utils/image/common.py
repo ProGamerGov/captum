@@ -127,6 +127,64 @@ class TestMakeGridImage(BaseTest):
         self.assertEqual(list(expected_output.shape), [1, 1, 7, 7])
         assertTensorAlmostEqual(self, test_output, expected_output, 0)
 
+    def test_make_grid_image_single_tensor_pad_value_cuda(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping make_image_grid CUDA test due to not supporting"
+                + " CUDA."
+            )
+        test_input = torch.ones(4, 1, 2, 2).cuda()
+        test_output = common.make_grid_image(
+            test_input, nrow=2, padding=1, pad_value=5.0
+        )
+        expected_output = torch.tensor(
+            [
+                [
+                    [
+                        [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
+                        [5.0, 1.0, 1.0, 5.0, 1.0, 1.0, 5.0],
+                        [5.0, 1.0, 1.0, 5.0, 1.0, 1.0, 5.0],
+                        [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
+                        [5.0, 1.0, 1.0, 5.0, 1.0, 1.0, 5.0],
+                        [5.0, 1.0, 1.0, 5.0, 1.0, 1.0, 5.0],
+                        [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
+                    ]
+                ]
+            ]
+        )
+        self.assertEqual(list(expected_output.shape), [1, 1, 7, 7])
+        self.assertTrue(test_output.is_cuda)
+        assertTensorAlmostEqual(self, test_output, expected_output, 0)
+
+    def test_make_grid_image_single_tensor_pad_value_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping make_image_grid JIT module test due to"
+                + "  insufficient Torch version."
+            )
+        test_input = torch.ones(4, 1, 2, 2)
+        jit_make_grid_image = torch.jit.script(common.make_grid_image)
+        test_output = jit_make_grid_image(
+            test_input, nrow=2, padding=1, pad_value=5.0
+        )
+        expected_output = torch.tensor(
+            [
+                [
+                    [
+                        [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
+                        [5.0, 1.0, 1.0, 5.0, 1.0, 1.0, 5.0],
+                        [5.0, 1.0, 1.0, 5.0, 1.0, 1.0, 5.0],
+                        [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
+                        [5.0, 1.0, 1.0, 5.0, 1.0, 1.0, 5.0],
+                        [5.0, 1.0, 1.0, 5.0, 1.0, 1.0, 5.0],
+                        [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
+                    ]
+                ]
+            ]
+        )
+        self.assertEqual(list(expected_output.shape), [1, 1, 7, 7])
+        assertTensorAlmostEqual(self, test_output, expected_output, 0)
+
 
 class TestGetNeuronPos(BaseTest):
     def test_get_neuron_pos_hw(self) -> None:
