@@ -24,6 +24,7 @@ __all__ = [
     "circuits",
     "models",
     "reducer",
+    "make_grid_image",
     "nchannels_to_rgb",
     "save_tensor_as_image",
     "show",
