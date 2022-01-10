@@ -38,6 +38,7 @@ def make_grid_image(
     Returns:
         grid_img (torch.Tensor): The full NCHW grid image.
     """
+    assert padding >= 0 and nrow >= 1
     if isinstance(tiles, (list, tuple)):
         assert all([t.device == tiles[0].device for t in tiles])
         assert all([t.dim() == 4 for t in tiles])
