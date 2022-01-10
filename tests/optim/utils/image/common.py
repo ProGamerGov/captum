@@ -130,8 +130,7 @@ class TestMakeGridImage(BaseTest):
     def test_make_grid_image_single_tensor_pad_value_cuda(self) -> None:
         if not torch.cuda.is_available():
             raise unittest.SkipTest(
-                "Skipping make_image_grid CUDA test due to not supporting"
-                + " CUDA."
+                "Skipping make_image_grid CUDA test due to not supporting" + " CUDA."
             )
         test_input = torch.ones(4, 1, 2, 2).cuda()
         test_output = common.make_grid_image(
@@ -164,9 +163,7 @@ class TestMakeGridImage(BaseTest):
             )
         test_input = torch.ones(4, 1, 2, 2)
         jit_make_grid_image = torch.jit.script(common.make_grid_image)
-        test_output = jit_make_grid_image(
-            test_input, nrow=2, padding=1, pad_value=5.0
-        )
+        test_output = jit_make_grid_image(test_input, nrow=2, padding=1, pad_value=5.0)
         expected_output = torch.tensor(
             [
                 [
