@@ -20,7 +20,8 @@ def make_grid_image(
     pad_value: float = 0.0,
 ) -> torch.Tensor:
     """
-    Make grids from NCHW Image tensors in a way similar to torchvision.utils.make_grid.
+    Make grids from NCHW Image tensors in a way similar to torchvision.utils.make_grid,
+    but without any channel duplication or creation behaviour.
 
     Args:
 
