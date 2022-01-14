@@ -129,26 +129,22 @@ def _dot_cossim(
 _torch_norm = torch.linalg.norm if torch.__version__ >= "1.9.0" else torch.norm
 
 
-def nchannels_to_rgb(x: torch.Tensor, warp: bool = True, eps: float = 1e-4) -> torch.Tensor:
+def hue_to_rgb(angle: float, device: torch.device=torch.device("cpu"), warp: bool = True) -> torch.Tensor:
     """
-    Convert an NCHW image with n channels into a 3 channel RGB image.
+    Create an RGB unit vector based on a hue of the input angle.
 
     Args:
 
-        x (torch.Tensor):  NCHW image tensor to transform into RGB image.
-        warp (bool, optional):  Whether or not to make colors more distinguishable.
+        angle (float): The hue angle to create an RGB color for.
+        device (torch.device, optional): The device to create the angle color tensor
+            on.
+            Default: torch.device("cpu")
+        warp (bool, optional): Whether or not to make colors more distinguishable.
             Default: True
-        eps (float, optional): An optional epsilon value.
-            Default: 1e-4
 
     Returns:
-        tensor (torch.Tensor): An NCHW RGB image tensor.
+        color_vec (torch.Tensor): A color vector.
     """
-
-    def hue_to_rgb(angle: float, device: torch.device, warp: bool = True) -> torch.Tensor:
-        """
-        Create an RGB unit vector based on a hue of the input angle.
-        """
 
         angle = angle - 360 * (angle // 360)
         colors = torch.tensor(
@@ -172,6 +168,23 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True, eps: float = 1e-4) -> t
 
         vec = (1 - d) * colors[idx] + d * colors[(idx + 1) % 6]
         return vec / _torch_norm(vec)
+
+
+def nchannels_to_rgb(x: torch.Tensor, warp: bool = True, eps: float = 1e-4) -> torch.Tensor:
+    """
+    Convert an NCHW image with n channels into a 3 channel RGB image.
+
+    Args:
+
+        x (torch.Tensor):  NCHW image tensor to transform into RGB image.
+        warp (bool, optional):  Whether or not to make colors more distinguishable.
+            Default: True
+        eps (float, optional): An optional epsilon value.
+            Default: 1e-4
+
+    Returns:
+        tensor (torch.Tensor): An NCHW RGB image tensor.
+    """
 
     assert x.dim() == 4
 
