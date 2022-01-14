@@ -146,28 +146,28 @@ def hue_to_rgb(angle: float, device: torch.device=torch.device("cpu"), warp: boo
         color_vec (torch.Tensor): A color vector.
     """
 
-        angle = angle - 360 * (angle // 360)
-        colors = torch.tensor(
-            [
-                [1.0, 0.0, 0.0],
-                [0.7071, 0.7071, 0.0],
-                [0.0, 1.0, 0.0],
-                [0.0, 0.7071, 0.7071],
-                [0.0, 0.0, 1.0],
-                [0.7071, 0.0, 0.7071],
-            ],
-            device=device,
-        )
+    angle = angle - 360 * (angle // 360)
+    colors = torch.tensor(
+        [
+            [1.0, 0.0, 0.0],
+            [0.7071, 0.7071, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 0.7071, 0.7071],
+            [0.0, 0.0, 1.0],
+            [0.7071, 0.0, 0.7071],
+        ],
+        device=device,
+    )
 
-        idx = math.floor(angle / 60)
-        d = (angle - idx * 60) / 60
+    idx = math.floor(angle / 60)
+    d = (angle - idx * 60) / 60
 
-        if warp:
-            # Idea from: https://github.com/tensorflow/lucid/pull/193
-            d = math.sin(d * math.pi / 2) if idx % 2 == 0 else 1 - math.sin((1- d) * math.pi / 2)
+    if warp:
+        # Idea from: https://github.com/tensorflow/lucid/pull/193
+        d = math.sin(d * math.pi / 2) if idx % 2 == 0 else 1 - math.sin((1- d) * math.pi / 2)
 
-        vec = (1 - d) * colors[idx] + d * colors[(idx + 1) % 6]
-        return vec / _torch_norm(vec)
+    vec = (1 - d) * colors[idx] + d * colors[(idx + 1) % 6]
+    return vec / _torch_norm(vec)
 
 
 def nchannels_to_rgb(x: torch.Tensor, warp: bool = True, eps: float = 1e-4) -> torch.Tensor:
