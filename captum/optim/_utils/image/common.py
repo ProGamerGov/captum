@@ -125,6 +125,10 @@ def _dot_cossim(
     return dot * torch.clamp(torch.cosine_similarity(x, y, eps=eps), 0.1) ** cossim_pow
 
 
+# Handle older versions of PyTorch
+_torch_norm = torch.linalg.norm if torch.__version__ >= "1.9.0" else torch.norm
+
+
 def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
     """
     Convert an NCHW image with n channels into a 3 channel RGB image.
@@ -138,9 +142,6 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
     Returns:
         tensor (torch.Tensor): An NCHW RGB image tensor.
     """
-
-    # Handle older versions of PyTorch
-    torch_norm = torch.linalg.norm if torch.__version__ >= "1.9.0" else torch.norm
 
     def hue_to_rgb(angle: float, device: torch.device) -> torch.Tensor:
         """
@@ -171,7 +172,7 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
             d = adj(d) if idx % 2 == 0 else 1 - adj(1 - d)
 
         vec = (1 - d) * colors[idx] + d * colors[(idx + 1) % 6]
-        return vec / torch_norm(vec)
+        return vec / _torch_norm(vec)
 
     assert x.dim() == 4
 
@@ -187,7 +188,7 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
     rgb = rgb + torch.ones(x.size(2), x.size(3), device=x.device)[None, None, :, :] * (
         torch.sum(x, 1)[:, None] - torch.max(x, 1)[0][:, None]
     )
-    return (rgb / (1e-4 + torch_norm(rgb, dim=1, keepdim=True))) * torch_norm(
+    return (rgb / (1e-4 + _torch_norm(rgb, dim=1, keepdim=True))) * _torch_norm(
         x, dim=1, keepdim=True
     )
 
