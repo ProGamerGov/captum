@@ -129,7 +129,7 @@ def _dot_cossim(
 _torch_norm = torch.linalg.norm if torch.__version__ >= "1.9.0" else torch.norm
 
 
-def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
+def nchannels_to_rgb(x: torch.Tensor, warp: bool = True, eps: float = 1e-4) -> torch.Tensor:
     """
     Convert an NCHW image with n channels into a 3 channel RGB image.
 
@@ -138,6 +138,8 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
         x (torch.Tensor):  NCHW image tensor to transform into RGB image.
         warp (bool, optional):  Whether or not to make colors more distinguishable.
             Default: True
+        eps (float, optional): An optional epsilon value.
+            Default: 1e-4
 
     Returns:
         tensor (torch.Tensor): An NCHW RGB image tensor.
@@ -169,7 +171,7 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
             def adj(x: float) -> float:
                 return math.sin(x * math.pi / 2)
 
-            d = adj(d) if idx % 2 == 0 else 1 - adj(1 - d)
+            d = math.sin(d * math.pi / 2) if idx % 2 == 0 else 1 - math.sin((1- d) * math.pi / 2)
 
         vec = (1 - d) * colors[idx] + d * colors[(idx + 1) % 6]
         return vec / _torch_norm(vec)
@@ -185,12 +187,10 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
         rgb_angle = hue_to_rgb(360 * i / num_channels, device=x.device, warp=warp)
         rgb = rgb + (x[:, i][:, None, :, :] * rgb_angle[None, :, None, None])
 
-    rgb = rgb + torch.ones(x.size(2), x.size(3), device=x.device)[None, None, :, :] * (
-        torch.sum(x, 1)[:, None] - torch.max(x, 1)[0][:, None]
-    )
-    return (rgb / (1e-4 + _torch_norm(rgb, dim=1, keepdim=True))) * _torch_norm(
-        x, dim=1, keepdim=True
-    )
+    rgb = rgb + (torch.ones(1, 1, x.size(2), x.size(3), device=x.device) * (torch.sum(x, 1) - torch.max(x, 1)[0])[:, None])
+    rgb = rgb / (eps + _torch_norm(rgb, dim=1, keepdim=True))
+    rgb = rgb * _torch_norm(x, dim=1, keepdim=True)
+    return rgb
 
 
 def weights_to_heatmap_2d(
