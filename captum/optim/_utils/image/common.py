@@ -126,6 +126,7 @@ def _dot_cossim(
 
 
 # Handle older versions of PyTorch
+# Defined outside of function in order to support JIT
 _torch_norm = torch.linalg.norm if torch.__version__ >= "1.9.0" else torch.norm
 
 
