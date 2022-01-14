@@ -143,7 +143,7 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
         tensor (torch.Tensor): An NCHW RGB image tensor.
     """
 
-    def hue_to_rgb(angle: float, device: torch.device) -> torch.Tensor:
+    def hue_to_rgb(angle: float, device: torch.device, warp: bool = True) -> torch.Tensor:
         """
         Create an RGB unit vector based on a hue of the input angle.
         """
@@ -180,10 +180,10 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
         x = posneg(x.permute(0, 2, 3, 1), -1).permute(0, 3, 1, 2)
 
     rgb = torch.zeros(1, 3, x.size(2), x.size(3), device=x.device)
-    nc = x.size(1)
-    for i in range(nc):
-        rgb = rgb + x[:, i][:, None, :, :]
-        rgb = rgb * hue_to_rgb(360 * i / nc, device=x.device)[None, :, None, None]
+    num_channels = x.size(1)
+    for i in range(num_channels):
+        rgb_angle = hue_to_rgb(360 * i / num_channels, device=x.device, warp=warp)
+        rgb = rgb + (x[:, i][:, None, :, :] * rgb_angle[None, :, None, None])
 
     rgb = rgb + torch.ones(x.size(2), x.size(3), device=x.device)[None, None, :, :] * (
         torch.sum(x, 1)[:, None] - torch.max(x, 1)[0][:, None]
