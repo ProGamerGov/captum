@@ -167,10 +167,7 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True, eps: float = 1e-4) -> t
         d = (angle - idx * 60) / 60
 
         if warp:
-
-            def adj(x: float) -> float:
-                return math.sin(x * math.pi / 2)
-
+            # Idea from: https://github.com/tensorflow/lucid/pull/193
             d = math.sin(d * math.pi / 2) if idx % 2 == 0 else 1 - math.sin((1- d) * math.pi / 2)
 
         vec = (1 - d) * colors[idx] + d * colors[(idx + 1) % 6]
