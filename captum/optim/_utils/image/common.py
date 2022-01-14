@@ -189,8 +189,7 @@ def nchannels_to_rgb(x: torch.Tensor, warp: bool = True, eps: float = 1e-4) -> t
 
     rgb = rgb + (torch.ones(1, 1, x.size(2), x.size(3), device=x.device) * (torch.sum(x, 1) - torch.max(x, 1)[0])[:, None])
     rgb = rgb / (eps + _torch_norm(rgb, dim=1, keepdim=True))
-    rgb = rgb * _torch_norm(x, dim=1, keepdim=True)
-    return rgb
+    return rgb * _torch_norm(x, dim=1, keepdim=True)
 
 
 def weights_to_heatmap_2d(
