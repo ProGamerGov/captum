@@ -249,6 +249,17 @@ class TestNChannelsToRGB(BaseTest):
         self.assertTrue(test_output.is_cuda)
         self.assertEqual(list(test_output.size()), [1, 3, 224, 224])
 
+    def test_nchannels_to_rgb_jit_module(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping nchannels_to_rgb JIT module test due to insufficient Torch"
+                + " version."
+            )
+        test_input = torch.randn(1, 6, 224, 224)
+        jit_nchannels_to_rgb = torch.jit.script(common.nchannels_to_rgb)
+        test_output = jit_nchannels_to_rgb(test_input)
+        self.assertEqual(list(test_output.size()), [1, 3, 224, 224])
+
 
 class TestWeightsToHeatmap2D(BaseTest):
     def test_weights_to_heatmap_2d(self) -> None:
