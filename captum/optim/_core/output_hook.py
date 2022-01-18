@@ -1,6 +1,6 @@
 import warnings
 from collections import OrderedDict
-from typing import Callable, Dict, Iterable, Optional, Tuple
+from typing import Callable, Dict, Iterable, List, Optional, Tuple, Union
 from warnings import warn
 
 import torch
@@ -183,7 +183,7 @@ def _remove_all_forward_hooks(
     _remove_hooks(module, hook_fn_name)
 
 
-def cleanup_module_hooks(modules: Union[nn.Module, List[nn.Module]) -> None:
+def cleanup_module_hooks(modules: Union[nn.Module, List[nn.Module]]) -> None:
     """
     Remove any InputOptimization hooks from the specified modules. This may be useful
     in the event that something goes wrong in between creating the InputOptimization
@@ -203,7 +203,10 @@ def cleanup_module_hooks(modules: Union[nn.Module, List[nn.Module]) -> None:
     if not hasattr(modules, "__iter__"):
         modules = [modules]
     # Captum ModuleOutputsHook uses "module_outputs_forward_hook" hook functions
-    [_remove_all_forward_hooks(module, "module_outputs_forward_hook") for module in modules]
+    [
+        _remove_all_forward_hooks(module, "module_outputs_forward_hook")
+        for module in modules
+    ]
 
 
 __all__ = ["cleanup_module_hooks"]
