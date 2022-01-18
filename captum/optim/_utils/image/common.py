@@ -102,7 +102,9 @@ def show(
             f"Incompatible number of dimensions. x.dim() = {x.dim()}; should be 3 or 4."
         )
     if images_per_row is not None:
-        x = make_grid_image(x, images_per_row=images_per_row, padding=padding, pad_value=pad_value)[0, ...]
+        x = make_grid_image(
+            x, images_per_row=images_per_row, padding=padding, pad_value=pad_value
+        )[0, ...]
     else:
         x = torch.cat([t[0] for t in x.split(1)], dim=2) if x.dim() == 4 else x
     x = x.clone().cpu().detach().permute(1, 2, 0) * scale
@@ -150,7 +152,9 @@ def save_tensor_as_image(
             f"Incompatible number of dimensions. x.dim() = {x.dim()}; should be 3 or 4."
         )
     if images_per_row is not None:
-        x = make_grid_image(x, images_per_row=images_per_row, padding=padding, pad_value=pad_value)[0, ...]
+        x = make_grid_image(
+            x, images_per_row=images_per_row, padding=padding, pad_value=pad_value
+        )[0, ...]
     else:
         x = torch.cat([t[0] for t in x.split(1)], dim=2) if x.dim() == 4 else x
     x = x.clone().cpu().detach().permute(1, 2, 0) * scale
