@@ -14,6 +14,11 @@ class TestMakeGridImage(BaseTest):
         test_output = common.make_grid_image(
             test_input, nrow=3, padding=1, pad_value=0.0
         )
+        # Border has a size of 1, and we are using 3 in a row:
+        # total_w = (n_row * border) + border + (n_row * tensor_dim_w)
+        # total_h = (n_column * border) + border + (n_column * tensor_dim_h)
+        # (3 * 1) + 1 + (3 * 2) = 10
+        # (2 * 1) + 1 + (2 * 2) = 7
         expected_output = torch.tensor(
             [
                 [
