@@ -154,7 +154,7 @@ def compute_avg_cell_samples(
         for y in range(grid_size[1]):
             indices = grid_indices[x][y]
             if len(indices) >= min_density:
-                cell_samples = torch.mean(raw_samples[indices]
+                cell_samples = raw_samples[indices]
                 if class_idx is not None:
                     cell_samples = cell_samples[:, class_idx]
                 average_samples.append(torch.mean(cell_samples, 0))
