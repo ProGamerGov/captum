@@ -56,8 +56,8 @@ def calc_grid_indices(
     This function draws a 2D grid across the irregular grid of points, and then groups
     point indices based on the grid cell they fall within. The grid cells are then
     filled with 1D tensors that have anywhere from 0 to n_indices values in them. The
-    sets of grid indices can then be used with the extract_grid_vectors function to
-    create atlas grid cell direction vectors.
+    sets of grid indices can then be used with the compute_avg_cell_samples function
+    to create atlas grid cell direction vectors.
 
     Indices are stored for grid cells in an xy matrix, where the outer lists represent
     x positions and the inner lists represent y positions. Each grid cell is filled
@@ -218,7 +218,7 @@ def create_atlas_vectors(
     indices = calc_grid_indices(
         xy_grid, grid_size, x_extent=x_extent, y_extent=y_extent
     )
-    grid_vecs, vec_coords = extract_grid_vectors(
+    grid_vecs, vec_coords = compute_avg_cell_samples(
         indices, raw_activations, grid_size, min_density
     )
     return grid_vecs, vec_coords
@@ -287,7 +287,7 @@ def create_atlas(
 __all__ = [
     "normalize_grid",
     "calc_grid_indices",
-    "extract_grid_vectors",
+    "compute_avg_cell_samples",
     "create_atlas_vectors",
     "create_atlas",
 ]
