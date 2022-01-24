@@ -150,12 +150,10 @@ def compute_avg_cell_samples(
         for y in range(grid_size[1]):
             indices = grid_indices[x][y]
             if len(indices) >= min_density:
-                cell_samples = raw_samples[indices]
-                average_samples.append(torch.mean(cell_samples, 0))
+                average_samples.append(torch.mean(raw_samples[indices], 0))
                 cell_coords.append((x, y, len(indices)))
     assert len(cell_coords) > 0, "No grid vectors were able to be created."
-    average_samples = torch.stack(average_samples)
-    return average_samples, cell_coords
+    return torch.stack(average_samples), cell_coords
 
 
 def create_atlas_vectors(
