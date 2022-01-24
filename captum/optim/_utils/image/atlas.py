@@ -110,11 +110,10 @@ def compute_avg_cell_samples(
     raw_samples: torch.Tensor,
     grid_size: Tuple[int, int],
     min_density: int = 8,
-    class_idx: Optional[Union[int, List[int]]] = None,
 ) -> Tuple[torch.Tensor, List[Tuple[int, int, int]]]:
     """
-    Create direction vectors for activation samples, attribution samples, and grid
-    indices. Grid cells without the minimum number of points as specified by
+    Create direction vectors for sets of activation samples, attribution samples, and
+    grid indices. Grid cells without the minimum number of points as specified by
     min_density will be ignored. The calc_grid_indices function can be used to produce
     the values required for the grid_indices variable.
 
@@ -133,9 +132,6 @@ def compute_avg_cell_samples(
         min_density (int, optional): The minimum number of points for a cell to be
             counted.
             Default: 8
-        class_idx (int or list of int, optional): The class indices to filter cell
-            samples by. Default is set to None for all class indices.
-            Default: None
 
     Returns:
         cell_vecs (torch.tensor): A tensor containing all the direction vectors that
@@ -155,11 +151,9 @@ def compute_avg_cell_samples(
             indices = grid_indices[x][y]
             if len(indices) >= min_density:
                 cell_samples = raw_samples[indices]
-                if class_idx is not None:
-                    cell_samples = cell_samples[:, class_idx]
                 average_samples.append(torch.mean(cell_samples, 0))
                 cell_coords.append((x, y, len(indices)))
-    assert len(cell_coords) > 0, "No grid cells were able to be created."
+    assert len(cell_coords) > 0, "No grid vectors were able to be created."
     average_samples = torch.stack(average_samples)
     return average_samples, cell_coords
 
