@@ -1924,7 +1924,7 @@ class TestTransformationRobustness(BaseTest):
         )
         expected_degrees = [float(d) for d in expected_degrees]
         self.assertEqual(
-            transform_robustness.random_rotation.degrees, test_expected_degrees
+            transform_robustness.random_rotation.degrees, expected_degrees
         )
 
         self.assertEqual(transform_robustness.final_jitter.pad_range, 2 * 2)
