@@ -41,15 +41,9 @@ class TestImageCov(BaseTest):
         )
 
         test_output = dataset_utils.image_cov(test_input)
-        expected_output = torch.tensor(
-            [
-                [
-                    [0.0073, 0.0067, 0.0067],
-                    [0.0067, 0.0067, 0.0067],
-                    [0.0067, 0.0067, 0.0073],
-                ]
-            ]
-        )
+        expected_output = torch.tensor([[0.0365, 0.0333, 0.0335],
+            [0.0333, 0.0333, 0.0333],
+            [0.0335, 0.0333, 0.0365]])
         self.assertEqual(list(test_output.shape), [3, 3])
         assertTensorAlmostEqual(self, test_output, expected_output, delta=0.001)
 
