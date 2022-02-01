@@ -30,7 +30,7 @@ def image_cov(x: torch.Tensor) -> torch.Tensor:
     x = x.reshape(x.shape[0], -1, x.shape[1])
     x = x - x.mean(1, keepdim=True)
     b_cov_mtx = 1.0 / (x.shape[1] - 1) * x.permute(0, 2, 1) @ x
-    return torch.sum(b_cov_mtx, dim=0) / x.shape[0]
+    return torch.sum(b_cov_mtx, dim=0)
 
 
 def dataset_cov_matrix(
