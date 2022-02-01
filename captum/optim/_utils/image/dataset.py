@@ -58,7 +58,7 @@ def dataset_cov_matrix(
     if show_progress:
         pbar = tqdm(total=len(loader.dataset), unit=" images")  # type: ignore
 
-    cov_mtx = cast(torch.Tensor, 0.0)
+    cov_mtx = torch.zeros([], device=device).float()
     for images, _ in loader:
         assert images.dim() > 1
         images = images.to(device)
