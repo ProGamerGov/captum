@@ -78,13 +78,9 @@ class TestDatasetCovMatrix(BaseTest):
             test_dataset, batch_size=10, num_workers=0, shuffle=False
         )
         output_mtx = dataset_utils.dataset_cov_matrix(dataset_loader)
-        expected_mtx = torch.tensor(
-            [
-                [0.0047, 0.0047, 0.0047],
-                [0.0047, 0.0047, 0.0047],
-                [0.0047, 0.0047, 0.0047],
-            ]
-        )
+        expected_mtx = torch.tensor([[0.0467, 0.0467, 0.0467],
+            [0.0467, 0.0467, 0.0467],
+            [0.0467, 0.0467, 0.0467]])
         assertTensorAlmostEqual(self, output_mtx, expected_mtx, delta=0.001)
 
 
@@ -130,13 +126,9 @@ class TestDatasetKLTMatrix(BaseTest):
 
         klt_transform = dataset_utils.dataset_klt_matrix(dataset_loader)
 
-        expected_mtx = torch.tensor(
-            [
-                [-0.0978, 0.0007, 0.0001],
-                [-0.0978, -0.0002, -0.0004],
-                [-0.0978, -0.0006, 0.0003],
-            ]
-        )
+        expected_mtx = torch.tensor([[-0.3091,  0.0023,  0.0004],
+            [-0.3091, -0.0005, -0.0012],
+            [-0.3091, -0.0018,  0.0008]])
         assertTensorAlmostEqual(self, klt_transform, expected_mtx, delta=0.001)
 
     def test_dataset_klt_matrix_randn(self) -> None:
