@@ -44,6 +44,8 @@ def clip_resnet50x4_visual(
             portion, without the AttentionPool2d.
     """
     if pretrained:
+        kwargs["layers"] = [4, 6, 10, 6]
+        kwargs["width"] = 80
         if "transform_input" not in kwargs:
             kwargs["transform_input"] = True
         if "replace_relus_with_redirectedrelu" not in kwargs:
