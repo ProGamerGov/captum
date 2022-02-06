@@ -104,10 +104,10 @@ class CLIP_ResNet50x4(nn.Module):
                 activ = nn.ReLU
 
         self.transform_input = transform_input
-        t_mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).view(3, 1, 1)
-        self.register_buffer("t_mean", t_mean)
-        t_sd = torch.tensor([0.26862954, 0.26130258, 0.27577711]).view(3, 1, 1)
-        self.register_buffer("t_sd", t_sd)
+        #t_mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).view(3, 1, 1)
+        #self.register_buffer("t_mean", t_mean)
+        #t_sd = torch.tensor([0.26862954, 0.26130258, 0.27577711]).view(3, 1, 1)
+        #self.register_buffer("t_sd", t_sd)
 
         # the 3-layer stem
         self.conv1 = nn.Conv2d(
@@ -168,9 +168,8 @@ class CLIP_ResNet50x4(nn.Module):
             if x.min() < 0.0 or x.max() > 1.0:
                 warn("Model input has values outside of the range [0, 1].")
             x = x.unsqueeze(0) if x.dim() == 3 else x
-            x = (x - self.t_mean.to(x.device, dtype=x.dtype)) / self.t_sd.to(
-                x.device, dtype=x.dtype
-            )
+            x = x - torch.tensor([0.48145466, 0.4578275, 0.40821073], device=x.device).view(3, 1, 1)
+            x = x / torch.tensor([0.26862954, 0.26130258, 0.27577711], device=x.device).view(3, 1, 1)
         return x
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
