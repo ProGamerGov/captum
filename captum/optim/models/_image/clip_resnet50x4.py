@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, Type
+from typing import List, Optional, Tuple, Type
 from warnings import warn
 
 import torch
