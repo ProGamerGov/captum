@@ -106,12 +106,8 @@ class CLIP_ResNet50x4(nn.Module):
                 activ = nn.ReLU
 
         self.transform_input = transform_input
-        #t_mean = torch.tensor([0.48145466, 0.4578275, 0.40821073]).view(3, 1, 1)
-        #self.register_buffer("t_mean", t_mean)
-        #t_sd = torch.tensor([0.26862954, 0.26130258, 0.27577711]).view(3, 1, 1)
-        #self.register_buffer("t_sd", t_sd)
 
-        # the 3-layer stem
+        # The 3-layer stem
         self.conv1 = nn.Conv2d(
             3, width // 2, kernel_size=3, stride=2, padding=1, bias=False
         )
