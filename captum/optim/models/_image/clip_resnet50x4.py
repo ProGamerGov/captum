@@ -128,18 +128,23 @@ class CLIP_ResNet50x4(nn.Module):
         self.avgpool = nn.AvgPool2d(2)
 
         # Residual layers
-        self.layer1 = self._make_layer(width, width, layers[0], activ=activ)
-        self.layer2 = self._make_layer(
-            width, width * 2, layers[1], stride=2, activ=activ
-        )
-        self.layer3 = self._make_layer(
-            width, width * 4, layers[2], stride=2, activ=activ
-        )
-        self.layer4 = self._make_layer(
-            width, width * 8, layers[3], stride=2, activ=activ
-        )
+        self._inplanes = width  # this is a *mutable* variable used during construction
+        self.layer1 = self._make_layer(width, layers[0])
+        self.layer2 = self._make_layer(width * 2, layers[1], stride=2)
+        self.layer3 = self._make_layer(width * 4, layers[2], stride=2)
+        self.layer4 = self._make_layer(width * 8, layers[3], stride=2)
+        #self.layer1 = self._make_layer(width, width, layers[0], activ=activ)
+        #self.layer2 = self._make_layer(
+        #    width, width * 2, layers[1], stride=2, activ=activ
+        #)
+        #self.layer3 = self._make_layer(
+        #    width, width * 4, layers[2], stride=2, activ=activ
+        #)
+        #self.layer4 = self._make_layer(
+        #    width, width * 8, layers[3], stride=2, activ=activ
+        #)
 
-    def _make_layer(
+    def _make_layer1(
         self,
         inplanes: int,
         planes: int,
@@ -154,6 +159,19 @@ class CLIP_ResNet50x4(nn.Module):
         layers = [Bottleneck(inplanes, planes, stride, activ=activ)]
         for _ in range(1, blocks):
             layers += [Bottleneck(planes * 4, planes, activ=activ)]
+        return nn.Sequential(*layers)
+
+    def _make_layer(
+        self,
+        planes: int,
+        blocks: int,
+        stride=1,
+        activ: Type[nn.Module] = nn.ReLU,
+    ) -> nn.Module:
+        layers = [Bottleneck(self._inplanes, planes, stride, activ=activ)]
+        self._inplanes = planes * 4
+        for _ in range(1, blocks):
+            layers += [Bottleneck(self._inplanes, planes, activ=activ)]
         return nn.Sequential(*layers)
 
     def _transform_input(self, x: torch.Tensor) -> torch.Tensor:
