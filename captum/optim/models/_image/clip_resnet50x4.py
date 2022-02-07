@@ -192,17 +192,17 @@ class Bottleneck(nn.Module):
         activ: Type[nn.Module] = nn.ReLU,
     ) -> None:
         super().__init__()
-        self.conv1 = nn.Conv2d(inplanes, planes, 1, bias=False)
+        self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
         self.relu1 = activ()
 
-        self.conv2 = nn.Conv2d(planes, planes, 3, padding=1, bias=False)
+        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(planes)
         self.relu2 = activ()
 
         self.avgpool = nn.AvgPool2d(stride)
 
-        self.conv3 = nn.Conv2d(planes, planes * 4, 1, bias=False)
+        self.conv3 = nn.Conv2d(planes, planes * 4, kernel_size=1, bias=False)
         self.bn3 = nn.BatchNorm2d(planes * 4)
         self.relu3 = activ()
 
@@ -210,7 +210,7 @@ class Bottleneck(nn.Module):
         if stride > 1 or inplanes != planes * 4:
             self.downsample = nn.Sequential(
                 nn.AvgPool2d(stride),
-                nn.Conv2d(inplanes, planes * 4, 1, stride=1, bias=False),
+                nn.Conv2d(inplanes, planes * 4, kernel_size=1, stride=1, bias=False),
                 nn.BatchNorm2d(planes * 4),
             )
 
