@@ -104,7 +104,7 @@ class CLIP_ResNet50x4(nn.Module):
 
         self.transform_input = transform_input
 
-        # The 3-layer stem
+        # The stem layers
         self.conv1 = nn.Conv2d(
             3, width // 2, kernel_size=3, stride=2, padding=1, bias=False
         )
@@ -129,9 +129,9 @@ class CLIP_ResNet50x4(nn.Module):
 
     def _make_layer(
         self,
-        planes: int,
-        blocks: int,
-        stride: int,
+        planes: int = 80,
+        blocks: int = 4,
+        stride: int = 1,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> nn.Module:
         """
@@ -182,8 +182,8 @@ class CLIP_ResNet50x4(nn.Module):
 class Bottleneck(nn.Module):
     def __init__(
         self,
-        inplanes: int,
-        planes: int,
+        inplanes: int = 80,
+        planes: int = 80,
         stride: int = 1,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> None:
