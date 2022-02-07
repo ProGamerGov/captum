@@ -239,7 +239,7 @@ class AttentionPool2d(nn.Module):
         super().__init__()
         self.positional_embedding = nn.Parameter(
             torch.randn(spacial_dim**2 + 1, embed_dim) / embed_dim**0.5
-        )
+        )[:, None, :]
         self.k_proj = nn.Linear(embed_dim, embed_dim)
         self.q_proj = nn.Linear(embed_dim, embed_dim)
         self.v_proj = nn.Linear(embed_dim, embed_dim)
@@ -249,7 +249,7 @@ class AttentionPool2d(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = x.reshape(*x.shape[:2], -1).permute(2, 0, 1)
         x = torch.cat([x.mean(dim=0, keepdim=True), x], dim=0)
-        x = x + self.positional_embedding[:, None, :]
+        x = x + self.positional_embedding
         return torch.nn.functional.multi_head_attention_forward(
             query=x,
             key=x,
