@@ -122,10 +122,10 @@ class CLIP_ResNet50x4(nn.Module):
 
         # Residual layers
         self._inplanes = width  # this is a *mutable* variable used during construction
-        self.layer1 = self._make_layer(width, layers[0], stride=1)
-        self.layer2 = self._make_layer(width * 2, layers[1], stride=2)
-        self.layer3 = self._make_layer(width * 4, layers[2], stride=2)
-        self.layer4 = self._make_layer(width * 8, layers[3], stride=2)
+        self.layer1 = self._make_layer(width, layers[0], stride=1, activ=activ)
+        self.layer2 = self._make_layer(width * 2, layers[1], stride=2, activ=activ)
+        self.layer3 = self._make_layer(width * 4, layers[2], stride=2, activ=activ)
+        self.layer4 = self._make_layer(width * 8, layers[3], stride=2, activ=activ)
 
     def _make_layer(
         self,
