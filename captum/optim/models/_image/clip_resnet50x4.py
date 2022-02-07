@@ -252,7 +252,7 @@ class AttentionPool2d(nn.Module):
         )
         x = torch.cat([x.mean(dim=0, keepdim=True), x], dim=0)
         x = x + self.positional_embedding[:, None, :].to(x.dtype)
-        return F.multi_head_attention_forward(
+        return torch.nn.functional.multi_head_attention_forward(
             query=x,
             key=x,
             value=x,
