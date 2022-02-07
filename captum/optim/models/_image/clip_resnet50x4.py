@@ -100,7 +100,6 @@ class CLIP_ResNet50x4(nn.Module):
                 activ = nn.ReLU
 
         self.transform_input = transform_input
-        layers = [4, 6, 10, 6]
         width = 80
 
         # The stem layers
@@ -120,6 +119,7 @@ class CLIP_ResNet50x4(nn.Module):
         self.avgpool = nn.AvgPool2d(2)
 
         # Residual layers
+        layers = [4, 6, 10, 6]
         self._inplanes = width  # this is a *mutable* variable used during construction
         self.layer1 = self._make_layer(width, layers[0], stride=1, activ=activ)
         self.layer2 = self._make_layer(width * 2, layers[1], stride=2, activ=activ)
