@@ -126,7 +126,9 @@ class CLIP_ResNet50x4(nn.Module):
         self.layer3 = self._make_layer(width * 4, layers[2], stride=2, activ=activ)
         self.layer4 = self._make_layer(width * 8, layers[3], stride=2, activ=activ)
 
-        self.attnpool = AttentionPool2d(9, width * 32, num_heads=width * 32 // 64, output_dim=640)
+        self.attnpool = AttentionPool2d(
+            9, width * 32, num_heads=width * 32 // 64, output_dim=640
+        )
 
     def _make_layer(
         self,
@@ -181,7 +183,7 @@ class CLIP_ResNet50x4(nn.Module):
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
-        
+
         x = self.attnpool(x)
         return x
 
@@ -235,7 +237,11 @@ class Bottleneck(nn.Module):
 
 class AttentionPool2d(nn.Module):
     def __init__(
-        self, spacial_dim: int = 9, embed_dim: int = 2560, num_heads: int = 40, output_dim: int = 640
+        self,
+        spacial_dim: int = 9,
+        embed_dim: int = 2560,
+        num_heads: int = 40,
+        output_dim: int = 640,
     ):
         super().__init__()
         self.positional_embedding = nn.Parameter(
