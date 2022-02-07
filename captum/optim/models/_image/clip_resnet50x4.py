@@ -22,6 +22,7 @@ def clip_resnet50x4_visual(
     https://github.com/openai/CLIP
 
     Args:
+
         pretrained (bool, optional): If True, returns a pre-trained model.
             Default: False
         progress (bool, optional): If True, displays a progress bar of the download to
@@ -41,7 +42,7 @@ def clip_resnet50x4_visual(
 
     Returns:
         **CLIP_ResNet50x4** (CLIP_ResNet50x4): An CLIP ResNet 50x4 model's visual
-            portion, without the AttentionPool2d.
+            portion.
     """
     if pretrained:
         if "transform_input" not in kwargs:
