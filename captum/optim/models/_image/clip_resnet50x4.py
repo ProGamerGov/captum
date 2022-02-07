@@ -234,7 +234,7 @@ class Bottleneck(nn.Module):
 
 class AttentionPool2d(nn.Module):
     def __init__(
-        self, spacial_dim: int, embed_dim: int, num_heads: int, output_dim: int = None
+        self, spacial_dim: int = 9, embed_dim: int = 2560, num_heads: int = 40, output_dim: int = 640
     ):
         super().__init__()
         self.positional_embedding = nn.Parameter(
@@ -243,7 +243,7 @@ class AttentionPool2d(nn.Module):
         self.k_proj = nn.Linear(embed_dim, embed_dim)
         self.q_proj = nn.Linear(embed_dim, embed_dim)
         self.v_proj = nn.Linear(embed_dim, embed_dim)
-        self.c_proj = nn.Linear(embed_dim, output_dim or embed_dim)
+        self.c_proj = nn.Linear(embed_dim, output_dim)
         self.num_heads = num_heads
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
