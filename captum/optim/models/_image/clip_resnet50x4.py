@@ -4,7 +4,7 @@ from warnings import warn
 import torch
 from torch import nn
 
-from captum.optim.models._common import Conv2dSame, RedirectedReluLayer, SkipLayer
+from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 
 GS_SAVED_WEIGHTS_URL = "clip_rn50x4_visual_no_attention.pt"
 
