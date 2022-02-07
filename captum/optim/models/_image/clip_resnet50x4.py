@@ -122,7 +122,7 @@ class CLIP_ResNet50x4(nn.Module):
 
         # Residual layers
         self._inplanes = width  # this is a *mutable* variable used during construction
-        self.layer1 = self._make_layer(width, layers[0])
+        self.layer1 = self._make_layer(width, layers[0], stride=1)
         self.layer2 = self._make_layer(width * 2, layers[1], stride=2)
         self.layer3 = self._make_layer(width * 4, layers[2], stride=2)
         self.layer4 = self._make_layer(width * 8, layers[3], stride=2)
@@ -131,7 +131,7 @@ class CLIP_ResNet50x4(nn.Module):
         self,
         planes: int,
         blocks: int,
-        stride=1,
+        stride: int,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> nn.Module:
         """
@@ -203,7 +203,6 @@ class Bottleneck(nn.Module):
         self.relu3 = activ()
 
         self.downsample = None
-        # downsampling layer is prepended with an avgpool, and the subsequent convolution has stride 1
         if stride > 1 or inplanes != planes * 4:
             self.downsample = nn.Sequential(
                 nn.AvgPool2d(stride),
