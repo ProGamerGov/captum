@@ -247,11 +247,9 @@ class AttentionPool2d(nn.Module):
         self.num_heads = num_heads
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = x.reshape(x.shape[0], x.shape[1], x.shape[2] * x.shape[3]).permute(
-            2, 0, 1
-        )
+        x = x.reshape(*x.shape[:2], -1).permute(2, 0, 1)
         x = torch.cat([x.mean(dim=0, keepdim=True), x], dim=0)
-        x = x + self.positional_embedding[:, None, :].to(x.dtype)
+        x = x + self.positional_embedding[:, None, :]
         return torch.nn.functional.multi_head_attention_forward(
             query=x,
             key=x,
