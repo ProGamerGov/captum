@@ -79,10 +79,6 @@ class CLIP_ResNet50x4(nn.Module):
         """
         Args:
 
-            layers (list of int): A list of residual layer numbers.
-                Default: [4, 6, 10, 6]
-            width (int): The width value to use for the creation of the model.
-                Default: 80
             replace_relus_with_redirectedrelu (bool, optional): If True, return
                 pretrained model with Redirected ReLU in place of ReLU layers.
                 Default: False
@@ -103,6 +99,8 @@ class CLIP_ResNet50x4(nn.Module):
                 activ = nn.ReLU
 
         self.transform_input = transform_input
+        layers = [4, 6, 10, 6]
+        width = 80
 
         # The stem layers
         self.conv1 = nn.Conv2d(
@@ -127,7 +125,7 @@ class CLIP_ResNet50x4(nn.Module):
         self.layer3 = self._make_layer(width * 4, layers[2], stride=2, activ=activ)
         self.layer4 = self._make_layer(width * 8, layers[3], stride=2, activ=activ)
 
-        self.attnpool = AttentionPool2d(288 // 32, width * 32, num_heads=80 * 32 // 64, output_dim=640)
+        self.attnpool = AttentionPool2d(288 // 32, width * 32, num_heads=width * 32 // 64, output_dim=640)
 
     def _make_layer(
         self,
