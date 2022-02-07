@@ -1,10 +1,10 @@
-from typing import List, Optional, Tuple, Type
+from typing import List, Optional, Type
 from warnings import warn
 
 import torch
 from torch import nn
 
-from captum.optim.models._common import Conv2dSame, RedirectedReluLayer, SkipLayer
+from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 
 GS_SAVED_WEIGHTS_URL = "clip_rn50x4_visual_no_attention.pt"
 
@@ -44,8 +44,6 @@ def clip_resnet50x4_visual(
             portion, without the AttentionPool2d.
     """
     if pretrained:
-        kwargs["layers"] = [4, 6, 10, 6]
-        kwargs["width"] = 80
         if "transform_input" not in kwargs:
             kwargs["transform_input"] = True
         if "replace_relus_with_redirectedrelu" not in kwargs:
@@ -96,7 +94,6 @@ class CLIP_ResNet50x4(nn.Module):
                 Default: False
         """
         super().__init__()
-
         if use_linear_modules_only:
             activ = SkipLayer
         else:
@@ -107,7 +104,7 @@ class CLIP_ResNet50x4(nn.Module):
 
         self.transform_input = transform_input
 
-        # The 3-layer stem
+        # The stem layers
         self.conv1 = nn.Conv2d(
             3, width // 2, kernel_size=3, stride=2, padding=1, bias=False
         )
@@ -125,16 +122,16 @@ class CLIP_ResNet50x4(nn.Module):
 
         # Residual layers
         self._inplanes = width  # this is a *mutable* variable used during construction
-        self.layer1 = self._make_layer(width, layers[0])
-        self.layer2 = self._make_layer(width * 2, layers[1], stride=2)
-        self.layer3 = self._make_layer(width * 4, layers[2], stride=2)
-        self.layer4 = self._make_layer(width * 8, layers[3], stride=2)
+        self.layer1 = self._make_layer(width, layers[0], stride=1, activ=activ)
+        self.layer2 = self._make_layer(width * 2, layers[1], stride=2, activ=activ)
+        self.layer3 = self._make_layer(width * 4, layers[2], stride=2, activ=activ)
+        self.layer4 = self._make_layer(width * 8, layers[3], stride=2, activ=activ)
 
     def _make_layer(
         self,
-        planes: int,
-        blocks: int,
-        stride=1,
+        planes: int = 80,
+        blocks: int = 4,
+        stride: int = 1,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> nn.Module:
         """
@@ -161,8 +158,12 @@ class CLIP_ResNet50x4(nn.Module):
             if x.min() < 0.0 or x.max() > 1.0:
                 warn("Model input has values outside of the range [0, 1].")
             x = x.unsqueeze(0) if x.dim() == 3 else x
-            x = x - torch.tensor([0.48145466, 0.4578275, 0.40821073], device=x.device).view(3, 1, 1)
-            x = x / torch.tensor([0.26862954, 0.26130258, 0.27577711], device=x.device).view(3, 1, 1)
+            x = x - torch.tensor(
+                [0.48145466, 0.4578275, 0.40821073], device=x.device
+            ).view(3, 1, 1)
+            x = x / torch.tensor(
+                [0.26862954, 0.26130258, 0.27577711], device=x.device
+            ).view(3, 1, 1)
         return x
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -185,32 +186,31 @@ class CLIP_ResNet50x4(nn.Module):
 class Bottleneck(nn.Module):
     def __init__(
         self,
-        inplanes: int,
-        planes: int,
+        inplanes: int = 80,
+        planes: int = 80,
         stride: int = 1,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> None:
         super().__init__()
-        self.conv1 = nn.Conv2d(inplanes, planes, 1, bias=False)
+        self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
         self.relu1 = activ()
 
-        self.conv2 = nn.Conv2d(planes, planes, 3, padding=1, bias=False)
+        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(planes)
         self.relu2 = activ()
 
         self.avgpool = nn.AvgPool2d(stride)
 
-        self.conv3 = nn.Conv2d(planes, planes * 4, 1, bias=False)
+        self.conv3 = nn.Conv2d(planes, planes * 4, kernel_size=1, bias=False)
         self.bn3 = nn.BatchNorm2d(planes * 4)
         self.relu3 = activ()
 
         self.downsample = None
-        # downsampling layer is prepended with an avgpool, and the subsequent convolution has stride 1
         if stride > 1 or inplanes != planes * 4:
             self.downsample = nn.Sequential(
                 nn.AvgPool2d(stride),
-                nn.Conv2d(inplanes, planes * 4, 1, stride=1, bias=False),
+                nn.Conv2d(inplanes, planes * 4, kernel_size=1, stride=1, bias=False),
                 nn.BatchNorm2d(planes * 4),
             )
 
