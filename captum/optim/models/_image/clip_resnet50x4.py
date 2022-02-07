@@ -6,7 +6,7 @@ from torch import nn
 
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 
-GS_SAVED_WEIGHTS_URL = "clip_rn50x4_visual_no_attention.pt"
+GS_SAVED_WEIGHTS_URL = "clip_rn50x4_visual.pt"
 
 
 def clip_resnet50x4_visual(
@@ -22,6 +22,7 @@ def clip_resnet50x4_visual(
     https://github.com/openai/CLIP
 
     Args:
+
         pretrained (bool, optional): If True, returns a pre-trained model.
             Default: False
         progress (bool, optional): If True, displays a progress bar of the download to
@@ -41,7 +42,7 @@ def clip_resnet50x4_visual(
 
     Returns:
         **CLIP_ResNet50x4** (CLIP_ResNet50x4): An CLIP ResNet 50x4 model's visual
-            portion, without the AttentionPool2d.
+            portion.
     """
     if pretrained:
         if "transform_input" not in kwargs:
@@ -79,10 +80,6 @@ class CLIP_ResNet50x4(nn.Module):
         """
         Args:
 
-            layers (list of int): A list of residual layer numbers.
-                Default: [4, 6, 10, 6]
-            width (int): The width value to use for the creation of the model.
-                Default: 80
             replace_relus_with_redirectedrelu (bool, optional): If True, return
                 pretrained model with Redirected ReLU in place of ReLU layers.
                 Default: False
@@ -103,6 +100,8 @@ class CLIP_ResNet50x4(nn.Module):
                 activ = nn.ReLU
 
         self.transform_input = transform_input
+        layers = [4, 6, 10, 6]
+        width = 80
 
         # The stem layers
         self.conv1 = nn.Conv2d(
@@ -126,6 +125,10 @@ class CLIP_ResNet50x4(nn.Module):
         self.layer2 = self._make_layer(width * 2, layers[1], stride=2, activ=activ)
         self.layer3 = self._make_layer(width * 4, layers[2], stride=2, activ=activ)
         self.layer4 = self._make_layer(width * 8, layers[3], stride=2, activ=activ)
+
+        self.attnpool = AttentionPool2d(
+            9, width * 32, num_heads=width * 32 // 64, output_dim=640
+        )
 
     def _make_layer(
         self,
@@ -180,6 +183,8 @@ class CLIP_ResNet50x4(nn.Module):
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
+
+        x = self.attnpool(x)
         return x
 
 
@@ -228,3 +233,50 @@ class Bottleneck(nn.Module):
         x = x + identity
         x = self.relu3(x)
         return x
+
+
+class AttentionPool2d(nn.Module):
+    def __init__(
+        self,
+        spacial_dim: int = 9,
+        embed_dim: int = 2560,
+        num_heads: int = 40,
+        output_dim: int = 640,
+    ):
+        super().__init__()
+        self.positional_embedding = nn.Parameter(
+            torch.randn(spacial_dim**2 + 1, embed_dim) / embed_dim**0.5
+        )[:, None, :]
+        self.k_proj = nn.Linear(embed_dim, embed_dim)
+        self.q_proj = nn.Linear(embed_dim, embed_dim)
+        self.v_proj = nn.Linear(embed_dim, embed_dim)
+        self.c_proj = nn.Linear(embed_dim, output_dim)
+        self.num_heads = num_heads
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = x.reshape(*x.shape[:2], -1).permute(2, 0, 1)
+        x = torch.cat([x.mean(dim=0, keepdim=True), x], dim=0)
+        x = x + self.positional_embedding
+        return torch.nn.functional.multi_head_attention_forward(
+            query=x,
+            key=x,
+            value=x,
+            embed_dim_to_check=x.shape[-1],
+            num_heads=self.num_heads,
+            q_proj_weight=self.q_proj.weight,
+            k_proj_weight=self.k_proj.weight,
+            v_proj_weight=self.v_proj.weight,
+            in_proj_weight=None,
+            in_proj_bias=torch.cat(
+                [self.q_proj.bias, self.k_proj.bias, self.v_proj.bias]
+            ),
+            bias_k=None,
+            bias_v=None,
+            add_zero_attn=False,
+            dropout_p=0,
+            out_proj_weight=self.c_proj.weight,
+            out_proj_bias=self.c_proj.bias,
+            use_separate_proj_weight=True,
+            training=self.training,
+            need_weights=False,
+        )[0][0]
