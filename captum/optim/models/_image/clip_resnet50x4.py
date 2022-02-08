@@ -116,7 +116,7 @@ class CLIP_ResNet50x4(nn.Module):
         self.conv3 = nn.Conv2d(width // 2, width, kernel_size=3, padding=1, bias=False)
         self.bn3 = nn.BatchNorm2d(width)
         self.relu3 = activ()
-        self.avgpool = nn.AdaptiveAvgPool2d(72)#nn.AvgPool2d(2)
+        self.avgpool = nn.AdaptiveAvgPool2d(72)
 
         # Residual layers
         layers = [4, 6, 10, 6]
@@ -208,10 +208,7 @@ class Bottleneck(nn.Module):
         self.bn2 = nn.BatchNorm2d(planes)
         self.relu2 = activ()
 
-        if stride == 1:
-            self.avgpool = nn.AvgPool2d(stride)
-        else:
-            self.avgpool = nn.AdaptiveAvgPool2d(pooling)
+        self.avgpool = nn.AdaptiveAvgPool2d(pooling)
 
         self.conv3 = nn.Conv2d(planes, planes * 4, kernel_size=1, bias=False)
         self.bn3 = nn.BatchNorm2d(planes * 4)
@@ -219,12 +216,8 @@ class Bottleneck(nn.Module):
 
         self.downsample = None
         if stride > 1 or inplanes != planes * 4:
-            if stride == 1:
-                d_pool = nn.AvgPool2d(stride)
-            else:
-                d_pool = nn.AdaptiveAvgPool2d(pooling)
             self.downsample = nn.Sequential(
-                d_pool,
+                nn.AdaptiveAvgPool2d(pooling),
                 nn.Conv2d(inplanes, planes * 4, kernel_size=1, stride=1, bias=False),
                 nn.BatchNorm2d(planes * 4),
             )
