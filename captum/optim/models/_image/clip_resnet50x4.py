@@ -143,7 +143,9 @@ class CLIP_ResNet50x4(nn.Module):
         Residual layer creation helper function, based on the heloper function used
         here: https://github.com/openai/CLIP/blob/main/clip/model.py
         """
-        layers = [Bottleneck(self._inplanes, planes, stride, pooling=pooling, activ=activ)]
+        layers = [
+            Bottleneck(self._inplanes, planes, stride, pooling=pooling, activ=activ)
+        ]
         self._inplanes = planes * 4
         for _ in range(1, blocks):
             layers += [Bottleneck(self._inplanes, planes, pooling=pooling, activ=activ)]
