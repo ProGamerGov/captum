@@ -19,6 +19,8 @@ def clip_resnet50x4_visual(
     The visual portion of OpenAI's ResNet 50x4 CLIP model from 'Learning Transferable
     Visual Models From Natural Language Supervision': https://arxiv.org/abs/2103.00020
 
+    AvgPool2d layers were replaced with AdaptiveAvgPool2d to allow for any input size.
+
     https://github.com/openai/CLIP
 
     Args:
