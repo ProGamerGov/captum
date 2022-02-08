@@ -100,7 +100,6 @@ class CLIP_ResNet50x4(nn.Module):
                 activ = nn.ReLU
 
         self.transform_input = transform_input
-        layers = [4, 6, 10, 6]
         width = 80
 
         # The stem layers
@@ -117,14 +116,16 @@ class CLIP_ResNet50x4(nn.Module):
         self.conv3 = nn.Conv2d(width // 2, width, kernel_size=3, padding=1, bias=False)
         self.bn3 = nn.BatchNorm2d(width)
         self.relu3 = activ()
-        self.avgpool = nn.AvgPool2d(2)
+        self.avgpool = nn.AdaptiveAvgPool2d(72)
 
         # Residual layers
+        layers = [4, 6, 10, 6]
+        pooling = [72, 36, 18, 9]
         self._inplanes = width  # this is a *mutable* variable used during construction
-        self.layer1 = self._make_layer(width, layers[0], stride=1, activ=activ)
-        self.layer2 = self._make_layer(width * 2, layers[1], stride=2, activ=activ)
-        self.layer3 = self._make_layer(width * 4, layers[2], stride=2, activ=activ)
-        self.layer4 = self._make_layer(width * 8, layers[3], stride=2, activ=activ)
+        self.layer1 = self._make_layer(width, 4, stride=1, pooling=72, activ=activ)
+        self.layer2 = self._make_layer(width * 2, 6, stride=2, pooling=36, activ=activ)
+        self.layer3 = self._make_layer(width * 4, 10, stride=2, pooling=18, activ=activ)
+        self.layer4 = self._make_layer(width * 8, 6, stride=2, pooling=9, activ=activ)
 
         self.attnpool = AttentionPool2d(
             9, width * 32, num_heads=width * 32 // 64, output_dim=640
@@ -135,16 +136,19 @@ class CLIP_ResNet50x4(nn.Module):
         planes: int = 80,
         blocks: int = 4,
         stride: int = 1,
+        pooling: int = 72,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> nn.Module:
         """
         Residual layer creation helper function, based on the heloper function used
         here: https://github.com/openai/CLIP/blob/main/clip/model.py
         """
-        layers = [Bottleneck(self._inplanes, planes, stride, activ=activ)]
+        layers = [
+            Bottleneck(self._inplanes, planes, stride, pooling=pooling, activ=activ)
+        ]
         self._inplanes = planes * 4
         for _ in range(1, blocks):
-            layers += [Bottleneck(self._inplanes, planes, activ=activ)]
+            layers += [Bottleneck(self._inplanes, planes, pooling=pooling, activ=activ)]
         return nn.Sequential(*layers)
 
     def _transform_input(self, x: torch.Tensor) -> torch.Tensor:
@@ -194,6 +198,7 @@ class Bottleneck(nn.Module):
         inplanes: int = 80,
         planes: int = 80,
         stride: int = 1,
+        pooling: int = 72,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> None:
         super().__init__()
@@ -205,7 +210,7 @@ class Bottleneck(nn.Module):
         self.bn2 = nn.BatchNorm2d(planes)
         self.relu2 = activ()
 
-        self.avgpool = nn.AvgPool2d(stride)
+        self.avgpool = nn.AdaptiveAvgPool2d(pooling)
 
         self.conv3 = nn.Conv2d(planes, planes * 4, kernel_size=1, bias=False)
         self.bn3 = nn.BatchNorm2d(planes * 4)
@@ -214,7 +219,7 @@ class Bottleneck(nn.Module):
         self.downsample = None
         if stride > 1 or inplanes != planes * 4:
             self.downsample = nn.Sequential(
-                nn.AvgPool2d(stride),
+                nn.AdaptiveAvgPool2d(pooling),
                 nn.Conv2d(inplanes, planes * 4, kernel_size=1, stride=1, bias=False),
                 nn.BatchNorm2d(planes * 4),
             )
