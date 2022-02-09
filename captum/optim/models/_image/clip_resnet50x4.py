@@ -132,7 +132,7 @@ class CLIP_ResNet50x4(nn.Module):
     ) -> nn.Module:
         """
         Residual layer creation helper function.
-        
+
         Args:
 
             inplanes (int, optional): The number of input channels / features to use
@@ -151,7 +151,7 @@ class CLIP_ResNet50x4(nn.Module):
             activ (type of nn.Module, optional): The nn.Module class type to use for
                 activation layers.
                 Default: nn.ReLU
-        
+
         Returns:
             residual_layer (nn.Sequential): A full residual layer.
         """
