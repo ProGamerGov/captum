@@ -1,4 +1,4 @@
-from typing import List, Optional, Type
+from typing import Optional, Type
 from warnings import warn
 
 import torch
@@ -73,8 +73,6 @@ class CLIP_ResNet50x4(nn.Module):
 
     def __init__(
         self,
-        layers: List[int] = [4, 6, 10, 6],
-        width: int = 80,
         transform_input: bool = False,
         replace_relus_with_redirectedrelu: bool = False,
         use_linear_modules_only: bool = False,
@@ -121,8 +119,6 @@ class CLIP_ResNet50x4(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool2d(72)
 
         # Residual layers
-        layers = [4, 6, 10, 6]
-        pooling = [72, 36, 18, 9]
         self._inplanes = width  # this is a *mutable* variable used during construction
         self.layer1 = self._make_layer(width, 4, stride=1, pooling=72, activ=activ)
         self.layer2 = self._make_layer(width * 2, 6, stride=2, pooling=36, activ=activ)
