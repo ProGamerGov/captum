@@ -221,9 +221,8 @@ class Bottleneck(nn.Module):
         x = self.relu1(self.bn1(self.conv1(x)))
         x = self.relu2(self.bn2(self.conv2(x)))
         x = self.avgpool(x)
-        x = self.bn3(self.conv3(x))
 
-        x = x + identity
+        x = self.bn3(self.conv3(x)) + identity
         x = self.relu3(x)
         return x
 
