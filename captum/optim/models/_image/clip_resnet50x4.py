@@ -102,7 +102,7 @@ class CLIP_ResNet50x4(nn.Module):
         self.transform_input = transform_input
         width = 80
 
-        # The stem layers
+        # Stem layers
         self.conv1 = nn.Conv2d(
             3, width // 2, kernel_size=3, stride=2, padding=1, bias=False
         )
@@ -120,9 +120,13 @@ class CLIP_ResNet50x4(nn.Module):
 
         # Residual layers
         self._inplanes = width  # this is a *mutable* variable used during construction
+        print("Layer 1")
         self.layer1 = self._make_layer(width, 4, stride=1, pooling=72, activ=activ)
+        print("Layer 2")
         self.layer2 = self._make_layer(width * 2, 6, stride=2, pooling=36, activ=activ)
+        print("Layer 3")
         self.layer3 = self._make_layer(width * 4, 10, stride=2, pooling=18, activ=activ)
+        print("Layer 4")
         self.layer4 = self._make_layer(width * 8, 6, stride=2, pooling=9, activ=activ)
 
         self.attnpool = AttentionPool2d(
@@ -141,10 +145,12 @@ class CLIP_ResNet50x4(nn.Module):
         Residual layer creation helper function, based on the heloper function used
         here: https://github.com/openai/CLIP/blob/main/clip/model.py
         """
+        print("first layer", self._inplanes)
         layers = [
             Bottleneck(self._inplanes, planes, stride, pooling=pooling, activ=activ)
         ]
         self._inplanes = planes * 4
+        print("subsequent layers", self._inplanes)
         for _ in range(1, blocks):
             layers += [Bottleneck(self._inplanes, planes, pooling=pooling, activ=activ)]
         return nn.Sequential(*layers)
