@@ -116,10 +116,14 @@ class CLIP_ResNet50x4(nn.Module):
 
         # Residual layers
         self._inplanes = width  # this is a *mutable* variable used during construction
-        self.layer1 = self._make_layer(width, 4, stride=1, pooling=72, activ=activ)
-        self.layer2 = self._make_layer(width * 2, 6, stride=2, pooling=36, activ=activ)
-        self.layer3 = self._make_layer(width * 4, 10, stride=2, pooling=18, activ=activ)
-        self.layer4 = self._make_layer(width * 8, 6, stride=2, pooling=9, activ=activ)
+        #self.layer1 = self._make_layer(width, 4, stride=1, pooling=72, activ=activ)
+        #self.layer2 = self._make_layer(width * 2, 6, stride=2, pooling=36, activ=activ)
+        #self.layer3 = self._make_layer(width * 4, 10, stride=2, pooling=18, activ=activ)
+        #self.layer4 = self._make_layer(width * 8, 6, stride=2, pooling=9, activ=activ)
+        self.layer1 = self._build_layer(80, 80, 4, stride=1, pooling=72, activ=activ)
+        self.layer2 = self._build_layer(320, 160, 6, stride=2, pooling=36, activ=activ)
+        self.layer3 = self._build_layer(640, 320, 10, stride=2, pooling=18, activ=activ)
+        self.layer4 = self._build_layer(1280, 640, 6, stride=2, pooling=9, activ=activ)
 
         self.attnpool = AttentionPool2d(9, 2560, num_heads=40, output_dim=640)
 
@@ -141,6 +145,24 @@ class CLIP_ResNet50x4(nn.Module):
         self._inplanes = planes * 4
         for _ in range(1, blocks):
             layers += [Bottleneck(self._inplanes, planes, pooling=pooling, activ=activ)]
+        return nn.Sequential(*layers)
+
+    def _build_layer(
+        self,
+        inplanes: int = 80,
+        planes: int = 80,
+        blocks: int = 4,
+        stride: int = 1,
+        pooling: int = 72,
+        activ: Type[nn.Module] = nn.ReLU,
+    ) -> nn.Module:
+        """
+        Residual layer creation helper function, based on the heloper function used
+        here: https://github.com/openai/CLIP/blob/main/clip/model.py
+        """
+        layers = [Bottleneck(inplanes, planes, stride, pooling=pooling, activ=activ)]
+        for _ in range(blocks - 1):
+            layers += [Bottleneck(planes * 4, planes, pooling=pooling, activ=activ)]
         return nn.Sequential(*layers)
 
     def _transform_input(self, x: torch.Tensor) -> torch.Tensor:
