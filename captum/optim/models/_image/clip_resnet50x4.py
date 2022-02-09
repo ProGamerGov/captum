@@ -119,7 +119,7 @@ class CLIP_ResNet50x4(nn.Module):
         self.layer3 = self._build_layer(640, 320, 10, stride=2, pooling=18, activ=activ)
         self.layer4 = self._build_layer(1280, 640, 6, stride=2, pooling=9, activ=activ)
 
-        self.attnpool = AttentionPool2d(9, 2560, num_heads=40, output_dim=640)
+        self.attnpool = AttentionPool2d(9, 2560, output_size=640, num_heads=40)
 
     def _build_layer(
         self,
@@ -286,19 +286,33 @@ class Bottleneck(nn.Module):
 class AttentionPool2d(nn.Module):
     def __init__(
         self,
-        spacial_dim: int = 9,
-        embed_dim: int = 2560,
+        spacial_size: int = 9,
+        in_features: int = 2560,
+        out_features: int = 640,
         num_heads: int = 40,
-        output_dim: int = 640,
     ) -> None:
+        """
+        Args:
+
+            spacial_size (int, optional): The desired size to user for the positional
+                embedding.
+                Default: 9
+            in_features (int, optional): The desired input size for the nn.Linear
+                layers.
+                Default: 2560
+            out_features (int, optional): The desired output size for the nn.Linear
+                layers.
+            num_heads (int, optional): The num number of heads to use.
+                Default: 40
+        """
         super().__init__()
         self.positional_embedding = nn.Parameter(
-            torch.randn(spacial_dim**2 + 1, embed_dim) / embed_dim**0.5
+            torch.randn(spacial_size**2 + 1, in_features) / in_features**0.5
         )
-        self.k_proj = nn.Linear(embed_dim, embed_dim)
-        self.q_proj = nn.Linear(embed_dim, embed_dim)
-        self.v_proj = nn.Linear(embed_dim, embed_dim)
-        self.c_proj = nn.Linear(embed_dim, output_dim)
+        self.k_proj = nn.Linear(in_features, in_features)
+        self.q_proj = nn.Linear(in_features, in_features)
+        self.v_proj = nn.Linear(in_features, in_features)
+        self.c_proj = nn.Linear(in_features, out_features)
         self.num_heads = num_heads
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
