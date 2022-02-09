@@ -131,8 +131,29 @@ class CLIP_ResNet50x4(nn.Module):
         activ: Type[nn.Module] = nn.ReLU,
     ) -> nn.Module:
         """
-        Residual layer creation helper function, based on the heloper function used
-        here: https://github.com/openai/CLIP/blob/main/clip/model.py
+        Residual layer creation helper function.
+        
+        Args:
+
+            inplanes (int, optional): The number of input channels / features to use
+                for the first layer.
+                Default: 80
+            planes (int, optional): The number of output channels / features to use
+                for the first layer. This variable is then multiplied by 4 to get the
+                number of input channels / features to use for the subsequent layers.
+                Default: 80
+            blocks (int, optional): The number of Bottleneck layers to create.
+                Default: 4
+            stride (int, optional): The stride value to use for the Bottleneck layers.
+                Default: 1
+            pooling (int, optional): The output size used for nn.AdaptiveAvgPool2d.
+                Default: 72
+            activ (type of nn.Module, optional): The nn.Module class type to use for
+                activation layers.
+                Default: nn.ReLU
+        
+        Returns:
+            residual_layer (nn.Sequential): A full residual layer.
         """
         layers = [Bottleneck(inplanes, planes, stride, pooling=pooling, activ=activ)]
         for _ in range(blocks - 1):
@@ -162,6 +183,14 @@ class CLIP_ResNet50x4(nn.Module):
         return x
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+
+            x (torch.Tensor): An input tensor to run through the model.
+
+        Returns:
+            x (torch.Tensor): The model output.
+        """
         x = self._transform_input(x)
 
         # Stem layers
@@ -189,6 +218,25 @@ class Bottleneck(nn.Module):
         pooling: int = 72,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> None:
+        """
+        Residual layer creation helper function.
+        
+        Args:
+
+            inplanes (int, optional): The number of input channels / features to use
+                for the first layer.
+                Default: 80
+            planes (int, optional): The number of output channels / features to use
+                for the subsequent layers.
+                Default: 80
+            stride (int, optional): The stride value to use for the Bottleneck layers.
+                Default: 1
+            pooling (int, optional): The output size used for nn.AdaptiveAvgPool2d.
+                Default: 72
+            activ (type of nn.Module, optional): The nn.Module class type to use for
+                activation layers.
+                Default: nn.ReLU
+        """
         super().__init__()
         self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
@@ -213,6 +261,14 @@ class Bottleneck(nn.Module):
             )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+
+            x (torch.Tensor): An input tensor to run through the module.
+
+        Returns:
+            x (torch.Tensor): The module output.
+        """
         if self.downsample is not None:
             identity = self.downsample(x)
         else:
@@ -246,6 +302,14 @@ class AttentionPool2d(nn.Module):
         self.num_heads = num_heads
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+
+            x (torch.Tensor): An input tensor to run through the module.
+
+        Returns:
+            x (torch.Tensor): The module output.
+        """
         x = x.reshape(*x.shape[:2], -1).permute(2, 0, 1)
         x = torch.cat([x.mean(dim=0, keepdim=True), x], dim=0)
         x = x + self.positional_embedding[:, None, :]
