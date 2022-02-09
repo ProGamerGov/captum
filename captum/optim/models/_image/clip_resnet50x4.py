@@ -219,8 +219,6 @@ class Bottleneck(nn.Module):
         activ: Type[nn.Module] = nn.ReLU,
     ) -> None:
         """
-        Residual layer creation helper function.
-        
         Args:
 
             inplanes (int, optional): The number of input channels / features to use
