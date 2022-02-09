@@ -119,7 +119,7 @@ class CLIP_ResNet50x4(nn.Module):
         self.layer3 = self._build_layer(640, 320, 10, stride=2, pooling=18, activ=activ)
         self.layer4 = self._build_layer(1280, 640, 6, stride=2, pooling=9, activ=activ)
 
-        self.attnpool = AttentionPool2d(9, 2560, output_size=640, num_heads=40)
+        self.attnpool = AttentionPool2d(9, 2560, out_features=640, num_heads=40)
 
     def _build_layer(
         self,
