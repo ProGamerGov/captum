@@ -245,7 +245,7 @@ class AttentionPool2d(nn.Module):
         embed_dim: int = 2560,
         num_heads: int = 40,
         output_dim: int = 640,
-    ):
+    ) -> None:
         super().__init__()
         self.positional_embedding = nn.Parameter(
             torch.randn(spacial_dim**2 + 1, embed_dim) / embed_dim**0.5
