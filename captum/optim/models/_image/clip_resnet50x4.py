@@ -103,17 +103,13 @@ class CLIP_ResNet50x4(nn.Module):
         width = 80
 
         # Stem layers
-        self.conv1 = nn.Conv2d(
-            3, width // 2, kernel_size=3, stride=2, padding=1, bias=False
-        )
-        self.bn1 = nn.BatchNorm2d(width // 2)
+        self.conv1 = nn.Conv2d(3, 40, kernel_size=3, stride=2, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(40)
         self.relu1 = activ()
-        self.conv2 = nn.Conv2d(
-            width // 2, width // 2, kernel_size=3, padding=1, bias=False
-        )
-        self.bn2 = nn.BatchNorm2d(width // 2)
+        self.conv2 = nn.Conv2d(40, 40, kernel_size=3, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(40)
         self.relu2 = activ()
-        self.conv3 = nn.Conv2d(width // 2, width, kernel_size=3, padding=1, bias=False)
+        self.conv3 = nn.Conv2d(40, 80, kernel_size=3, padding=1, bias=False)
         self.bn3 = nn.BatchNorm2d(width)
         self.relu3 = activ()
         self.avgpool = nn.AdaptiveAvgPool2d(72)
@@ -125,9 +121,7 @@ class CLIP_ResNet50x4(nn.Module):
         self.layer3 = self._make_layer(width * 4, 10, stride=2, pooling=18, activ=activ)
         self.layer4 = self._make_layer(width * 8, 6, stride=2, pooling=9, activ=activ)
 
-        self.attnpool = AttentionPool2d(
-            9, width * 32, num_heads=width * 32 // 64, output_dim=640
-        )
+        self.attnpool = AttentionPool2d(9, 2560, num_heads=40, output_dim=640)
 
     def _make_layer(
         self,
