@@ -164,10 +164,10 @@ class CLIP_ResNet50x4(nn.Module):
         """
         Args:
 
-            x (torch.Tensor): An input tensor to normalize and scale the values of.
+            x (torch.Tensor): An input tensor to normalize the values of.
 
         Returns:
-            x (torch.Tensor): A transformed tensor.
+            x (torch.Tensor): A normalized tensor.
         """
         if self.transform_input:
             assert x.dim() == 3 or x.dim() == 4
