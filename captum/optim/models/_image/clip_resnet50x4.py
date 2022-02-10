@@ -313,6 +313,7 @@ class AttentionPool2d(nn.Module):
         self.c_proj = nn.Linear(in_features, out_features)
         self.num_heads = num_heads
 
+    @torch.jit.ignore
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Args:
