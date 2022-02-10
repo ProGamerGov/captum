@@ -276,7 +276,7 @@ class DeepDream(BaseLoss):
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
         activations = activations[self.batch_index[0] : self.batch_index[1]]
-        return activations ** 2
+        return activations**2
 
 
 @loss_wrapper
@@ -596,7 +596,7 @@ class AngledNeuronDirection(BaseLoss):
             return activations * vec
 
         dot = torch.mean(activations * vec)
-        cossims = dot / (self.eps + torch.sqrt(torch.sum(activations ** 2)))
+        cossims = dot / (self.eps + torch.sqrt(torch.sum(activations**2)))
         return dot * torch.clamp(cossims, min=0.1) ** self.cossim_pow
 
 
@@ -724,7 +724,12 @@ def sum_loss_list(
     target = [
         target
         for targets in [
-            [loss.target] if not (hasattr(loss.target, "__iter__") and not isinstance(loss.target, nn.Module)) else loss.target
+            [loss.target]
+            if not (
+                hasattr(loss.target, "__iter__")
+                and not isinstance(loss.target, nn.Module)
+            )
+            else loss.target
             for loss in loss_list
         ]
         for target in targets
