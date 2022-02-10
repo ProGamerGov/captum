@@ -128,8 +128,16 @@ def module_op(
 
         name = f"Compose({', '.join([self.__name__, other.__name__])})"
         target = (
-            self.target if hasattr(self.target, "__iter__")  and not isinstance(self.target, nn.Module) else [self.target]
-        ) + (other.target if hasattr(other.target, "__iter__") and not isinstance(other.target, nn.Module) else [other.target])
+            self.target
+            if hasattr(self.target, "__iter__")
+            and not isinstance(self.target, nn.Module)
+            else [self.target]
+        ) + (
+            other.target
+            if hasattr(other.target, "__iter__")
+            and not isinstance(other.target, nn.Module)
+            else [other.target]
+        )
     else:
         raise TypeError(
             "Can only apply math operations with int, float or Loss. Received type "
@@ -268,7 +276,7 @@ class DeepDream(BaseLoss):
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
         activations = activations[self.batch_index[0] : self.batch_index[1]]
-        return activations ** 2
+        return activations**2
 
 
 @loss_wrapper
@@ -588,7 +596,7 @@ class AngledNeuronDirection(BaseLoss):
             return activations * vec
 
         dot = torch.mean(activations * vec)
-        cossims = dot / (self.eps + torch.sqrt(torch.sum(activations ** 2)))
+        cossims = dot / (self.eps + torch.sqrt(torch.sum(activations**2)))
         return dot * torch.clamp(cossims, min=0.1) ** self.cossim_pow
 
 
