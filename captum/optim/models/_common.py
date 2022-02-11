@@ -21,9 +21,13 @@ def get_model_layers(model: nn.Module) -> List[str]:
             for name, layer in net._modules.items():
                 if layer is None:
                     continue
-                separator = "" if str(name).isdigit() else "."
-                name = "[" + str(name) + "]" if str(name).isdigit() else name
-                layers.append(separator.join(prefix + [name]))
+                name_str = "".join(
+                    [
+                        ("[" + str(i) + "]" if str(i).isdigit() else "." + i)
+                        for i in prefix + [name]
+                    ]
+                ).strip()
+                layers.append(name_str[1:] if name_str[0] == "." else name_str)
                 get_layers(layer, prefix=prefix + [name])
 
     get_layers(model)
