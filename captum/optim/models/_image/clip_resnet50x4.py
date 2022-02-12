@@ -251,13 +251,14 @@ class Bottleneck(nn.Module):
         self.bn3 = nn.BatchNorm2d(planes * 4)
         self.relu3 = activ()
 
-        self.downsample = None
         if stride > 1 or inplanes != planes * 4:
             self.downsample = nn.Sequential(
                 nn.AdaptiveAvgPool2d(pooling),
                 nn.Conv2d(inplanes, planes * 4, kernel_size=1, stride=1, bias=False),
                 nn.BatchNorm2d(planes * 4),
             )
+        else:
+            self.downsample = None
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
