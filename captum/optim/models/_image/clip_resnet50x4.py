@@ -21,7 +21,7 @@ def clip_resnet50x4_visual(
 
     AvgPool2d layers were replaced with AdaptiveAvgPool2d to allow for any input size.
 
-    https://github.com/openai/CLIP
+    See here for more OpenAI's code: https://github.com/openai/CLIP
 
     Args:
 
@@ -119,6 +119,7 @@ class CLIP_ResNet50x4(nn.Module):
         self.layer3 = self._build_layer(640, 320, 10, stride=2, pooling=18, activ=activ)
         self.layer4 = self._build_layer(1280, 640, 6, stride=2, pooling=9, activ=activ)
 
+        # Attention Pooling 2D
         self.attnpool = AttentionPool2d(9, 2560, out_features=640, num_heads=40)
 
     def _build_layer(
