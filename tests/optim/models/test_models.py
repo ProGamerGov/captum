@@ -6,7 +6,7 @@ import torch
 from captum.optim.models import googlenet
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
-from tests.optim.helpers.models_basic import _check_layer_in_model, _check_layer_not_in_model
+from tests.optim.helpers.models import _check_layer_in_model, _check_layer_not_in_model
 
 
 class TestInceptionV1(BaseTest):
