@@ -119,7 +119,7 @@ class CLIP_ResNet50x4(nn.Module):
         self.layer3 = self._build_layer(640, 320, 10, stride=2, pooling=18, activ=activ)
         self.layer4 = self._build_layer(1280, 640, 6, stride=2, pooling=9, activ=activ)
 
-        # Attention Pooling 2D
+        # Attention Pooling
         self.attnpool = AttentionPool2d(9, 2560, out_features=640, num_heads=40)
 
     def _build_layer(
@@ -192,6 +192,8 @@ class CLIP_ResNet50x4(nn.Module):
         Returns:
             x (torch.Tensor): The model output.
         """
+
+        # Normalize input
         x = self._transform_input(x)
 
         # Stem layers
@@ -206,6 +208,7 @@ class CLIP_ResNet50x4(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
 
+        # Attention Pooling
         x = self.attnpool(x)
         return x
 
