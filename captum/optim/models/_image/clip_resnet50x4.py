@@ -40,7 +40,7 @@ def clip_resnet50x4_visual(
             Default: False
         transform_input (bool, optional): If True, preprocesses the input according to
             the method with which it was trained.
-            Default: False
+            Default: *True* when pretrained is True otherwise *False*
 
     Returns:
         **CLIP_ResNet50x4** (CLIP_ResNet50x4): An CLIP ResNet 50x4 model's visual
