@@ -21,7 +21,7 @@ def clip_resnet50x4_visual(
 
     AvgPool2d layers were replaced with AdaptiveAvgPool2d to allow for any input size.
 
-    See here for more OpenAI's code: https://github.com/openai/CLIP
+    See here for more details: https://github.com/openai/CLIP
 
     Args:
 
