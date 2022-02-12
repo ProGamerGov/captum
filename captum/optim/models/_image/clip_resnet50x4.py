@@ -192,8 +192,6 @@ class CLIP_ResNet50x4(nn.Module):
         Returns:
             x (torch.Tensor): The model output.
         """
-
-        # Normalize input
         x = self._transform_input(x)
 
         # Stem layers
