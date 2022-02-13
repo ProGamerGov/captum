@@ -42,7 +42,7 @@ class TestCLIPResNet50x4(BaseTest):
                 "Skipping load pretrained CLIP ResNet 50x4 due to insufficient"
                 + " Torch version."
             )
-        model = clip_resnet50x4_visual(
+        model = clip_resnet50x4_image(
             pretrained=True, replace_relus_with_redirectedrelu=True
         )
         _check_layer_in_model(self, model, RedirectedReluLayer)
@@ -53,7 +53,7 @@ class TestCLIPResNet50x4(BaseTest):
                 "Skipping load pretrained CLIP ResNet 50x4 RedirectedRelu test"
                 + " due to insufficient Torch version."
             )
-        model = clip_resnet50x4_visual(
+        model = clip_resnet50x4_image(
             pretrained=True, replace_relus_with_redirectedrelu=False
         )
         _check_layer_not_in_model(self, model, RedirectedReluLayer)
@@ -65,7 +65,7 @@ class TestCLIPResNet50x4(BaseTest):
                 "Skipping load pretrained CLIP ResNet 50x4 linear test due to"
                 + " insufficient Torch version."
             )
-        model = clip_resnet50x4_visual(pretrained=True, use_linear_modules_only=True)
+        model = clip_resnet50x4_image(pretrained=True, use_linear_modules_only=True)
         _check_layer_not_in_model(self, model, RedirectedReluLayer)
         _check_layer_not_in_model(self, model, torch.nn.ReLU)
         _check_layer_in_model(self, model, SkipLayer)
@@ -77,7 +77,7 @@ class TestCLIPResNet50x4(BaseTest):
                 + " insufficient Torch version."
             )
         x = torch.randn(1, 3, 288, 288).clamp(0, 1)
-        model = clip_resnet50x4_visual(pretrained=True)
+        model = clip_resnet50x4_image(pretrained=True)
         output = model._transform_input(x)
         expected_output = x.clone() - torch.tensor([0.48145466, 0.4578275, 0.40821073]).view(3, 1, 1)
         expected_output = expected_output / torch.tensor([0.26862954, 0.26130258, 0.27577711]).view(3, 1, 1)
@@ -92,7 +92,7 @@ class TestCLIPResNet50x4(BaseTest):
         x = torch.stack(
             [torch.ones(3, 112, 112) * -1, torch.ones(3, 112, 112) * 2], dim=0
         )
-        model = clip_resnet50x4_visual(pretrained=True)
+        model = clip_resnet50x4_image(pretrained=True)
         with self.assertWarns(UserWarning):
             model._transform_input(x)
 
@@ -103,7 +103,7 @@ class TestCLIPResNet50x4(BaseTest):
                 + " insufficient Torch version."
             )
         x = torch.zeros(1, 3, 288, 288)
-        model = clip_resnet50x4_visual(pretrained=True)
+        model = clip_resnet50x4_image(pretrained=True)
         output = model(x)
         self.assertEqual([list(output.shape), [1, 640])
 
@@ -114,7 +114,7 @@ class TestCLIPResNet50x4(BaseTest):
                 + " insufficient Torch version."
             )
         x = torch.zeros(1, 3, 288, 288)
-        model = clip_resnet50x4_visual(pretrained=False)
+        model = clip_resnet50x4_image(pretrained=False)
         output = model(x)
         self.assertEqual([list(output.shape), [1, 640])
 
@@ -126,7 +126,7 @@ class TestCLIPResNet50x4(BaseTest):
             )
         x = torch.zeros(1, 3, 512, 512)
         x2 = torch.zeros(1, 3, 126, 224)
-        model = clip_resnet50x4_visual(pretrained=True)
+        model = clip_resnet50x4_image(pretrained=True)
 
         output = model(x)
         output2 = model(x2)
@@ -146,7 +146,7 @@ class TestCLIPResNet50x4(BaseTest):
                 + " not supporting CUDA."
             )
         x = torch.zeros(1, 3, 224, 224).cuda()
-        model = clip_resnet50x4_visual(pretrained=True).cuda()
+        model = clip_resnet50x4_image(pretrained=True).cuda()
         output = model(x)
 
         self.assertTrue(output.is_cuda)
@@ -159,7 +159,7 @@ class TestCLIPResNet50x4(BaseTest):
                 + " redirected relu test due to insufficient Torch version."
             )
         x = torch.zeros(1, 3, 224, 224)
-        model = clip_resnet50x4_visual(
+        model = clip_resnet50x4_image(
             pretrained=True, replace_relus_with_redirectedrelu=False
         )
         jit_model = torch.jit.script(model)
