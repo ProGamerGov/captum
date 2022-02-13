@@ -14,7 +14,7 @@ def clip_resnet50x4_image(
     progress: bool = True,
     model_path: Optional[str] = None,
     **kwargs
-) -> "CLIP_ResNet50x4":
+) -> "CLIP_ResNet50x4Image":
     """
     The visual portion of OpenAI's ResNet 50x4 CLIP model from 'Learning Transferable
     Visual Models From Natural Language Supervision': https://arxiv.org/abs/2103.00020
@@ -43,7 +43,7 @@ def clip_resnet50x4_image(
             Default: *True* when pretrained is True otherwise *False*
 
     Returns:
-        **CLIP_ResNet50x4** (CLIP_ResNet50x4): A CLIP ResNet 50x4 model's visual
+        **CLIP_ResNet50x4Image** (CLIP_ResNet50x4Image): A CLIP ResNet 50x4 model's image
             portion.
     """
     if pretrained:
@@ -54,7 +54,7 @@ def clip_resnet50x4_image(
         if "use_linear_modules_only" not in kwargs:
             kwargs["use_linear_modules_only"] = False
 
-        model = CLIP_ResNet50x4(**kwargs)
+        model = CLIP_ResNet50x4Image(**kwargs)
 
         if model_path is None:
             state_dict = torch.hub.load_state_dict_from_url(
@@ -65,10 +65,10 @@ def clip_resnet50x4_image(
         model.load_state_dict(state_dict)
         return model
 
-    return CLIP_ResNet50x4(**kwargs)
+    return CLIP_ResNet50x4Image(**kwargs)
 
 
-class CLIP_ResNet50x4(nn.Module):
+class CLIP_ResNet50x4Image(nn.Module):
     __constants__ = ["transform_input"]
 
     def __init__(
