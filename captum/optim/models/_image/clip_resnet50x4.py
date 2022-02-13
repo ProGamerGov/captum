@@ -43,7 +43,7 @@ def clip_resnet50x4_visual(
             Default: *True* when pretrained is True otherwise *False*
 
     Returns:
-        **CLIP_ResNet50x4** (CLIP_ResNet50x4): An CLIP ResNet 50x4 model's visual
+        **CLIP_ResNet50x4** (CLIP_ResNet50x4): A CLIP ResNet 50x4 model's visual
             portion.
     """
     if pretrained:
