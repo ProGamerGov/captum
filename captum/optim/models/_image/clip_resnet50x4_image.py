@@ -6,22 +6,22 @@ from torch import nn
 
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 
-GS_SAVED_WEIGHTS_URL = "clip_rn50x4_visual.pt"
+GS_SAVED_WEIGHTS_URL = "clip_rn50x4_image.pt"
 
 
-def clip_resnet50x4_visual(
+def clip_resnet50x4_image(
     pretrained: bool = False,
     progress: bool = True,
     model_path: Optional[str] = None,
     **kwargs
-) -> "CLIP_ResNet50x4":
+) -> "CLIP_ResNet50x4Image":
     """
     The visual portion of OpenAI's ResNet 50x4 CLIP model from 'Learning Transferable
     Visual Models From Natural Language Supervision': https://arxiv.org/abs/2103.00020
 
     AvgPool2d layers were replaced with AdaptiveAvgPool2d to allow for any input size.
 
-    https://github.com/openai/CLIP
+    See here for more details: https://github.com/openai/CLIP
 
     Args:
 
@@ -40,10 +40,10 @@ def clip_resnet50x4_visual(
             Default: False
         transform_input (bool, optional): If True, preprocesses the input according to
             the method with which it was trained.
-            Default: False
+            Default: *True* when pretrained is True otherwise *False*
 
     Returns:
-        **CLIP_ResNet50x4** (CLIP_ResNet50x4): An CLIP ResNet 50x4 model's visual
+        **CLIP_ResNet50x4Image** (CLIP_ResNet50x4Image): A CLIP ResNet 50x4 model's image
             portion.
     """
     if pretrained:
@@ -54,7 +54,7 @@ def clip_resnet50x4_visual(
         if "use_linear_modules_only" not in kwargs:
             kwargs["use_linear_modules_only"] = False
 
-        model = CLIP_ResNet50x4(**kwargs)
+        model = CLIP_ResNet50x4Image(**kwargs)
 
         if model_path is None:
             state_dict = torch.hub.load_state_dict_from_url(
@@ -65,10 +65,10 @@ def clip_resnet50x4_visual(
         model.load_state_dict(state_dict)
         return model
 
-    return CLIP_ResNet50x4(**kwargs)
+    return CLIP_ResNet50x4Image(**kwargs)
 
 
-class CLIP_ResNet50x4(nn.Module):
+class CLIP_ResNet50x4Image(nn.Module):
     __constants__ = ["transform_input"]
 
     def __init__(
@@ -119,6 +119,7 @@ class CLIP_ResNet50x4(nn.Module):
         self.layer3 = self._build_layer(640, 320, 10, stride=2, pooling=18, activ=activ)
         self.layer4 = self._build_layer(1280, 640, 6, stride=2, pooling=9, activ=activ)
 
+        # Attention Pooling
         self.attnpool = AttentionPool2d(9, 2560, out_features=640, num_heads=40)
 
     def _build_layer(
@@ -205,6 +206,7 @@ class CLIP_ResNet50x4(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
 
+        # Attention Pooling
         x = self.attnpool(x)
         return x
 
@@ -250,13 +252,14 @@ class Bottleneck(nn.Module):
         self.bn3 = nn.BatchNorm2d(planes * 4)
         self.relu3 = activ()
 
-        self.downsample = None
         if stride > 1 or inplanes != planes * 4:
             self.downsample = nn.Sequential(
                 nn.AdaptiveAvgPool2d(pooling),
                 nn.Conv2d(inplanes, planes * 4, kernel_size=1, stride=1, bias=False),
                 nn.BatchNorm2d(planes * 4),
             )
+        else:
+            self.downsample = None
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -313,6 +316,7 @@ class AttentionPool2d(nn.Module):
         self.c_proj = nn.Linear(in_features, out_features)
         self.num_heads = num_heads
 
+    @torch.jit.ignore
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
         Args:
