@@ -4,7 +4,7 @@ from typing import Type
 
 import torch
 
-from captum.optim.models import clip_resnet50x4_visual
+from captum.optim.models import clip_resnet50x4_image
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
