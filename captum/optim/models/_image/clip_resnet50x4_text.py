@@ -66,8 +66,7 @@ class CLIP_ResNet50x4Text(nn.Module):
         x = x + self.positional_embedding.to(device=x.device, dtype=x.dtype)
         x = self.transformer(x.permute(1, 0, 2)).permute(1, 0, 2)
         x = self.ln_final(x)
-        x = x[torch.arange(x.shape[0]), text.argmax(dim=-1)] @ self.text_projection.to(device=x.device, dtype=x.dtype)
-        return x
+        return x[torch.arange(x.shape[0]), text.argmax(dim=-1)] @ self.text_projection.to(device=x.device, dtype=x.dtype)
 
 
 class QuickGELU(nn.Module):
@@ -90,9 +89,8 @@ class ResidualAttentionBlock(nn.Module):
     def attention(self, x: torch.Tensor) -> torch.Tensor:
         if self.attn_mask is not None:
             self.attn_mask = self.attn_mask.to(device=x.device, dtype=x.dtype)
-        return self.attn(x, x, x, need_weights=False, attn_mask=attn_mask)[0]
+        return self.attn(x, x, x, need_weights=False, attn_mask=self.attn_mask)[0]
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = x + self.attention(self.ln_1(x))
-        x = x + self.mlp(self.ln_2(x))
-        return x
+        return x + self.mlp(self.ln_2(x))
