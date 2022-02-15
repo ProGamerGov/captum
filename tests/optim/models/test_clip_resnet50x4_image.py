@@ -105,7 +105,7 @@ class TestCLIPResNet50x4(BaseTest):
         x = torch.zeros(1, 3, 288, 288)
         model = clip_resnet50x4_image(pretrained=True)
         output = model(x)
-        self.assertEqual([list(output.shape), [1, 640])
+        self.assertEqual(list(output.shape), [1, 640])
 
     def test_untrained_clip_resnet50x4_load_and_forward(self) -> None:
         if torch.__version__ <= "1.6.0":
@@ -116,7 +116,7 @@ class TestCLIPResNet50x4(BaseTest):
         x = torch.zeros(1, 3, 288, 288)
         model = clip_resnet50x4_image(pretrained=False)
         output = model(x)
-        self.assertEqual([list(output.shape), [1, 640])
+        self.assertEqual(list(output.shape), [1, 640])
 
     def test_clip_resnet50x4_load_and_forward_diff_sizes(self) -> None:
         if torch.__version__ <= "1.6.0":
@@ -131,8 +131,8 @@ class TestCLIPResNet50x4(BaseTest):
         output = model(x)
         output2 = model(x2)
 
-        self.assertEqual([list(output.shape), [1, 640])
-        self.assertEqual([list(output2.shape), [1, 640])
+        self.assertEqual(list(output.shape), [1, 640])
+        self.assertEqual(list(output2.shape), [1, 640])
 
     def test_clip_resnet50x4_forward_cuda(self) -> None:
         if torch.__version__ <= "1.6.0":
@@ -150,7 +150,7 @@ class TestCLIPResNet50x4(BaseTest):
         output = model(x)
 
         self.assertTrue(output.is_cuda)
-        self.assertEqual([list(output.shape), [1, 640])
+        self.assertEqual(list(output.shape), [1, 640])
 
     def test_clip_resnet50x4_jit_module_no_redirected_relu(self) -> None:
         if torch.__version__ <= "1.8.0":
@@ -164,4 +164,4 @@ class TestCLIPResNet50x4(BaseTest):
         )
         jit_model = torch.jit.script(model)
         output = jit_model(x)
-        self.assertEqual([list(output.shape), [1, 640])
+        self.assertEqual(list(output.shape), [1, 640])
