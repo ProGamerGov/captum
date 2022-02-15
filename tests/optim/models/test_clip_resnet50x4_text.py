@@ -25,7 +25,7 @@ class TestCLIPResNet50x4(BaseTest):
         x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77-2)]).int()
         model = clip_resnet50x4_text(pretrained=True)
         output = model(x)
-        self.assertEqual([list(output.shape), [1, 640])
+        self.assertEqual(list(output.shape), [1, 640])
 
     def test_clip_resnet50x4_forward_cuda(self) -> None:
         if torch.__version__ <= "1.6.0":
@@ -43,7 +43,7 @@ class TestCLIPResNet50x4(BaseTest):
         output = model(x)
 
         self.assertTrue(output.is_cuda)
-        self.assertEqual([list(output.shape), [1, 640])
+        self.assertEqual(list(output.shape), [1, 640])
 
     def test_clip_resnet50x4_jit_module(self) -> None:
         if torch.__version__ <= "1.8.0":
@@ -55,4 +55,4 @@ class TestCLIPResNet50x4(BaseTest):
         model = clip_resnet50x4_text(pretrained=True)
         jit_model = torch.jit.script(model)
         output = jit_model(x)
-        self.assertEqual([list(output.shape), [1, 640])
+        self.assertEqual(list(output.shape), [1, 640])
