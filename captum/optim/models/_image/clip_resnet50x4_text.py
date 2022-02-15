@@ -53,7 +53,9 @@ class CLIP_ResNet50x4Text(nn.Module):
     def __init__(self) -> None:
         super().__init__()
         attn_mask = torch.empty(77, 77).fill_(float("-inf")).triu_(1)
-        self.transformer = nn.Sequential(*[ResidualAttentionBlock(640, 10, attn_mask) for _ in range(12)])
+        self.transformer = nn.Sequential(
+            *[ResidualAttentionBlock(640, 10, attn_mask) for _ in range(12)]
+        )
         self.token_embedding = nn.Embedding(49408, 640)
         self.positional_embedding = nn.Parameter(torch.empty(77, 640))
         self.ln_final = nn.LayerNorm(640)
@@ -66,13 +68,16 @@ class CLIP_ResNet50x4Text(nn.Module):
         x = x + self.positional_embedding.to(device=x.device, dtype=x.dtype)
         x = self.transformer(x.permute(1, 0, 2)).permute(1, 0, 2)
         x = self.ln_final(x)
-        return x[torch.arange(x.shape[0]), text.argmax(dim=-1)] @ self.text_projection.to(device=x.device, dtype=x.dtype)
+        return x[
+            torch.arange(x.shape[0]), text.argmax(dim=-1)
+        ] @ self.text_projection.to(device=x.device, dtype=x.dtype)
 
 
 class QuickGELU(nn.Module):
     """
     OpenAI's model use a slightly different GELU than PyTorch's default GELU.
     """
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return x * torch.sigmoid(1.702 * x)
 
@@ -82,12 +87,20 @@ class ResidualAttentionBlock(nn.Module):
         super().__init__()
         self.attn = nn.MultiheadAttention(width, num_heads)
         self.ln_1 = nn.LayerNorm(width)
-        self.mlp = nn.Sequential(nn.Linear(width, width * 4), QuickGELU(), nn.Linear(width * 4, width))
+        self.mlp = nn.Sequential(
+            nn.Linear(width, width * 4), QuickGELU(), nn.Linear(width * 4, width)
+        )
         self.ln_2 = nn.LayerNorm(width)
         self.attn_mask = attn_mask
 
     def attention(self, x: torch.Tensor) -> torch.Tensor:
-        return self.attn(x, x, x, need_weights=False, attn_mask=self.attn_mask.to(device=x.device, dtype=x.dtype))[0]
+        return self.attn(
+            x,
+            x,
+            x,
+            need_weights=False,
+            attn_mask=self.attn_mask.to(device=x.device, dtype=x.dtype),
+        )[0]
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = x + self.attention(self.ln_1(x))
