@@ -68,9 +68,8 @@ class CLIP_ResNet50x4Text(nn.Module):
         x = x + self.positional_embedding.to(device=x.device, dtype=x.dtype)
         x = self.transformer(x.permute(1, 0, 2)).permute(1, 0, 2)
         x = self.ln_final(x)
-        return x[
-            torch.arange(x.shape[0]), text.argmax(dim=-1)
-        ] @ self.text_projection.to(device=x.device, dtype=x.dtype)
+        x = x[torch.arange(x.shape[0]), text.argmax(dim=-1)]
+        return x @ self.text_projection.to(device=x.device, dtype=x.dtype)
 
 
 class QuickGELU(nn.Module):
