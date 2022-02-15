@@ -79,8 +79,12 @@ class TestCLIPResNet50x4(BaseTest):
         x = torch.randn(1, 3, 288, 288).clamp(0, 1)
         model = clip_resnet50x4_image(pretrained=True)
         output = model._transform_input(x)
-        expected_output = x.clone() - torch.tensor([0.48145466, 0.4578275, 0.40821073]).view(3, 1, 1)
-        expected_output = expected_output / torch.tensor([0.26862954, 0.26130258, 0.27577711]).view(3, 1, 1)
+        expected_output = x.clone() - torch.tensor(
+            [0.48145466, 0.4578275, 0.40821073]
+        ).view(3, 1, 1)
+        expected_output = expected_output / torch.tensor(
+            [0.26862954, 0.26130258, 0.27577711]
+        ).view(3, 1, 1)
         assertTensorAlmostEqual(self, output, expected_output, 0)
 
     def test_clip_resnet50x4_transform_warning(self) -> None:

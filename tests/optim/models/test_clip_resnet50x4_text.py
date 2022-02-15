@@ -22,7 +22,7 @@ class TestCLIPResNet50x4(BaseTest):
                 "Skipping basic pretrained CLIP ResNet 50x4 forward test due to"
                 + " insufficient Torch version."
             )
-        x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77-2)]).int()
+        x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77 - 2)]).int()
         model = clip_resnet50x4_text(pretrained=True)
         output = model(x)
         self.assertEqual(list(output.shape), [1, 640])
@@ -38,7 +38,7 @@ class TestCLIPResNet50x4(BaseTest):
                 "Skipping pretrained CLIP ResNet 50x4 forward CUDA test due to"
                 + " not supporting CUDA."
             )
-        x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77-2)]).int().cuda()
+        x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77 - 2)]).int().cuda()
         model = clip_resnet50x4_text(pretrained=True).cuda()
         output = model(x)
 
@@ -51,7 +51,7 @@ class TestCLIPResNet50x4(BaseTest):
                 "Skipping pretrained CLIP ResNet 50x4 load & JIT module"
                 + " test due to insufficient Torch version."
             )
-        x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77-2)]).int()
+        x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77 - 2)]).int()
         model = clip_resnet50x4_text(pretrained=True)
         jit_model = torch.jit.script(model)
         output = jit_model(x)
