@@ -1,1 +1,0 @@
-# Tutorial asset file tests
