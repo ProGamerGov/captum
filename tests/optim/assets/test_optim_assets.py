@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import unittest
-
 import torch
 
 from tests.helpers.basic import BaseTest
