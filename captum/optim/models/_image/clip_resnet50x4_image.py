@@ -6,7 +6,9 @@ from torch import nn
 
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 
-GS_SAVED_WEIGHTS_URL = "clip_rn50x4_image.pt"
+GS_SAVED_WEIGHTS_URL = (
+    "https://pytorch-tutorial-assets.s3.amazonaws.com/captum/clip_resnet50x4_image.pt"
+)
 
 
 def clip_resnet50x4_image(
@@ -43,8 +45,8 @@ def clip_resnet50x4_image(
             Default: *True* when pretrained is True otherwise *False*
 
     Returns:
-        **CLIP_ResNet50x4Image** (CLIP_ResNet50x4Image): A CLIP ResNet 50x4 model's image
-            portion.
+        **CLIP_ResNet50x4Image** (CLIP_ResNet50x4Image): A CLIP ResNet 50x4 model's
+            image portion.
     """
     if pretrained:
         if "transform_input" not in kwargs:
