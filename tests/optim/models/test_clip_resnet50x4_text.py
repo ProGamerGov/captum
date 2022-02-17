@@ -11,7 +11,7 @@ class TestCLIPResNet50x4Text(BaseTest):
     def test_clip_resnet50x4_text_load_and_forward(self) -> None:
         if torch.__version__ <= "1.6.0":
             raise unittest.SkipTest(
-                "Skipping basic pretrained CLIP ResNet 50x4 forward test due to"
+                "Skipping basic pretrained CLIP ResNet 50x4 Text forward test due to"
                 + " insufficient Torch version."
             )
         x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77 - 2)])
@@ -23,12 +23,12 @@ class TestCLIPResNet50x4Text(BaseTest):
     def test_clip_resnet50x4_text_forward_cuda(self) -> None:
         if torch.__version__ <= "1.6.0":
             raise unittest.SkipTest(
-                "Skipping pretrained CLIP ResNet 50x4 forward CUDA test due to"
+                "Skipping pretrained CLIP ResNet 50x4 Text forward CUDA test due to"
                 + " insufficient Torch version."
             )
         if not torch.cuda.is_available():
             raise unittest.SkipTest(
-                "Skipping pretrained CLIP ResNet 50x4 forward CUDA test due to"
+                "Skipping pretrained CLIP ResNet 50x4 Text forward CUDA test due to"
                 + " not supporting CUDA."
             )
         x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77 - 2)]).cuda()
@@ -42,7 +42,7 @@ class TestCLIPResNet50x4Text(BaseTest):
     def test_clip_resnet50x4_text_jit_module(self) -> None:
         if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
-                "Skipping pretrained CLIP ResNet 50x4 load & JIT module"
+                "Skipping pretrained CLIP ResNet 50x4 Text load & JIT module"
                 + " test due to insufficient Torch version."
             )
         x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77 - 2)])
