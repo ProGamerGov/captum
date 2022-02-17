@@ -5,7 +5,9 @@ import torch
 from torch import nn
 
 
-GS_SAVED_WEIGHTS_URL = "clip_rn50x4_text.pt"
+GS_SAVED_WEIGHTS_URL = (
+    "https://pytorch-tutorial-assets.s3.amazonaws.com/captum/clip_resnet50x4_text.pt"
+)
 
 
 def clip_resnet50x4_text(
@@ -68,9 +70,8 @@ class CLIP_ResNet50x4Text(nn.Module):
         x = x + self.positional_embedding.to(device=x.device, dtype=x.dtype)
         x = self.transformer(x.permute(1, 0, 2)).permute(1, 0, 2)
         x = self.ln_final(x)
-        return x[
-            torch.arange(x.shape[0]), text.argmax(dim=-1)
-        ] @ self.text_projection.to(device=x.device, dtype=x.dtype)
+        x = x[torch.arange(x.shape[0]), text.argmax(dim=-1)]
+        return x @ self.text_projection.to(device=x.device, dtype=x.dtype)
 
 
 class QuickGELU(nn.Module):
@@ -94,13 +95,8 @@ class ResidualAttentionBlock(nn.Module):
         self.attn_mask = attn_mask
 
     def attention(self, x: torch.Tensor) -> torch.Tensor:
-        return self.attn(
-            x,
-            x,
-            x,
-            need_weights=False,
-            attn_mask=self.attn_mask.to(device=x.device, dtype=x.dtype),
-        )[0]
+        attn_mask = self.attn_mask.to(device=x.device, dtype=x.dtype)
+        return self.attn(x, x, x, need_weights=False, attn_mask=attn_mask)[0]
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = x + self.attention(self.ln_1(x))
