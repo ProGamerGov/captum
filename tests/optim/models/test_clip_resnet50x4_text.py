@@ -8,14 +8,6 @@ from tests.helpers.basic import BaseTest
 
 
 class TestCLIPResNet50x4(BaseTest):
-    def test_load_clip_resnet50x4(self) -> None:
-        if torch.__version__ <= "1.6.0":
-            raise unittest.SkipTest(
-                "Skipping load pretrained CLIP ResNet 50x4 due to insufficient"
-                + " Torch version."
-            )
-        model = clip_resnet50x4_text(pretrained=True)
-
     def test_clip_resnet50x4_load_and_forward(self) -> None:
         if torch.__version__ <= "1.6.0":
             raise unittest.SkipTest(
