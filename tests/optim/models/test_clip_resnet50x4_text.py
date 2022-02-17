@@ -7,7 +7,7 @@ from captum.optim.models import clip_resnet50x4_text
 from tests.helpers.basic import BaseTest
 
 
-class TestCLIPResNet50x4(BaseTest):
+class TestCLIPResNet50x4Text(BaseTest):
     def test_clip_resnet50x4_text_load_and_forward(self) -> None:
         if torch.__version__ <= "1.6.0":
             raise unittest.SkipTest(
