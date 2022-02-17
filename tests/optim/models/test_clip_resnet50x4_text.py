@@ -8,7 +8,7 @@ from tests.helpers.basic import BaseTest
 
 
 class TestCLIPResNet50x4(BaseTest):
-    def test_clip_resnet50x4_load_and_forward(self) -> None:
+    def test_clip_resnet50x4_text_load_and_forward(self) -> None:
         if torch.__version__ <= "1.6.0":
             raise unittest.SkipTest(
                 "Skipping basic pretrained CLIP ResNet 50x4 forward test due to"
@@ -20,7 +20,7 @@ class TestCLIPResNet50x4(BaseTest):
         output = model(x[None, :])
         self.assertEqual(list(output.shape), [1, 640])
 
-    def test_clip_resnet50x4_forward_cuda(self) -> None:
+    def test_clip_resnet50x4_text_forward_cuda(self) -> None:
         if torch.__version__ <= "1.6.0":
             raise unittest.SkipTest(
                 "Skipping pretrained CLIP ResNet 50x4 forward CUDA test due to"
@@ -39,7 +39,7 @@ class TestCLIPResNet50x4(BaseTest):
         self.assertTrue(output.is_cuda)
         self.assertEqual(list(output.shape), [1, 640])
 
-    def test_clip_resnet50x4_jit_module(self) -> None:
+    def test_clip_resnet50x4_text_jit_module(self) -> None:
         if torch.__version__ <= "1.8.0":
             raise unittest.SkipTest(
                 "Skipping pretrained CLIP ResNet 50x4 load & JIT module"
