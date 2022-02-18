@@ -25,8 +25,8 @@ def clip_resnet50x4_image(
     CLIP ResNet 50x4 model.
 
     AvgPool2d layers were replaced with AdaptiveAvgPool2d to allow for any input height
-    and width size, though the best results are obtained from using the model's
-    intended input height and width of 288x288.
+    and width size, though the best results are obtained by using the model's intended
+    input height and width of 288x288.
 
     See here for more details: https://github.com/openai/CLIP
 
