@@ -68,6 +68,14 @@ class CLIP_ResNet50x4Text(nn.Module):
         self.logit_scale = nn.Parameter(torch.ones([]) * math.log(1 / 0.07))
 
     def forward(self, text: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+
+            x (torch.Tensor): An input tensor to run through the model.
+
+        Returns:
+            x (torch.Tensor): The model output.
+        """
         x = self.token_embedding(text)
         x = x + self.positional_embedding.to(device=x.device, dtype=x.dtype)
         x = self.transformer(x.permute(1, 0, 2)).permute(1, 0, 2)
@@ -82,11 +90,27 @@ class QuickGELU(nn.Module):
     """
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+
+            x (torch.Tensor): An input tensor to run through the module.
+
+        Returns:
+            x (torch.Tensor): The module output.
+        """
         return x * torch.sigmoid(1.702 * x)
 
 
 class ResidualAttentionBlock(nn.Module):
-    def __init__(self, width: int, num_heads: int) -> None:
+    def __init__(self, width: int = 640, num_heads: int = 10) -> None:
+        """
+        Args:
+
+            width (int, optional): The desired width size to use.
+                Default: 640
+            num_heads (int, optional): The num number of heads to use.
+                Default: 10
+        """
         super().__init__()
         self.attn = nn.MultiheadAttention(width, num_heads)
         self.ln_1 = nn.LayerNorm(width)
@@ -101,5 +125,13 @@ class ResidualAttentionBlock(nn.Module):
         return self.attn(x, x, x, need_weights=False, attn_mask=attn_mask)[0]
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+
+            x (torch.Tensor): An input tensor to run through the module.
+
+        Returns:
+            x (torch.Tensor): The module output.
+        """
         x = x + self.attention(self.ln_1(x))
         return x + self.mlp(self.ln_2(x))
