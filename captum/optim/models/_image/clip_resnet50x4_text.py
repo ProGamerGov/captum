@@ -54,9 +54,8 @@ def clip_resnet50x4_text(
 class CLIP_ResNet50x4Text(nn.Module):
     def __init__(self) -> None:
         super().__init__()
-        attn_mask = torch.empty(77, 77).fill_(float("-inf")).triu_(1)
         self.transformer = nn.Sequential(
-            *[ResidualAttentionBlock(640, 10, attn_mask) for _ in range(12)]
+            *[ResidualAttentionBlock(640, 10) for _ in range(12)]
         )
         self.token_embedding = nn.Embedding(49408, 640)
         self.positional_embedding = nn.Parameter(torch.empty(77, 640))
@@ -84,7 +83,7 @@ class QuickGELU(nn.Module):
 
 
 class ResidualAttentionBlock(nn.Module):
-    def __init__(self, width: int, num_heads: int, attn_mask: torch.Tensor) -> None:
+    def __init__(self, width: int, num_heads: int) -> None:
         super().__init__()
         self.attn = nn.MultiheadAttention(width, num_heads)
         self.ln_1 = nn.LayerNorm(width)
@@ -92,7 +91,7 @@ class ResidualAttentionBlock(nn.Module):
             nn.Linear(width, width * 4), QuickGELU(), nn.Linear(width * 4, width)
         )
         self.ln_2 = nn.LayerNorm(width)
-        self.attn_mask = attn_mask
+        self.attn_mask = torch.empty(77, 77).fill_(float("-inf")).triu_(1)
 
     def attention(self, x: torch.Tensor) -> torch.Tensor:
         attn_mask = self.attn_mask.to(device=x.device, dtype=x.dtype)
