@@ -7,7 +7,7 @@ from torch import nn
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 
 GS_SAVED_WEIGHTS_URL = (
-    "https://pytorch-tutorial-assets.s3.amazonaws.com/captum/clip_resnet50x4_image.pt"
+    "https://pytorch.s3.amazonaws.com/models/captum/clip_resnet50x4_image.pt"
 )
 
 
