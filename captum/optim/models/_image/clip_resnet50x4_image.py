@@ -7,7 +7,7 @@ from torch import nn
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 
 GS_SAVED_WEIGHTS_URL = (
-    "https://pytorch-tutorial-assets.s3.amazonaws.com/captum/clip_resnet50x4_image.pt"
+    "https://pytorch.s3.amazonaws.com/models/captum/clip_resnet50x4_image.pt"
 )
 
 
@@ -21,7 +21,12 @@ def clip_resnet50x4_image(
     The visual portion of OpenAI's ResNet 50x4 CLIP model from 'Learning Transferable
     Visual Models From Natural Language Supervision': https://arxiv.org/abs/2103.00020
 
-    AvgPool2d layers were replaced with AdaptiveAvgPool2d to allow for any input size.
+    This model can be combined with the CLIP ResNet 50x4 Text model to create the full
+    CLIP ResNet 50x4 model.
+
+    AvgPool2d layers were replaced with AdaptiveAvgPool2d to allow for any input height
+    and width size, though the best results are obtained by using the model's intended
+    input height and width of 288x288.
 
     See here for more details: https://github.com/openai/CLIP
 
@@ -310,7 +315,7 @@ class AttentionPool2d(nn.Module):
         """
         super().__init__()
         self.positional_embedding = nn.Parameter(
-            torch.randn(spacial_size**2 + 1, in_features) / in_features**0.5
+            torch.randn(spacial_size ** 2 + 1, in_features) / in_features ** 0.5
         )
         self.k_proj = nn.Linear(in_features, in_features)
         self.q_proj = nn.Linear(in_features, in_features)
