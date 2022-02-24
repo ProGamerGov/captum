@@ -310,7 +310,7 @@ class AttentionPool2d(nn.Module):
                 Default: 2560
             out_features (int, optional): The desired output size for the nn.Linear
                 layers.
-            num_heads (int, optional): The num number of heads to use.
+            num_heads (int, optional): The number of heads to use.
                 Default: 40
         """
         super().__init__()
