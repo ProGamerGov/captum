@@ -86,7 +86,7 @@ class CLIP_ResNet50x4Text(nn.Module):
 
 class QuickGELU(nn.Module):
     """
-    OpenAI's model use a slightly different GELU than PyTorch's default GELU.
+    OpenAI's models use a slightly different GELU than PyTorch's default GELU.
     """
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
