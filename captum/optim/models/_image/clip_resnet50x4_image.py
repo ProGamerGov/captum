@@ -88,10 +88,10 @@ class CLIP_ResNet50x4Image(nn.Module):
         Args:
 
             replace_relus_with_redirectedrelu (bool, optional): If True, return
-                pretrained model with Redirected ReLU in place of ReLU layers.
+                model with Redirected ReLU in place of ReLU layers.
                 Default: False
-            use_linear_modules_only (bool, optional): If True, return pretrained
-                model with all nonlinear layers replaced with linear equivalents.
+            use_linear_modules_only (bool, optional): If True, return model with
+                all nonlinear layers replaced with linear equivalents.
                 Default: False
             transform_input (bool, optional): If True, preprocesses the input according
                 to the method with which it was trained on.
