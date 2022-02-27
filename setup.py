@@ -140,23 +140,7 @@ if __name__ == "__main__":
         packages=find_packages(),
         extras_require={
             "dev": DEV_REQUIRES,
-            "insights": INSIGHTS_REQUIRES,
-            "test": TEST_REQUIRES,
             "tutorials": TUTORIALS_REQUIRES,
         },
         package_data={"captum": package_files},
-        data_files=[
-            (
-                "share/jupyter/nbextensions/jupyter-captum-insights",
-                [
-                    "captum/insights/widget/static/extension.js",
-                    "captum/insights/widget/static/index.js",
-                    "captum/insights/widget/static/index.js.map",
-                ],
-            ),
-            (
-                "etc/jupyter/nbconfig/notebook.d",
-                ["captum/insights/widget/jupyter-captum-insights.json"],
-            ),
-        ],
     )
