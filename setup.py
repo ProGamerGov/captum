@@ -100,8 +100,8 @@ def get_package_files(root, subdirs):
 
 if __name__ == "__main__":
 
-    if BUILD_INSIGHTS:
-        build_insights()
+    #if BUILD_INSIGHTS:
+    #    build_insights()
 
     package_files = get_package_files("captum", INSIGHTS_FILE_SUBDIRS)
 
