@@ -63,8 +63,9 @@ class CLIP_ResNet50x4Text(nn.Module):
         self.token_embedding = nn.Embedding(49408, 640)
         self.positional_embedding = nn.Parameter(torch.empty(77, 640))
         self.ln_final = nn.LayerNorm(640)
-
         self.text_projection = nn.Parameter(torch.empty(640, 640))
+
+        # logit_scale is only used when combining Text & Image models
         self.logit_scale = nn.Parameter(torch.ones([]) * math.log(1 / 0.07))
 
     def forward(self, text: torch.Tensor) -> torch.Tensor:
