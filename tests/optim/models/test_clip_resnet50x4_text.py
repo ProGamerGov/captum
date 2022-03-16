@@ -25,6 +25,7 @@ class TestCLIPResNet50x4Text(BaseTest):
                 "Skipping basic pretrained CLIP ResNet 50x4 Text forward test due to"
                 + " insufficient Torch version."
             )
+        # Start & End tokens: 49405, 49406
         x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77 - 2)])
         x = x.int()[None, :]
         model = clip_resnet50x4_text(pretrained=True)
