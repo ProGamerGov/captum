@@ -55,15 +55,15 @@ def clip_resnet50x4_text(
 
 
 class CLIP_ResNet50x4Text(nn.Module):
-    def __init__(self) -> None:
+    def __init__(self, width: int = 640, num_heads: int = 10, num_layers: int = 12, context_length: int = 77) -> None:
         super().__init__()
         self.transformer = nn.Sequential(
-            *[ResidualAttentionBlock(640, 10) for _ in range(12)]
+            *[ResidualAttentionBlock(width, num_heads) for _ in range(num_layers)]
         )
-        self.token_embedding = nn.Embedding(49408, 640)
-        self.positional_embedding = nn.Parameter(torch.empty(77, 640))
-        self.ln_final = nn.LayerNorm(640)
-        self.text_projection = nn.Parameter(torch.empty(640, 640))
+        self.token_embedding = nn.Embedding(49408, width)
+        self.positional_embedding = nn.Parameter(torch.empty(context_length, width))
+        self.ln_final = nn.LayerNorm(width)
+        self.text_projection = nn.Parameter(torch.empty(width, width))
 
         # logit_scale is only used when combining Text & Image models
         self.logit_scale = nn.Parameter(torch.ones([]) * math.log(1 / 0.07))
