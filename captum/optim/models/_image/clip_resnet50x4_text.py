@@ -34,6 +34,17 @@ def clip_resnet50x4_text(
             Default: True
         model_path (str, optional): Optional path for the model file.
             Default: None
+        width (int, optional): The desired width size to use for the model.
+            Default: 640
+        num_heads (int, optional): The num number of heads to use for the model.
+            Default: 10
+        num_residual_layers (int, optional): The number of residual layers to use for
+            each residual attention block.
+            Default: 12
+        content_length (int, optional): The expected size of text inputs to the model.
+            Default: 77
+        vocab_size (int, optional): The size of the vocab used to train the model.
+            Default: 49408
 
     Returns:
         **CLIP_ResNet50x4Text** (CLIP_ResNet50x4Text): A CLIP ResNet 50x4 model's text
@@ -55,13 +66,29 @@ def clip_resnet50x4_text(
 
 
 class CLIP_ResNet50x4Text(nn.Module):
-    def __init__(self, width: int = 640, num_heads: int = 10, num_layers: int = 12, context_length: int = 77, vocab_size: int = 49408) -> None:
+    def __init__(self, width: int = 640, num_heads: int = 10, num_residual_layers: int = 12, content_length: int = 77, vocab_size: int = 49408) -> None:
+        """
+        Args:
+
+            width (int, optional): The desired width size to use for the model.
+                Default: 640
+            num_heads (int, optional): The num number of heads to use for the model.
+                Default: 10
+            num_residual_layers (int, optional): The number of residual layers to use
+                for each residual attention block.
+                Default: 12
+            content_length (int, optional): The expected size of text inputs to the
+                model.
+                Default: 77
+            vocab_size (int, optional): The size of the vocab used to train the model.
+                Default: 49408
+        """
         super().__init__()
         self.transformer = nn.Sequential(
             *[ResidualAttentionBlock(width, num_heads) for _ in range(num_layers)]
         )
         self.token_embedding = nn.Embedding(vocab_size, width)
-        self.positional_embedding = nn.Parameter(torch.empty(context_length, width))
+        self.positional_embedding = nn.Parameter(torch.empty(content_length, width))
         self.ln_final = nn.LayerNorm(width)
         self.text_projection = nn.Parameter(torch.empty(width, width))
 
