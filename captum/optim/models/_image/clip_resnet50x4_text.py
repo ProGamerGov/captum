@@ -34,6 +34,17 @@ def clip_resnet50x4_text(
             Default: True
         model_path (str, optional): Optional path for the model file.
             Default: None
+        width (int, optional): The desired width size to use for the model.
+            Default: 640
+        num_heads (int, optional): The num number of heads to use for the model.
+            Default: 10
+        num_residual_layers (int, optional): The number of residual layers to use for
+            each residual attention block.
+            Default: 12
+        content_length (int, optional): The expected size of text inputs to the model.
+            Default: 77
+        vocab_size (int, optional): The size of the vocab used to train the model.
+            Default: 49408
 
     Returns:
         **CLIP_ResNet50x4Text** (CLIP_ResNet50x4Text): A CLIP ResNet 50x4 model's text
@@ -55,15 +66,41 @@ def clip_resnet50x4_text(
 
 
 class CLIP_ResNet50x4Text(nn.Module):
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        width: int = 640,
+        num_heads: int = 10,
+        num_residual_layers: int = 12,
+        content_length: int = 77,
+        vocab_size: int = 49408,
+    ) -> None:
+        """
+        Args:
+
+            width (int, optional): The desired width size to use for the model.
+                Default: 640
+            num_heads (int, optional): The num number of heads to use for the model.
+                Default: 10
+            num_residual_layers (int, optional): The number of residual layers to use
+                for each residual attention block.
+                Default: 12
+            content_length (int, optional): The expected size of text inputs to the
+                model.
+                Default: 77
+            vocab_size (int, optional): The size of the vocab used to train the model.
+                Default: 49408
+        """
         super().__init__()
         self.transformer = nn.Sequential(
-            *[ResidualAttentionBlock(640, 10) for _ in range(12)]
+            *[
+                ResidualAttentionBlock(width, num_heads, content_length)
+                for _ in range(num_residual_layers)
+            ]
         )
-        self.token_embedding = nn.Embedding(49408, 640)
-        self.positional_embedding = nn.Parameter(torch.empty(77, 640))
-        self.ln_final = nn.LayerNorm(640)
-        self.text_projection = nn.Parameter(torch.empty(640, 640))
+        self.token_embedding = nn.Embedding(vocab_size, width)
+        self.positional_embedding = nn.Parameter(torch.empty(content_length, width))
+        self.ln_final = nn.LayerNorm(width)
+        self.text_projection = nn.Parameter(torch.empty(width, width))
 
         # logit_scale is only used when combining Text & Image models
         self.logit_scale = nn.Parameter(torch.ones([]) * math.log(1 / 0.07))
@@ -103,7 +140,9 @@ class QuickGELU(nn.Module):
 
 
 class ResidualAttentionBlock(nn.Module):
-    def __init__(self, width: int = 640, num_heads: int = 10) -> None:
+    def __init__(
+        self, width: int = 640, num_heads: int = 10, content_length: int = 77
+    ) -> None:
         """
         Args:
 
@@ -111,6 +150,8 @@ class ResidualAttentionBlock(nn.Module):
                 Default: 640
             num_heads (int, optional): The num number of heads to use.
                 Default: 10
+            content_length (int, optional): The desired content_length to use.
+                Default: 77
         """
         super().__init__()
         self.attn = nn.MultiheadAttention(width, num_heads)
@@ -119,7 +160,9 @@ class ResidualAttentionBlock(nn.Module):
             nn.Linear(width, width * 4), QuickGELU(), nn.Linear(width * 4, width)
         )
         self.ln_2 = nn.LayerNorm(width)
-        self.attn_mask = torch.empty(77, 77).fill_(float("-inf")).triu_(1)
+        self.attn_mask = (
+            torch.empty(content_length, content_length).fill_(float("-inf")).triu_(1)
+        )
 
     def attention(self, x: torch.Tensor) -> torch.Tensor:
         attn_mask = self.attn_mask.to(device=x.device, dtype=x.dtype)
