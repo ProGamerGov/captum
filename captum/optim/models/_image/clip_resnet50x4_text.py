@@ -94,7 +94,7 @@ class CLIP_ResNet50x4Text(nn.Module):
         self.transformer = nn.Sequential(
             *[
                 ResidualAttentionBlock(width, num_heads, content_length)
-                for _ in range(num_layers)
+                for _ in range(num_residual_layers)
             ]
         )
         self.token_embedding = nn.Embedding(vocab_size, width)
