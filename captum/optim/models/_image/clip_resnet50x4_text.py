@@ -55,12 +55,12 @@ def clip_resnet50x4_text(
 
 
 class CLIP_ResNet50x4Text(nn.Module):
-    def __init__(self, width: int = 640, num_heads: int = 10, num_layers: int = 12, context_length: int = 77) -> None:
+    def __init__(self, width: int = 640, num_heads: int = 10, num_layers: int = 12, context_length: int = 77, vocab_size: int = 49408) -> None:
         super().__init__()
         self.transformer = nn.Sequential(
             *[ResidualAttentionBlock(width, num_heads) for _ in range(num_layers)]
         )
-        self.token_embedding = nn.Embedding(49408, width)
+        self.token_embedding = nn.Embedding(vocab_size, width)
         self.positional_embedding = nn.Parameter(torch.empty(context_length, width))
         self.ln_final = nn.LayerNorm(width)
         self.text_projection = nn.Parameter(torch.empty(width, width))
