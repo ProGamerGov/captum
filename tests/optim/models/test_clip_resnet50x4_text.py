@@ -4,10 +4,21 @@ import unittest
 import torch
 
 from captum.optim.models import clip_resnet50x4_text
-from tests.helpers.basic import BaseTest
+from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 
 class TestCLIPResNet50x4Text(BaseTest):
+    def test_clip_resnet50x4_text_logit_scale(self) -> None:
+        if torch.__version__ <= "1.6.0":
+            raise unittest.SkipTest(
+                "Skipping basic pretrained CLIP ResNet 50x4 Text logit scale test due"
+                + " to insufficient Torch version."
+            )
+        model = clip_resnet50x4_text(pretrained=True)
+        
+        expected_logit_scale = torch.tensor([4.605170249938965])
+        assertTensorAlmostEqual(self, model.logit_scale, expected_logit_scale)
+
     def test_clip_resnet50x4_text_load_and_forward(self) -> None:
         if torch.__version__ <= "1.6.0":
             raise unittest.SkipTest(
