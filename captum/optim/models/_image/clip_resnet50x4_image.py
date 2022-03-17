@@ -177,8 +177,8 @@ class CLIP_ResNet50x4Image(nn.Module):
         Returns:
             x (torch.Tensor): A normalized tensor.
         """
+        assert x.dim() == 3 or x.dim() == 4
         if self.transform_input:
-            assert x.dim() == 3 or x.dim() == 4
             if x.min() < 0.0 or x.max() > 1.0:
                 warn("Model input has values outside of the range [0, 1].")
             x = x.unsqueeze(0) if x.dim() == 3 else x
@@ -277,6 +277,7 @@ class Bottleneck(nn.Module):
         Returns:
             x (torch.Tensor): The module output.
         """
+        assert x.dim() == 4
         if self.downsample is not None:
             identity = self.downsample(x)
         else:
@@ -333,6 +334,7 @@ class AttentionPool2d(nn.Module):
         Returns:
             x (torch.Tensor): The module output.
         """
+        assert x.dim() == 4
         x = x.reshape(*x.shape[:2], -1).permute(2, 0, 1)
         x = torch.cat([x.mean(dim=0, keepdim=True), x], dim=0)
         x = x + self.positional_embedding[:, None, :]
