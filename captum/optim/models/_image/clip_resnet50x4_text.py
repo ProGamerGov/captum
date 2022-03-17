@@ -36,10 +36,10 @@ def clip_resnet50x4_text(
             Default: None
         width (int, optional): The desired width size to use for the model.
             Default: 640
-        num_heads (int, optional): The num number of heads to use for the model.
+        num_heads (int, optional): The number of heads to use for the model.
             Default: 10
         num_residual_layers (int, optional): The number of residual layers to use for
-            each residual attention block.
+            each residual attention block in the model.
             Default: 12
         content_length (int, optional): The expected size of text inputs to the model.
             Default: 77
