@@ -129,13 +129,11 @@ def module_op(
         name = f"Compose({', '.join([self.__name__, other.__name__])})"
         target = (
             self.target
-            if hasattr(self.target, "__iter__")
-            and not isinstance(self.target, nn.Module)
+            if isinstance(self.target, list)
             else [self.target]
         ) + (
             other.target
-            if hasattr(other.target, "__iter__")
-            and not isinstance(other.target, nn.Module)
+            if isinstance(self.target, list)
             else [other.target]
         )
     else:
@@ -725,10 +723,7 @@ def sum_loss_list(
         target
         for targets in [
             [loss.target]
-            if not (
-                hasattr(loss.target, "__iter__")
-                and not isinstance(loss.target, nn.Module)
-            )
+            if not isinstance(loss.target, list)
             else loss.target
             for loss in loss_list
         ]
