@@ -18,7 +18,7 @@ def get_model_layers(model: nn.Module) -> List[str]:
 
     def get_layers(net: nn.Module, prefix: List = []) -> None:
         if hasattr(net, "_modules"):
-            for name, layer in net._modules.items():
+            for name, layer in net.named_children():
                 if layer is None:
                     continue
                 name_str = "".join(
