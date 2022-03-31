@@ -78,6 +78,21 @@ def clip_resnet50x4_image(
 
 
 class CLIP_ResNet50x4Image(nn.Module):
+    """
+    The visual portion of OpenAI's ResNet 50x4 CLIP model from 'Learning Transferable
+    Visual Models From Natural Language Supervision': https://arxiv.org/abs/2103.00020
+
+    This model can be combined with the CLIP ResNet 50x4 Text model to create the full
+    CLIP ResNet 50x4 model.
+
+    AvgPool2d layers were replaced with AdaptiveAvgPool2d to allow for any input height
+    and width size, though the best results are obtained by using the model's intended
+    input height and width of 288x288.
+
+    See here for more details:
+    https://github.com/openai/CLIP
+    https://github.com/mlfoundations/open_clip
+    """
     __constants__ = ["transform_input"]
 
     def __init__(
