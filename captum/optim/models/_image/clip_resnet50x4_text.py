@@ -23,7 +23,9 @@ def clip_resnet50x4_text(
     This model can be combined with the CLIP ResNet 50x4 Image model to create the full
     CLIP ResNet 50x4 model.
 
-    See here for more details: https://github.com/openai/CLIP
+    See here for more details:
+    https://github.com/openai/CLIP
+    https://github.com/mlfoundations/open_clip
 
     Args:
 
