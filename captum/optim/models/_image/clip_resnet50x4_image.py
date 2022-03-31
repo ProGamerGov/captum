@@ -28,7 +28,9 @@ def clip_resnet50x4_image(
     and width size, though the best results are obtained by using the model's intended
     input height and width of 288x288.
 
-    See here for more details: https://github.com/openai/CLIP
+    See here for more details:
+    https://github.com/openai/CLIP
+    https://github.com/mlfoundations/open_clip
 
     Args:
 
