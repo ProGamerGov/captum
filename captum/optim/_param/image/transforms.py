@@ -273,23 +273,6 @@ def center_crop(
     return x
 
 
-def _rand_select(
-    transform_values: NumSeqOrTensorType,
-) -> Union[int, float, torch.Tensor]:
-    """
-    Randomly return a single value from the provided tuple, list, or tensor.
-
-    Args:
-
-        transform_values (sequence):  A sequence of values to randomly select from.
-
-    Returns:
-        **value**:  A single value from the specified sequence.
-    """
-    n = torch.randint(low=0, high=len(transform_values), size=[1]).item()
-    return transform_values[n]
-
-
 class RandomScale(nn.Module):
     """
     Apply random rescaling on a NCHW tensor using the F.interpolate function.
@@ -600,7 +583,7 @@ class RandomRotation(nn.Module):
 
     def __init__(
         self,
-        degrees: NumSeqOrTensorType,
+        degrees: NumSeqOrTensorOrProbDistType,
         mode: str = "bilinear",
         padding_mode: str = "zeros",
         align_corners: bool = False,
