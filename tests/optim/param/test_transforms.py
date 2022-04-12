@@ -23,6 +23,7 @@ class TestRandomScale(BaseTest):
         self.assertEqual(scale_module.mode, "bilinear")
         self.assertFalse(scale_module.align_corners)
         self.assertFalse(scale_module.recompute_scale_factor)
+        self.assertFalse(scale_module.antialias)
 
     def test_random_scale_tensor_scale(self) -> None:
         scale = torch.tensor([1, 0.975, 1.025, 0.95, 1.05])
@@ -55,6 +56,9 @@ class TestRandomScale(BaseTest):
         self.assertEqual(
             scale_module._has_recompute_scale_factor, has_recompute_scale_factor
         )
+
+        has_antialias = torch.__version__ >= "1.11.0"
+        self.assertEqual(scale_module._has_antialias, has_antialias)
 
     def test_random_scale_downscaling(self) -> None:
         scale_module = transforms.RandomScale(scale=[0.5])
@@ -96,6 +100,33 @@ class TestRandomScale(BaseTest):
                         [0.0000, 0.5000, 1.0000],
                         [1.0000, 1.5000, 2.0000],
                         [2.0000, 2.5000, 3.0000],
+                    ]
+                ]
+            ]
+        )
+
+        assertTensorAlmostEqual(
+            self,
+            scaled_tensor,
+            expected_tensor,
+            0,
+        )
+
+    def test_random_scale_antialias(self) -> None:
+        scale_module = transforms.RandomScale(scale=[0.5], antialias=True)
+        test_tensor = torch.arange(0, 1 * 1 * 10 * 10).view(1, 1, 10, 10).float()
+
+        scaled_tensor = scale_module._scale_tensor(test_tensor, 0.5)
+
+        expected_tensor = torch.tensor(
+            [
+                [
+                    [
+                        [7.8571, 9.6429, 11.6429, 13.6429, 15.4286],
+                        [25.7143, 27.5000, 29.5000, 31.5000, 33.2857],
+                        [45.7143, 47.5000, 49.5000, 51.5000, 53.2857],
+                        [65.7143, 67.5000, 69.5000, 71.5000, 73.2857],
+                        [83.5714, 85.3571, 87.3571, 89.3571, 91.1429],
                     ]
                 ]
             ]
