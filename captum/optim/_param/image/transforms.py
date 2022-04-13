@@ -313,9 +313,9 @@ class RandomScale(nn.Module):
             recompute_scale_factor (bool, optional): Whether or not to recompute the
                 scale factor See documentation of F.interpolate for more details.
                 Default: False
-            antialias (bool, optional): Whether or not use to antialiasing when
-                resizing. This feature is currently only available for "bilinear" and
-                "bicubic" modes. See documentation of F.interpolate for more details.
+            antialias (bool, optional): Whether or not use to anti-aliasing. This
+                feature is currently only available for "bilinear" and "bicubic"
+                modes. See documentation of F.interpolate for more details.
                 Default: False
         """
         super().__init__()
