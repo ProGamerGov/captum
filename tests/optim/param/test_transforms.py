@@ -141,7 +141,7 @@ class TestRandomScale(BaseTest):
             self,
             scaled_tensor,
             expected_tensor,
-            0,
+            0.0005,
         )
 
     def test_random_forward_exact(self) -> None:
