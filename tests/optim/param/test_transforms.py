@@ -113,6 +113,11 @@ class TestRandomScale(BaseTest):
         )
 
     def test_random_scale_antialias(self) -> None:
+        if torch.__version__ < "1.11.0":
+            raise unittest.SkipTest(
+                "Skipping RandomScale antialias test"
+                + " due to insufficient Torch version."
+            )
         scale_module = transforms.RandomScale(scale=[0.5], antialias=True)
         test_tensor = torch.arange(0, 1 * 1 * 10 * 10).view(1, 1, 10, 10).float()
 
