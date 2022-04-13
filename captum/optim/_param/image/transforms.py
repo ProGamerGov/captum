@@ -320,8 +320,6 @@ class RandomScale(nn.Module):
         """
         super().__init__()
         assert mode not in ["linear", "trilinear"]
-        if antialias:
-            assert mode in ["bilinear", "bicubic"]
         if isinstance(scale, torch.distributions.distribution.Distribution):
             # Distributions are not supported by TorchScript / JIT yet
             assert scale.batch_shape == torch.Size([])
