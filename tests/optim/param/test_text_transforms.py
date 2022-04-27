@@ -3,7 +3,7 @@ import unittest
 
 import torch
 
-from captum.optim.tokenizer import CLIPTokenizer
+import captum.optim._param.text.transforms as transforms
 from tests.helpers.basic import BaseTest
 
 
@@ -19,7 +19,7 @@ class TestCLIPTokenizer(BaseTest):
         file_path = path.join(
             torch.hub.get_dir(), "vocab", "clip_bpe_simple_vocab_48895.txt"
         )
-        merges_path = CLIPTokenizer._download_clip_bpe_merges(None)
+        merges_path = transforms.CLIPTokenizer._download_clip_bpe_merges(None)
         self.assertEqual(merges_path, file_path)
 
     def test_clip_tokenizer_pretrained_download_custom_path(self) -> None:
@@ -27,7 +27,7 @@ class TestCLIPTokenizer(BaseTest):
             torch.hub.get_dir(), "vocab_test", "clip_bpe_simple_vocab_48895.txt"
         )
         custom_path = path.join(torch.hub.get_dir(), "vocab_test")
-        merges_path = CLIPTokenizer._download_clip_bpe_merges(custom_path)
+        merges_path = transforms.CLIPTokenizer._download_clip_bpe_merges(custom_path)
         self.assertEqual(merges_path, file_path)
 
     def test_clip_tokenizer_init(self) -> None:
@@ -35,7 +35,7 @@ class TestCLIPTokenizer(BaseTest):
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer init test"
             )
-        clip_tokenizer = CLIPTokenizer(pretrained_merges=True)
+        clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
 
         self.assertEqual(clip_tokenizer.content_length, 77)
         self.assertEqual(clip_tokenizer.start_token, "<|startoftext|> ")
@@ -57,7 +57,7 @@ class TestCLIPTokenizer(BaseTest):
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer str input test"
             )
-        clip_tokenizer = CLIPTokenizer(pretrained_merges=True)
+        clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
         text_input_str = "this is a test!"
 
         text_output = clip_tokenizer(text_input_str)
@@ -76,7 +76,7 @@ class TestCLIPTokenizer(BaseTest):
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer str input"
                 + " content_length test"
             )
-        clip_tokenizer = CLIPTokenizer(pretrained_merges=True)
+        clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
         text_input_str = "this is a test!"
 
         text_output = clip_tokenizer(text_input_str)
@@ -95,7 +95,7 @@ class TestCLIPTokenizer(BaseTest):
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer list str input"
                 + " test"
             )
-        clip_tokenizer = CLIPTokenizer(pretrained_merges=True)
+        clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
         text_input_str = ["this is a test!", "a picture of a cat."]
 
         text_output = clip_tokenizer(text_input_str)
@@ -118,7 +118,7 @@ class TestCLIPTokenizer(BaseTest):
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer str input"
                 + " decode test"
             )
-        clip_tokenizer = CLIPTokenizer(pretrained_merges=True)
+        clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
         text_input_str = "this is a test!"
 
         text_output = clip_tokenizer(text_input_str)
@@ -133,7 +133,7 @@ class TestCLIPTokenizer(BaseTest):
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer str input JIT"
                 + " test"
             )
-        clip_tokenizer = CLIPTokenizer(pretrained_merges=True)
+        clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
         text_input_str = "this is a test!"
 
         text_output = torch.jit.script(clip_tokenizer(text_input_str))
