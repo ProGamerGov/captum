@@ -310,7 +310,7 @@ class TestCLIPTokenizer(BaseTest):
         clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
         txt_output_str = clip_tokenizer.decode(input_tokens)
 
-        expected_str = (
+        expected_str = (  # noqa: W605
             """!"#$%&'()*+,-./0123456789:;<=>?@abcdefghijklmnopqrstuvwxyz[\]^_`abcd"""
             + """efghijklmnopqrstuvwxyz{|}~¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿àáâãäåæçèé"""
             + """êëìíîïðñòóôõö×øùúûüýþßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿāāăăąąććĉĉċċ"""
