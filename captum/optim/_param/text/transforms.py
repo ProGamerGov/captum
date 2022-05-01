@@ -210,4 +210,4 @@ class CLIPTokenizer(torch.nn.Module):
         return torch.as_tensor(tokens).int()
 
 
-__all__ = ["ClipTokenizer"]
+__all__ = ["CLIPTokenizer"]
