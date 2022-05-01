@@ -25,10 +25,8 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(merges_path, file_path)
 
     def test_clip_tokenizer_pretrained_download_custom_path(self) -> None:
-        file_path = path.join(
-            torch.hub.get_dir(), "vocab_test", "clip_bpe_simple_vocab_48895.txt"
-        )
         custom_path = path.join(torch.hub.get_dir(), "vocab_test")
+        file_path = path.join(custom_path, "clip_bpe_simple_vocab_48895.txt")
         merges_path = transforms.CLIPTokenizer._download_clip_bpe_merges(custom_path)
         self.assertEqual(merges_path, file_path)
 
