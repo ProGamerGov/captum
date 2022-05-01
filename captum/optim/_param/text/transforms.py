@@ -13,8 +13,10 @@ class CLIPTokenizer(torch.nn.Module):
     This module allows individuals to use torchtext's CLIP tokenizer with a wrapper
     that handles context_length padding, special start and end tokens, and to tensor
     conversions. This module also supports JIT.
+
     See here for more details:
     https://pytorch.org/text/main/transforms.html#torchtext.transforms.CLIPTokenizer
+
     The torchtext CLIPTokenizer is based on these implementations:
     https://github.com/openai/CLIP/blob/main/clip/simple_tokenizer.py
     https://github.com/mlfoundations/open_clip/blob/main/src/clip/tokenizer.py
@@ -41,6 +43,7 @@ class CLIPTokenizer(torch.nn.Module):
     ) -> None:
         """
         Args:
+
             merges_path (str, optional): Path to file containing the merges, or where
                 to save the merges file if pretrained_merges is set to True. The
                 torch.hub.get_dir() function will be used to get the directory if set
@@ -89,14 +92,18 @@ class CLIPTokenizer(torch.nn.Module):
         """
         Download a copy of CLIP's BPE merges for the first 48895 lines of the
         'bpe_simple_vocab_16e6.txt.gz' file from: https://github.com/openai/CLIP.
+
         The BPE merges file will not be downloaded if it already exists in the
         specified directory.
+
         Args:
+
             file_dir (str, optional): Optionally provide a location to save the
                 file to. The torch.hub.get_dir() function will be used to get the
                 directory if set to None, resulting in a path
                 of: <PATH_TO_HUB_DIR>/vocab.
                 Default: None
+
             Returns:
                 filename (str): The path to the downloaded file with the filename.
         """
@@ -131,14 +138,18 @@ class CLIPTokenizer(torch.nn.Module):
     ) -> List[List[str]]:
         """
         Decode token values into their corresponding string values.
+
         Based on the implementations used by OpenAI & TorchText:
         https://github.com/openai/gpt-2/blob/master/src/encoder.py
         https://github.com/pytorch/text/blob/main/torchtext/transforms.py
+
         Args:
+
             x (torch.Tensor): A set of tokens stacked across the batch dimension.
             include_special_tokens (bool, optional): Whether or not to included added
                 special tokens in the output.
                 Default: False
+
         Returns:
             token_str (list of list of str): A set of strings that correspond to the
                 token values in the input tensor.
@@ -188,7 +199,9 @@ class CLIPTokenizer(torch.nn.Module):
     def forward(self, x: Union[str, List[str]]) -> torch.Tensor:
         """
         Args:
+
             x (str or list of str): Text values to be converted to tokenized tensors.
+
         Returns:
             tokens (torch.Tensor): A tensor containing each set of tokens stacked
                 across the batch dimension.
