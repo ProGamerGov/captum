@@ -12,7 +12,7 @@ class CLIPTokenizer(torch.nn.Module):
     """
     This module allows individuals to use torchtext's CLIP tokenizer with a wrapper
     that handles context_length padding, special start and end tokens, and to tensor
-    conversions. This module also supports JIT.
+    conversions. This module also supports JIT, and can decode tokens.
 
     See here for more details:
     https://pytorch.org/text/main/transforms.html#torchtext.transforms.CLIPTokenizer
