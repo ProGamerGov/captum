@@ -117,7 +117,7 @@ class CLIPTokenizer(torch.nn.Module):
         if file_dir is None:
             file_dir = path.join(torch.hub.get_dir(), "vocab")
         else:
-            assert not path.isfile(file_dir)
+            assert path.splitext(path.basename(file_dir))[1] == ""
 
         filename = path.join(file_dir, path.basename(url))
 
