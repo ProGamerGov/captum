@@ -5,7 +5,7 @@ import torch
 try:
     from torchtext.transforms import CLIPTokenizer as CLIPTokenizer_TorchText
 except ImportError:
-    print("torchtext >=0.12.0 is required to use Captum's Optim ClipTokenizer")
+    print("torchtext >=0.12.0 is required to use Captum's Optim CLIPTokenizer")
 
 
 class CLIPTokenizer(torch.nn.Module):
