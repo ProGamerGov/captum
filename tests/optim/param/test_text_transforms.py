@@ -128,7 +128,7 @@ class TestCLIPTokenizer(BaseTest):
             [49406, 320, 1674, 539, 320, 2368, 269, 49407],
         ]
 
-        self.assertEqual(text_output.shape, [2, context_length])
+        self.assertEqual(list(text_output.shape), [2, context_length])
         for b, t in enumerate(token_ids):
             padding = [0] * (context_length - len(t))
             token_set = t + padding
