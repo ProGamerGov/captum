@@ -132,7 +132,9 @@ class CLIPTokenizer(torch.nn.Module):
         return filename
 
     @torch.jit.ignore
-    def decode(self, x: torch.Tensor) -> List[List[str]]:
+    def decode(
+        self, x: torch.Tensor, include_special_tokens: bool = False
+    ) -> List[List[str]]:
         """
         Decode token values into their corresponding string values.
 
@@ -143,6 +145,9 @@ class CLIPTokenizer(torch.nn.Module):
         Args:
 
             x (torch.Tensor): A set of tokens stacked across the batch dimension.
+            include_special_tokens (bool, optional): Whether or not to included added
+                special tokens in the output.
+                Default: False
 
         Returns:
             token_str (list of list of str): A set of strings that correspond to the
@@ -166,18 +171,31 @@ class CLIPTokenizer(torch.nn.Module):
         bpe_vocab += [
             "".join(merge_pair.split()) for merge_pair in bpe_merges[:num_merges]
         ]
-        special_tokens = [self.start_token.strip(), self.end_token.strip()]
-        bpe_vocab += special_tokens
+
+        # Handle special tokens
+        if self.start_token != "":
+            bpe_vocab += [self.start_token.strip()]
+        if self.end_token != "":
+            bpe_vocab += [self.end_token.strip()]
+
         decoder = dict(zip(range(len(bpe_vocab)), bpe_vocab))
 
         # Decode tokens
-        token_str = ["".join([decoder[t] for t in ts.tolist()]) for ts in x]
+        x = [[t.tolist() for t in b] for b in x]
+        x = [[i for i in b if i != self.padding_value] for b in x]
+        # print(x)
+        token_str = ["".join([decoder[t] for t in ts]) for ts in x]
+        # print(token_str)
         token_str = [bytearray([byte_decoder[t] for t in ts]) for ts in token_str]
         token_str = [
-            ts.decode("utf-8", errors="replace").replace("</w>", " ")
+            ts.decode("utf-8", errors="replace").replace("</w>", " ").strip()
             for ts in token_str
         ]
-        return token_str
+        if self.start_token != "" and not include_special_tokens:
+            token_str = [s.replace(self.start_token.strip(), "") for s in token_str]
+        if self.end_token != "" and not include_special_tokens:
+            token_str = [s.replace(self.end_token.strip(), "") for s in token_str]
+        return [s.strip() for s in token_str]
 
     def forward(self, x: Union[str, List[str]]) -> torch.Tensor:
         """
