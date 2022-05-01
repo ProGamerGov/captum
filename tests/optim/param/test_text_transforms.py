@@ -66,7 +66,7 @@ class TestCLIPTokenizer(BaseTest):
         padding = [0] * (context_length - len(token_ids))
 
         token_set = token_ids + padding
-        self.assertEqual(text_output.shape, [1, context_length])
+        self.assertEqual(list(text_output.shape), [1, context_length])
         self.assertEqual(text_output[0].tolist(), token_set)
 
     def test_clip_tokenizer_str_input_context_length_54(self) -> None:
@@ -85,7 +85,7 @@ class TestCLIPTokenizer(BaseTest):
         padding = [0] * (context_length - len(token_ids))
 
         token_set = token_ids + padding
-        self.assertEqual(text_output.shape, [1, context_length])
+        self.assertEqual(list(text_output.shape), [1, context_length])
         self.assertEqual(text_output[0].tolist(), token_set)
 
     def test_clip_tokenizer_str_input_context_length_padding(self) -> None:
@@ -106,7 +106,7 @@ class TestCLIPTokenizer(BaseTest):
         padding = [padding_value] * (context_length - len(token_ids))
 
         token_set = token_ids + padding
-        self.assertEqual(text_output.shape, [1, context_length])
+        self.assertEqual(list(text_output.shape), [1, context_length])
         self.assertEqual(text_output[0].tolist(), token_set)
 
     def test_clip_tokenizer_list_str_input(self) -> None:
@@ -164,7 +164,7 @@ class TestCLIPTokenizer(BaseTest):
         padding = [0] * (context_length - len(token_ids))
 
         token_set = token_ids + padding
-        self.assertEqual(text_output.shape, [1, context_length])
+        self.assertEqual(list(text_output.shape), [1, context_length])
         self.assertEqual(text_output[0].tolist(), token_set)
 
     def test_clip_tokenizer_unicode(self) -> None:
