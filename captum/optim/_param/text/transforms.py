@@ -86,8 +86,9 @@ class CLIPTokenizer(torch.nn.Module):
         )
         self.padding_value = padding_value
 
+    @staticmethod
     @torch.jit.ignore
-    def _download_clip_bpe_merges(self, file_dir: Optional[str] = None) -> str:
+    def _download_clip_bpe_merges(file_dir: Optional[str] = None) -> str:
         """
         Download a copy of CLIP's BPE merges for the first 48895 lines of the
         'bpe_simple_vocab_16e6.txt.gz' file from: https://github.com/openai/CLIP.
