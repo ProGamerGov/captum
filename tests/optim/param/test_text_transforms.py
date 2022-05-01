@@ -147,6 +147,23 @@ class TestCLIPTokenizer(BaseTest):
         expected_ouput_str = ["this is a test !"]
         self.assertEqual(text_output_str, expected_ouput_str)
 
+    def test_clip_tokenizer_str_input_decode_special_tokens(self) -> None:
+        if not _torchtext_has_clip_tokenizer:
+            raise unittest.SkipTest(
+                "torchtext >=0.12.0 not found, skipping ClipTokenizer str input"
+                + " decode include_special_tokens test"
+            )
+        clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
+        text_input_str = "This is a test!"
+
+        text_output = clip_tokenizer(text_input_str)
+        text_output_str = clip_tokenizer.decode(
+            text_output, include_special_tokens=True
+        )
+
+        expected_ouput_str = ["<|startoftext|>this is a test ! <|endoftext|>"]
+        self.assertEqual(text_output_str, expected_ouput_str)
+
     def test_clip_tokenizer_str_input_jit(self) -> None:
         if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
