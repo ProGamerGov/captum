@@ -11,7 +11,7 @@ except ImportError:
 class CLIPTokenizer(torch.nn.Module):
     """
     This module allows individuals to use torchtext's CLIP tokenizer with a wrapper
-    that handles content_length padding, special start and end tokens, and to tensor
+    that handles context_length padding, special start and end tokens, and to tensor
     conversions. This module also supports JIT.
 
     See here for more details:
@@ -22,15 +22,24 @@ class CLIPTokenizer(torch.nn.Module):
     https://github.com/mlfoundations/open_clip/blob/main/src/clip/tokenizer.py
     """
 
-    __constants__ = ["content_length", "start_token", "end_token", "_merges_path"]
+    __constants__ = [
+        "context_length",
+        "start_token",
+        "end_token",
+        "_merges_path",
+        "_num_merges",
+        "padding_value",
+    ]
 
     def __init__(
         self,
         merges_path: Optional[str] = None,
-        content_length: int = 77,
+        context_length: int = 77,
         start_token: Optional[str] = "<|startoftext|>",
         end_token: Optional[str] = "<|endoftext|>",
         pretrained_merges: bool = True,
+        num_merges: Optional[int] = None,
+        padding_value: int = 0,
     ) -> None:
         """
         Args:
@@ -40,8 +49,8 @@ class CLIPTokenizer(torch.nn.Module):
                 torch.hub.get_dir() function will be used to get the directory if set
                 to None, resulting in a path of: <PATH_TO_HUB_DIR>/vocab.
                 Default: None
-            content_length (int, optional): The required context length for the model.
-                Inputs with lengths less than content_length will be padded with
+            context_length (int, optional): The required context length for the model.
+                Inputs with lengths less than context_length will be padded with
                 zeros.
                 Default: 77
             start_token (str, optional): The starting token to place in front of each
@@ -53,9 +62,15 @@ class CLIPTokenizer(torch.nn.Module):
             pretrained_merges (bool, optional): Whether or not to download merges for
                 the pretrained CLIP model.
                 Default: True
+            num_merges (int, optional): The number of lines to use from the merges
+                file. Set to None for all lines.
+                Default: None
+            padding_value (int, optional): An integer value to use for padding token
+                sets to the desired context_length.
+                Default: 0
         """
         super().__init__()
-        self.content_length = content_length
+        self.context_length = context_length
         self.start_token = start_token + " " if start_token is not None else ""
         self.end_token = " " + end_token if end_token is not None else ""
 
@@ -64,8 +79,12 @@ class CLIPTokenizer(torch.nn.Module):
         else:
             assert merges_path is not None
 
+        self._num_merges = num_merges
         self._merges_path = merges_path
-        self.clip_tokenizer_module = CLIPTokenizer_TorchText(merges_path=merges_path)
+        self.clip_tokenizer_module = CLIPTokenizer_TorchText(
+            merges_path=merges_path, num_merges=num_merges
+        )
+        self.padding_value = padding_value
 
     @torch.jit.ignore
     def _download_clip_bpe_merges(self, file_dir: Optional[str] = None) -> str:
@@ -122,6 +141,7 @@ class CLIPTokenizer(torch.nn.Module):
         https://github.com/pytorch/text/blob/main/torchtext/transforms.py
 
         Args:
+
             x (torch.Tensor): A set of tokens stacked across the batch dimension.
 
         Returns:
@@ -131,20 +151,33 @@ class CLIPTokenizer(torch.nn.Module):
         assert x.dim() == 2
         with open(self._merges_path, "r", encoding="utf-8") as f:
             bpe_merges = f.read().split("\n")[1:]
+        num_merges = self._num_merges or len(bpe_merges)
 
         # Setup vocab Unicode values
+        # Unicode values from "!" to "~", "¡" to "¬", "®" to "ÿ"
+        # Lowercase & uppercase are treated as the same character
         bpe_v = list(range(33, 127)) + list(range(161, 173)) + list(range(174, 256))
+        bpe_keys = bpe_v + list(range(0, 33)) + list(range(127, 161)) + [173]
         bpe_vocab = [chr(c) for c in bpe_v + [256 + n for n in list(range(0, 68))]]
+        byte_decoder = dict(zip(bpe_vocab, bpe_keys))
+
         bpe_vocab += [v + "</w>" for v in bpe_vocab]
         # Add vocab merges from file
         bpe_vocab += [
-            "".join(merge_pair.split()) for merge_pair in bpe_merges[: len(bpe_merges)]
+            "".join(merge_pair.split()) for merge_pair in bpe_merges[:num_merges]
         ]
         special_tokens = [self.start_token.strip(), self.end_token.strip()]
         bpe_vocab += special_tokens
-        token_str = [[bpe_vocab[int(i)] for i in b if int(i) != 0] for b in x]
-        token_str = [[s.replace("</w>", "").strip() for s in b] for b in token_str]
-        return [[s for s in b if s not in special_tokens] for b in token_str]
+        decoder = dict(zip(range(len(bpe_vocab)), bpe_vocab))
+
+        # Decode tokens
+        token_str = ["".join([decoder[t] for t in ts.tolist()]) for ts in x]
+        token_str = [bytearray([byte_decoder[t] for t in ts]) for ts in token_str]
+        token_str = [
+            ts.decode("utf-8", errors="replace").replace("</w>", " ")
+            for ts in token_str
+        ]
+        return token_str
 
     def forward(self, x: Union[str, List[str]]) -> torch.Tensor:
         """
@@ -166,11 +199,12 @@ class CLIPTokenizer(torch.nn.Module):
 
         # Refine 'tokens' Type from Any to List[List[str]] in JIT
         assert torch.jit.isinstance(tokens, List[List[str]])
-        assert all([len(t) <= self.content_length for t in tokens])
+        assert all([len(t) <= self.context_length for t in tokens])
 
         # Convert str tokens to tensor values & apply zeros padding
+        p = self.padding_value
         tokens = [
-            [int(t) for t in token_set] + ([0] * (self.content_length - len(token_set)))
+            [int(t) for t in token_set] + ([p] * (self.context_length - len(token_set)))
             for token_set in tokens
         ]
         return torch.as_tensor(tokens).int()
