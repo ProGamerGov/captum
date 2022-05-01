@@ -30,6 +30,11 @@ class TestCLIPTokenizer(BaseTest):
         merges_path = transforms.CLIPTokenizer._download_clip_bpe_merges(custom_path)
         self.assertEqual(merges_path, file_path)
 
+    def test_clip_tokenizer_pretrained_download_assert_error(self) -> None:
+        file_path = path.join("vocab", "clip_bpe_simple_vocab_48895.txt")
+        with self.assertRaises(AssertionError):
+            _ = transforms.CLIPTokenizer._download_clip_bpe_merges(file_path)
+
     def test_clip_tokenizer_init(self) -> None:
         if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
