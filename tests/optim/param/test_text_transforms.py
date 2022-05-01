@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import unittest
+from os import path
 
 import torch
 
@@ -46,9 +47,6 @@ class TestCLIPTokenizer(BaseTest):
             torch.hub.get_dir(), "vocab", "clip_bpe_simple_vocab_48895.txt"
         )
         self.assertEqual(clip_tokenizer._merges_path, file_path)
-
-        from torchtext.transforms import CLIPTokenizer as CLIPTokenizer_TorchText
-
         self.assertIsInstance(
             clip_tokenizer.clip_tokenizer_module, CLIPTokenizer_TorchText
         )
