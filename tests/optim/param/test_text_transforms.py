@@ -38,8 +38,8 @@ class TestCLIPTokenizer(BaseTest):
         clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
 
         self.assertEqual(clip_tokenizer.context_length, 77)
-        self.assertEqual(clip_tokenizer.start_token, "<|startoftext|> ")
-        self.assertEqual(clip_tokenizer.end_token, " <|endoftext|>")
+        self.assertEqual(clip_tokenizer.start_token, "<|startoftext|>")
+        self.assertEqual(clip_tokenizer.end_token, "<|endoftext|>")
 
         file_path = path.join(
             torch.hub.get_dir(), "vocab", "clip_bpe_simple_vocab_48895.txt"
