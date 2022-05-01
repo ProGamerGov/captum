@@ -183,9 +183,7 @@ class CLIPTokenizer(torch.nn.Module):
         # Decode tokens
         x = [[t.tolist() for t in b] for b in x]
         x = [[i for i in b if i != self.padding_value] for b in x]
-        # print(x)
         token_str = ["".join([decoder[t] for t in ts]) for ts in x]
-        # print(token_str)
         token_str = [bytearray([byte_decoder[t] for t in ts]) for ts in token_str]
         token_str = [
             ts.decode("utf-8", errors="replace").replace("</w>", " ").strip()
