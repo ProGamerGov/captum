@@ -219,9 +219,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(list(text_output.shape), [1, context_length])
         self.assertEqual(text_output[0].tolist(), token_set)
 
-        text_output_str = clip_tokenizer.decode(
-            text_output, include_special_tokens=True
-        )
+        text_output_str = clip_tokenizer.decode(text_output)
 
         expected_ouput_str = ["this is a test !"]
         self.assertEqual(text_output_str, expected_ouput_str)
