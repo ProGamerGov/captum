@@ -9,6 +9,7 @@ from tests.helpers.basic import BaseTest
 
 try:
     from torchtext.transforms import CLIPTokenizer as CLIPTokenizer_TorchText
+
     _torchtext_has_clip_tokenizer = True
 except ImportError:
     _torchtext_has_clip_tokenizer = False
