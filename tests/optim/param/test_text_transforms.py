@@ -311,7 +311,7 @@ class TestCLIPTokenizer(BaseTest):
         txt_output_str = clip_tokenizer.decode(input_tokens)
 
         expected_str = (
-            """!"#$%&'()*+,-./0123456789:;<=>?@abcdefghijklmnopqrstuvwxyz[\]^_`abcd"""  # noqa: W605
+            """!"#$%&'()*+,-./0123456789:;<=>?@abcdefghijklmnopqrstuvwxyz[\]^_`abcd"""  # noqa: W605,E501
             + """efghijklmnopqrstuvwxyz{|}~¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿àáâãäåæçèé"""
             + """êëìíîïðñòóôõö×øùúûüýþßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿāāăăąąććĉĉċċ"""
             + """ččďďđđēēĕĕėėęęěěĝĝğğġġģģĥĥħħĩĩīīĭĭįįi̇ıijijĵĵķķĸĺĺļļľľŀŀłłń"""
