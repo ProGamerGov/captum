@@ -75,12 +75,14 @@ class TestCLIPTokenizer(BaseTest):
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer str input"
                 + " context_length test"
             )
-        clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
+        context_length = 54
+        clip_tokenizer = transforms.CLIPTokenizer(
+            pretrained_merges=True, context_length=context_length
+        )
         text_input_str = "this is a test!"
 
         text_output = clip_tokenizer(text_input_str)
 
-        context_length = 54
         token_ids = [49406, 589, 533, 320, 1628, 256, 49407]
         padding = [0] * (context_length - len(token_ids))
 
