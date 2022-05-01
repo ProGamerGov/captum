@@ -231,8 +231,6 @@ class TestCLIPTokenizer(BaseTest):
                 + " test"
             )
 
-        from torchtext import __version__ as torchtext_version
-
         # fmt: off
         input_tokens = [
             256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270,
