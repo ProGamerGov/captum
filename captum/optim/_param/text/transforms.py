@@ -29,6 +29,7 @@ class CLIPTokenizer(torch.nn.Module):
         "_merges_path",
         "_num_merges",
         "padding_value",
+        "truncate",
     ]
 
     def __init__(
@@ -40,6 +41,7 @@ class CLIPTokenizer(torch.nn.Module):
         pretrained_merges: bool = True,
         num_merges: Optional[int] = None,
         padding_value: int = 0,
+        truncate: bool = False,
     ) -> None:
         """
         Args:
@@ -68,6 +70,9 @@ class CLIPTokenizer(torch.nn.Module):
             padding_value (int, optional): An integer value to use for padding token
                 sets to the desired context_length.
                 Default: 0
+            truncate (bool, optional): Whether or not to truncate outputs larger than
+                context_length.
+                Default: False
         """
         super().__init__()
         self.context_length = context_length
@@ -85,6 +90,7 @@ class CLIPTokenizer(torch.nn.Module):
             merges_path=merges_path, num_merges=num_merges
         )
         self.padding_value = padding_value
+        self.truncate = truncate
 
     @staticmethod
     @torch.jit.ignore
@@ -219,6 +225,24 @@ class CLIPTokenizer(torch.nn.Module):
 
         # Refine 'tokens' Type from Any to List[List[str]] in JIT
         assert torch.jit.isinstance(tokens, List[List[str]])
+
+        # Optionally truncate inputs
+        if self.truncate:
+            if self.end_token:
+                tokens = [
+                    token_set[: self.context_length - 1] + [token_set[-1]]
+                    if len(token_set) > self.context_length
+                    else token_set
+                    for token_set in tokens
+                ]
+            else:
+                tokens = [
+                    token_set[: self.context_length]
+                    if len(token_set) > self.context_length
+                    else token_set
+                    for token_set in tokens
+                ]
+
         assert all([len(t) <= self.context_length for t in tokens])
 
         # Convert str tokens to tensor values & apply zeros padding
