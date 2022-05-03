@@ -350,3 +350,28 @@ class TestCLIPTokenizer(BaseTest):
         )
         self.assertEqual(len(txt_output_str), 1)
         self.assertEqual(txt_output_str[0].replace(" ", ""), expected_str)
+
+    def test_clip_tokenizer_truncate(self) -> None:
+        context_length = 5
+        clip_tokenizer = transforms.CLIPTokenizer(
+            pretrained_merges=True, context_length=context_length, truncate=True
+        )
+        text_input_str = "this is a test!"
+        text_output = clip_tokenizer(text_input_str)
+
+        self.assertEqual(list(text_output.shape), [1, context_length])
+        self.assertEqual(text_output[0].tolist(), [49406, 589, 533, 320, 49407])
+
+    def test_clip_tokenizer_truncate_no_end_token(self) -> None:
+        context_length = 5
+        clip_tokenizer = transforms.CLIPTokenizer(
+            pretrained_merges=True,
+            context_length=context_length,
+            end_token=None,
+            truncate=True,
+        )
+        text_input_str = "this is a test!"
+        text_output = clip_tokenizer(text_input_str)
+
+        self.assertEqual(list(text_output.shape), [1, context_length])
+        self.assertEqual(text_output[0].tolist(), [49406, 589, 533, 320, 1628])
