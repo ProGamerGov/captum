@@ -352,6 +352,10 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(txt_output_str[0].replace(" ", ""), expected_str)
 
     def test_clip_tokenizer_truncate(self) -> None:
+        if not _torchtext_has_clip_tokenizer:
+            raise unittest.SkipTest(
+                "torchtext >=0.12.0 not found, skipping ClipTokenizer truncate test"
+            )
         context_length = 5
         clip_tokenizer = transforms.CLIPTokenizer(
             pretrained_merges=True, context_length=context_length, truncate=True
@@ -363,6 +367,11 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(text_output[0].tolist(), [49406, 589, 533, 320, 49407])
 
     def test_clip_tokenizer_truncate_no_end_token(self) -> None:
+        if not _torchtext_has_clip_tokenizer:
+            raise unittest.SkipTest(
+                "torchtext >=0.12.0 not found, skipping ClipTokenizer truncate no"
+                + " end token test"
+            )
         context_length = 5
         clip_tokenizer = transforms.CLIPTokenizer(
             pretrained_merges=True,
