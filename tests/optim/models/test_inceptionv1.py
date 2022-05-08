@@ -54,6 +54,19 @@ class TestInceptionV1(BaseTest):
         expected_output = x * 255 - 117
         assertTensorAlmostEqual(self, output, expected_output, 0)
 
+    def test_inceptionv1_transform_warning(self) -> None:
+        if torch.__version__ <= "1.2.0":
+            raise unittest.SkipTest(
+                "Skipping InceptionV1 internal transform warning test due to"
+                + " insufficient Torch version."
+            )
+        x = torch.stack(
+            [torch.ones(3, 112, 112) * -1, torch.ones(3, 112, 112) * 2], dim=0
+        )
+        model = googlenet(pretrained=True)
+        with self.assertWarns(UserWarning):
+            model._transform_input(x)
+
     def test_transform_bgr_inceptionv1(self) -> None:
         if torch.__version__ <= "1.2.0":
             raise unittest.SkipTest(
