@@ -205,7 +205,7 @@ class NoiseTunnel(Attribution):
 
             attribution = attribution.view(attribution_shape)
             expected_attribution = attribution.mean(dim=1, keepdim=False)
-            expected_attribution_sq = torch.mean(attribution ** 2, dim=1, keepdim=False)
+            expected_attribution_sq = torch.mean(attribution**2, dim=1, keepdim=False)
             return expected_attribution, expected_attribution_sq
 
         with torch.no_grad():
