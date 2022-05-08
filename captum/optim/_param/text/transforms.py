@@ -140,7 +140,9 @@ class CLIPTokenizer(torch.nn.Module):
 
     @torch.jit.ignore
     def decode(
-        self, x: torch.Tensor, include_special_tokens: bool = False
+        self,
+        x: Union[torch.Tensor, List[int], List[List[int]]],
+        include_special_tokens: bool = False,
     ) -> List[List[str]]:
         """
         Decode token values into their corresponding string values.
@@ -151,7 +153,9 @@ class CLIPTokenizer(torch.nn.Module):
 
         Args:
 
-            x (torch.Tensor): A set of tokens stacked across the batch dimension.
+            x (torch.Tensor or list of int or list of list of int): A set of tokens
+                stacked across the batch dimension, a list of tokens, or a list of
+                lists of tokens.
             include_special_tokens (bool, optional): Whether or not to included added
                 special tokens in the output.
                 Default: False
@@ -160,7 +164,17 @@ class CLIPTokenizer(torch.nn.Module):
             token_str (list of list of str): A set of strings that correspond to the
                 token values in the input tensor.
         """
-        assert x.dim() == 2
+        if isinstance(x, torch.Tensor):
+            x = x.unsqueeze(0) if x.dim() == 1 else x
+            assert x.dim() == 2
+            x = [[t.tolist() for t in b] for b in x]
+        elif isinstance(x, (tuple, list)):
+            if any([isinstance(v, (tuple, list)) for v in x]):
+                assert all([[isinstance(v, int) for v in l] for l in x])
+            else:
+                assert all([isinstance(v, int) for v in x])
+                x = [x]
+
         with open(self._merges_path, "r", encoding="utf-8") as f:
             bpe_merges = f.read().split("\n")[1:]
         num_merges = self._num_merges or len(bpe_merges)
@@ -188,7 +202,6 @@ class CLIPTokenizer(torch.nn.Module):
         decoder = dict(zip(range(len(bpe_vocab)), bpe_vocab))
 
         # Decode tokens
-        x = [[t.tolist() for t in b] for b in x]
         x = [[i for i in b if i != self.padding_value] for b in x]
         token_str = ["".join([decoder[t] for t in ts]) for ts in x]
         token_str = [bytearray([byte_decoder[t] for t in ts]) for ts in token_str]
