@@ -7,6 +7,7 @@ import torch
 from captum.optim.models googlenet_places365
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
+from tests.optim.helpers.models import check_layer_in_model
 
 
 class TestInceptionV1Places365(BaseTest):
@@ -19,7 +20,7 @@ class TestInceptionV1Places365(BaseTest):
         model = googlenet_places365(
             pretrained=True, replace_relus_with_redirectedrelu=True
         )
-        _check_layer_in_model(self, model, RedirectedReluLayer)
+        self.assertTrue(check_layer_in_model(model, RedirectedReluLayer))
 
     def test_load_inceptionv1_places365_no_redirected_relu(self) -> None:
         if torch.__version__ <= "1.6.0":
@@ -30,8 +31,8 @@ class TestInceptionV1Places365(BaseTest):
         model = googlenet_places365(
             pretrained=True, replace_relus_with_redirectedrelu=False
         )
-        _check_layer_not_in_model(self, model, RedirectedReluLayer)
-        _check_layer_in_model(self, model, torch.nn.ReLU)
+        self.assertFalse(check_layer_in_model(model, RedirectedReluLayer))
+        self.assertTrue(check_layer_in_model(model, torch.nn.ReLU))
 
     def test_load_inceptionv1_places365_linear(self) -> None:
         if torch.__version__ <= "1.6.0":
@@ -40,11 +41,11 @@ class TestInceptionV1Places365(BaseTest):
                 + " insufficient Torch version."
             )
         model = googlenet_places365(pretrained=True, use_linear_modules_only=True)
-        _check_layer_not_in_model(self, model, RedirectedReluLayer)
-        _check_layer_not_in_model(self, model, torch.nn.ReLU)
-        _check_layer_not_in_model(self, model, torch.nn.MaxPool2d)
-        _check_layer_in_model(self, model, SkipLayer)
-        _check_layer_in_model(self, model, torch.nn.AvgPool2d)
+        self.assertFalse(check_layer_in_model(model, RedirectedReluLayer))
+        self.assertFalse(check_layer_in_model(model, torch.nn.ReLU))
+        self.assertFalse(check_layer_in_model(model, torch.nn.MaxPool2d))
+        self.assertTrue(check_layer_in_model(model, SkipLayer))
+        self.assertTrue(check_layer_in_model(model, torch.nn.AvgPool2d))
 
     def test_inceptionv1_places365_transform(self) -> None:
         if torch.__version__ <= "1.6.0":
