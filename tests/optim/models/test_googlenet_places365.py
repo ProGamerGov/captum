@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 import unittest
-from typing import Type
 
 import torch
 
-from captum.optim.models googlenet_places365
+from captum.optim.models import googlenet_places365
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 from tests.optim.helpers.models import check_layer_in_model
