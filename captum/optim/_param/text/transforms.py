@@ -162,7 +162,7 @@ class CLIPTokenizer(torch.nn.Module):
 
         Returns:
             token_str (list of list of str): A set of strings that correspond to the
-                token values in the input tensor.
+                token values in the input.
         """
         if isinstance(x, torch.Tensor):
             x = x.unsqueeze(0) if x.dim() == 1 else x
