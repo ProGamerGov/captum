@@ -170,9 +170,9 @@ class CLIPTokenizer(torch.nn.Module):
             x = [[t.tolist() for t in b] for b in x]
         elif isinstance(x, (tuple, list)):
             if any([isinstance(v, (tuple, list)) for v in x]):
-                assert all([[isinstance(v, int) for v in l] for l in x])
+                assert all([[isinstance(t, int) for t in ts] for ts in x])
             else:
-                assert all([isinstance(v, int) for v in x])
+                assert all([isinstance(t, int) for t in x])
                 x = [x]
 
         with open(self._merges_path, "r", encoding="utf-8") as f:
