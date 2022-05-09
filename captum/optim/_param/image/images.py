@@ -460,9 +460,7 @@ class SharedImage(ImageParameterization):
     def __init__(
         self,
         shapes: Union[Tuple[Tuple[int]], Tuple[int]] = None,
-        parameterization: Union[
-            ImageParameterization, AugmentedImageParameterization
-        ] = None,
+        parameterization: ImageParameterization = None,
         offset: Union[int, Tuple[int], Tuple[Tuple[int]], None] = None,
     ) -> None:
         """
@@ -471,7 +469,7 @@ class SharedImage(ImageParameterization):
             shapes (list of int or list of list of ints): The shapes of the shared
                 tensors to use for creating the nn.Parameter tensors.
             parameterization (ImageParameterization): An image parameterization
-                or augmented image parameterization instance.
+                instance.
             offset (int or list of int or list of list of ints , optional): The offsets
                 to use for the shared tensors.
                 Default: None
@@ -691,7 +689,7 @@ class StackImage(ImageParameterization):
 
     def __init__(
         self,
-        parameterizations: List[Union[ImageParameterization, AugmentedImageParameterization, torch.Tensor]],
+        parameterizations: List[Union[ImageParameterization, torch.Tensor]],
         dim: int = 0,
         output_device: Optional[torch.device] = None,
     ) -> None:
