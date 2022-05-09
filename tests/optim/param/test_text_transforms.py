@@ -172,6 +172,37 @@ class TestCLIPTokenizer(BaseTest):
         expected_ouput_str = ["<|startoftext|>this is a test ! <|endoftext|>"]
         self.assertEqual(text_output_str, expected_ouput_str)
 
+    def test_clip_tokenizer_list_decode(self) -> None:
+        if not _torchtext_has_clip_tokenizer:
+            raise unittest.SkipTest(
+                "torchtext >=0.12.0 not found, skipping ClipTokenizer list decode"
+                + " test"
+            )
+        clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
+
+        token_list = [49406, 589, 533, 320, 1628, 256, 49407, 0]
+
+        str_output = clip_tokenizer.decode(token_list)
+        expected_str = ["this is a test !"]
+        self.assertEqual(str_output, expected_str)
+
+    def test_clip_tokenizer_list_of_list_decode(self) -> None:
+        if not _torchtext_has_clip_tokenizer:
+            raise unittest.SkipTest(
+                "torchtext >=0.12.0 not found, skipping ClipTokenizer list of list"
+                + " decode test"
+            )
+        clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
+
+        token_list = [
+            [49406, 589, 533, 320, 1628, 256, 49407],
+            [49406, 320, 1674, 539, 320, 2368, 269, 49407, 0, 0],
+        ]
+
+        str_output = clip_tokenizer.decode(token_list)
+        expected_str = ["this is a test !", "a picture of a cat ."]
+        self.assertEqual(str_output, expected_str)
+
     def test_clip_tokenizer_no_special_tokens(self) -> None:
         if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
