@@ -30,7 +30,7 @@ class TestDeepDream(BaseTest):
         loss = opt_loss.DeepDream(model.layer)
         assertArraysAlmostEqual(
             get_loss_value(model, loss),
-            [[[CHANNEL_ACTIVATION_0_LOSS ** 2]], [[CHANNEL_ACTIVATION_1_LOSS ** 2]]],
+            [[[CHANNEL_ACTIVATION_0_LOSS**2]], [[CHANNEL_ACTIVATION_1_LOSS**2]]],
         )
 
 
@@ -83,7 +83,7 @@ class TestL2(BaseTest):
         loss = opt_loss.L2(model.layer)
         self.assertAlmostEqual(
             get_loss_value(model, loss),
-            (CHANNEL_ACTIVATION_0_LOSS ** 2 + CHANNEL_ACTIVATION_1_LOSS ** 2) ** 0.5,
+            (CHANNEL_ACTIVATION_0_LOSS**2 + CHANNEL_ACTIVATION_1_LOSS**2) ** 0.5,
             places=5,
         )
 
@@ -255,7 +255,7 @@ class TestCompositeLoss(BaseTest):
         loss = opt_loss.ChannelActivation(model.layer, 0) ** 2
         self.assertAlmostEqual(
             get_loss_value(model, loss),
-            CHANNEL_ACTIVATION_0_LOSS ** 2,
+            CHANNEL_ACTIVATION_0_LOSS**2,
             places=6,
         )
 
