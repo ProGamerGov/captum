@@ -90,7 +90,7 @@ class TestInceptionV1(BaseTest):
         self.assertEqual(list(outputs.shape), [1, 1008])
 
     def test_inceptionv1_load_and_jit_module(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if torch.__version__ <= "1.9.0":
             raise unittest.SkipTest(
                 "Skipping pretrained InceptionV1 load & JIT test"
                 + " due to insufficient Torch version."
@@ -102,7 +102,7 @@ class TestInceptionV1(BaseTest):
         self.assertEqual(list(outputs.shape), [1, 1008])
 
     def test_inceptionv1_load_and_jit_module_no_redirected_relu(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if torch.__version__ <= "1.9.0":
             raise unittest.SkipTest(
                 "Skipping pretrained InceptionV1 load & JIT with no"
                 + " redirected relu test due to insufficient Torch version."
