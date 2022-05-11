@@ -381,7 +381,7 @@ class TestPixelImage(BaseTest):
         self.assertEqual(image_param.image.size(1), channels)
         self.assertEqual(image_param.image.size(2), size[0])
         self.assertEqual(image_param.image.size(3), size[1])
-        assertTensorAlmostEqual(self, image_param.image, init_tensor, 0)
+        assertTensorAlmostEqual(self, image_param.image, init_tensor[None, :], 0)
         self.assertTrue(image_param.image.requires_grad)
 
     def test_pixelimage_init_error(self) -> None:
