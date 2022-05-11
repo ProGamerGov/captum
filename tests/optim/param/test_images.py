@@ -4,7 +4,6 @@ from typing import List
 
 import numpy as np
 import torch
-
 from captum.optim._param.image import images
 from captum.optim._param.image.transforms import SymmetricPadding, ToRGB
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual

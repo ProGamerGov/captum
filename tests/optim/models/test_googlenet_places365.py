@@ -2,7 +2,6 @@
 import unittest
 
 import torch
-
 from captum.optim.models import googlenet_places365
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual

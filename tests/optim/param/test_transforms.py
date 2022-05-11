@@ -2,11 +2,10 @@
 import unittest
 from typing import List
 
+import captum.optim._param.image.transforms as transforms
 import numpy as np
 import torch
 import torch.nn.functional as F
-
-import captum.optim._param.image.transforms as transforms
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 from tests.optim.helpers import numpy_transforms
 

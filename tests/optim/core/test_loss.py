@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 from typing import cast, List, Union
 
+import captum.optim._core.loss as opt_loss
 import numpy as np
 import torch
-
-import captum.optim._core.loss as opt_loss
 from captum.optim.models import collect_activations
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 from tests.helpers.basic_models import BasicModel_ConvNet_Optim
