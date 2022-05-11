@@ -422,7 +422,7 @@ class TestLaplacianImage(BaseTest):
         size = (224, 224)
         channels = 3
         image_param = images.LaplacianImage(size=size, channels=channels)
-        test_tensor = image_param.forward()
+        test_tensor = image_param.forward().rename(None)
 
         self.assertEqual(test_tensor.dim(), 4)
         self.assertEqual(test_tensor.size(0), 1)
@@ -433,7 +433,7 @@ class TestLaplacianImage(BaseTest):
     def test_laplacianimage_init(self) -> None:
         init_t = torch.zeros(1, 224, 224)
         image_param = images.LaplacianImage(size=(224, 224), channels=3, init=init_t)
-        output = image_param.forward().detach()
+        output = image_param.forward().detach().rename(None)
         assertTensorAlmostEqual(self, torch.ones_like(output) * 0.5, output, mode="max")
 
 
