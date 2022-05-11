@@ -898,7 +898,7 @@ class TestCenterCrop(BaseTest):
                 [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
             ]
         )
-        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor[None, None, :], 0)
 
     def test_center_crop_forward_padding_prime_num_pad(self) -> None:
         test_tensor = torch.arange(0, 1 * 1 * 3 * 3).view(1, 1, 3, 3).float()
@@ -1177,7 +1177,7 @@ class TestCenterCropFunction(BaseTest):
                 [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
             ]
         )
-        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor[None, None, :], 0)
 
     def test_center_crop_padding_prime_num_pad(self) -> None:
         test_tensor = torch.arange(0, 1 * 1 * 3 * 3).view(1, 1, 3, 3).float()
@@ -1254,7 +1254,7 @@ class TestCenterCropFunction(BaseTest):
                 [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
             ]
         )
-        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor[None, None, :], 0)
 
 
 class TestBlendAlpha(BaseTest):
