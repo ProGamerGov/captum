@@ -28,13 +28,10 @@ class TestDeepDream(BaseTest):
     def test_channel_deepdream(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.DeepDream(model.layer)
-        expected = torch.as_tensor([[[CHANNEL_ACTIVATION_0_LOSS ** 2]], [[CHANNEL_ACTIVATION_1_LOSS ** 2]]])
-        assertTensorAlmostEqual(
-            self,
-            get_loss_value(model, loss),
-            expected,
-            mode="max"
+        expected = torch.as_tensor(
+            [[[CHANNEL_ACTIVATION_0_LOSS ** 2]], [[CHANNEL_ACTIVATION_1_LOSS ** 2]]]
         )
+        assertTensorAlmostEqual(self, get_loss_value(model, loss), expected, mode="max")
 
 
 class TestChannelActivation(BaseTest):
@@ -175,7 +172,9 @@ class TestActivationWeights(BaseTest):
     def test_activation_weights_0(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.ActivationWeights(model.layer, weights=torch.zeros(1))
-        assertTensorAlmostEqual(self, get_loss_value(model, loss), torch.zeros(1, 1, 2, 1), mode="max")
+        assertTensorAlmostEqual(
+            self, get_loss_value(model, loss), torch.zeros(1, 1, 2, 1), mode="max"
+        )
 
     def test_activation_weights_1(self) -> None:
         model = BasicModel_ConvNet_Optim()
