@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-import torch
-
 import captum.optim as opt
+import torch
 from tests.helpers.basic import BaseTest
 from tests.helpers.basic_models import BasicModel_ConvNet_Optim
 

@@ -4,7 +4,6 @@ from typing import List
 
 import numpy as np
 import torch
-
 from captum.optim._param.image import images
 from captum.optim._param.image.transforms import SymmetricPadding, ToRGB
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
@@ -114,7 +113,7 @@ class TestFFTImage(BaseTest):
 
         test_output = image.torch_irfft(test_fft_tensor)
 
-        if torch.__version__ >= "1.7.0":
+        if torch.__version__ >= "1.8.0":
             # torch.fft.irfftn output
             expected_tensor = torch.tensor(
                 [
