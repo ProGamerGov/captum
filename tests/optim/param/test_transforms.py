@@ -1288,7 +1288,7 @@ class TestBlendAlpha(BaseTest):
         background_array = np.ones(rgb_array.shape) * 5
         blend_alpha_np = numpy_transforms.BlendAlpha(background=background_array)
         blended_array = blend_alpha_np.blend_alpha(test_array)
-        belnded_array = torch.as_tensor(blended_array)
+        blended_array = torch.as_tensor(blended_array)
 
         assertTensorAlmostEqual(self, blended_tensor, blended_array, 0, mode="max")
 
@@ -1314,7 +1314,7 @@ class TestBlendAlpha(BaseTest):
         background_array = np.ones(rgb_array.shape) * 5
         blend_alpha_np = numpy_transforms.BlendAlpha(background=background_array)
         blended_array = blend_alpha_np.blend_alpha(test_array)
-        belnded_array = torch.as_tensor(blended_array)
+        blended_array = torch.as_tensor(blended_array)
 
         assertTensorAlmostEqual(self, blended_tensor, blended_array, 0, mode="max")
 
