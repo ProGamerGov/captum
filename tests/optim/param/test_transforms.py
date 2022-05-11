@@ -923,7 +923,7 @@ class TestCenterCrop(BaseTest):
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
     def test_center_crop_forward_one_number_exact_jit_module(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if torch.__version__ <= "1.9.0":
             raise unittest.SkipTest(
                 "Skipping CenterCrop JIT module test due to insufficient"
                 + " Torch version."
@@ -957,7 +957,7 @@ class TestCenterCrop(BaseTest):
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
 
     def test_center_crop_forward_padding_jit_module(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if torch.__version__ <= "1.9.0":
             raise unittest.SkipTest(
                 "Skipping CenterCrop padding JIT module test due to insufficient"
                 + " Torch version."
@@ -1200,7 +1200,7 @@ class TestCenterCropFunction(BaseTest):
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
     def test_center_crop_one_number_exact_jit_module(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if torch.__version__ <= "1.9.0":
             raise unittest.SkipTest(
                 "Skipping center_crop JIT module test due to insufficient"
                 + " Torch version."
@@ -1233,7 +1233,7 @@ class TestCenterCropFunction(BaseTest):
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor)
 
     def test_center_crop_padding_jit_module(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if torch.__version__ <= "1.9.0":
             raise unittest.SkipTest(
                 "Skipping center_crop padding JIT module test due to insufficient"
                 + " Torch version."
