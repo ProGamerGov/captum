@@ -956,7 +956,7 @@ class TestCenterCrop(BaseTest):
         assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
 
     def test_center_crop_forward_padding_jit_module(self) -> None:
-        if torch.__version__ <= "1.9.0":
+        if torch.__version__ <= "1.10.0":
             raise unittest.SkipTest(
                 "Skipping CenterCrop padding JIT module test due to insufficient"
                 + " Torch version."
