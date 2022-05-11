@@ -426,7 +426,7 @@ class TestLaplacianImage(BaseTest):
         init_t = torch.zeros(1, 224, 224)
         image_param = images.LaplacianImage(size=(224, 224), channels=3, init=init_t)
         output = image_param.forward().detach()
-        assertTensorAlmostEqual(torch.ones_like(output) * 0.5, output, mode="max")
+        assertTensorAlmostEqual(self, torch.ones_like(output) * 0.5, output, mode="max")
 
 
 class TestSharedImage(BaseTest):
@@ -742,7 +742,7 @@ class TestNaturalImage(BaseTest):
     def test_natural_image_0(self) -> None:
         image_param = images.NaturalImage(size=(1, 1))
         image = image_param.forward().detach()
-        assertTensorAlmostEqual(self, image, torch.ones_like(image) * 0.5, mode="max")
+        assertTensorAlmostEqual(self, image, torch.ones_like(image) * 0.5, mode="max", delta=0.001)
 
     def test_natural_image_1(self) -> None:
         image_param = images.NaturalImage(init=torch.ones(3, 1, 1))
