@@ -30,7 +30,7 @@ class TestDeepDream(BaseTest):
         loss = opt_loss.DeepDream(model.layer)
         expected = torch.as_tensor(
             [[[CHANNEL_ACTIVATION_0_LOSS ** 2]], [[CHANNEL_ACTIVATION_1_LOSS ** 2]]]
-        )
+        )[None, :]
         assertTensorAlmostEqual(self, get_loss_value(model, loss), expected, mode="max")
 
 
