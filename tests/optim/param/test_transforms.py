@@ -162,11 +162,6 @@ class TestRandomScale(BaseTest):
         )
 
     def test_random_scale_forward_exact_align_corners(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping RandomScale exact align corners forward due to"
-                + " insufficient Torch version."
-            )
         scale_module = transforms.RandomScale(scale=[0.5], align_corners=True)
         self.assertTrue(scale_module.align_corners)
 
@@ -504,11 +499,6 @@ class TestRandomRotation(BaseTest):
         assertTensorAlmostEqual(self, test_output, expected_output, 0.005)
 
     def test_random_rotation_forward_exact_nearest_reflection(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping RandomRotation forward due exact nearest relfection"
-                + " to insufficient Torch version."
-            )
         rotation_module = transforms.RandomRotation(
             [45.0], mode="nearest", padding_mode="reflection"
         )
@@ -1391,10 +1381,6 @@ class TestToRGB(BaseTest):
             transforms.ToRGB(transform="error")
 
     def test_to_rgb_klt_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping ToRGB forward due to insufficient Torch version."
-            )
         to_rgb = transforms.ToRGB(transform="klt")
         test_tensor = torch.ones(1, 3, 4, 4).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
@@ -1413,10 +1399,6 @@ class TestToRGB(BaseTest):
         )
 
     def test_to_rgb_alpha_klt_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping ToRGB with Alpha forward due to insufficient Torch version."
-            )
         to_rgb = transforms.ToRGB(transform="klt")
         test_tensor = torch.ones(1, 4, 4, 4).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
@@ -1436,11 +1418,6 @@ class TestToRGB(BaseTest):
         )
 
     def test_to_rgb_alpha_klt_forward_dim_3(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping ToRGB with Alpha forward dim 3 due to"
-                + " insufficient Torch version."
-            )
         to_rgb = transforms.ToRGB(transform="klt")
         test_tensor = torch.ones(4, 4, 4).refine_names("C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
@@ -1460,10 +1437,6 @@ class TestToRGB(BaseTest):
         )
 
     def test_to_rgb_klt_forward_no_named_dims(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping ToRGB forward due to insufficient Torch version."
-            )
         to_rgb = transforms.ToRGB(transform="klt")
         test_tensor = torch.ones(1, 3, 4, 4)
         rgb_tensor = to_rgb(test_tensor)
@@ -1482,10 +1455,6 @@ class TestToRGB(BaseTest):
         )
 
     def test_to_rgb_alpha_klt_forward_no_named_dims(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping ToRGB with Alpha forward due to insufficient Torch version."
-            )
         to_rgb = transforms.ToRGB(transform="klt")
         test_tensor = torch.ones(1, 4, 4, 4)
         rgb_tensor = to_rgb(test_tensor)
@@ -1505,10 +1474,6 @@ class TestToRGB(BaseTest):
         )
 
     def test_to_rgb_i1i2i3_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping ToRGB forward due to insufficient Torch version."
-            )
         to_rgb = transforms.ToRGB(transform="i1i2i3")
         test_tensor = torch.ones(1, 3, 4, 4).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
@@ -1526,10 +1491,6 @@ class TestToRGB(BaseTest):
         )
 
     def test_to_rgb_alpha_i1i2i3_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping ToRGB with Alpha forward due to insufficient Torch version."
-            )
         to_rgb = transforms.ToRGB(transform="i1i2i3")
         test_tensor = torch.ones(1, 4, 4, 4).refine_names("B", "C", "H", "W")
         rgb_tensor = to_rgb(test_tensor)
@@ -1548,10 +1509,6 @@ class TestToRGB(BaseTest):
         )
 
     def test_to_rgb_custom_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping ToRGB forward due to insufficient Torch version."
-            )
         matrix = torch.eye(3, 3)
         to_rgb = transforms.ToRGB(transform=matrix)
         test_tensor = torch.ones(1, 3, 4, 4).refine_names("B", "C", "H", "W")
