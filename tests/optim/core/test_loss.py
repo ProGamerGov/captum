@@ -28,7 +28,7 @@ class TestDeepDream(BaseTest):
     def test_channel_deepdream(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.DeepDream(model.layer)
-        expected = torch.as_tensor[[[CHANNEL_ACTIVATION_0_LOSS ** 2]], [[CHANNEL_ACTIVATION_1_LOSS ** 2]]])
+        expected = torch.as_tensor([[[CHANNEL_ACTIVATION_0_LOSS ** 2]], [[CHANNEL_ACTIVATION_1_LOSS ** 2]]])
         assertTensorAlmostEqual(
             self,
             get_loss_value(model, loss),
