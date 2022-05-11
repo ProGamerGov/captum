@@ -70,7 +70,7 @@ class TestImageTensor(BaseTest):
 
         filename = "image_tensor.jpg"
         image_tensor.export(filename)
-        new_tensor = images.ImageTensor().open(filename)
+        new_tensor = images.ImageTensor().open(filename)[None, :]
 
         self.assertTrue(torch.is_tensor(new_tensor))
         assertTensorAlmostEqual(self, image_tensor, new_tensor)
