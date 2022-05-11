@@ -438,7 +438,7 @@ class TestPixelImage(BaseTest):
         self.assertEqual(test_tensor.size(1), channels)
         self.assertEqual(test_tensor.size(2), size[0])
         self.assertEqual(test_tensor.size(3), size[1])
-        assertTensorAlmostEqual(self, test_tensor, init_tensor.squeeze(0), 0)
+        assertTensorAlmostEqual(self, test_tensor, init_tensor[None, :], 0)
 
 
 class TestLaplacianImage(BaseTest):
