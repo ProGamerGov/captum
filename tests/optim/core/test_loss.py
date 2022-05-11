@@ -15,7 +15,7 @@ CHANNEL_ACTIVATION_1_LOSS = 1.3
 
 def get_loss_value(
     model: torch.nn.Module, loss: opt_loss.Loss, input_shape: List[int] = [1, 3, 1, 1]
-) -> Union[int, float, np.ndarray]:
+) -> Union[int, float]:
     module_outputs = collect_activations(model, loss.target, torch.ones(*input_shape))
     loss_value = loss(module_outputs)
     try:
@@ -30,7 +30,7 @@ class TestDeepDream(BaseTest):
         loss = opt_loss.DeepDream(model.layer)
         assertTensorAlmostEqual(
             self,
-            get_loss_value(model, loss),
+            get_loss_value(model, loss)[None, :],
             [[[CHANNEL_ACTIVATION_0_LOSS ** 2]], [[CHANNEL_ACTIVATION_1_LOSS ** 2]]],
             mode="max"
         )
