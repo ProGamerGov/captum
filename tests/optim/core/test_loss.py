@@ -173,7 +173,7 @@ class TestActivationWeights(BaseTest):
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.ActivationWeights(model.layer, weights=torch.zeros(1))
         assertTensorAlmostEqual(
-            self, get_loss_value(model, loss), torch.zeros(1, 1, 2, 1), mode="max"
+            self, get_loss_value(model, loss), torch.zeros(1, 2, 1, 1), mode="max"
         )
 
     def test_activation_weights_1(self) -> None:
