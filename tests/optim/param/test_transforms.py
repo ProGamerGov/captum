@@ -979,7 +979,7 @@ class TestCenterCrop(BaseTest):
                 [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
             ]
         )
-        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, expected_tensor[None, None, :], 0)
 
 
 class TestCenterCropFunction(BaseTest):
