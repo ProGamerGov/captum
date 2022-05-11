@@ -1345,7 +1345,9 @@ class TestToRGB(BaseTest):
     def test_to_rgb_i1i2i3(self) -> None:
         to_rgb = transforms.ToRGB(transform="i1i2i3")
         to_rgb_np = numpy_transforms.ToRGB(transform="i1i2i3")
-        assertTensorAlmostEqual(self, to_rgb.transform, torch.as_tensor(to_rgb_np.transform), mode="max")
+        assertTensorAlmostEqual(
+            self, to_rgb.transform, torch.as_tensor(to_rgb_np.transform), mode="max"
+        )
         transform = torch.tensor(
             [
                 [0.3333, 0.3333, 0.3333],
@@ -1358,8 +1360,10 @@ class TestToRGB(BaseTest):
     def test_to_rgb_klt(self) -> None:
         to_rgb = transforms.ToRGB(transform="klt")
         to_rgb_np = numpy_transforms.ToRGB(transform="klt")
-        
-        assertTensorAlmostEqual(self, to_rgb.transform, torch.as_tensor(to_rgb_np.transform), mode="max")
+
+        assertTensorAlmostEqual(
+            self, to_rgb.transform, torch.as_tensor(to_rgb_np.transform), mode="max"
+        )
         transform = torch.tensor(
             [
                 [0.5628, 0.1948, 0.0433],
@@ -1373,7 +1377,9 @@ class TestToRGB(BaseTest):
         matrix = torch.eye(3, 3)
         to_rgb = transforms.ToRGB(transform=matrix)
         to_rgb_np = numpy_transforms.ToRGB(transform=matrix.numpy())
-        assertTensorAlmostEqual(self, to_rgb.transform, torch.as_tensor(to_rgb_np.transform), mode="max")
+        assertTensorAlmostEqual(
+            self, to_rgb.transform, torch.as_tensor(to_rgb_np.transform), mode="max"
+        )
         assertTensorAlmostEqual(self, to_rgb.transform, matrix, 0.0)
 
     def test_to_rgb_init_value_error(self) -> None:
@@ -1518,7 +1524,9 @@ class TestToRGB(BaseTest):
         test_array = np.ones((1, 3, 4, 4))
         rgb_array = to_rgb_np.to_rgb(test_array)
 
-        assertTensorAlmostEqual(self, rgb_tensor, torch.as_tensor(rgb_array), mode="max")
+        assertTensorAlmostEqual(
+            self, rgb_tensor, torch.as_tensor(rgb_array), mode="max"
+        )
 
         inverse_tensor = to_rgb(rgb_tensor.clone(), inverse=True)
         assertTensorAlmostEqual(

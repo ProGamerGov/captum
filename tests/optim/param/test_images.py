@@ -88,7 +88,9 @@ class TestFFTImage(BaseTest):
     def test_pytorch_fftfreq(self) -> None:
         image = images.FFTImage((1, 1))
         _, _, fftfreq = image.get_fft_funcs()
-        assertTensorAlmostEqual(self, fftfreq(4, 4), torch.as_tensor(np.fft.fftfreq(4, 4)), mode="max")
+        assertTensorAlmostEqual(
+            self, fftfreq(4, 4), torch.as_tensor(np.fft.fftfreq(4, 4)), mode="max"
+        )
 
     def test_rfft2d_freqs(self) -> None:
         height = 2
@@ -303,7 +305,9 @@ class TestFFTImage(BaseTest):
 
         self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
-        assertTensorAlmostEqual(self, fftimage_tensor.detach(), fftimage_array, 25.0, mode="max")
+        assertTensorAlmostEqual(
+            self, fftimage_tensor.detach(), fftimage_array, 25.0, mode="max"
+        )
 
     def test_fftimage_forward_init_bchw(self) -> None:
         size = (224, 224)
@@ -318,7 +322,9 @@ class TestFFTImage(BaseTest):
 
         self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
-        assertTensorAlmostEqual(self, fftimage_tensor.detach(), fftimage_array, 25.0, mode="max")
+        assertTensorAlmostEqual(
+            self, fftimage_tensor.detach(), fftimage_array, 25.0, mode="max"
+        )
 
     def test_fftimage_forward_init_batch(self) -> None:
         size = (224, 224)
@@ -334,7 +340,9 @@ class TestFFTImage(BaseTest):
 
         self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
-        assertTensorAlmostEqual(self, fftimage_tensor.detach(), fftimage_array, 25.0, mode="max")
+        assertTensorAlmostEqual(
+            self, fftimage_tensor.detach(), fftimage_array, 25.0, mode="max"
+        )
 
 
 class TestPixelImage(BaseTest):
@@ -742,7 +750,9 @@ class TestNaturalImage(BaseTest):
     def test_natural_image_0(self) -> None:
         image_param = images.NaturalImage(size=(1, 1))
         image = image_param.forward().detach()
-        assertTensorAlmostEqual(self, image, torch.ones_like(image) * 0.5, mode="max", delta=0.001)
+        assertTensorAlmostEqual(
+            self, image, torch.ones_like(image) * 0.5, mode="max", delta=0.001
+        )
 
     def test_natural_image_1(self) -> None:
         image_param = images.NaturalImage(init=torch.ones(3, 1, 1))
