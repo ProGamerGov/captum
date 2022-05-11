@@ -7,11 +7,7 @@ import torch
 import torch.nn.functional as F
 
 import captum.optim._param.image.transforms as transforms
-from tests.helpers.basic import (
-    BaseTest,
-    assertArraysAlmostEqual,
-    assertTensorAlmostEqual,
-)
+from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 from tests.optim.helpers import numpy_transforms
 
 
@@ -646,10 +642,11 @@ class TestRandomSpatialJitter(BaseTest):
 
         spatial_mod_np = numpy_transforms.RandomSpatialJitter(t_val)
         jittered_array = spatial_mod_np.translate_array(np.eye(4, 4), translate_vals)
+        jittered_array = torch.as_tensor(jittered_array)
 
-        assertArraysAlmostEqual(jittered_tensor[0].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[1].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[2].numpy(), jittered_array, 0)
+        assertTensorAlmostEqual(self, jittered_tensor[0], jittered_array, 0, mode="max")
+        assertTensorAlmostEqual(self, jittered_tensor[1], jittered_array, 0, mode="max")
+        assertTensorAlmostEqual(self, jittered_tensor[2], jittered_array, 0, mode="max")
 
     def test_random_spatial_jitter_w(self) -> None:
         translate_vals = [0, 3]
@@ -663,10 +660,11 @@ class TestRandomSpatialJitter(BaseTest):
 
         spatial_mod_np = numpy_transforms.RandomSpatialJitter(t_val)
         jittered_array = spatial_mod_np.translate_array(np.eye(4, 4), translate_vals)
+        jittered_array = torch.as_tensor(jittered_array)
 
-        assertArraysAlmostEqual(jittered_tensor[0].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[1].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[2].numpy(), jittered_array, 0)
+        assertTensorAlmostEqual(self, jittered_tensor[0], jittered_array, 0, mode="max")
+        assertTensorAlmostEqual(self, jittered_tensor[1], jittered_array, 0, mode="max")
+        assertTensorAlmostEqual(self, jittered_tensor[2], jittered_array, 0, mode="max")
 
     def test_random_spatial_jitter_h(self) -> None:
         translate_vals = [3, 0]
@@ -680,10 +678,11 @@ class TestRandomSpatialJitter(BaseTest):
 
         spatial_mod_np = numpy_transforms.RandomSpatialJitter(t_val)
         jittered_array = spatial_mod_np.translate_array(np.eye(4, 4), translate_vals)
+        jittered_array = torch.as_tensor(jittered_array)
 
-        assertArraysAlmostEqual(jittered_tensor[0].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[1].numpy(), jittered_array, 0)
-        assertArraysAlmostEqual(jittered_tensor[2].numpy(), jittered_array, 0)
+        assertTensorAlmostEqual(self, jittered_tensor[0], jittered_array, 0, mode="max")
+        assertTensorAlmostEqual(self, jittered_tensor[1], jittered_array, 0, mode="max")
+        assertTensorAlmostEqual(self, jittered_tensor[2], jittered_array, 0, mode="max")
 
     def test_random_spatial_jitter_forward(self) -> None:
         t_val = 3
@@ -731,8 +730,9 @@ class TestCenterCrop(BaseTest):
 
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals, True)
         cropped_array = crop_mod_np.forward(test_tensor.numpy())
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
         expected_tensor = torch.stack(
             [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
         ).unsqueeze(0)
@@ -750,8 +750,9 @@ class TestCenterCrop(BaseTest):
 
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals, True)
         cropped_array = crop_mod_np.forward(test_tensor.numpy())
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
         expected_tensor = torch.stack(
             [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
         )
@@ -772,8 +773,9 @@ class TestCenterCrop(BaseTest):
 
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals, True)
         cropped_array = crop_mod_np.forward(test_tensor.numpy())
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
         expected_tensor = torch.stack(
             [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
         ).unsqueeze(0)
@@ -805,8 +807,9 @@ class TestCenterCrop(BaseTest):
 
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals, True)
         cropped_array = crop_mod_np.forward(test_tensor.numpy())
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
         expected_tensor = torch.stack(
             [torch.stack([torch.tensor([1.0, 0.0, 1.0, 1.0, 0.0, 1.0])] * 2)] * 3
         ).unsqueeze(0)
@@ -827,8 +830,9 @@ class TestCenterCrop(BaseTest):
 
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals, False)
         cropped_array = crop_mod_np.forward(test_tensor.numpy())
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
         expected_tensor = torch.stack(
             [
                 torch.tensor(
@@ -860,8 +864,9 @@ class TestCenterCrop(BaseTest):
 
         crop_mod_np = numpy_transforms.CenterCrop(crop_vals, False)
         cropped_array = crop_mod_np.forward(test_tensor.numpy())
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
 
         expected_tensor = torch.stack(
             [torch.tensor([[0.0, 0.0], [1.0, 1.0], [1.0, 1.0], [0.0, 0.0]])] * 3
@@ -1001,8 +1006,9 @@ class TestCenterCropFunction(BaseTest):
         cropped_array = numpy_transforms.center_crop(
             test_tensor.numpy(), crop_vals, True
         )
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
         expected_tensor = torch.stack(
             [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
         ).unsqueeze(0)
@@ -1019,8 +1025,9 @@ class TestCenterCropFunction(BaseTest):
         cropped_array = numpy_transforms.center_crop(
             test_tensor.numpy(), crop_vals, True
         )
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
         expected_tensor = torch.stack(
             [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
         )
@@ -1040,8 +1047,9 @@ class TestCenterCropFunction(BaseTest):
         cropped_array = numpy_transforms.center_crop(
             test_tensor.numpy(), crop_vals, True
         )
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
         expected_tensor = torch.stack(
             [torch.tensor([[1.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 0.0]])] * 3
         ).unsqueeze(0)
@@ -1084,8 +1092,9 @@ class TestCenterCropFunction(BaseTest):
         cropped_array = numpy_transforms.center_crop(
             test_tensor.numpy(), crop_vals, True
         )
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
         expected_tensor = torch.stack(
             [torch.stack([torch.tensor([0.0, 1.0, 1.0, 0.0])] * 2)] * 3
         ).unsqueeze(0)
@@ -1105,8 +1114,9 @@ class TestCenterCropFunction(BaseTest):
         cropped_array = numpy_transforms.center_crop(
             test_tensor.numpy(), crop_vals, False
         )
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
         expected_tensor = torch.stack(
             [
                 torch.tensor(
@@ -1137,8 +1147,9 @@ class TestCenterCropFunction(BaseTest):
         cropped_array = numpy_transforms.center_crop(
             test_tensor.numpy(), crop_vals, False
         )
+        cropped_array = torch.as_tensor(cropped_array)
 
-        assertArraysAlmostEqual(cropped_tensor.numpy(), cropped_array, 0)
+        assertTensorAlmostEqual(self, cropped_tensor, cropped_array, 0, mode="max")
         expected_tensor = torch.stack(
             [torch.tensor([[0.0, 0.0], [1.0, 1.0], [1.0, 1.0], [0.0, 0.0]])] * 3
         ).unsqueeze(0)
@@ -1277,8 +1288,9 @@ class TestBlendAlpha(BaseTest):
         background_array = np.ones(rgb_array.shape) * 5
         blend_alpha_np = numpy_transforms.BlendAlpha(background=background_array)
         blended_array = blend_alpha_np.blend_alpha(test_array)
+        belnded_array = torch.as_tensor(blended_array)
 
-        assertArraysAlmostEqual(blended_tensor.numpy(), blended_array, 0)
+        assertTensorAlmostEqual(self, blended_tensor, blended_array, 0, mode="max")
 
     def test_blend_alpha_jit_module(self) -> None:
         if torch.__version__ <= "1.8.0":
@@ -1302,8 +1314,9 @@ class TestBlendAlpha(BaseTest):
         background_array = np.ones(rgb_array.shape) * 5
         blend_alpha_np = numpy_transforms.BlendAlpha(background=background_array)
         blended_array = blend_alpha_np.blend_alpha(test_array)
+        belnded_array = torch.as_tensor(blended_array)
 
-        assertArraysAlmostEqual(blended_tensor.numpy(), blended_array, 0)
+        assertTensorAlmostEqual(self, blended_tensor, blended_array, 0, mode="max")
 
 
 class TestIgnoreAlpha(BaseTest):
@@ -1355,7 +1368,8 @@ class TestToRGB(BaseTest):
     def test_to_rgb_klt(self) -> None:
         to_rgb = transforms.ToRGB(transform="klt")
         to_rgb_np = numpy_transforms.ToRGB(transform="klt")
-        assertArraysAlmostEqual(to_rgb.transform.numpy(), to_rgb_np.transform)
+        
+        assertTensorAlmostEqual(self, to_rgb.transform, to_rgb_np.transform, mode="max")
         transform = torch.tensor(
             [
                 [0.5628, 0.1948, 0.0433],
