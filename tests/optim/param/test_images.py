@@ -92,7 +92,7 @@ class TestFFTImage(BaseTest):
     def test_pytorch_fftfreq(self) -> None:
         image = images.FFTImage((1, 1))
         _, _, fftfreq = image.get_fft_funcs()
-        assertArraysAlmostEqual(fftfreq(4, 4).numpy(), np.fft.fftfreq(4, 4))
+        assertTensorAlmostEqual(self, fftfreq(4, 4), torch.as_tensor(np.fft.fftfreq(4, 4)), mode="max")
 
     def test_rfft2d_freqs(self) -> None:
         height = 2
@@ -311,7 +311,7 @@ class TestFFTImage(BaseTest):
 
         self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
-        assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array, 25.0)
+        assertTensorAlmostEqual(self, fftimage_tensor.detach(), fftimage_array, 25.0, mode="max")
 
     def test_fftimage_forward_init_bchw(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -330,7 +330,7 @@ class TestFFTImage(BaseTest):
 
         self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
-        assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array, 25.0)
+        assertTensorAlmostEqual(self, fftimage_tensor.detach(), fftimage_array, 25.0, mode="max")
 
     def test_fftimage_forward_init_batch(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -350,7 +350,7 @@ class TestFFTImage(BaseTest):
 
         self.assertEqual(fftimage.size, (224, 224))
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
-        assertArraysAlmostEqual(fftimage_tensor.detach().numpy(), fftimage_array, 25.0)
+        assertTensorAlmostEqual(self, fftimage_tensor.detach(), fftimage_array, 25.0, mode="max")
 
 
 class TestPixelImage(BaseTest):
@@ -469,8 +469,8 @@ class TestLaplacianImage(BaseTest):
             )
         init_t = torch.zeros(1, 224, 224)
         image_param = images.LaplacianImage(size=(224, 224), channels=3, init=init_t)
-        test_np = image_param.forward().detach().numpy()
-        assertArraysAlmostEqual(np.ones_like(test_np) * 0.5, test_np)
+        output = image_param.forward().detach()
+        assertTensorAlmostEqual(torch.ones_like(output) * 0.5, output, mode="max")
 
 
 class TestSharedImage(BaseTest):
@@ -868,8 +868,8 @@ class TestNaturalImage(BaseTest):
                 "Skipping NaturalImage test due to insufficient Torch version."
             )
         image_param = images.NaturalImage(size=(1, 1))
-        image_np = image_param.forward().detach().numpy()
-        assertArraysAlmostEqual(image_np, np.ones_like(image_np) * 0.5)
+        image = image_param.forward().detach()
+        assertTensorAlmostEqual(self, image, torch.ones_like(image) * 0.5, mode="max")
 
     def test_natural_image_1(self) -> None:
         if torch.__version__ <= "1.2.0":
@@ -877,8 +877,8 @@ class TestNaturalImage(BaseTest):
                 "Skipping NaturalImage test due to insufficient Torch version."
             )
         image_param = images.NaturalImage(init=torch.ones(3, 1, 1))
-        image_np = image_param.forward().detach().numpy()
-        assertArraysAlmostEqual(image_np, np.ones_like(image_np))
+        image = image_param.forward().detach()
+        assertTensorAlmostEqual(self, image, torch.ones_like(image), mode="max")
 
     def test_natural_image_cuda(self) -> None:
         if not torch.cuda.is_available():
