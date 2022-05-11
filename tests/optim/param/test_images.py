@@ -802,6 +802,11 @@ class TestNaturalImage(BaseTest):
         assertTensorAlmostEqual(self, output_tensor, torch.ones_like(output_tensor))
 
     def test_natural_image_decorrelation_module_none(self) -> None:
+        if torch.__version__ <= "1.8.0":
+            raise unittest.SkipTest(
+                "Skipping NaturalImage no decorrelation module"
+                + " test due to insufficient Torch version."
+            )
         image_param = images.NaturalImage(
             init=torch.ones(1, 3, 4, 4), decorrelation_module=None
         )
