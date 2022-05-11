@@ -6,7 +6,7 @@ import torch
 
 import captum.optim._core.loss as opt_loss
 from captum.optim.models import collect_activations
-from tests.helpers.basic import BaseTest, assertArraysAlmostEqual
+from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 from tests.helpers.basic_models import BasicModel_ConvNet_Optim
 
 CHANNEL_ACTIVATION_0_LOSS = 1.3
@@ -21,7 +21,7 @@ def get_loss_value(
     try:
         return loss_value.item()
     except ValueError:
-        return loss_value.detach().numpy()
+        return loss_value.detach()
 
 
 class TestDeepDream(BaseTest):
@@ -172,16 +172,18 @@ class TestActivationWeights(BaseTest):
     def test_activation_weights_0(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.ActivationWeights(model.layer, weights=torch.zeros(1))
-        assertArraysAlmostEqual(get_loss_value(model, loss), np.zeros((1, 2, 1)))
+        assertTensorAlmostEqual(self, get_loss_value(model, loss), torch.zeros((1, 2, 1)), mode="max")
 
     def test_activation_weights_1(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.ActivationWeights(
             model.layer, weights=torch.ones(1), neuron=True
         )
-        assertArraysAlmostEqual(
+        assertTensorAlmostEqual(
+            self,
             get_loss_value(model, loss),
             [CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS],
+            mode="max",
         )
 
 
