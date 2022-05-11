@@ -291,10 +291,6 @@ class TestFFTImage(BaseTest):
         self.assertEqual(list(fftimage_tensor.shape), [1, 3, 512, 405])
 
     def test_fftimage_forward_init_chw(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping FFTImage test due to insufficient Torch version."
-            )
         size = (224, 224)
         init_tensor = torch.randn(1, 3, 224, 224)
         init_array = init_tensor.numpy()
@@ -310,10 +306,6 @@ class TestFFTImage(BaseTest):
         assertTensorAlmostEqual(self, fftimage_tensor.detach(), fftimage_array, 25.0, mode="max")
 
     def test_fftimage_forward_init_bchw(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping FFTImage test due to insufficient Torch version."
-            )
         size = (224, 224)
         init_tensor = torch.randn(1, 3, 224, 224)
         init_array = init_tensor.numpy()
@@ -329,10 +321,6 @@ class TestFFTImage(BaseTest):
         assertTensorAlmostEqual(self, fftimage_tensor.detach(), fftimage_array, 25.0, mode="max")
 
     def test_fftimage_forward_init_batch(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping FFTImage test due to insufficient Torch version."
-            )
         size = (224, 224)
         batch = 2
         init_tensor = torch.randn(1, 3, 224, 224)
@@ -351,10 +339,6 @@ class TestFFTImage(BaseTest):
 
 class TestPixelImage(BaseTest):
     def test_pixelimage_random(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping PixelImage random due to insufficient Torch version."
-            )
         size = (224, 224)
         channels = 3
         image_param = images.PixelImage(size=size, channels=channels)
@@ -367,10 +351,6 @@ class TestPixelImage(BaseTest):
         self.assertTrue(image_param.image.requires_grad)
 
     def test_pixelimage_init(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping PixelImage init due to insufficient Torch version."
-            )
         size = (224, 224)
         channels = 3
         init_tensor = torch.randn(channels, *size)
@@ -385,10 +365,6 @@ class TestPixelImage(BaseTest):
         self.assertTrue(image_param.image.requires_grad)
 
     def test_pixelimage_init_error(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping PixelImage init due to insufficient Torch version."
-            )
         size = (224, 224)
         channels = 2
         init_tensor = torch.randn(channels, *size)
@@ -396,10 +372,6 @@ class TestPixelImage(BaseTest):
             images.PixelImage(size=size, channels=channels, init=init_tensor)
 
     def test_pixelimage_random_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping PixelImage random due to insufficient Torch version."
-            )
         size = (224, 224)
         channels = 3
         image_param = images.PixelImage(size=size, channels=channels)
@@ -423,10 +395,6 @@ class TestPixelImage(BaseTest):
         self.assertTrue(torch.is_tensor(output_tensor))
 
     def test_pixelimage_init_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping PixelImage init due to insufficient Torch version."
-            )
         size = (224, 224)
         channels = 3
         init_tensor = torch.randn(3, 224, 224)
@@ -443,10 +411,6 @@ class TestPixelImage(BaseTest):
 
 class TestLaplacianImage(BaseTest):
     def test_laplacianimage_random_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping LaplacianImage random due to insufficient Torch version."
-            )
         size = (224, 224)
         channels = 3
         image_param = images.LaplacianImage(size=size, channels=channels)
@@ -459,10 +423,6 @@ class TestLaplacianImage(BaseTest):
         self.assertEqual(test_tensor.size(3), size[1])
 
     def test_laplacianimage_init(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping LaplacianImage random due to insufficient Torch version."
-            )
         init_t = torch.zeros(1, 224, 224)
         image_param = images.LaplacianImage(size=(224, 224), channels=3, init=init_t)
         output = image_param.forward().detach()
@@ -471,10 +431,6 @@ class TestLaplacianImage(BaseTest):
 
 class TestSharedImage(BaseTest):
     def test_sharedimage_get_offset_single_number(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
@@ -487,10 +443,6 @@ class TestSharedImage(BaseTest):
         self.assertEqual(offset, [[4, 4, 4, 4]] * 3)
 
     def test_sharedimage_get_offset_exact(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
@@ -504,10 +456,6 @@ class TestSharedImage(BaseTest):
         self.assertEqual(offset, [[int(o) for o in v] for v in offset_vals])
 
     def test_sharedimage_get_offset_single_set_four_numbers(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
@@ -521,10 +469,6 @@ class TestSharedImage(BaseTest):
         self.assertEqual(offset, [list(offset_vals)] * 3)
 
     def test_sharedimage_get_offset_single_set_three_numbers(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
@@ -538,10 +482,6 @@ class TestSharedImage(BaseTest):
         self.assertEqual(offset, [[0] + list(offset_vals)] * 3)
 
     def test_sharedimage_get_offset_single_set_two_numbers(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
@@ -579,10 +519,6 @@ class TestSharedImage(BaseTest):
         return A
 
     def test_apply_offset(self):
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
         size = (4, 3, 224, 224)
         shared_shapes = (128 // 2, 128 // 2)
         offset_vals = (2, 3, 4, 5)
@@ -604,10 +540,6 @@ class TestSharedImage(BaseTest):
             assertTensorAlmostEqual(self, t_expected, t_output)
 
     def test_interpolate_tensor(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
         shared_shapes = (128 // 2, 128 // 2)
         test_param = lambda: torch.ones(3, 3, 224, 224)  # noqa: E731
         image_param = images.SharedImage(
@@ -630,11 +562,6 @@ class TestSharedImage(BaseTest):
         self.assertEqual(output_tensor.size(3), size[1])
 
     def test_sharedimage_single_shape_hw_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
-
         shared_shapes = (128 // 2, 128 // 2)
         batch = 6
         channels = 3
@@ -657,11 +584,6 @@ class TestSharedImage(BaseTest):
         self.assertEqual(test_tensor.size(3), size[1])
 
     def test_sharedimage_single_shape_chw_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
-
         shared_shapes = (3, 128 // 2, 128 // 2)
         batch = 6
         channels = 3
@@ -684,11 +606,6 @@ class TestSharedImage(BaseTest):
         self.assertEqual(test_tensor.size(3), size[1])
 
     def test_sharedimage_single_shape_bchw_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
-
         shared_shapes = (1, 3, 128 // 2, 128 // 2)
         batch = 6
         channels = 3
@@ -709,11 +626,6 @@ class TestSharedImage(BaseTest):
         self.assertEqual(test_tensor.size(3), size[1])
 
     def test_sharedimage_multiple_shapes_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
-
         shared_shapes = (
             (1, 3, 128 // 2, 128 // 2),
             (1, 3, 128 // 4, 128 // 4),
@@ -744,11 +656,6 @@ class TestSharedImage(BaseTest):
         self.assertEqual(test_tensor.size(3), size[1])
 
     def test_sharedimage_multiple_shapes_diff_len_forward(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping SharedImage test due to insufficient Torch version."
-            )
-
         shared_shapes = (
             (128 // 2, 128 // 2),
             (7, 3, 128 // 4, 128 // 4),
@@ -782,34 +689,18 @@ class TestSharedImage(BaseTest):
 
 class TestNaturalImage(BaseTest):
     def test_natural_image_init_func_default(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping NaturalImage FFTImage init func test due to insufficient"
-                + " Torch version."
-            )
         image_param = images.NaturalImage(size=(4, 4))
         self.assertIsInstance(image_param.parameterization, images.FFTImage)
         self.assertIsInstance(image_param.decorrelate, ToRGB)
         self.assertEqual(image_param.squash_func, torch.sigmoid)
 
     def test_natural_image_init_func_fftimage(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping NaturalImage FFTImage init func test due to insufficient"
-                + " Torch version."
-            )
         image_param = images.NaturalImage(size=(4, 4), parameterization=images.FFTImage)
         self.assertIsInstance(image_param.parameterization, images.FFTImage)
         self.assertIsInstance(image_param.decorrelate, ToRGB)
         self.assertEqual(image_param.squash_func, torch.sigmoid)
 
     def test_natural_image_init_func_fftimage_instance(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping NaturalImage FFTImage init func FFTImage instance test due"
-                + " to insufficient Torch version."
-            )
-
         fft_param = images.FFTImage(size=(4, 4))
         image_param = images.NaturalImage(parameterization=fft_param)
         self.assertIsInstance(image_param.parameterization, images.FFTImage)
@@ -817,11 +708,6 @@ class TestNaturalImage(BaseTest):
         self.assertEqual(image_param.squash_func, torch.sigmoid)
 
     def test_natural_image_init_func_pixelimage(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping NaturalImage PixelImage init func test due to insufficient"
-                + " Torch version."
-            )
         image_param = images.NaturalImage(
             size=(4, 4), parameterization=images.PixelImage
         )
@@ -830,11 +716,6 @@ class TestNaturalImage(BaseTest):
         self.assertEqual(image_param.squash_func, torch.sigmoid)
 
     def test_natural_image_init_func_default_init_tensor(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping NaturalImage FFTImage init func test due to insufficient"
-                + " Torch version."
-            )
         image_param = images.NaturalImage(init=torch.ones(1, 3, 1, 1))
         self.assertIsInstance(image_param.parameterization, images.FFTImage)
         self.assertIsInstance(image_param.decorrelate, ToRGB)
@@ -859,19 +740,11 @@ class TestNaturalImage(BaseTest):
         )
 
     def test_natural_image_0(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping NaturalImage test due to insufficient Torch version."
-            )
         image_param = images.NaturalImage(size=(1, 1))
         image = image_param.forward().detach()
         assertTensorAlmostEqual(self, image, torch.ones_like(image) * 0.5, mode="max")
 
     def test_natural_image_1(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping NaturalImage test due to insufficient Torch version."
-            )
         image_param = images.NaturalImage(init=torch.ones(3, 1, 1))
         image = image_param.forward().detach()
         assertTensorAlmostEqual(self, image, torch.ones_like(image), mode="max")
@@ -920,10 +793,6 @@ class TestNaturalImage(BaseTest):
         assertTensorAlmostEqual(self, output_tensor, torch.ones_like(output_tensor))
 
     def test_natural_image_decorrelation_module_none(self) -> None:
-        if torch.__version__ <= "1.3.0":
-            raise unittest.SkipTest(
-                "Skipping NaturalImage test due to insufficient Torch version."
-            )
         image_param = images.NaturalImage(
             init=torch.ones(1, 3, 4, 4), decorrelation_module=None
         )
