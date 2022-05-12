@@ -569,7 +569,6 @@ class RandomScaleAffine(nn.Module):
         "mode",
         "padding_mode",
         "align_corners",
-        "_has_align_corners",
         "_is_distribution",
     ]
 
@@ -615,7 +614,6 @@ class RandomScaleAffine(nn.Module):
         self.mode = mode
         self.padding_mode = padding_mode
         self.align_corners = align_corners
-        self._has_align_corners = torch.__version__ >= "1.3.0"
 
     def _get_scale_mat(
         self,
@@ -653,21 +651,14 @@ class RandomScaleAffine(nn.Module):
         scale_matrix = self._get_scale_mat(scale, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
-        if self._has_align_corners:
-            # Pass align_corners explicitly for torch >= 1.3.0
-            grid = F.affine_grid(
-                scale_matrix, x.size(), align_corners=self.align_corners
-            )
-            x = F.grid_sample(
-                x,
-                grid,
-                mode=self.mode,
-                padding_mode=self.padding_mode,
-                align_corners=self.align_corners,
-            )
-        else:
-            grid = F.affine_grid(scale_matrix, x.size())
-            x = F.grid_sample(x, grid, mode=self.mode, padding_mode=self.padding_mode)
+        grid = F.affine_grid(scale_matrix, x.size(), align_corners=self.align_corners)
+        x = F.grid_sample(
+            x,
+            grid,
+            mode=self.mode,
+            padding_mode=self.padding_mode,
+            align_corners=self.align_corners,
+        )
         return x
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -760,7 +751,6 @@ class RandomRotation(nn.Module):
         "mode",
         "padding_mode",
         "align_corners",
-        "_has_align_corners",
         "_is_distribution",
     ]
 
@@ -807,7 +797,6 @@ class RandomRotation(nn.Module):
         self.mode = mode
         self.padding_mode = padding_mode
         self.align_corners = align_corners
-        self._has_align_corners = torch.__version__ >= "1.3.0"
 
     def _get_rot_mat(
         self,
@@ -851,19 +840,14 @@ class RandomRotation(nn.Module):
         rot_matrix = self._get_rot_mat(theta, x.device, x.dtype)[None, ...].repeat(
             x.shape[0], 1, 1
         )
-        if self._has_align_corners:
-            # Pass align_corners explicitly for torch >= 1.3.0
-            grid = F.affine_grid(rot_matrix, x.size(), align_corners=self.align_corners)
-            x = F.grid_sample(
-                x,
-                grid,
-                mode=self.mode,
-                padding_mode=self.padding_mode,
-                align_corners=self.align_corners,
-            )
-        else:
-            grid = F.affine_grid(rot_matrix, x.size())
-            x = F.grid_sample(x, grid, mode=self.mode, padding_mode=self.padding_mode)
+        grid = F.affine_grid(rot_matrix, x.size(), align_corners=self.align_corners)
+        x = F.grid_sample(
+            x,
+            grid,
+            mode=self.mode,
+            padding_mode=self.padding_mode,
+            align_corners=self.align_corners,
+        )
         return x
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
