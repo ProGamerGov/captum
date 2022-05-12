@@ -101,7 +101,7 @@ class TestRandomScale(BaseTest):
         )
 
     def test_random_scale_antialias(self) -> None:
-        if version.pase(torch.__version__) < version.parse("1.11.0"):
+        if version.parse(torch.__version__) < version.parse("1.11.0"):
             raise unittest.SkipTest(
                 "Skipping RandomScale antialias test"
                 + " due to insufficient Torch version."
