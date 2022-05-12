@@ -2,9 +2,8 @@
 import unittest
 from os import path
 
-import torch
-
 import captum.optim._param.text.transforms as transforms
+import torch
 from packaging import version
 from tests.helpers.basic import BaseTest
 
