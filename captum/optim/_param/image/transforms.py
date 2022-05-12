@@ -432,9 +432,9 @@ class RandomScale(nn.Module):
         "scale",
         "mode",
         "align_corners",
-        "_has_align_corners",
         "recompute_scale_factor",
-        "_has_recompute_scale_factor",
+        "antialias",
+        "_has_antialias",
         "_is_distribution",
     ]
 
@@ -444,6 +444,7 @@ class RandomScale(nn.Module):
         mode: str = "bilinear",
         align_corners: Optional[bool] = False,
         recompute_scale_factor: bool = False,
+        antialias: bool = False,
     ) -> None:
         """
         Args:
@@ -459,6 +460,10 @@ class RandomScale(nn.Module):
                 Default: False
             recompute_scale_factor (bool, optional): Whether or not to recompute the
                 scale factor See documentation of F.interpolate for more details.
+                Default: False
+            antialias (bool, optional): Whether or not use to anti-aliasing. This
+                feature is currently only available for "bilinear" and "bicubic"
+                modes. See documentation of F.interpolate for more details.
                 Default: False
         """
         super().__init__()
@@ -480,8 +485,10 @@ class RandomScale(nn.Module):
         self.mode = mode
         self.align_corners = align_corners if mode not in ["nearest", "area"] else None
         self.recompute_scale_factor = recompute_scale_factor
-        self._has_align_corners = torch.__version__ >= "1.3.0"
-        self._has_recompute_scale_factor = torch.__version__ >= "1.6.0"
+        self.antialias = antialias
+        self._has_antialias = version.parse(torch.__version__) >= version.parse(
+            "1.11.0"
+        )
 
     def _scale_tensor(self, x: torch.Tensor, scale: float) -> torch.Tensor:
         """
@@ -495,24 +502,23 @@ class RandomScale(nn.Module):
         Returns:
             **x** (torch.Tensor): A scaled NCHW image tensor.
         """
-        if self._has_align_corners:
-            if self._has_recompute_scale_factor:
-                x = F.interpolate(
-                    x,
-                    scale_factor=scale,
-                    mode=self.mode,
-                    align_corners=self.align_corners,
-                    recompute_scale_factor=self.recompute_scale_factor,
-                )
-            else:
-                x = F.interpolate(
-                    x,
-                    scale_factor=scale,
-                    mode=self.mode,
-                    align_corners=self.align_corners,
-                )
+        if self._has_antialias:
+            x = F.interpolate(
+                x,
+                scale_factor=scale,
+                mode=self.mode,
+                align_corners=self.align_corners,
+                recompute_scale_factor=self.recompute_scale_factor,
+                antialias=self.antialias,
+            )
         else:
-            x = F.interpolate(x, scale_factor=scale, mode=self.mode)
+            x = F.interpolate(
+                x,
+                scale_factor=scale,
+                mode=self.mode,
+                align_corners=self.align_corners,
+                recompute_scale_factor=self.recompute_scale_factor,
+            )
         return x
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
