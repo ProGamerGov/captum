@@ -291,11 +291,6 @@ class TestRandomScaleAffine(BaseTest):
         )
         self.assertTrue(scale_module._is_distribution)
 
-    def test_random_scale_affine_torch_version_check(self) -> None:
-        scale_module = transforms.RandomScaleAffine([1.0])
-        _has_align_corners = torch.__version__ >= "1.3.0"
-        self.assertEqual(scale_module._has_align_corners, _has_align_corners)
-
     def test_random_scale_affine_matrix(self) -> None:
         scale_module = transforms.RandomScaleAffine(scale=[0.5])
         test_tensor = torch.ones(1, 3, 3, 3)
@@ -467,11 +462,6 @@ class TestRandomRotation(BaseTest):
             torch.distributions.distribution.Distribution,
         )
         self.assertTrue(rotation_module._is_distribution)
-
-    def test_random_rotation_torch_version_check(self) -> None:
-        rotation_module = transforms.RandomRotation([1.0])
-        _has_align_corners = torch.__version__ >= "1.3.0"
-        self.assertEqual(rotation_module._has_align_corners, _has_align_corners)
 
     def test_random_rotation_matrix(self) -> None:
         theta = 25.1
