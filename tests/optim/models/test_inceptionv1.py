@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import unittest
-from packaging import version
 
 import torch
 from captum.optim.models import googlenet
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
+from packaging import version
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 from tests.optim.helpers.models import check_layer_in_model
 
