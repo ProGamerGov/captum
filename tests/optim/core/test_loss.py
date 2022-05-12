@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import unittest
 from typing import cast, List, Union
 
 import captum.optim._core.loss as opt_loss
