@@ -6,9 +6,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from packaging import version
 from captum.optim._utils.image.common import nchannels_to_rgb
 from captum.optim._utils.typing import IntSeqOrIntType, NumSeqOrTensorOrProbDistType
+from packaging import version
 
 
 class BlendAlpha(nn.Module):
