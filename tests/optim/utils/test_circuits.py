@@ -38,7 +38,7 @@ class TestGetExpandedWeights(BaseTest):
         )
         self.assertEqual(list(output_tensor.shape), [508, 480, 5, 5])
 
-        if version.pase(torch.__version__) <= version.parse("1.6.0"):
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             norm_func = torch.norm
         else:
             norm_func = torch.linalg.norm
