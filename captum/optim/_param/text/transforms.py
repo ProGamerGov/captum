@@ -1,4 +1,5 @@
 from typing import Optional, List, Union
+
 import torch
 
 
@@ -114,6 +115,7 @@ class CLIPTokenizer(torch.nn.Module):
                 filename (str): The path to the downloaded file with the filename.
         """
         from os import path, makedirs
+
         import requests
 
         url = (
