@@ -169,11 +169,7 @@ class TestFFTImage(BaseTest):
         init_tensor = torch.ones(1, 3, size[0], size[1])
         image_param = images.FFTImage(init=init_tensor.clone())
 
-        if version.parse(torch.__version__) >= version.parse("1.7.0"):
-            if version.parse(torch.__version__) <= version.parse("1.8.0"):
-                global torch
-                import torch.fft
-
+        if version.parse(torch.__version__) >= version.parse("1.8.0"):
             torch_rfft_init = torch.view_as_real(torch.fft.rfftn(init_tensor, s=size))
         else:
             torch_rfft_init = torch.rfft(init_tensor, signal_ndim=2)  # type: ignore
