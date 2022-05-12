@@ -7,6 +7,7 @@ import requests
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from packaging import version
 
 try:
     from PIL import Image
@@ -236,8 +237,8 @@ class FFTImage(ImageParameterization):
                 to use for irfft, rfft, and fftfreq operations.
         """
 
-        if TORCH_VERSION > "1.7.0":
-            if TORCH_VERSION <= "1.8.0":
+        if version.parse(TORCH_VERSION) > version.parse("1.7.0"):
+            if version.parse(TORCH_VERSION) <= version.parse("1.8.0"):
                 global torch
                 import torch.fft
 
