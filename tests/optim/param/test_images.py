@@ -351,13 +351,6 @@ class TestPixelImage(BaseTest):
         assertTensorAlmostEqual(self, image_param.image, init_tensor[None, :], 0)
         self.assertTrue(image_param.image.requires_grad)
 
-    def test_pixelimage_init_error(self) -> None:
-        size = (224, 224)
-        channels = 2
-        init_tensor = torch.randn(channels, *size)
-        with self.assertRaises(AssertionError):
-            images.PixelImage(size=size, channels=channels, init=init_tensor)
-
     def test_pixelimage_random_forward(self) -> None:
         size = (224, 224)
         channels = 3
