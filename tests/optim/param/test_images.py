@@ -113,7 +113,7 @@ class TestFFTImage(BaseTest):
 
         test_output = image.torch_irfft(test_fft_tensor)
 
-        if torch.__version__ >= "1.8.0":
+        if version.parse(torch.__version__) >= version.parse("1.8.0"):
             # torch.fft.irfftn output
             expected_tensor = torch.tensor(
                 [
@@ -164,7 +164,7 @@ class TestFFTImage(BaseTest):
         )
 
     @unittest.skipIf(
-        torch.__version__ < "1.8.0",
+        version.parse(torch.__version__) < version.parse("1.8.0"),
         "Skipping FFTImage fourier_coeffs with init"
         + " tensor test due to newer Torch version.",
     )
@@ -190,13 +190,8 @@ class TestFFTImage(BaseTest):
         assertTensorAlmostEqual(self, image_param.fourier_coeffs, fourier_coeffs)
         self.assertTrue(image_param.fourier_coeffs.requires_grad)
 
-    @unittest.skipUnless(
-        torch.__version__ < "1.7.0",
-        "Skipping FFTImage fourier_coeffs with init"
-        + " tensor test due to newer Torch version.",
-    )
     def test_init_fourier_coeffs_init_tensor_before_v1_7_0(self) -> None:
-        if torch.__version__ < "1.7.0":
+        if version.parse(torch.__version__) < version.parse("1.7.0"):
             raise unittest.SkipTest(
                 "Skipping FFTImage fourier_coeffs with init tensor test due to newer"
                 + " Torch version."
@@ -224,10 +219,6 @@ class TestFFTImage(BaseTest):
         self.assertTrue(image_param.fourier_coeffs.requires_grad)
 
     def test_fftimage_forward_randn_init(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping FFTImage test due to insufficient Torch version."
-            )
         size = (224, 224)
 
         fftimage = images.FFTImage(size=size)
@@ -240,7 +231,7 @@ class TestFFTImage(BaseTest):
         self.assertTrue(fftimage.fourier_coeffs.requires_grad)
 
     def test_fftimage_forward_jit_module(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if version.parse(torch.__version__) <= version.parse("1.8.0"):
             raise unittest.SkipTest(
                 "Skipping FFTImage JIT module test due to insufficient Torch version."
             )
@@ -250,10 +241,6 @@ class TestFFTImage(BaseTest):
         self.assertTrue(torch.is_tensor(fftimage_tensor))
 
     def test_fftimage_forward_init_randn_batch(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping FFTImage test due to insufficient Torch version."
-            )
         size = (224, 224)
         batch = 2
 
@@ -266,10 +253,6 @@ class TestFFTImage(BaseTest):
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
 
     def test_fftimage_forward_init_randn_channels(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping FFTImage test due to insufficient Torch version."
-            )
         size = (224, 224)
         channels = 4
 
@@ -282,10 +265,6 @@ class TestFFTImage(BaseTest):
         self.assertEqual(fftimage_tensor.detach().numpy().shape, fftimage_array.shape)
 
     def test_fftimage_forward_randn_init_width_odd(self) -> None:
-        if torch.__version__ <= "1.2.0":
-            raise unittest.SkipTest(
-                "Skipping FFTImage test due to insufficient Torch version."
-            )
         fftimage = images.FFTImage(size=(512, 405))
         self.assertEqual(list(fftimage.spectrum_scale.shape), [1, 512, 203, 1])
         fftimage_tensor = fftimage().detach().rename(None)
@@ -391,7 +370,7 @@ class TestPixelImage(BaseTest):
         self.assertEqual(test_tensor.size(3), size[1])
 
     def test_pixelimage_forward_jit_module(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if version.parse(torch.__version__) <= version.parse("1.8.0"):
             raise unittest.SkipTest(
                 "Skipping PixelImage JIT module test due to insufficient Torch"
                 + " version."
@@ -729,7 +708,7 @@ class TestNaturalImage(BaseTest):
         self.assertEqual(image_param.squash_func, image_param._clamp_image)
 
     def test_natural_image_init_tensor_pixelimage_sf_sigmoid(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if version.parse(torch.__version__) <= version.parse("1.8.0"):
             raise unittest.SkipTest(
                 "Skipping NaturalImage PixelImage init tensor with sigmoid"
                 + " test due to insufficient Torch version."
@@ -767,7 +746,7 @@ class TestNaturalImage(BaseTest):
         self.assertTrue(image_param().is_cuda)
 
     def test_natural_image_jit_module(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if version.parse(torch.__version__) <= version.parse("1.8.0"):
             raise unittest.SkipTest(
                 "Skipping NaturalImage JIT module test due to"
                 + " insufficient Torch version."
@@ -778,7 +757,7 @@ class TestNaturalImage(BaseTest):
         self.assertTrue(torch.is_tensor(output_tensor))
 
     def test_natural_image_jit_module_init_tensor(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if version.parse(torch.__version__) <= version.parse("1.8.0"):
             raise unittest.SkipTest(
                 "Skipping NaturalImage init tensor JIT module test due to"
                 + " insufficient Torch version."
@@ -789,7 +768,7 @@ class TestNaturalImage(BaseTest):
         assertTensorAlmostEqual(self, output_tensor, torch.ones_like(output_tensor))
 
     def test_natural_image_jit_module_init_tensor_pixelimage(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if version.parse(torch.__version__) <= version.parse("1.8.0"):
             raise unittest.SkipTest(
                 "Skipping NaturalImage PixelImage init tensor JIT module"
                 + " test due to insufficient Torch version."
@@ -802,7 +781,7 @@ class TestNaturalImage(BaseTest):
         assertTensorAlmostEqual(self, output_tensor, torch.ones_like(output_tensor))
 
     def test_natural_image_decorrelation_module_none(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if version.parse(torch.__version__) <= version.parse("1.8.0"):
             raise unittest.SkipTest(
                 "Skipping NaturalImage no decorrelation module"
                 + " test due to insufficient Torch version."
