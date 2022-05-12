@@ -197,7 +197,7 @@ class TestFFTImage(BaseTest):
         self.assertTrue(image_param.fourier_coeffs.requires_grad)
 
     def test_init_fourier_coeffs_init_tensor_before_v1_7_0(self) -> None:
-        if version.parse(torch.__version__) > version.parse("1.7.0"):
+        if version.parse(torch.__version__) >= version.parse("1.7.0"):
             raise unittest.SkipTest(
                 "Skipping FFTImage fourier_coeffs with init tensor test due to newer"
                 + " Torch version."
