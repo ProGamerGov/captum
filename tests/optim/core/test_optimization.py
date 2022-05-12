@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import unittest
+
 import captum.optim as opt
 import torch
 from packaging import version
