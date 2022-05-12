@@ -19,6 +19,7 @@ class TestRandomScale(BaseTest):
         self.assertEqual(scale_module.mode, "bilinear")
         self.assertFalse(scale_module.align_corners)
         self.assertFalse(scale_module.recompute_scale_factor)
+        self.assertFalse(scale_module.antialias)
 
     def test_random_scale_tensor_scale(self) -> None:
         scale = torch.tensor([1, 0.975, 1.025, 0.95, 1.05])
