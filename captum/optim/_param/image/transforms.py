@@ -79,8 +79,6 @@ class ToRGB(nn.Module):
     https://www.sciencedirect.com/science/article/pii/0146664X80900477
     """
 
-    __constants__ = ["_supports_is_scripting", "_supports_named_dims"]
-
     @staticmethod
     def klt_transform() -> torch.Tensor:
         """
@@ -131,9 +129,6 @@ class ToRGB(nn.Module):
             raise ValueError(
                 "transform has to be either 'klt', 'i1i2i3'," + " or a matrix tensor."
             )
-        # Check & store whether or not we can use torch.jit.is_scripting()
-        self._supports_is_scripting = torch.__version__ >= "1.6.0"
-        self._supports_named_dims = torch.__version__ >= "1.3.0"
 
     @torch.jit.ignore
     def _forward(self, x: torch.Tensor, inverse: bool = False) -> torch.Tensor:
@@ -249,12 +244,10 @@ class ToRGB(nn.Module):
             chw (torch.tensor):  A tensor with it's colors recorrelated or
                 decorrelated.
         """
-        if self._supports_is_scripting:
-            if torch.jit.is_scripting():
-                return self._forward_without_named_dims(x, inverse)
-        if self._supports_named_dims:
-            if list(x.names) in [[None] * 3, [None] * 4]:
-                return self._forward_without_named_dims(x, inverse)
+        if torch.jit.is_scripting():
+            return self._forward_without_named_dims(x, inverse)
+        if list(x.names) in [[None] * 3, [None] * 4]:
+            return self._forward_without_named_dims(x, inverse)
         return self._forward(x, inverse)
 
 
