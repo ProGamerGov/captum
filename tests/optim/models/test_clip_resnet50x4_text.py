@@ -15,7 +15,7 @@ class TestCLIPResNet50x4Text(BaseTest):
                 + " to insufficient Torch version."
             )
         model = clip_resnet50x4_text(pretrained=True)
-        expected_logit_scale = torch.tensor([4.605170249938965])
+        expected_logit_scale = torch.tensor(4.605170249938965)
         assertTensorAlmostEqual(self, model.logit_scale, expected_logit_scale)
 
     def test_clip_resnet50x4_text_load_and_forward(self) -> None:
