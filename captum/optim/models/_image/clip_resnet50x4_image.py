@@ -23,6 +23,8 @@ def clip_resnet50x4_image(
     This model can be combined with the CLIP ResNet 50x4 Text model to create the full
     CLIP ResNet 50x4 model.
 
+    Note that model inputs are expected to have a shape of: [B, 3, 288, 288] or
+    [3, 288, 288].
 
     See here for more details:
     https://github.com/openai/CLIP
