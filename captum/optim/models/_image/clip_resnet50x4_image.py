@@ -178,7 +178,6 @@ class CLIP_ResNet50x4Image(nn.Module):
             x (torch.Tensor): A normalized tensor.
         """
         assert x.dim() == 3 or x.dim() == 4
-        assert list(x.shape[-3:]) == [3, 288, 288]
         if self.transform_input:
             if x.min() < 0.0 or x.max() > 1.0:
                 warn("Model input has values outside of the range [0, 1].")
