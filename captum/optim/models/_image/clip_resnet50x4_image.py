@@ -165,7 +165,7 @@ class CLIP_ResNet50x4Image(nn.Module):
         """
         layers = [Bottleneck(inplanes, planes, stride, activ=activ)]
         for _ in range(blocks - 1):
-            layers += [Bottleneck(planes * 4, planes, activ=activ)]
+            layers += [Bottleneck(planes, planes, activ=activ)]
         return nn.Sequential(*layers)
 
     def _transform_input(self, x: torch.Tensor) -> torch.Tensor:
