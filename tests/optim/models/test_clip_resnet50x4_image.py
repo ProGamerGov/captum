@@ -105,7 +105,7 @@ class TestCLIPResNet50x4Image(BaseTest):
         x = torch.zeros(1, 3, 126, 512)
         model = clip_resnet50x4_image(pretrained=True)
         with self.assertRaises(AssertionError):
-            output = model(x)
+            _ = model(x)
 
     def test_clip_resnet50x4_image_forward_cuda(self) -> None:
         if version.parse(torch.__version__) <= version.parse("1.6.0"):
