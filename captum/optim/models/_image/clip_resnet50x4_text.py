@@ -1,6 +1,6 @@
+import math
 from typing import Optional
 
-import math
 import torch
 from torch import nn
 
@@ -23,7 +23,9 @@ def clip_resnet50x4_text(
     This model can be combined with the CLIP ResNet 50x4 Image model to create the full
     CLIP ResNet 50x4 model.
 
-    See here for more details: https://github.com/openai/CLIP
+    See here for more details:
+    https://github.com/openai/CLIP
+    https://github.com/mlfoundations/open_clip
 
     Args:
 
@@ -66,6 +68,11 @@ def clip_resnet50x4_text(
 
 
 class CLIP_ResNet50x4Text(nn.Module):
+    """
+    The text portion of OpenAI's ResNet 50x4 CLIP model from 'Learning Transferable
+    Visual Models From Natural Language Supervision': https://arxiv.org/abs/2103.00020
+    """
+
     def __init__(
         self,
         width: int = 640,
