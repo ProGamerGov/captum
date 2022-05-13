@@ -123,7 +123,7 @@ class CLIP_ResNet50x4Image(nn.Module):
         self.conv3 = nn.Conv2d(40, 80, kernel_size=3, padding=1, bias=False)
         self.bn3 = nn.BatchNorm2d(80)
         self.relu3 = activ()
-        self.avgpool = nn.AdaptiveAvgPool2d(2)
+        self.avgpool = nn.AvgPool2d(2)
 
         # Residual layers
         self.layer1 = self._build_layer(80, 80, blocks=4, stride=1, activ=activ)
