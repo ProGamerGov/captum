@@ -124,10 +124,10 @@ class CLIP_ResNet50x4Image(nn.Module):
         self.avgpool = nn.AdaptiveAvgPool2d(2)
 
         # Residual layers
-        self.layer1 = self._build_layer(80, 80, 4, stride=1, activ=activ)
-        self.layer2 = self._build_layer(320, 160, 6, stride=2, activ=activ)
-        self.layer3 = self._build_layer(640, 320, 10, stride=2, activ=activ)
-        self.layer4 = self._build_layer(1280, 640, 6, stride=2, activ=activ)
+        self.layer1 = self._build_layer(80, 80, blocks=4, stride=1, activ=activ)
+        self.layer2 = self._build_layer(320, 160, blocks=6, stride=2, activ=activ)
+        self.layer3 = self._build_layer(640, 320, blocks=10, stride=2, activ=activ)
+        self.layer4 = self._build_layer(1280, 640, blocks=6, stride=2, activ=activ)
 
         # Attention Pooling
         self.attnpool = AttentionPool2d(9, 2560, out_features=640, num_heads=40)
