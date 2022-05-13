@@ -68,7 +68,7 @@ class TestCLIPResNet50x4Image(BaseTest):
                 + " to insufficient Torch version."
             )
         x = torch.stack(
-            [torch.ones(3, 112, 112) * -1, torch.ones(3, 112, 112) * 2], dim=0
+            [torch.ones(3, 288, 288) * -1, torch.ones(3, 288, 288) * 2], dim=0
         )
         model = clip_resnet50x4_image(pretrained=True)
         with self.assertWarns(UserWarning):
@@ -118,7 +118,7 @@ class TestCLIPResNet50x4Image(BaseTest):
                 "Skipping pretrained CLIP ResNet 50x4 Image forward CUDA test due to"
                 + " not supporting CUDA."
             )
-        x = torch.zeros(1, 3, 224, 224).cuda()
+        x = torch.zeros(1, 3, 288, 288).cuda()
         model = clip_resnet50x4_image(pretrained=True).cuda()
         output = model(x)
 
@@ -131,9 +131,23 @@ class TestCLIPResNet50x4Image(BaseTest):
                 "Skipping pretrained CLIP ResNet 50x4 Image load & JIT module with"
                 + " no redirected relu test due to insufficient Torch version."
             )
-        x = torch.zeros(1, 3, 224, 224)
+        x = torch.zeros(1, 3, 288, 288)
         model = clip_resnet50x4_image(
             pretrained=True, replace_relus_with_redirectedrelu=False
+        )
+        jit_model = torch.jit.script(model)
+        output = jit_model(x)
+        self.assertEqual(list(output.shape), [1, 640])
+
+    def test_clip_resnet50x4_image_jit_module_with_redirected_relu(self) -> None:
+        if version.parse(torch.__version__) <= version.parse("1.8.0"):
+            raise unittest.SkipTest(
+                "Skipping pretrained CLIP ResNet 50x4 Image load & JIT module with"
+                + " redirected relu test due to insufficient Torch version."
+            )
+        x = torch.zeros(1, 3, 288, 288)
+        model = clip_resnet50x4_image(
+            pretrained=True, replace_relus_with_redirectedrelu=True
         )
         jit_model = torch.jit.script(model)
         output = jit_model(x)
