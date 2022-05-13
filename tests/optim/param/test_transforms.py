@@ -4,9 +4,9 @@ from typing import List
 
 import captum.optim._param.image.transforms as transforms
 import numpy as np
-import os
 import torch
 import torch.nn.functional as F
+from os import path
 from packaging import version
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 from tests.optim.helpers import numpy_transforms
