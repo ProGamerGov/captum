@@ -258,7 +258,7 @@ class Bottleneck(nn.Module):
 
         if stride > 1 or inplanes != planes * 4:
             self.downsample = nn.Sequential(
-                nn.AvgPool2d(planes * 4),
+                nn.AvgPool2d(stride),
                 nn.Conv2d(inplanes, planes * 4, kernel_size=1, stride=1, bias=False),
                 nn.BatchNorm2d(planes * 4),
             )
