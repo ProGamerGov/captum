@@ -2,14 +2,14 @@
 import unittest
 
 import torch
-
 from captum.optim.models import clip_resnet50x4_text
+from packaging import version
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 
 
 class TestCLIPResNet50x4Text(BaseTest):
     def test_clip_resnet50x4_text_logit_scale(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping basic pretrained CLIP ResNet 50x4 Text logit scale test due"
                 + " to insufficient Torch version."
@@ -19,7 +19,7 @@ class TestCLIPResNet50x4Text(BaseTest):
         assertTensorAlmostEqual(self, model.logit_scale, expected_logit_scale)
 
     def test_clip_resnet50x4_text_load_and_forward(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping basic pretrained CLIP ResNet 50x4 Text forward test due to"
                 + " insufficient Torch version."
@@ -32,7 +32,7 @@ class TestCLIPResNet50x4Text(BaseTest):
         self.assertEqual(list(output.shape), [1, 640])
 
     def test_clip_resnet50x4_text_forward_cuda(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping pretrained CLIP ResNet 50x4 Text forward CUDA test due to"
                 + " insufficient Torch version."
@@ -51,7 +51,7 @@ class TestCLIPResNet50x4Text(BaseTest):
         self.assertEqual(list(output.shape), [1, 640])
 
     def test_clip_resnet50x4_text_jit_module(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if version.parse(torch.__version__) <= version.parse("1.8.0"):
             raise unittest.SkipTest(
                 "Skipping pretrained CLIP ResNet 50x4 Text load & JIT module"
                 + " test due to insufficient Torch version."
