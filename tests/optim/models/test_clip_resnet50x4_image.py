@@ -109,17 +109,6 @@ class TestCLIPResNet50x4Image(BaseTest):
         with self.assertWarns(UserWarning):
             _ = model._transform_input(x)
 
-    def test_clip_resnet50x4_image_load_and_forward_diff_size(self) -> None:
-        if version.parse(torch.__version__) <= version.parse("1.6.0"):
-            raise unittest.SkipTest(
-                "Skipping pretrained CLIP ResNet 50x4 Image forward with different"
-                + " sized inputs test due to insufficient Torch version."
-            )
-        x = torch.zeros(1, 3, 126, 512)
-        model = clip_resnet50x4_image(pretrained=True)
-        with self.assertRaises(AssertionError):
-            _ = model(x)
-
     def test_clip_resnet50x4_image_forward_cuda(self) -> None:
         if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
