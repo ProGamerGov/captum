@@ -4,8 +4,15 @@ from os import path
 
 import captum.optim._param.text.transforms as transforms
 import torch
-from packaging import version
 from tests.helpers.basic import BaseTest
+
+
+try:
+    from torchtext.transforms import CLIPTokenizer as CLIPTokenizer_TorchText
+
+    _torchtext_has_clip_tokenizer = True
+except ImportError:
+    _torchtext_has_clip_tokenizer = False
 
 
 class TestCLIPTokenizer(BaseTest):
@@ -28,12 +35,10 @@ class TestCLIPTokenizer(BaseTest):
             _ = transforms.CLIPTokenizer._download_clip_bpe_merges(file_path)
 
     def test_clip_tokenizer_init(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer init test"
             )
-        from torchtext.transforms import CLIPTokenizer as CLIPTokenizer_TorchText
-
         clip_tokenizer = transforms.CLIPTokenizer(pretrained_merges=True)
 
         self.assertEqual(clip_tokenizer.context_length, 77)
@@ -52,7 +57,7 @@ class TestCLIPTokenizer(BaseTest):
         )
 
     def test_clip_tokenizer_str_input(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer str input test"
             )
@@ -70,7 +75,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(text_output[0].tolist(), token_set)
 
     def test_clip_tokenizer_str_input_context_length_54(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer str input"
                 + " context_length test"
@@ -91,7 +96,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(text_output[0].tolist(), token_set)
 
     def test_clip_tokenizer_str_input_context_length_padding(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer str input test"
             )
@@ -112,7 +117,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(text_output[0].tolist(), token_set)
 
     def test_clip_tokenizer_list_str_input(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer list str input"
                 + " test"
@@ -135,7 +140,7 @@ class TestCLIPTokenizer(BaseTest):
             self.assertEqual(text_output[b].tolist(), token_set)
 
     def test_clip_tokenizer_str_input_decode(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer str input"
                 + " decode test"
@@ -150,7 +155,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(text_output_str, expected_ouput_str)
 
     def test_clip_tokenizer_str_input_decode_special_tokens(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer str input"
                 + " decode include_special_tokens test"
@@ -167,7 +172,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(text_output_str, expected_ouput_str)
 
     def test_clip_tokenizer_list_decode(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer list decode"
                 + " test"
@@ -181,7 +186,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(str_output, expected_str)
 
     def test_clip_tokenizer_list_of_list_decode(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer list of list"
                 + " decode test"
@@ -198,7 +203,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(str_output, expected_str)
 
     def test_clip_tokenizer_no_special_tokens(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer no special"
                 + " tokens test"
@@ -226,7 +231,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(text_output_str, expected_ouput_str)
 
     def test_clip_tokenizer_pretrained_merges_false(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer pretrained"
                 + " merges False test"
@@ -253,7 +258,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(text_output_str, expected_ouput_str)
 
     def test_clip_tokenizer_str_input_jit(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer str input JIT"
                 + " test"
@@ -273,7 +278,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(text_output[0].tolist(), token_set)
 
     def test_clip_tokenizer_unicode_encode(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer unicode test"
             )
@@ -328,7 +333,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(txt_output[0].tolist()[1:-1], expected_tokens)
 
     def test_clip_tokenizer_unicode_decode(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer unicode decode"
                 + " test"
@@ -380,7 +385,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(txt_output_str[0].replace(" ", ""), expected_str)
 
     def test_clip_tokenizer_truncate(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer truncate test"
             )
@@ -395,7 +400,7 @@ class TestCLIPTokenizer(BaseTest):
         self.assertEqual(text_output[0].tolist(), [49406, 589, 533, 320, 49407])
 
     def test_clip_tokenizer_truncate_no_end_token(self) -> None:
-        if version.parse(torchtext.__version__) >= version.parse("0.12.0"):
+        if not _torchtext_has_clip_tokenizer:
             raise unittest.SkipTest(
                 "torchtext >=0.12.0 not found, skipping ClipTokenizer truncate no"
                 + " end token test"
