@@ -15,6 +15,9 @@ class CLIPTokenizer(torch.nn.Module):
     that handles context_length padding, special start and end tokens, truncation, and
     to tensor conversions. This module also supports JIT, and can decode tokens.
 
+    Note that this module does not implement preprocessing like whitespace cleaning,
+    heuristic unicode correction, and HTML handling.
+
     See here for more details:
     https://pytorch.org/text/main/transforms.html#torchtext.transforms.CLIPTokenizer
 
