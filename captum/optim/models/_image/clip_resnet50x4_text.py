@@ -1,6 +1,6 @@
+import math
 from typing import Optional
 
-import math
 import torch
 from torch import nn
 
@@ -72,6 +72,7 @@ class CLIP_ResNet50x4Text(nn.Module):
     The text portion of OpenAI's ResNet 50x4 CLIP model from 'Learning Transferable
     Visual Models From Natural Language Supervision': https://arxiv.org/abs/2103.00020
     """
+
     def __init__(
         self,
         width: int = 640,

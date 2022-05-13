@@ -3,16 +3,16 @@ import unittest
 from typing import Type
 
 import torch
-
 from captum.optim.models import clip_resnet50x4_image
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
+from packaging import version
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
 from tests.optim.helpers.models import check_layer_in_model
 
 
 class TestCLIPResNet50x4Image(BaseTest):
     def test_load_clip_resnet50x4_image_with_redirected_relu(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping load pretrained CLIP ResNet 50x4 Image due to insufficient"
                 + " Torch version."
@@ -23,7 +23,7 @@ class TestCLIPResNet50x4Image(BaseTest):
         self.assertTrue(check_layer_in_model(model, RedirectedReluLayer))
 
     def test_load_clip_resnet50x4_image_no_redirected_relu(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping load pretrained CLIP ResNet 50x4 Image RedirectedRelu test"
                 + " due to insufficient Torch version."
@@ -35,7 +35,7 @@ class TestCLIPResNet50x4Image(BaseTest):
         self.assertTrue(check_layer_in_model(model, torch.nn.ReLU))
 
     def test_load_clip_resnet50x4_image_linear(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping load pretrained CLIP ResNet 50x4 Image linear test due to"
                 + " insufficient Torch version."
@@ -46,7 +46,7 @@ class TestCLIPResNet50x4Image(BaseTest):
         self.assertTrue(check_layer_in_model(model, SkipLayer))
 
     def test_clip_resnet50x4_image_transform(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping CLIP ResNet 50x4 Image internal transform test due to"
                 + " insufficient Torch version."
@@ -63,7 +63,7 @@ class TestCLIPResNet50x4Image(BaseTest):
         assertTensorAlmostEqual(self, output, expected_output, 0)
 
     def test_clip_resnet50x4_image_transform_warning(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping CLIP ResNet 50x4 Image internal transform warning test due"
                 + " to insufficient Torch version."
@@ -76,7 +76,7 @@ class TestCLIPResNet50x4Image(BaseTest):
             model._transform_input(x)
 
     def test_clip_resnet50x4_image_load_and_forward(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping basic pretrained CLIP ResNet 50x4 Image forward test due to"
                 + " insufficient Torch version."
@@ -87,7 +87,7 @@ class TestCLIPResNet50x4Image(BaseTest):
         self.assertEqual(list(output.shape), [1, 640])
 
     def test_untrained_clip_resnet50x4_image_load_and_forward(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping basic untrained CLIP ResNet 50x4 Image forward test due to"
                 + " insufficient Torch version."
@@ -98,7 +98,7 @@ class TestCLIPResNet50x4Image(BaseTest):
         self.assertEqual(list(output.shape), [1, 640])
 
     def test_clip_resnet50x4_image_load_and_forward_diff_sizes(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping pretrained CLIP ResNet 50x4 Image forward with different"
                 + " sized inputs test due to insufficient Torch version."
@@ -114,7 +114,7 @@ class TestCLIPResNet50x4Image(BaseTest):
         self.assertEqual(list(output2.shape), [1, 640])
 
     def test_clip_resnet50x4_image_forward_cuda(self) -> None:
-        if torch.__version__ <= "1.6.0":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping pretrained CLIP ResNet 50x4 Image forward CUDA test due to"
                 + " insufficient Torch version."
@@ -132,7 +132,7 @@ class TestCLIPResNet50x4Image(BaseTest):
         self.assertEqual(list(output.shape), [1, 640])
 
     def test_clip_resnet50x4_image_jit_module_no_redirected_relu(self) -> None:
-        if torch.__version__ <= "1.8.0":
+        if version.parse(torch.__version__) <= version.parse("1.8.0"):
             raise unittest.SkipTest(
                 "Skipping pretrained CLIP ResNet 50x4 Image load & JIT module with"
                 + " no redirected relu test due to insufficient Torch version."
