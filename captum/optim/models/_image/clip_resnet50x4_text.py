@@ -1,8 +1,8 @@
 import math
-from typing import Optional
+from typing import Any, Optional
 
 import torch
-from torch import nn
+import torch.nn as nn
 
 
 GS_SAVED_WEIGHTS_URL = (
@@ -14,7 +14,7 @@ def clip_resnet50x4_text(
     pretrained: bool = False,
     progress: bool = True,
     model_path: Optional[str] = None,
-    **kwargs
+    **kwargs: Any,
 ) -> "CLIP_ResNet50x4Text":
     """
     The text portion of OpenAI's ResNet 50x4 CLIP model from 'Learning Transferable
