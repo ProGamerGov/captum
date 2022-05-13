@@ -23,9 +23,6 @@ def clip_resnet50x4_image(
     This model can be combined with the CLIP ResNet 50x4 Text model to create the full
     CLIP ResNet 50x4 model.
 
-    AvgPool2d layers were replaced with AdaptiveAvgPool2d to allow for any input height
-    and width size, though the best results are obtained by using the model's intended
-    input height and width of 288x288.
 
     See here for more details:
     https://github.com/openai/CLIP
@@ -124,13 +121,13 @@ class CLIP_ResNet50x4Image(nn.Module):
         self.conv3 = nn.Conv2d(40, 80, kernel_size=3, padding=1, bias=False)
         self.bn3 = nn.BatchNorm2d(80)
         self.relu3 = activ()
-        self.avgpool = nn.AdaptiveAvgPool2d(72)
+        self.avgpool = nn.AdaptiveAvgPool2d(2)
 
         # Residual layers
-        self.layer1 = self._build_layer(80, 80, 4, stride=1, pooling=72, activ=activ)
-        self.layer2 = self._build_layer(320, 160, 6, stride=2, pooling=36, activ=activ)
-        self.layer3 = self._build_layer(640, 320, 10, stride=2, pooling=18, activ=activ)
-        self.layer4 = self._build_layer(1280, 640, 6, stride=2, pooling=9, activ=activ)
+        self.layer1 = self._build_layer(80, 80, 4, stride=1, activ=activ)
+        self.layer2 = self._build_layer(320, 160, 6, stride=2, activ=activ)
+        self.layer3 = self._build_layer(640, 320, 10, stride=2, activ=activ)
+        self.layer4 = self._build_layer(1280, 640, 6, stride=2, activ=activ)
 
         # Attention Pooling
         self.attnpool = AttentionPool2d(9, 2560, out_features=640, num_heads=40)
@@ -141,7 +138,6 @@ class CLIP_ResNet50x4Image(nn.Module):
         planes: int = 80,
         blocks: int = 4,
         stride: int = 1,
-        pooling: int = 72,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> nn.Module:
         """
@@ -160,8 +156,6 @@ class CLIP_ResNet50x4Image(nn.Module):
                 Default: 4
             stride (int, optional): The stride value to use for the Bottleneck layers.
                 Default: 1
-            pooling (int, optional): The output size used for nn.AdaptiveAvgPool2d.
-                Default: 72
             activ (type of nn.Module, optional): The nn.Module class type to use for
                 activation layers.
                 Default: nn.ReLU
@@ -169,9 +163,9 @@ class CLIP_ResNet50x4Image(nn.Module):
         Returns:
             residual_layer (nn.Sequential): A full residual layer.
         """
-        layers = [Bottleneck(inplanes, planes, stride, pooling=pooling, activ=activ)]
+        layers = [Bottleneck(inplanes, planes, stride, activ=activ)]
         for _ in range(blocks - 1):
-            layers += [Bottleneck(planes * 4, planes, pooling=pooling, activ=activ)]
+            layers += [Bottleneck(planes * 4, planes, activ=activ)]
         return nn.Sequential(*layers)
 
     def _transform_input(self, x: torch.Tensor) -> torch.Tensor:
@@ -184,6 +178,7 @@ class CLIP_ResNet50x4Image(nn.Module):
             x (torch.Tensor): A normalized tensor.
         """
         assert x.dim() == 3 or x.dim() == 4
+        assert list(x.shape[-3]) == [3, 288, 288]
         if self.transform_input:
             if x.min() < 0.0 or x.max() > 1.0:
                 warn("Model input has values outside of the range [0, 1].")
@@ -230,7 +225,6 @@ class Bottleneck(nn.Module):
         inplanes: int = 80,
         planes: int = 80,
         stride: int = 1,
-        pooling: int = 72,
         activ: Type[nn.Module] = nn.ReLU,
     ) -> None:
         """
@@ -244,8 +238,6 @@ class Bottleneck(nn.Module):
                 Default: 80
             stride (int, optional): The stride value to use for the Bottleneck layers.
                 Default: 1
-            pooling (int, optional): The output size used for nn.AdaptiveAvgPool2d.
-                Default: 72
             activ (type of nn.Module, optional): The nn.Module class type to use for
                 activation layers.
                 Default: nn.ReLU
@@ -259,7 +251,7 @@ class Bottleneck(nn.Module):
         self.bn2 = nn.BatchNorm2d(planes)
         self.relu2 = activ()
 
-        self.avgpool = nn.AdaptiveAvgPool2d(pooling)
+        self.avgpool = nn.AvgPool2d(stride) if stride > 1 else nn.Identity()
 
         self.conv3 = nn.Conv2d(planes, planes * 4, kernel_size=1, bias=False)
         self.bn3 = nn.BatchNorm2d(planes * 4)
@@ -267,7 +259,7 @@ class Bottleneck(nn.Module):
 
         if stride > 1 or inplanes != planes * 4:
             self.downsample = nn.Sequential(
-                nn.AdaptiveAvgPool2d(pooling),
+                nn.AvgPool2d(planes * 4),
                 nn.Conv2d(inplanes, planes * 4, kernel_size=1, stride=1, bias=False),
                 nn.BatchNorm2d(planes * 4),
             )
