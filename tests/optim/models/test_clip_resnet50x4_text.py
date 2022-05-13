@@ -26,7 +26,7 @@ class TestCLIPResNet50x4Text(BaseTest):
             )
         # Start & End tokens: 49405, 49406
         x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77 - 2)])
-        x = x.int()[None, :]
+        x = x[None, :].long()
         model = clip_resnet50x4_text(pretrained=True)
         output = model(x)
         self.assertEqual(list(output.shape), [1, 640])
@@ -43,7 +43,7 @@ class TestCLIPResNet50x4Text(BaseTest):
                 + " not supporting CUDA."
             )
         x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77 - 2)]).cuda()
-        x = x.int()[None, :]
+        x = x[None, :].long()
         model = clip_resnet50x4_text(pretrained=True).cuda()
         output = model(x)
 
@@ -57,7 +57,7 @@ class TestCLIPResNet50x4Text(BaseTest):
                 + " test due to insufficient Torch version."
             )
         x = torch.cat([torch.tensor([49405, 49406]), torch.zeros(77 - 2)])
-        x = x.int()[None, :]
+        x = x[None, :].long()
         model = clip_resnet50x4_text(pretrained=True)
         jit_model = torch.jit.script(model)
         output = jit_model(x)
