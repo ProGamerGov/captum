@@ -1,9 +1,9 @@
-from typing import Optional, Type
+from typing import Any, Optional, Type
 from warnings import warn
 
 import torch
+import torch.nn as nn
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
-from torch import nn
 
 GS_SAVED_WEIGHTS_URL = (
     "https://pytorch.s3.amazonaws.com/models/captum/clip_resnet50x4_image.pt"
@@ -14,7 +14,7 @@ def clip_resnet50x4_image(
     pretrained: bool = False,
     progress: bool = True,
     model_path: Optional[str] = None,
-    **kwargs
+    **kwargs: Any,
 ) -> "CLIP_ResNet50x4Image":
     """
     The visual portion of OpenAI's ResNet 50x4 CLIP model from 'Learning Transferable
