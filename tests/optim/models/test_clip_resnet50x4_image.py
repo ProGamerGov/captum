@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import unittest
-from typing import Type
 
 import torch
 from captum.optim.models import clip_resnet50x4_image
