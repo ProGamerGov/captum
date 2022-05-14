@@ -222,7 +222,7 @@ class TestVectorLoss(BaseTest):
         model = BasicModel_ConvNet_Optim()
         vec = torch.tensor([0, 1]).float()
         loss = opt_loss.VectorLoss(model.layer, vec=vec)
-        out = get_loss_value(model, loss, input_shape=[1, 3, 6, 6])
+        output = get_loss_value(model, loss, input_shape=[1, 3, 6, 6])
         self.assertAlmostEqual(output, CHANNEL_ACTIVATION_1_LOSS, places=6)
 
     def test_vectorloss_multiple_channels(self) -> None:
@@ -250,7 +250,7 @@ class TestFacetLoss(BaseTest):
         )
         output = get_loss_value(model, loss, input_shape=[1, 3, 6, 6])
         expected = (CHANNEL_ACTIVATION_0_LOSS * 2) * 1.5
-        self.assertAlmostEqual(output, expected, places=6)
+        self.assertAlmostEqual(output, expected / 10.0, places=6)
 
     def test_facetloss_multi_channel(self) -> None:
         layer = torch.nn.Conv2d(2, 3, 1, bias=True)
