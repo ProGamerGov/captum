@@ -197,6 +197,98 @@ class TestActivationWeights(BaseTest):
         )
 
 
+class TestL2Mean(BaseTest):
+    def test_l2mean_constant(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        constant = 0.5
+        loss = opt_loss.L2Mean(model.layer, constant=constant)
+        output = get_loss_value(model, loss)
+
+        expected = (CHANNEL_ACTIVATION_0_LOSS - constant) ** 2
+        self.assertAlmostEqual(output, expected, places=6)
+
+    def test_l2mean_channel_index(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        constant = 0.0
+        loss = opt_loss.L2Mean(model.layer, channel_index=0, constant=constant)
+        output = get_loss_value(model, loss)
+
+        expected = (CHANNEL_ACTIVATION_0_LOSS - constant) ** 2
+        self.assertAlmostEqual(output, expected, places=6)
+
+
+class TestVectorLoss(BaseTest):
+    def test_vectorloss_single_channel(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        vec = torch.tensor([0, 1]).float()
+        loss = opt_loss.VectorLoss(model.layer, vec=vec)
+        output = get_loss_value(model, loss, input_shape=[1, 3, 6, 6])
+        self.assertAlmostEqual(output, CHANNEL_ACTIVATION_1_LOSS, places=6)
+
+    def test_vectorloss_multiple_channels(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        vec = torch.tensor([1, 1]).float()
+        loss = opt_loss.VectorLoss(model.layer, vec=vec)
+        output = get_loss_value(model, loss, input_shape=[1, 3, 6, 6])
+        self.assertAlmostEqual(output, CHANNEL_ACTIVATION_1_LOSS * 2, places=6)
+
+
+class TestFacetLoss(BaseTest):
+    def test_facetloss_single_channel(self) -> None:
+        layer = torch.nn.Conv2d(2, 3, 1, bias=True)
+        layer.weight.data.fill_(0.1)
+        layer.bias.data.fill_(1)
+        model = torch.nn.Sequential(BasicModel_ConvNet_Optim(), layer)
+
+        vec = torch.tensor([0, 1, 0]).float()
+        facet_weights = torch.ones([1, 2, 1, 1]) * 1.5
+        loss = opt_loss.FacetLoss(
+            ultimate_target=model[1],
+            layer_targets=model[0].layer,
+            vec=vec,
+            facet_weights=facet_weights,
+        )
+        output = get_loss_value(model, loss, input_shape=[1, 3, 6, 6])
+        expected = (CHANNEL_ACTIVATION_0_LOSS * 2) * 1.5
+        self.assertAlmostEqual(output, expected / 10.0, places=6)
+
+    def test_facetloss_multi_channel(self) -> None:
+        layer = torch.nn.Conv2d(2, 3, 1, bias=True)
+        layer.weight.data.fill_(0.1)
+        layer.bias.data.fill_(1)
+
+        model = torch.nn.Sequential(BasicModel_ConvNet_Optim(), layer)
+
+        vec = torch.tensor([1, 1, 1]).float()
+        facet_weights = torch.ones([1, 2, 1, 1]) * 2.0
+        loss = opt_loss.FacetLoss(
+            ultimate_target=model[1],
+            layer_targets=model[0].layer,
+            vec=vec,
+            facet_weights=facet_weights,
+        )
+        output = get_loss_value(model, loss, input_shape=[1, 3, 6, 6])
+        self.assertAlmostEqual(output, 1.560000, places=6)
+
+    def test_facetloss_strength(self) -> None:
+        layer = torch.nn.Conv2d(2, 3, 1, bias=True)
+        layer.weight.data.fill_(0.1)
+        layer.bias.data.fill_(1)
+        model = torch.nn.Sequential(BasicModel_ConvNet_Optim(), layer)
+
+        vec = torch.tensor([0, 1, 0]).float()
+        facet_weights = torch.ones([1, 2, 1, 1]) * 1.5
+        loss = opt_loss.FacetLoss(
+            ultimate_target=model[1],
+            layer_targets=model[0].layer,
+            vec=vec,
+            facet_weights=facet_weights,
+            strength=0.5,
+        )
+        output = get_loss_value(model, loss, input_shape=[1, 3, 6, 6])
+        self.assertAlmostEqual(output, 0.1950000, places=6)
+
+
 class TestCompositeLoss(BaseTest):
     def test_negative(self) -> None:
         model = BasicModel_ConvNet_Optim()
