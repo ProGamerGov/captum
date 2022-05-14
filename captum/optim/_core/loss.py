@@ -847,6 +847,7 @@ class FacetLoss(BaseLoss):
         self.layer_targets = layer_targets
         self.vec = vec
         self.strength = strength
+        assert facet_weights.dim() == 4 or facet_weights.dim() == 2
         self.facet_weights = facet_weights
 
     def vector_fn(self, x: torch.Tensor) -> torch.Tensor:
@@ -901,7 +902,6 @@ class FacetLoss(BaseLoss):
             retain_graph=True,
         )
 
-        assert self.facet_weights.dim() == 4 or self.facet_weights.dim() == 2
         flat_attr = []
         for layer, grad in zip(target_activations, layer_grads):
             layer = layer[self.batch_index[0] : self.batch_index[1]]
