@@ -278,7 +278,6 @@ class TestFacetLoss(BaseTest):
 
         vec = torch.tensor([0, 1, 0]).float()
         facet_weights = torch.ones([1, 2, 1, 1]) * 1.5
-        strength = 5.0
         loss = opt_loss.FacetLoss(
             ultimate_target=model[1],
             layer_targets=model[0].layer,
