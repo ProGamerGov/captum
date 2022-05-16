@@ -244,7 +244,7 @@ class TestFacetLoss(BaseTest):
         facet_weights = torch.ones([1, 2, 1, 1]) * 1.5
         loss = opt_loss.FacetLoss(
             ultimate_target=model[1],
-            layer_targets=model[0].layer,
+            layer_target=model[0].layer,
             vec=vec,
             facet_weights=facet_weights,
         )
@@ -263,7 +263,7 @@ class TestFacetLoss(BaseTest):
         facet_weights = torch.ones([1, 2, 1, 1]) * 2.0
         loss = opt_loss.FacetLoss(
             ultimate_target=model[1],
-            layer_targets=model[0].layer,
+            layer_target=model[0].layer,
             vec=vec,
             facet_weights=facet_weights,
         )
@@ -280,7 +280,7 @@ class TestFacetLoss(BaseTest):
         facet_weights = torch.ones([1, 2, 1, 1]) * 1.5
         loss = opt_loss.FacetLoss(
             ultimate_target=model[1],
-            layer_targets=model[0].layer,
+            layer_target=model[0].layer,
             vec=vec,
             facet_weights=facet_weights,
             strength=0.5,
@@ -298,7 +298,7 @@ class TestFacetLoss(BaseTest):
         facet_weights = torch.ones([1, 2]) * 1.5
         loss = opt_loss.FacetLoss(
             ultimate_target=model[1],
-            layer_targets=model[0].layer,
+            layer_target=model[0].layer,
             vec=vec,
             facet_weights=facet_weights,
         )
