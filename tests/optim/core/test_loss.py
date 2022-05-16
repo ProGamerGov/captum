@@ -305,15 +305,36 @@ class TestFacetLoss(BaseTest):
 
         vec = torch.tensor([0, 1, 0]).float()
         facet_weights = torch.ones([1, 2, 1, 1]) * 1.5
+        strength = 0.5
         loss = opt_loss.FacetLoss(
             ultimate_target=model[1],
             layer_target=model[0].layer,
             vec=vec,
             facet_weights=facet_weights,
-            strength=0.5,
+            strength=strength,
         )
+        self.assertEqual(loss.strength, strength)
         output = get_loss_value(model, loss, input_shape=[1, 3, 6, 6])
         self.assertAlmostEqual(output, 0.1950000, places=6)
+
+    def test_facetloss_strength_batch(self) -> None:
+        layer = torch.nn.Conv2d(2, 3, 1, bias=True)
+        layer.weight.data.fill_(0.1)
+        layer.bias.data.fill_(1)
+        model = torch.nn.Sequential(BasicModel_ConvNet_Optim(), layer)
+
+        vec = torch.tensor([0, 1, 0]).float()
+        facet_weights = torch.ones([1, 2, 1, 1]) * 1.5
+        strength = [0.1, 5.05]
+        loss = opt_loss.FacetLoss(
+            ultimate_target=model[1],
+            layer_target=model[0].layer,
+            vec=vec,
+            facet_weights=facet_weights,
+            strength=strength,
+        )
+        self.assertEqual(loss.strength, strength)
+        self.assertAlmostEqual(output, 4.017000198364258, places=6)
 
     def test_facetloss_2d_weights(self) -> None:
         layer = torch.nn.Conv2d(2, 3, 1, bias=True)
