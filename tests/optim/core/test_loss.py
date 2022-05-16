@@ -201,7 +201,7 @@ class TestL2Mean(BaseTest):
     def test_l2mean_init(self) -> None:
         model = torch.nn.Identity()
         loss = opt_loss.L2Mean(model.layer)
-        self.assert(loss.constant, 0.5)
+        self.assertEqual(loss.constant, 0.5)
         self.assertIsNone(loss.channel_index)
 
     def test_l2mean_constant(self) -> None:
@@ -248,7 +248,7 @@ class TestVectorLoss(BaseTest):
 
 
 class TestFacetLoss(BaseTest):
-    def test_facetloss_single_channel(self) -> None:
+    def test_facetloss_init(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         vec = torch.tensor([0, 1, 0]).float()
         facet_weights = torch.ones([1, 2, 1, 1]) * 1.5
