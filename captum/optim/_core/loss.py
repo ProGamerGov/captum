@@ -884,7 +884,7 @@ class FacetLoss(BaseLoss):
 
         flat_attr = layer * torch.nn.functional.relu(layer_grad.detach())
         if self.facet_weights.dim() == 2 and flat_attr.dim() == 4:
-            flat_attr = torch.sum(flat_attr, dims=(2, 3))
+            flat_attr = torch.sum(flat_attr, dim=(2, 3))
 
         if self.strength:
             strength_t = self._get_strength(new_vec.shape[0], flat_attr.device)
