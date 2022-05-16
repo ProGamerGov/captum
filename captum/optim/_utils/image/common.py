@@ -231,7 +231,7 @@ def _create_new_vector(
     """
     Create a vector using a given set of activations and another vector.
     This function is intended for use in CLIP related loss objectives.
-   
+
     https://distill.pub/2021/multimodal-neurons/
     https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py
     The einsum equation: "ijkl,j->ikl", used by the paper's associated code is the
