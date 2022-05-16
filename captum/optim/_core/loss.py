@@ -779,13 +779,13 @@ class VectorLoss(BaseLoss):
         BaseLoss.__init__(self, target, batch_index)
         self.vec = vec
         self.activation_fn = activation_fn
-        self._move_channel_dim_to_final_dim = move_channel_dim_to_final_dim
+        self.move_channel_dim_to_final_dim = move_channel_dim_to_final_dim
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
         activations = activations[self.batch_index[0] : self.batch_index[1]]
         return _create_new_vector(
-            x,
+            activations,
             vec=self.vec,
             activation_fn=self.activation_fn,
             move_channel_dim_to_final_dim=self.move_channel_dim_to_final_dim,
