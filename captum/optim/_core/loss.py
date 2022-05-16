@@ -5,7 +5,7 @@ from typing import Any, Callable, List, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
-from captum.optim._utils.image.common import _dot_cossim, get_neuron_pos
+from captum.optim._utils.image.common import _create_new_vector, _dot_cossim, get_neuron_pos
 from captum.optim._utils.typing import ModuleOutputMapping
 
 
@@ -740,9 +740,7 @@ class VectorLoss(BaseLoss):
     perform a similar role to the ChannelActivation objective by using one-hot 1D
     vectors.
 
-    The einsum equation: "ijkl,j->ikl", used by the paper's associated code is the
-    same thing as: "[..., C] @ vec", where vec has a shape of 'C'.
-
+    See here for more details:
     https://distill.pub/2021/multimodal-neurons/
     https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py
     """
@@ -786,15 +784,12 @@ class VectorLoss(BaseLoss):
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
         activations = activations[self.batch_index[0] : self.batch_index[1]]
-        if self.activation_fn is not None:
-            activations = self.activation_fn(activations)
-
-        if activations.dim() > 2 and self._move_channel_dim_to_final_dim:
-            permute_vals = [0] + list(range(activations.dim()))[2:] + [1]
-            activations = activations.permute(*permute_vals)
-        if activations.dim() == 2:
-            return activations @ self.vec
-        return torch.mean(activations @ self.vec, [1, 2]).mean()
+        return _create_new_vector(
+            x,
+            vec=self.vec,
+            activation_fn=self.activation_fn,
+            move_channel_dim_to_final_dim=self.move_channel_dim_to_final_dim,
+        ).mean()
 
 
 @loss_wrapper
