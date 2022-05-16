@@ -198,6 +198,12 @@ class TestActivationWeights(BaseTest):
 
 
 class TestL2Mean(BaseTest):
+    def test_l2mean_init(self) -> None:
+        model = torch.nn.Identity()
+        loss = opt_loss.L2Mean(model.layer)
+        self.assert(loss.constant, 0.5)
+        self.assertIsNone(loss.channel_index)
+
     def test_l2mean_constant(self) -> None:
         model = BasicModel_ConvNet_Optim()
         constant = 0.5
@@ -218,6 +224,14 @@ class TestL2Mean(BaseTest):
 
 
 class TestVectorLoss(BaseTest):
+    def test_vectorloss_init(self) -> None:
+        model = torch.nn.Identity()
+        vec = torch.tensor([0, 1]).float()
+        loss = opt_loss.VectorLoss(model.layer, vec=vec)
+        assertTensorAlmostEqual(self, loss.vec, vec, delta=0.0)
+        self.assertTrue(loss.move_channel_dim_to_final_dim)
+        self.assertEqual(loss.activation_fn, torch.nn.functional.relu)
+
     def test_vectorloss_single_channel(self) -> None:
         model = BasicModel_ConvNet_Optim()
         vec = torch.tensor([0, 1]).float()
@@ -234,6 +248,19 @@ class TestVectorLoss(BaseTest):
 
 
 class TestFacetLoss(BaseTest):
+    def test_facetloss_single_channel(self) -> None:
+        model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        vec = torch.tensor([0, 1, 0]).float()
+        facet_weights = torch.ones([1, 2, 1, 1]) * 1.5
+        loss = opt_loss.FacetLoss(
+            ultimate_target=model[1],
+            layer_target=model[0].layer,
+            vec=vec,
+            facet_weights=facet_weights,
+        )
+        assertTensorAlmostEqual(self, loss.vec, vec, delta=0.0)
+        assertTensorAlmostEqual(self, loss.facet_weights, facet_weights, delta=0.0)
+
     def test_facetloss_single_channel(self) -> None:
         layer = torch.nn.Conv2d(2, 3, 1, bias=True)
         layer.weight.data.fill_(0.1)
