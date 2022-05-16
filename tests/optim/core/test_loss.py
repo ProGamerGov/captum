@@ -334,6 +334,7 @@ class TestFacetLoss(BaseTest):
             strength=strength,
         )
         self.assertEqual(loss.strength, strength)
+        output = get_loss_value(model, loss, input_shape=[4, 3, 6, 6])
         self.assertAlmostEqual(output, 4.017000198364258, places=6)
 
     def test_facetloss_2d_weights(self) -> None:
