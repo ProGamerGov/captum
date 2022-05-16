@@ -872,7 +872,7 @@ class FacetLoss(BaseLoss):
         new_vec = _create_new_vector(activations_ultimate, self.vec)[
             self.batch_index[0] : self.batch_index[1]
         ]
-        target_activations = targets_to_values[target]
+        target_activations = targets_to_values[self.layer_target]
 
         layer_grad = torch.autograd.grad(
             outputs=new_vec,
