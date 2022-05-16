@@ -1,11 +1,10 @@
 import math
-from typing import List, Optional, Tuple
+from typing import Callable, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
 from captum.optim._utils.reducer import posneg
-from packaging import version
 
 try:
     from PIL import Image
@@ -65,21 +64,6 @@ def save_tensor_as_image(x: torch.Tensor, filename: str, scale: float = 255.0) -
 def get_neuron_pos(
     H: int, W: int, x: Optional[int] = None, y: Optional[int] = None
 ) -> Tuple[int, int]:
-    """
-    Args:
-
-        H (int) The height
-        W (int) The width
-        x (int, optional): Optionally specify and exact x location of the neuron. If
-            set to None, then the center x location will be used.
-            Default: None
-        y (int, optional): Optionally specify and exact y location of the neuron. If
-            set to None, then the center y location will be used.
-            Default: None
-
-    Return:
-        Tuple[_x, _y] (Tuple[int, int]): The x and y dimensions of the neuron.
-    """
     if x is None:
         _x = W // 2
     else:
@@ -125,75 +109,48 @@ def _dot_cossim(
     return dot * torch.clamp(torch.cosine_similarity(x, y, eps=eps), 0.1) ** cossim_pow
 
 
-# Handle older versions of PyTorch
-# Defined outside of function in order to support JIT
-_torch_norm = (
-    torch.linalg.norm
-    if version.parse(torch.__version__) >= version.parse("1.7.0")
-    else torch.norm
-)
-
-
-def hue_to_rgb(
-    angle: float, device: torch.device = torch.device("cpu"), warp: bool = True
-) -> torch.Tensor:
-    """
-    Create an RGB unit vector based on a hue of the input angle.
-    Args:
-        angle (float): The hue angle to create an RGB color for.
-        device (torch.device, optional): The device to create the angle color tensor
-            on.
-            Default: torch.device("cpu")
-        warp (bool, optional): Whether or not to make colors more distinguishable.
-            Default: True
-    Returns:
-        color_vec (torch.Tensor): A color vector.
-    """
-
-    angle = angle - 360 * (angle // 360)
-    colors = torch.tensor(
-        [
-            [1.0, 0.0, 0.0],
-            [0.7071, 0.7071, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.7071, 0.7071],
-            [0.0, 0.0, 1.0],
-            [0.7071, 0.0, 0.7071],
-        ],
-        device=device,
-    )
-
-    idx = math.floor(angle / 60)
-    d = (angle - idx * 60) / 60
-
-    if warp:
-        # Idea from: https://github.com/tensorflow/lucid/pull/193
-        d = (
-            math.sin(d * math.pi / 2)
-            if idx % 2 == 0
-            else 1 - math.sin((1 - d) * math.pi / 2)
-        )
-
-    vec = (1 - d) * colors[idx] + d * colors[(idx + 1) % 6]
-    return vec / _torch_norm(vec)
-
-
-def nchannels_to_rgb(
-    x: torch.Tensor, warp: bool = True, eps: float = 1e-4
-) -> torch.Tensor:
+@torch.jit.ignore
+def nchannels_to_rgb(x: torch.Tensor, warp: bool = True) -> torch.Tensor:
     """
     Convert an NCHW image with n channels into a 3 channel RGB image.
 
     Args:
-
-        x (torch.Tensor):  NCHW image tensor to transform into RGB image.
+        x (torch.Tensor):  Image tensor to transform into RGB image.
         warp (bool, optional):  Whether or not to make colors more distinguishable.
             Default: True
-        eps (float, optional): An optional epsilon value.
-            Default: 1e-4
     Returns:
-        tensor (torch.Tensor): An NCHW RGB image tensor.
+        *tensor* RGB image
     """
+
+    def hue_to_rgb(angle: float) -> torch.Tensor:
+        """
+        Create an RGB unit vector based on a hue of the input angle.
+        """
+
+        angle = angle - 360 * (angle // 360)
+        colors = torch.tensor(
+            [
+                [1.0, 0.0, 0.0],
+                [0.7071, 0.7071, 0.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 0.7071, 0.7071],
+                [0.0, 0.0, 1.0],
+                [0.7071, 0.0, 0.7071],
+            ]
+        )
+
+        idx = math.floor(angle / 60)
+        d = (angle - idx * 60) / 60
+
+        if warp:
+
+            def adj(x: float) -> float:
+                return math.sin(x * math.pi / 2)
+
+            d = adj(d) if idx % 2 == 0 else 1 - adj(1 - d)
+
+        vec = (1 - d) * colors[idx] + d * colors[(idx + 1) % 6]
+        return vec / torch.norm(vec)
 
     assert x.dim() == 4
 
@@ -201,17 +158,17 @@ def nchannels_to_rgb(
         x = posneg(x.permute(0, 2, 3, 1), -1).permute(0, 3, 1, 2)
 
     rgb = torch.zeros(1, 3, x.size(2), x.size(3), device=x.device)
-    num_channels = x.size(1)
-    for i in range(num_channels):
-        rgb_angle = hue_to_rgb(360 * i / num_channels, device=x.device, warp=warp)
-        rgb = rgb + (x[:, i][:, None, :, :] * rgb_angle[None, :, None, None])
+    nc = x.size(1)
+    for i in range(nc):
+        rgb = rgb + x[:, i][:, None, :, :]
+        rgb = rgb * hue_to_rgb(360 * i / nc).to(device=x.device)[None, :, None, None]
 
-    rgb = rgb + (
-        torch.ones(1, 1, x.size(2), x.size(3), device=x.device)
-        * (torch.sum(x, 1) - torch.max(x, 1)[0])[:, None]
+    rgb = rgb + torch.ones(x.size(2), x.size(3))[None, None, :, :] * (
+        torch.sum(x, 1)[:, None] - torch.max(x, 1)[0][:, None]
     )
-    rgb = rgb / (eps + _torch_norm(rgb, dim=1, keepdim=True))
-    return rgb * _torch_norm(x, dim=1, keepdim=True)
+    return (rgb / (1e-4 + torch.norm(rgb, dim=1, keepdim=True))) * torch.norm(
+        x, dim=1, keepdim=True
+    )
 
 
 def weights_to_heatmap_2d(
@@ -261,3 +218,54 @@ def weights_to_heatmap_2d(
         * ((1 - (-x - 0.5) * 2) * color_list[1] + (-x - 0.5) * 2 * color_list[0])
     ).permute(2, 0, 1)
     return color_tensor
+
+
+def _create_new_vector(
+    x: torch.Tensor,
+    vec: torch.Tensor,
+    activation_fn: Optional[
+        Callable[[torch.Tensor], torch.Tensor]
+    ] = torch.nn.functional.relu,
+    move_channel_dim_to_final_dim: bool = True,
+) -> torch.Tensor:
+    """
+    Create a vector using a given set of activations and another vector.
+    This function is intended for use in CLIP related loss objectives.
+
+    https://distill.pub/2021/multimodal-neurons/
+    https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py
+    The einsum equation: "ijkl,j->ikl", used by the paper's associated code is the
+    same thing as: "[..., C] @ vec", where vec has a shape of 'C'.
+
+    Args:
+
+        x (torch.Tensor): A set of 2d or 4d activations.
+        vec (torch.Tensor): A direction vector to use, with a compatible shape for
+            computing the matrix product of the activations. See torch.matmul for
+            See torch.matmul for more details on compatible shapes:
+            https://pytorch.org/docs/stable/generated/torch.matmul.html
+            By default, vec is expected to share the same size as the channel or
+            feature dimension of the activations.
+        activation_fn (Callable, optional): An optional activation function to
+            apply to the activations before computing the matrix product. If set
+            to None, then no activation function will be used.
+            Default: torch.nn.functional.relu
+        move_channel_dim_to_final_dim (bool, optional): Whether or not to move the
+            channel dimension to the last dimension before computing the matrix
+            product.
+            Default: True
+
+    Returns
+        x (torch.Tensor): A  vector created from the input activations and the
+            stored vector.
+    """
+    assert x.device == vec.device
+    assert x.dim() > 1
+    if activation_fn:
+        x = activation_fn(x)
+    if x.dim() > 2 and move_channel_dim_to_final_dim:
+        permute_vals = [0] + list(range(x.dim()))[2:] + [1]
+        x = x.permute(*permute_vals)
+        return torch.mean(x @ vec, [1, 2])
+    else:
+        return (x @ vec)[:, None]
