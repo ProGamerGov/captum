@@ -442,6 +442,7 @@ class Diversity(BaseLoss):
     loss.
 
     Args:
+
         target (nn.Module): A target layer, transform, or image parameterization
             instance to optimize the output of.
         batch_index (int or list of int, optional): The index or indice range of
@@ -549,6 +550,11 @@ class Alignment(BaseLoss):
             decay_ratio (float): How much to decay penalty as images move apart in
                 the batch.
                 Default: 2.0
+            batch_index (int or list of int, optional): The index or indice range of
+                activations to optimize if optimizing a batch of activations. If set to
+                to None, defaults to all activations in the batch. Indice ranges should
+                be in the format of: [start, end].
+                Default: None
         """
         BaseLoss.__init__(self, target)
         self.decay_ratio = decay_ratio
