@@ -448,15 +448,15 @@ class Diversity(BaseLoss):
 
         target (nn.Module): A target layer, transform, or image parameterization
             instance to optimize the output of.
-        batch_index (int or list of int, optional): The index or indice range of
-            activations to optimize if optimizing a batch of activations. If set to
-            None, defaults to all activations in the batch. Indice ranges should be
-            in the format of: [start, end].
+        batch_index (list of int, optional): The indice range of activations to
+            optimize. If set to None, defaults to all activations in the batch. Indice
+            ranges should be in the format of: [start, end].
             Default: None
     """
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
+        activations = activations[self.batch_index[0] : self.batch_index[1]]
         batch, channels = activations.shape[:2]
         flattened = activations.view(batch, channels, -1)
         grams = torch.matmul(flattened, torch.transpose(flattened, 1, 2))
@@ -544,7 +544,12 @@ class Alignment(BaseLoss):
     between neighbouring images.
     """
 
-    def __init__(self, target: nn.Module, decay_ratio: float = 2.0) -> None:
+    def __init__(
+        self,
+        target: nn.Module,
+        decay_ratio: float = 2.0,
+        batch_index: Optional[List[int]] = None,
+    ) -> None:
         """
         Args:
 
@@ -553,17 +558,17 @@ class Alignment(BaseLoss):
             decay_ratio (float): How much to decay penalty as images move apart in
                 the batch.
                 Default: 2.0
-            batch_index (int or list of int, optional): The index or indice range of
-                activations to optimize if optimizing a batch of activations. If set to
-                to None, defaults to all activations in the batch. Indice ranges should
-                be in the format of: [start, end].
+            batch_index (list of int, optional): The indice range of activations to
+                optimize. If set to None, defaults to all activations in the batch.
+                Indice ranges should be in the format of: [start, end].
                 Default: None
         """
-        BaseLoss.__init__(self, target)
+        BaseLoss.__init__(self, target, batch_index)
         self.decay_ratio = decay_ratio
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
+        activations = activations[self.batch_index[0] : self.batch_index[1]]
         B = activations.size(0)
 
         sum_tensor = torch.zeros(1, device=activations.device)
