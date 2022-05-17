@@ -226,9 +226,12 @@ class ChannelActivation(BaseLoss):
     """
 
     def __init__(
-        self, target: nn.Module, channel_index: int, batch_index: Optional[Union[int, List[int]]] = None,
+        self,
+        target: nn.Module,
+        channel_index: int,
+        batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
-        """ 
+        """
         Args:
 
             target (nn.Module): A target layer, transform, or image parameterization
@@ -273,7 +276,7 @@ class NeuronActivation(BaseLoss):
         y: Optional[int] = None,
         batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
-        """ 
+        """
         Args:
 
             target (nn.Module):  The layer to containing the channel to optimize for.
@@ -381,7 +384,7 @@ class L1(BaseLoss):
         constant: float = 0.0,
         batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
-        """ 
+        """
         Args:
 
             target (nn.Module): A target layer, transform, or image parameterization
@@ -415,7 +418,7 @@ class L2(BaseLoss):
         epsilon: float = 1e-6,
         batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
-        """ 
+        """
         Args:
 
             target (nn.Module): A target layer, transform, or image parameterization
