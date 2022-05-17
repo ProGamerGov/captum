@@ -285,7 +285,7 @@ class NeuronActivation(BaseLoss):
                 unspecified, defaults to center, or one unit left of center for even
                 lengths.
                 Default: None
-            y (int, optional):  The y coordinate of the neuron to optimize for. If
+            y (int, optional): The y coordinate of the neuron to optimize for. If
                 unspecified, defaults to center, or one unit up of center for even
                 heights.
                 Default: None
@@ -831,8 +831,8 @@ class TensorDirection(BaseLoss):
 
             target (nn.Module): A target layer, transform, or image parameterization
                 instance to optimize the output of.
-            vec (torch.Tensor):  Vector representing direction to align to.
-            cossim_pow (float, optional):  The desired cosine similarity power to use.
+            vec (torch.Tensor): Vector representing direction to align to.
+            cossim_pow (float, optional): The desired cosine similarity power to use.
                 Default: 0.0
             batch_index (int, optional): The index of activations to optimize if
                 optimizing a batch of activations. If set to None, defaults to all
@@ -898,10 +898,10 @@ class ActivationWeights(BaseLoss):
                 set to None, defaults to center, or one unit up of center for even
                 heights.
                 Default: None
-            wx (int, optional):  Length of neurons to apply the weights to, along the
+            wx (int, optional): Length of neurons to apply the weights to, along the
                 x-axis. Set to None for the full length.
                 Default: None
-            wy (int, optional):  Length of neurons to apply the weights to, along the
+            wy (int, optional): Length of neurons to apply the weights to, along the
                 y-axis. Set to None for the full length.
                 Default: None
         """
