@@ -279,9 +279,9 @@ class NeuronActivation(BaseLoss):
         """
         Args:
 
-            target (nn.Module):  The layer to containing the channel to optimize for.
-            channel_index (int):  The index of the channel to optimize for.
-            x (int, optional):  The x coordinate of the neuron to optimize for. If
+            target (nn.Module): The layer instance containing the channel to optimize for.
+            channel_index (int): The index of the channel to optimize for.
+            x (int, optional): The x coordinate of the neuron to optimize for. If
                 unspecified, defaults to center, or one unit left of center for even
                 lengths.
                 Default: None
