@@ -415,7 +415,7 @@ class L2(BaseLoss):
         self,
         target: nn.Module,
         constant: float = 0.0,
-        epsilon: float = 1e-6,
+        eps: float = 1e-6,
         batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
         """
@@ -425,7 +425,7 @@ class L2(BaseLoss):
                 instance to optimize the output of.
             constant (float): Constant threshold to deduct from the activations.
                 Default: 0.0
-            epsilon (float): Small value to add to L2 prior to sqrt.
+            eps (float): Small value to add to L2 prior to sqrt.
                 Default: 1e-6
             batch_index (int or list of int, optional): The index or indice range of
                 activations to optimize if optimizing a batch of activations. If set to
@@ -435,14 +435,14 @@ class L2(BaseLoss):
         """
         BaseLoss.__init__(self, target, batch_index)
         self.constant = constant
-        self.epsilon = epsilon
+        self.eps = eps
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target][
             self.batch_index[0] : self.batch_index[1]
         ]
         activations = ((activations - self.constant) ** 2).sum()
-        return torch.sqrt(self.epsilon + activations)
+        return torch.sqrt(self.eps + activations)
 
 
 @loss_wrapper
