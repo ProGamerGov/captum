@@ -204,9 +204,9 @@ class LayerActivation(BaseLoss):
 
         target (nn.Module): A target layer, transform, or image parameterization
             instance to optimize the output of.
-        batch_index (int or list of int, optional): The index or indice range of
+        batch_index (int or list of int, optional): The index or index range of
             activations to optimize if optimizing a batch of activations. If set to
-            None, defaults to all activations in the batch. Indice ranges should be
+            None, defaults to all activations in the batch. index ranges should be
             in the format of: [start, end].
             Default: None
     """
@@ -237,9 +237,9 @@ class ChannelActivation(BaseLoss):
             target (nn.Module): A target layer, transform, or image parameterization
                 instance to optimize the output of.
             channel_index (int): The index of the channel to optimize for.
-            batch_index (int or list of int, optional): The index or indice range of
+            batch_index (int or list of int, optional): The index or index range of
                 activations to optimize if optimizing a batch of activations. If set to
-                None, defaults to all activations in the batch. Indice ranges should be
+                None, defaults to all activations in the batch. index ranges should be
                 in the format of: [start, end].
                 Default: None
         """
@@ -289,9 +289,9 @@ class NeuronActivation(BaseLoss):
                 unspecified, defaults to center, or one unit up of center for even
                 heights.
                 Default: None
-            batch_index (int or list of int, optional): The index or indice range of
+            batch_index (int or list of int, optional): The index or index range of
                 activations to optimize if optimizing a batch of activations. If set to
-                None, defaults to all activations in the batch. Indice ranges should be
+                None, defaults to all activations in the batch. index ranges should be
                 in the format of: [start, end].
                 Default: None
         """
@@ -330,9 +330,9 @@ class DeepDream(BaseLoss):
 
         target (nn.Module): A target layer, transform, or image parameterization
             instance to optimize the output of.
-        batch_index (int or list of int, optional): The index or indice range of
+        batch_index (int or list of int, optional): The index or index range of
             activations to optimize if optimizing a batch of activations. If set to
-            None, defaults to all activations in the batch. Indice ranges should be
+            None, defaults to all activations in the batch. index ranges should be
             in the format of: [start, end].
             Default: None
     """
@@ -357,9 +357,9 @@ class TotalVariation(BaseLoss):
 
         target (nn.Module): A target layer, transform, or image parameterization
             instance to optimize the output of.
-        batch_index (int or list of int, optional): The index or indice range of
+        batch_index (int or list of int, optional): The index or index range of
             activations to optimize if optimizing a batch of activations. If set to
-            None, defaults to all activations in the batch. Indice ranges should be
+            None, defaults to all activations in the batch. index ranges should be
             in the format of: [start, end].
             Default: None
     """
@@ -390,9 +390,9 @@ class L1(BaseLoss):
             target (nn.Module): A target layer, transform, or image parameterization
                 instance to optimize the output of.
             constant (float): Constant threshold to deduct from the activations.
-            batch_index (int or list of int, optional): The index or indice range of
+            batch_index (int or list of int, optional): The index or index range of
                 activations to optimize if optimizing a batch of activations. If set to
-                None, defaults to all activations in the batch. Indice ranges should be
+                None, defaults to all activations in the batch. index ranges should be
                 in the format of: [start, end].
                 Default: None
         """
@@ -427,9 +427,9 @@ class L2(BaseLoss):
                 Default: 0.0
             eps (float): Small value to add to L2 prior to sqrt.
                 Default: 1e-6
-            batch_index (int or list of int, optional): The index or indice range of
+            batch_index (int or list of int, optional): The index or index range of
                 activations to optimize if optimizing a batch of activations. If set to
-                None, defaults to all activations in the batch. Indice ranges should be
+                None, defaults to all activations in the batch. index ranges should be
                 in the format of: [start, end].
                 Default: None
         """
@@ -459,8 +459,8 @@ class Diversity(BaseLoss):
 
         target (nn.Module): A target layer, transform, or image parameterization
             instance to optimize the output of.
-        batch_index (list of int, optional): The indice range of activations to
-            optimize. If set to None, defaults to all activations in the batch. Indice
+        batch_index (list of int, optional): The index range of activations to
+            optimize. If set to None, defaults to all activations in the batch. index
             ranges should be in the format of: [start, end].
             Default: None
     """
@@ -576,9 +576,9 @@ class Alignment(BaseLoss):
             decay_ratio (float): How much to decay penalty as images move apart in
                 the batch.
                 Default: 2.0
-            batch_index (list of int, optional): The indice range of activations to
+            batch_index (list of int, optional): The index range of activations to
                 optimize. If set to None, defaults to all activations in the batch.
-                Indice ranges should be in the format of: [start, end].
+                index ranges should be in the format of: [start, end].
                 Default: None
         """
         if batch_index:
