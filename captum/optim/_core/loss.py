@@ -535,14 +535,18 @@ class Alignment(BaseLoss):
     When interpolating between activations, it may be desirable to keep image landmarks
     in the same position for visual comparison. This loss helps to minimize L2 distance
     between neighbouring images.
-
-    Args:
-        target (nn.Module):  The layer to optimize for.
-        decay_ratio (float):  How much to decay penalty as images move apart in batch.
-            Defaults to 2.
     """
 
     def __init__(self, target: nn.Module, decay_ratio: float = 2.0) -> None:
+        """
+        Args:
+
+            target (nn.Module): A target layer, transform, or image parameterization
+                instance to optimize the output of.
+            decay_ratio (float): How much to decay penalty as images move apart in
+                the batch.
+                Default: 2.0
+        """
         BaseLoss.__init__(self, target)
         self.decay_ratio = decay_ratio
 
@@ -572,14 +576,6 @@ class Direction(BaseLoss):
     the alignment between the input vector and the layer’s activation vector. The
     dimensionality of the vector should correspond to the number of channels in the
     layer.
-
-    Args:
-        target (nn.Module):  The layer to optimize for.
-        vec (torch.Tensor):  Vector representing direction to align to.
-        cossim_pow (float, optional):  The desired cosine similarity power to use.
-        batch_index (int, optional):  The index of the image to optimize if we
-            optimizing a batch of images. If unspecified, defaults to all images
-            in the batch.
     """
 
     def __init__(
@@ -589,6 +585,19 @@ class Direction(BaseLoss):
         cossim_pow: Optional[float] = 0.0,
         batch_index: Optional[int] = None,
     ) -> None:
+        """
+        Args:
+
+            target (nn.Module): A target layer, transform, or image parameterization
+                instance to optimize the output of.
+            vec (torch.Tensor): Vector representing direction to align to.
+            cossim_pow (float, optional): The desired cosine similarity power to use.
+                Default: 0.0
+            batch_index (int, optional): The index of activations to optimize if
+                optimizing a batch of activations. If set to None, defaults to all
+                activations in the batch.
+                Default: None
+        """
         BaseLoss.__init__(self, target, batch_index)
         self.vec = vec.reshape((1, -1, 1, 1))
         self.cossim_pow = cossim_pow
