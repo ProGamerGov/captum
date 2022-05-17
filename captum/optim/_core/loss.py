@@ -141,14 +141,18 @@ class BaseLoss(Loss):
     def __init__(
         self,
         target: Union[nn.Module, List[nn.Module]] = [],
-        batch_index: Optional[int] = None,
+        batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
         super(BaseLoss, self).__init__()
         self._target = target
         if batch_index is None:
             self._batch_index = (None, None)
+        elif isinstance(batch_index, (list, tuple)):
+            self._batch_index = tuple(batch_index)
         else:
             self._batch_index = (batch_index, batch_index + 1)
+        assert all([isinstance(b, (int, type(None))) for b in self._batch_index])
+        assert len(self._batch_index) == 2
 
     @property
     def target(self) -> Union[nn.Module, List[nn.Module]]:
@@ -200,9 +204,10 @@ class LayerActivation(BaseLoss):
 
         target (nn.Module): A target layer, transform, or image parameterization
             instance to optimize the output of.
-        batch_index (int, optional): The index of activations to optimize if
-            optimizing a batch of activations. If set to None, defaults to all
-            activations in the batch.
+        batch_index (int or list of int, optional): The index or indice range of
+            activations to optimize if optimizing a batch of activations. If set to
+            None, defaults to all activations in the batch. Indice ranges should be
+            in the format of: [start, end].
             Default: None
     """
 
@@ -221,17 +226,21 @@ class ChannelActivation(BaseLoss):
     """
 
     def __init__(
-        self, target: nn.Module, channel_index: int, batch_index: Optional[int] = None
+        self,
+        target: nn.Module,
+        channel_index: int,
+        batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
-        """ 
+        """
         Args:
 
             target (nn.Module): A target layer, transform, or image parameterization
                 instance to optimize the output of.
-            channel_index (int):  The index of the channel to optimize for.
-            batch_index (int, optional): The index of activations to optimize if
-                optimizing a batch of activations. If set to None, defaults to all
-                activations in the batch.
+            channel_index (int): The index of the channel to optimize for.
+            batch_index (int or list of int, optional): The index or indice range of
+                activations to optimize if optimizing a batch of activations. If set to
+                None, defaults to all activations in the batch. Indice ranges should be
+                in the format of: [start, end].
                 Default: None
         """
         BaseLoss.__init__(self, target, batch_index)
@@ -265,9 +274,9 @@ class NeuronActivation(BaseLoss):
         channel_index: int,
         x: Optional[int] = None,
         y: Optional[int] = None,
-        batch_index: Optional[int] = None,
+        batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
-        """ 
+        """
         Args:
 
             target (nn.Module):  The layer to containing the channel to optimize for.
@@ -280,9 +289,10 @@ class NeuronActivation(BaseLoss):
                 unspecified, defaults to center, or one unit up of center for even
                 heights.
                 Default: None
-            batch_index (int, optional): The index of activations to optimize if
-                optimizing a batch of activations. If set to None, defaults to all
-                activations in the batch.
+            batch_index (int or list of int, optional): The index or indice range of
+                activations to optimize if optimizing a batch of activations. If set to
+                None, defaults to all activations in the batch. Indice ranges should be
+                in the format of: [start, end].
                 Default: None
         """
         BaseLoss.__init__(self, target, batch_index)
@@ -320,9 +330,10 @@ class DeepDream(BaseLoss):
 
         target (nn.Module): A target layer, transform, or image parameterization
             instance to optimize the output of.
-        batch_index (int, optional): The index of activations to optimize if
-            optimizing a batch of activations. If set to None, defaults to all
-            activations in the batch.
+        batch_index (int or list of int, optional): The index or indice range of
+            activations to optimize if optimizing a batch of activations. If set to
+            None, defaults to all activations in the batch. Indice ranges should be
+            in the format of: [start, end].
             Default: None
     """
 
@@ -346,9 +357,10 @@ class TotalVariation(BaseLoss):
 
         target (nn.Module): A target layer, transform, or image parameterization
             instance to optimize the output of.
-        batch_index (int, optional): The index of activations to optimize if
-            optimizing a batch of activations. If set to None, defaults to all
-            activations in the batch.
+        batch_index (int or list of int, optional): The index or indice range of
+            activations to optimize if optimizing a batch of activations. If set to
+            None, defaults to all activations in the batch. Indice ranges should be
+            in the format of: [start, end].
             Default: None
     """
 
@@ -370,17 +382,18 @@ class L1(BaseLoss):
         self,
         target: nn.Module,
         constant: float = 0.0,
-        batch_index: Optional[int] = None,
+        batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
-        """ 
+        """
         Args:
 
             target (nn.Module): A target layer, transform, or image parameterization
                 instance to optimize the output of.
-            constant (float):  Constant threshold to deduct from the activations.
-            batch_index (int, optional): The index of activations to optimize if
-                optimizing a batch of activations. If set to None, defaults to all
-                activations in the batch.
+            constant (float): Constant threshold to deduct from the activations.
+            batch_index (int or list of int, optional): The index or indice range of
+                activations to optimize if optimizing a batch of activations. If set to
+                None, defaults to all activations in the batch. Indice ranges should be
+                in the format of: [start, end].
                 Default: None
         """
         BaseLoss.__init__(self, target, batch_index)
@@ -403,20 +416,21 @@ class L2(BaseLoss):
         target: nn.Module,
         constant: float = 0.0,
         epsilon: float = 1e-6,
-        batch_index: Optional[int] = None,
+        batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
-        """ 
+        """
         Args:
 
             target (nn.Module): A target layer, transform, or image parameterization
                 instance to optimize the output of.
-            constant (float):  Constant threshold to deduct from the activations.
+            constant (float): Constant threshold to deduct from the activations.
                 Default: 0.0
-            epsilon (float):  Small value to add to L2 prior to sqrt.
+            epsilon (float): Small value to add to L2 prior to sqrt.
                 Default: 1e-6
-            batch_index (int, optional): The index of activations to optimize if
-                optimizing a batch of activations. If set to None, defaults to all
-                activations in the batch.
+            batch_index (int or list of int, optional): The index or indice range of
+                activations to optimize if optimizing a batch of activations. If set to
+                None, defaults to all activations in the batch. Indice ranges should be
+                in the format of: [start, end].
                 Default: None
         """
         BaseLoss.__init__(self, target, batch_index)
@@ -445,15 +459,15 @@ class Diversity(BaseLoss):
 
         target (nn.Module): A target layer, transform, or image parameterization
             instance to optimize the output of.
-        batch_index (int or list of int, optional): The index or indice range of
-            activations to optimize if optimizing a batch of activations. If set to
-            None, defaults to all activations in the batch. Indice ranges should be
-            in the format of: [start, end].
+        batch_index (list of int, optional): The indice range of activations to
+            optimize. If set to None, defaults to all activations in the batch. Indice
+            ranges should be in the format of: [start, end].
             Default: None
     """
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
+        activations = activations[self.batch_index[0] : self.batch_index[1]]
         batch, channels = activations.shape[:2]
         flattened = activations.view(batch, channels, -1)
         grams = torch.matmul(flattened, torch.transpose(flattened, 1, 2))
@@ -490,10 +504,24 @@ class ActivationInterpolation(BaseLoss):
     def __init__(
         self,
         target1: nn.Module = None,
-        channel_index1: int = -1,
+        channel_index1: Optional[int] = None,
         target2: nn.Module = None,
-        channel_index2: int = -1,
+        channel_index2: Optional[int] = None,
     ) -> None:
+        """
+        Args:
+
+            target1 (nn.Module): The first layer, transform, or image parameterization
+                instance to optimize the output for.
+            channel_index1 (int, optional): Index of channel in first target to
+                optimize. Default is set to None for all channels.
+                Default: None
+            target2 (nn.Module): The second layer, transform, or image parameterization
+                instance to optimize the output for.
+            channel_index2 (int, optional): Index of channel in second target to
+                optimize. Default is set to None for all channels.
+                Default: None
+        """
         self.target_one = target1
         self.channel_index_one = channel_index1
         self.target_two = target2
@@ -507,15 +535,16 @@ class ActivationInterpolation(BaseLoss):
 
         assert activations_one is not None and activations_two is not None
         # ensure channel indices are valid
-        assert (
-            self.channel_index_one < activations_one.shape[1]
-            and self.channel_index_two < activations_two.shape[1]
-        )
+        if self.channel_index_one:
+            assert self.channel_index_one < activations_one.shape[1]
+        if self.channel_index_two:
+            assert self.channel_index_two < activations_two.shape[1]
+
         assert activations_one.size(0) == activations_two.size(0)
 
-        if self.channel_index_one > -1:
+        if self.channel_index_one:
             activations_one = activations_one[:, self.channel_index_one]
-        if self.channel_index_two > -1:
+        if self.channel_index_two:
             activations_two = activations_two[:, self.channel_index_two]
         B = activations_one.size(0)
 
@@ -541,7 +570,12 @@ class Alignment(BaseLoss):
     between neighbouring images.
     """
 
-    def __init__(self, target: nn.Module, decay_ratio: float = 2.0) -> None:
+    def __init__(
+        self,
+        target: nn.Module,
+        decay_ratio: float = 2.0,
+        batch_index: Optional[List[int]] = None,
+    ) -> None:
         """
         Args:
 
@@ -550,17 +584,19 @@ class Alignment(BaseLoss):
             decay_ratio (float): How much to decay penalty as images move apart in
                 the batch.
                 Default: 2.0
-            batch_index (int or list of int, optional): The index or indice range of
-                activations to optimize if optimizing a batch of activations. If set to
-                to None, defaults to all activations in the batch. Indice ranges should
-                be in the format of: [start, end].
+            batch_index (list of int, optional): The indice range of activations to
+                optimize. If set to None, defaults to all activations in the batch.
+                Indice ranges should be in the format of: [start, end].
                 Default: None
         """
-        BaseLoss.__init__(self, target)
+        if batch_index:
+            assert len(batch_index) == 2
+        BaseLoss.__init__(self, target, batch_index)
         self.decay_ratio = decay_ratio
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
+        activations = activations[self.batch_index[0] : self.batch_index[1]]
         B = activations.size(0)
 
         sum_tensor = torch.zeros(1, device=activations.device)
