@@ -501,10 +501,24 @@ class ActivationInterpolation(BaseLoss):
     def __init__(
         self,
         target1: nn.Module = None,
-        channel_index1: int = -1,
+        channel_index1: Optional[int] = None,
         target2: nn.Module = None,
-        channel_index2: int = -1,
+        channel_index2: Optional[int] = None,
     ) -> None:
+        """
+        Args:
+
+            target1 (nn.Module): The first layer, transform, or image parameterization
+                instance to optimize the output for.
+            channel_index1 (int, optional): Index of channel in first target to
+                optimize. Default is set to None for all channels.
+                Default: None
+            target2 (nn.Module): The second layer, transform, or image parameterization
+                instance to optimize the output for.
+            channel_index2 (int, optional): Index of channel in second target to
+                optimize. Default is set to None for all channels.
+                Default: None
+        """
         self.target_one = target1
         self.channel_index_one = channel_index1
         self.target_two = target2
@@ -518,15 +532,16 @@ class ActivationInterpolation(BaseLoss):
 
         assert activations_one is not None and activations_two is not None
         # ensure channel indices are valid
-        assert (
-            self.channel_index_one < activations_one.shape[1]
-            and self.channel_index_two < activations_two.shape[1]
-        )
+        if self.channel_index_one:
+            assert self.channel_index_one < activations_one.shape[1]
+        if self.channel_index_two:
+            assert self.channel_index_two < activations_two.shape[1]
+
         assert activations_one.size(0) == activations_two.size(0)
 
-        if self.channel_index_one > -1:
+        if self.channel_index_one:
             activations_one = activations_one[:, self.channel_index_one]
-        if self.channel_index_two > -1:
+        if self.channel_index_two:
             activations_two = activations_two[:, self.channel_index_two]
         B = activations_one.size(0)
 
