@@ -491,14 +491,6 @@ class ActivationInterpolation(BaseLoss):
     https://distill.pub/2017/feature-visualization/#Interaction-between-Neurons
     This loss helps to interpolate or mix visualizations from two activations (layer or
     channel) by interpolating a linear sum between the two activations.
-
-    Args:
-        target1 (nn.Module):  The first layer to optimize for.
-        channel_index1 (int):  Index of channel in first layer to optimize. Defaults to
-            all channels.
-        target2 (nn.Module):  The first layer to optimize for.
-        channel_index2 (int):  Index of channel in first layer to optimize. Defaults to
-            all channels.
     """
 
     def __init__(
