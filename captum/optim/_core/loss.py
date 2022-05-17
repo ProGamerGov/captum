@@ -141,14 +141,17 @@ class BaseLoss(Loss):
     def __init__(
         self,
         target: Union[nn.Module, List[nn.Module]] = [],
-        batch_index: Optional[int] = None,
+        batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
         super(BaseLoss, self).__init__()
         self._target = target
         if batch_index is None:
             self._batch_index = (None, None)
+        elif isinstance(batch_index, (list, tuple)):
+            self._batch_index = tuple(batch_index)
         else:
             self._batch_index = (batch_index, batch_index + 1)
+        assert all([isinstance(b, (int, type(None))) for b in self._batch_index])
 
     @property
     def target(self) -> Union[nn.Module, List[nn.Module]]:
