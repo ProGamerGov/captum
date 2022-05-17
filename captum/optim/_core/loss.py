@@ -197,10 +197,13 @@ class LayerActivation(BaseLoss):
     their original form.
 
     Args:
-        target (nn.Module):  The layer to optimize for.
-        batch_index (int, optional):  The index of the image to optimize if we
-            optimizing a batch of images. If unspecified, defaults to all images
-            in the batch.
+
+        target (nn.Module): A target layer, transform, or image parameterization
+            instance to optimize the output of.
+        batch_index (int, optional): The index of activations to optimize if
+            optimizing a batch of activations. If set to None, defaults to all
+            activations in the batch.
+            Default: None
     """
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
@@ -217,11 +220,14 @@ class ChannelActivation(BaseLoss):
     layer, and can be useful to determine what features the channel is excited by.
 
     Args:
-        target (nn.Module):  The layer to containing the channel to optimize for.
+
+        target (nn.Module): A target layer, transform, or image parameterization
+            instance to optimize the output of.
         channel_index (int):  The index of the channel to optimize for.
-        batch_index (int, optional):  The index of the image to optimize if we
-            optimizing a batch of images. If unspecified, defaults to all images
-            in the batch.
+        batch_index (int, optional): The index of activations to optimize if
+            optimizing a batch of activations. If set to None, defaults to all
+            activations in the batch.
+            Default: None
     """
 
     def __init__(
@@ -252,17 +258,21 @@ class NeuronActivation(BaseLoss):
     research.
 
     Args:
+
         target (nn.Module):  The layer to containing the channel to optimize for.
         channel_index (int):  The index of the channel to optimize for.
         x (int, optional):  The x coordinate of the neuron to optimize for. If
             unspecified, defaults to center, or one unit left of center for even
             lengths.
+            Default: None
         y (int, optional):  The y coordinate of the neuron to optimize for. If
             unspecified, defaults to center, or one unit up of center for even
             heights.
-        batch_index (int, optional):  The index of the image to optimize if we
-            optimizing a batch of images. If unspecified, defaults to all images
-            in the batch.
+            Default: None
+        batch_index (int, optional): The index of activations to optimize if
+            optimizing a batch of activations. If set to None, defaults to all
+            activations in the batch.
+            Default: None
     """
 
     def __init__(
@@ -305,10 +315,13 @@ class DeepDream(BaseLoss):
     referred to as 'Deep Dream'.
 
     Args:
-        target (nn.Module):  The layer to optimize for.
-        batch_index (int, optional):  The index of the image to optimize if we
-            optimizing a batch of images. If unspecified, defaults to all images
-            in the batch.
+
+        target (nn.Module): A target layer, transform, or image parameterization
+            instance to optimize the output of.
+        batch_index (int, optional): The index of activations to optimize if
+            optimizing a batch of activations. If set to None, defaults to all
+            activations in the batch.
+            Default: None
     """
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
@@ -328,10 +341,13 @@ class TotalVariation(BaseLoss):
     often used to remove unwanted visual artifacts.
 
     Args:
-        target (nn.Module):  The layer to optimize for.
-        batch_index (int, optional):  The index of the image to optimize if we
-            optimizing a batch of images. If unspecified, defaults to all images
-            in the batch.
+
+        target (nn.Module): A target layer, transform, or image parameterization
+            instance to optimize the output of.
+        batch_index (int, optional): The index of activations to optimize if
+            optimizing a batch of activations. If set to None, defaults to all
+            activations in the batch.
+            Default: None
     """
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
@@ -348,12 +364,15 @@ class L1(BaseLoss):
     L1 norm of the target layer, generally used as a penalty.
 
     Args:
-        target (nn.Module):  The layer to optimize for.
+
+        target (nn.Module): A target layer, transform, or image parameterization
+            instance to optimize the output of.
         constant (float):  Constant threshold to deduct from the activations.
-            Defaults to 0.
-        batch_index (int, optional):  The index of the image to optimize if we
-            optimizing a batch of images. If unspecified, defaults to all images
-            in the batch.
+            Default: 0.0
+        batch_index (int, optional): The index of activations to optimize if
+            optimizing a batch of activations. If set to None, defaults to all
+            activations in the batch.
+            Default: None
     """
 
     def __init__(
@@ -377,13 +396,17 @@ class L2(BaseLoss):
     L2 norm of the target layer, generally used as a penalty.
 
     Args:
-        target (nn.Module):  The layer to optimize for.
+
+        target (nn.Module): A target layer, transform, or image parameterization
+            instance to optimize the output of.
         constant (float):  Constant threshold to deduct from the activations.
-            Defaults to 0.
-        epsilon (float):  Small value to add to L2 prior to sqrt. Defaults to 1e-6.
-        batch_index (int, optional):  The index of the image to optimize if we
-            optimizing a batch of images. If unspecified, defaults to all images
-            in the batch.
+            Default: 0.0
+        epsilon (float):  Small value to add to L2 prior to sqrt.
+            Default: 1e-6
+        batch_index (int, optional): The index of activations to optimize if
+            optimizing a batch of activations. If set to None, defaults to all
+            activations in the batch.
+            Default: None
     """
 
     def __init__(
@@ -416,9 +439,13 @@ class Diversity(BaseLoss):
     loss.
 
     Args:
-        target (nn.Module):  The layer to optimize for.
-        batch_index (int, optional):  Unused here since we are optimizing for diversity
-            across the batch.
+        target (nn.Module): A target layer, transform, or image parameterization
+            instance to optimize the output of.
+        batch_index (int or list of int, optional): The index or indice range of
+            activations to optimize if optimizing a batch of activations. If set to
+            None, defaults to all activations in the batch. Indice ranges should be
+            in the format of: [start, end].
+            Default: None
     """
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
