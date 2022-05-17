@@ -608,21 +608,6 @@ class NeuronDirection(BaseLoss):
     https://distill.pub/2019/activation-atlas/#Aggregating-Multiple-Images
     Extends Direction loss by focusing on visualizing a single neuron within the
     kernel.
-
-    Args:
-        target (nn.Module):  The layer to optimize for.
-        vec (torch.Tensor):  Vector representing direction to align to.
-        x (int, optional):  The x coordinate of the neuron to optimize for. If
-            unspecified, defaults to center, or one unit left of center for even
-            lengths.
-        y (int, optional):  The y coordinate of the neuron to optimize for. If
-            unspecified, defaults to center, or one unit up of center for even
-            heights.
-        channel_index (int):  The index of the channel to optimize for.
-        cossim_pow (float, optional):  The desired cosine similarity power to use.
-        batch_index (int, optional):  The index of the image to optimize if we
-            optimizing a batch of images. If unspecified, defaults to all images
-            in the batch.
     """
 
     def __init__(
@@ -635,6 +620,30 @@ class NeuronDirection(BaseLoss):
         cossim_pow: Optional[float] = 0.0,
         batch_index: Optional[int] = None,
     ) -> None:
+        """
+        Args:
+
+            target (nn.Module): A target layer, transform, or image parameterization
+                instance to optimize the output of.
+            vec (torch.Tensor): Vector representing direction to align to.
+            x (int, optional): The x coordinate of the neuron to optimize for. If
+                set to None, defaults to center, or one unit left of center for even
+                lengths.
+                Default: None
+            y (int, optional): The y coordinate of the neuron to optimize for. If
+                set to None, defaults to center, or one unit up of center for even
+                heights.
+                Default: None
+            channel_index (int): The index of the channel to optimize for. If set to
+                None, then all channels will be used.
+                Default: None
+            cossim_pow (float, optional): The desired cosine similarity power to use.
+                Default: 0.0
+            batch_index (int, optional): The index of activations to optimize if
+                optimizing a batch of activations. If set to None, defaults to all
+                activations in the batch.
+                Default: None
+        """
         BaseLoss.__init__(self, target, batch_index)
         self.vec = vec.reshape((1, -1, 1, 1))
         self.x = x
@@ -700,16 +709,25 @@ class AngledNeuronDirection(BaseLoss):
     ) -> None:
         """
         Args:
-            target (nn.Module): A target layer instance.
+
+            target (nn.Module): A target layer, transform, or image parameterization
+                instance to optimize the output of.
             vec (torch.Tensor): A neuron direction vector to use.
             vec_whitened (torch.Tensor, optional): A whitened neuron direction vector.
+                If set to None, then no whitened vec will be used.
+                Default: None
             cossim_pow (float, optional): The desired cosine similarity power to use.
-            x (int, optional): Optionally provide a specific x position for the target
-                neuron.
-            y (int, optional): Optionally provide a specific y position for the target
-                neuron.
+            x (int, optional): The x coordinate of the neuron to optimize for. If
+                set to None, defaults to center, or one unit left of center for even
+                lengths.
+                Default: None
+            y (int, optional): The y coordinate of the neuron to optimize for. If
+                set to None, defaults to center, or one unit up of center for even
+                heights.
+                Default: None
             eps (float, optional): If cossim_pow is greater than zero, the desired
                 epsilon value to use for cosine similarity calculations.
+                Default: 1.0e-4
         """
         BaseLoss.__init__(self, target, batch_index)
         self.vec = vec.unsqueeze(0) if vec.dim() == 1 else vec
@@ -753,14 +771,6 @@ class TensorDirection(BaseLoss):
     Carter, et al., "Activation Atlas", Distill, 2019.
     https://distill.pub/2019/activation-atlas/#Aggregating-Multiple-Images
     Extends Direction loss by allowing batch-wise direction visualization.
-
-    Args:
-        target (nn.Module):  The layer to optimize for.
-        vec (torch.Tensor):  Vector representing direction to align to.
-        cossim_pow (float, optional):  The desired cosine similarity power to use.
-        batch_index (int, optional):  The index of the image to optimize if we
-            optimizing a batch of images. If unspecified, defaults to all images
-            in the batch.
     """
 
     def __init__(
@@ -770,6 +780,19 @@ class TensorDirection(BaseLoss):
         cossim_pow: Optional[float] = 0.0,
         batch_index: Optional[int] = None,
     ) -> None:
+        """
+        Args:
+
+            target (nn.Module): A target layer, transform, or image parameterization
+                instance to optimize the output of.
+            vec (torch.Tensor):  Vector representing direction to align to.
+            cossim_pow (float, optional):  The desired cosine similarity power to use.
+                Default: 0.0
+            batch_index (int, optional): The index of activations to optimize if
+                optimizing a batch of activations. If set to None, defaults to all
+                activations in the batch.
+                Default: None
+        """
         BaseLoss.__init__(self, target, batch_index)
         assert vec.dim() == 4
         self.vec = vec
@@ -801,21 +824,6 @@ class ActivationWeights(BaseLoss):
     Apply weights to channels, neurons, or spots in the target.
     This loss weighs specific channels or neurons in a given layer, via a weight
     vector.
-
-    Args:
-        target (nn.Module):  The layer to optimize for.
-        weights (torch.Tensor): Weights to apply to targets.
-        neuron (bool): Whether target is a neuron. Defaults to False.
-        x (int, optional):  The x coordinate of the neuron to optimize for. If
-            unspecified, defaults to center, or one unit left of center for even
-            lengths.
-        y (int, optional):  The y coordinate of the neuron to optimize for. If
-            unspecified, defaults to center, or one unit up of center for even
-            heights.
-        wx (int, optional):  Length of neurons to apply the weights to, along the
-            x-axis.
-        wy (int, optional):  Length of neurons to apply the weights to, along the
-            y-axis.
     """
 
     def __init__(
@@ -828,6 +836,29 @@ class ActivationWeights(BaseLoss):
         wx: Optional[int] = None,
         wy: Optional[int] = None,
     ) -> None:
+        """
+        Args:
+
+            target (nn.Module): A target layer, transform, or image parameterization
+                instance to optimize the output of.
+            weights (torch.Tensor): Weights to apply to targets.
+            neuron (bool): Whether target is a neuron.
+                Default: False
+            x (int, optional): The x coordinate of the neuron to optimize for. If
+                set to None, defaults to center, or one unit left of center for even
+                lengths.
+                Default: None
+            y (int, optional): The y coordinate of the neuron to optimize for. If
+                set to None, defaults to center, or one unit up of center for even
+                heights.
+                Default: None
+            wx (int, optional):  Length of neurons to apply the weights to, along the
+                x-axis. Set to None for the full length.
+                Default: None
+            wy (int, optional):  Length of neurons to apply the weights to, along the
+                y-axis. Set to None for the full length.
+                Default: None
+        """
         BaseLoss.__init__(self, target)
         self.x = x
         self.y = y
