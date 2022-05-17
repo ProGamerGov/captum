@@ -218,21 +218,22 @@ class ChannelActivation(BaseLoss):
     Maximize activations at the target layer and target channel.
     This loss maximizes the activations of a target channel in a specified target
     layer, and can be useful to determine what features the channel is excited by.
-
-    Args:
-
-        target (nn.Module): A target layer, transform, or image parameterization
-            instance to optimize the output of.
-        channel_index (int):  The index of the channel to optimize for.
-        batch_index (int, optional): The index of activations to optimize if
-            optimizing a batch of activations. If set to None, defaults to all
-            activations in the batch.
-            Default: None
     """
 
     def __init__(
         self, target: nn.Module, channel_index: int, batch_index: Optional[int] = None
     ) -> None:
+        """ 
+        Args:
+
+            target (nn.Module): A target layer, transform, or image parameterization
+                instance to optimize the output of.
+            channel_index (int):  The index of the channel to optimize for.
+            batch_index (int, optional): The index of activations to optimize if
+                optimizing a batch of activations. If set to None, defaults to all
+                activations in the batch.
+                Default: None
+        """
         BaseLoss.__init__(self, target, batch_index)
         self.channel_index = channel_index
 
@@ -256,23 +257,6 @@ class NeuronActivation(BaseLoss):
     from the specified layer. This loss is useful for determining the type of features
     that excite a neuron, and thus is often used for circuits and neuron related
     research.
-
-    Args:
-
-        target (nn.Module):  The layer to containing the channel to optimize for.
-        channel_index (int):  The index of the channel to optimize for.
-        x (int, optional):  The x coordinate of the neuron to optimize for. If
-            unspecified, defaults to center, or one unit left of center for even
-            lengths.
-            Default: None
-        y (int, optional):  The y coordinate of the neuron to optimize for. If
-            unspecified, defaults to center, or one unit up of center for even
-            heights.
-            Default: None
-        batch_index (int, optional): The index of activations to optimize if
-            optimizing a batch of activations. If set to None, defaults to all
-            activations in the batch.
-            Default: None
     """
 
     def __init__(
@@ -283,6 +267,24 @@ class NeuronActivation(BaseLoss):
         y: Optional[int] = None,
         batch_index: Optional[int] = None,
     ) -> None:
+        """ 
+        Args:
+
+            target (nn.Module):  The layer to containing the channel to optimize for.
+            channel_index (int):  The index of the channel to optimize for.
+            x (int, optional):  The x coordinate of the neuron to optimize for. If
+                unspecified, defaults to center, or one unit left of center for even
+                lengths.
+                Default: None
+            y (int, optional):  The y coordinate of the neuron to optimize for. If
+                unspecified, defaults to center, or one unit up of center for even
+                heights.
+                Default: None
+            batch_index (int, optional): The index of activations to optimize if
+                optimizing a batch of activations. If set to None, defaults to all
+                activations in the batch.
+                Default: None
+        """
         BaseLoss.__init__(self, target, batch_index)
         self.channel_index = channel_index
         self.x = x
@@ -362,17 +364,6 @@ class TotalVariation(BaseLoss):
 class L1(BaseLoss):
     """
     L1 norm of the target layer, generally used as a penalty.
-
-    Args:
-
-        target (nn.Module): A target layer, transform, or image parameterization
-            instance to optimize the output of.
-        constant (float):  Constant threshold to deduct from the activations.
-            Default: 0.0
-        batch_index (int, optional): The index of activations to optimize if
-            optimizing a batch of activations. If set to None, defaults to all
-            activations in the batch.
-            Default: None
     """
 
     def __init__(
@@ -381,6 +372,17 @@ class L1(BaseLoss):
         constant: float = 0.0,
         batch_index: Optional[int] = None,
     ) -> None:
+        """ 
+        Args:
+
+            target (nn.Module): A target layer, transform, or image parameterization
+                instance to optimize the output of.
+            constant (float):  Constant threshold to deduct from the activations.
+            batch_index (int, optional): The index of activations to optimize if
+                optimizing a batch of activations. If set to None, defaults to all
+                activations in the batch.
+                Default: None
+        """
         BaseLoss.__init__(self, target, batch_index)
         self.constant = constant
 
@@ -394,19 +396,6 @@ class L1(BaseLoss):
 class L2(BaseLoss):
     """
     L2 norm of the target layer, generally used as a penalty.
-
-    Args:
-
-        target (nn.Module): A target layer, transform, or image parameterization
-            instance to optimize the output of.
-        constant (float):  Constant threshold to deduct from the activations.
-            Default: 0.0
-        epsilon (float):  Small value to add to L2 prior to sqrt.
-            Default: 1e-6
-        batch_index (int, optional): The index of activations to optimize if
-            optimizing a batch of activations. If set to None, defaults to all
-            activations in the batch.
-            Default: None
     """
 
     def __init__(
@@ -416,6 +405,20 @@ class L2(BaseLoss):
         epsilon: float = 1e-6,
         batch_index: Optional[int] = None,
     ) -> None:
+        """ 
+        Args:
+
+            target (nn.Module): A target layer, transform, or image parameterization
+                instance to optimize the output of.
+            constant (float):  Constant threshold to deduct from the activations.
+                Default: 0.0
+            epsilon (float):  Small value to add to L2 prior to sqrt.
+                Default: 1e-6
+            batch_index (int, optional): The index of activations to optimize if
+                optimizing a batch of activations. If set to None, defaults to all
+                activations in the batch.
+                Default: None
+        """
         BaseLoss.__init__(self, target, batch_index)
         self.constant = constant
         self.epsilon = epsilon
