@@ -181,7 +181,7 @@ class TestNeuronDirection(BaseTest):
         self.assertIsNone(loss.y)
         self.assertIsNone(loss.channel_index)
         self.assertEqual(loss.cossim_pow, 0.0)
-        self.assertEqual(list(loss.vec.shape), [1, 1, 1, 1])
+        self.assertEqual(list(loss.vec.shape), [1, 2, 1, 1])
         assertTensorAlmostEqual(self, loss.vec, vec.reshape((1, -1, 1, 1)), delta=0.0)
 
     def test_neuron_direction(self) -> None:
@@ -207,7 +207,7 @@ class TestAngledNeuronDirection(BaseTest):
         model = torch.nn.Identity()
         vec = torch.ones(1, 2) * 0.5
         loss = opt_loss.AngledNeuronDirection(
-            model.layer,
+            model,
             vec=vec,
         )
         self.assertEqual(loss.eps, 1.0e-4)
@@ -256,7 +256,7 @@ class TestAngledNeuronDirection(BaseTest):
         dot = dot * torch.clamp(cossims, min=0.1) ** cossim_pow
 
         output = get_loss_value(model, loss)
-        self.assertAlmostEqual(output.item(), dot.item(), places=6)
+        self.assertAlmostEqual(output, dot.item(), places=6)
 
 
 class TestTensorDirection(BaseTest):
