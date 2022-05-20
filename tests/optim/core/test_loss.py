@@ -158,14 +158,14 @@ class TestDirection(BaseTest):
     def test_direction_init(self) -> None:
         model = torch.nn.Identity()
         vec = torch.ones(2) * 0.5
-        loss = opt_loss.Direction(model,  vec=vec)
+        loss = opt_loss.Direction(model, vec=vec)
         self.assertEqual(list(loss.vec.shape), [1, 2, 1, 1])
         assertTensorAlmostEqual(self, loss.vec, vec.reshape((1, -1, 1, 1)), delta=0.0)
         self.assertEqual(loss.cossim_pow, 0.0)
 
     def test_direction(self) -> None:
         model = BasicModel_ConvNet_Optim()
-        vec=torch.ones(2)
+        vec = torch.ones(2)
         loss = opt_loss.Direction(model.layer, vec=torch.ones(2))
         b = torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS])
         dot = torch.sum(vec.reshape((1, -1, 1, 1)) * b.reshape((1, -1, 1, 1)), 1)
@@ -175,7 +175,7 @@ class TestDirection(BaseTest):
 class TestNeuronDirection(BaseTest):
     def test_neuron_direction_init(self) -> None:
         model = torch.nn.Identity()
-        vec=torch.ones(2) * 0.5
+        vec = torch.ones(2) * 0.5
         loss = opt_loss.NeuronDirection(model, vec=vec)
         self.assertIsNone(loss.x)
         self.assertIsNone(loss.y)
@@ -194,7 +194,7 @@ class TestNeuronDirection(BaseTest):
 
     def test_neuron_direction_channel_index_none(self) -> None:
         model = BasicModel_ConvNet_Optim()
-        vec=torch.ones(2)
+        vec = torch.ones(2)
         loss = opt_loss.NeuronDirection(model.layer, vec=vec, channel_index=None)
 
         b = torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS])
@@ -220,9 +220,7 @@ class TestAngledNeuronDirection(BaseTest):
     def test_angled_neuron_direction(self) -> None:
         model = BasicModel_ConvNet_Optim()
         vec = torch.ones(1, 2)
-        loss = opt_loss.AngledNeuronDirection(
-            model.layer, vec=vec, cossim_pow=0
-        )
+        loss = opt_loss.AngledNeuronDirection(model.layer, vec=vec, cossim_pow=0)
         b = torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_0_LOSS])
         dot = torch.sum(b * vec).item()
         output = torch.sum(cast(torch.Tensor, get_loss_value(model, loss)))
@@ -245,11 +243,13 @@ class TestAngledNeuronDirection(BaseTest):
     def test_angled_neuron_direction_cossim_pow_4(self) -> None:
         model = BasicModel_ConvNet_Optim()
         cossim_pow = 4.0
-        vec=torch.ones(1, 2)
+        vec = torch.ones(1, 2)
         loss = opt_loss.AngledNeuronDirection(
             model.layer, vec=vec, cossim_pow=cossim_pow
         )
-        a = torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_0_LOSS])[None, :]
+        a = torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_0_LOSS])[
+            None, :
+        ]
 
         dot = torch.mean(a * vec)
         cossims = dot / (1.0e-4 + torch.sqrt(torch.sum(a**2)))
