@@ -175,7 +175,7 @@ class TestDirection(BaseTest):
 class TestNeuronDirection(BaseTest):
     def test_neuron_direction_init(self) -> None:
         model = torch.nn.Identity()
-        vec=torch.ones(1) * 0.5
+        vec=torch.ones(2) * 0.5
         loss = opt_loss.NeuronDirection(model, vec=vec)
         self.assertIsNone(loss.x)
         self.assertIsNone(loss.y)
@@ -186,11 +186,11 @@ class TestNeuronDirection(BaseTest):
 
     def test_neuron_direction(self) -> None:
         model = BasicModel_ConvNet_Optim()
-        loss = opt_loss.NeuronDirection(model.layer, vec=torch.ones(1, 1, 1, 1))
-        a = 1
-        b = [CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS]
-        dot = np.sum(np.inner(a, b))
-        self.assertAlmostEqual(get_loss_value(model, loss), dot, places=6)
+        vec = torch.ones(2)
+        loss = opt_loss.NeuronDirection(model.layer, vec=vec)
+        b = torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS])
+        dot = torch.sum(b * vec)
+        self.assertAlmostEqual(get_loss_value(model, loss), dot.item(), places=6)
 
     def test_neuron_direction_channel_index_none(self) -> None:
         model = BasicModel_ConvNet_Optim()
