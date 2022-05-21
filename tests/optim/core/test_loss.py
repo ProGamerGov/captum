@@ -308,13 +308,16 @@ class TestActivationWeights(BaseTest):
         assertTensorAlmostEqual(
             self,
             get_loss_value(model, loss),
-            torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS])[None, :, None, None],
+            torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS])[
+                None, :, None, None
+            ],
             mode="max",
         )
 
 
 class _OverrideAbstractFunctions:
     """Context manager for testing classes with abstract functions"""
+
     def __init__(self, class_type: Type) -> None:
         """
         Args:
