@@ -316,7 +316,14 @@ class TestActivationWeights(BaseTest):
 
 
 class _OverrideAbstractFunctions:
-    """Context manager for testing classes with abstract functions"""
+    """
+    Context manager for testing classes with abstract functions.
+
+    Examples::
+        >>> # Overriding the abstract methods in BaseLoss
+        >>> with _OverrideAbstractFunctions(path.to.classtype):
+        >>>     # Do stuff with <path.to.classtype>
+    """
 
     def __init__(self, class_type: Type) -> None:
         """
