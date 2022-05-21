@@ -342,6 +342,9 @@ class TestCompositeLoss(BaseTest):
         model = BasicModel_ConvNet_Optim()
         with self.assertRaises(TypeError):
             opt_loss.ChannelActivation(model.layer, 0) * "string"
+
+    def test_rmul_error(self) -> None:
+        model = BasicModel_ConvNet_Optim()
         with self.assertRaises(TypeError):
             "string" * opt_loss.ChannelActivation(model.layer, 0)
 
@@ -356,6 +359,9 @@ class TestCompositeLoss(BaseTest):
         model = BasicModel_ConvNet_Optim()
         with self.assertRaises(TypeError):
             opt_loss.ChannelActivation(model.layer, 0) / "string"
+
+    def test_rdiv_error(self) -> None:
+        model = BasicModel_ConvNet_Optim()
         with self.assertRaises(TypeError):
             "string" / opt_loss.ChannelActivation(model.layer, 0)
 
@@ -372,6 +378,9 @@ class TestCompositeLoss(BaseTest):
         model = BasicModel_ConvNet_Optim()
         with self.assertRaises(TypeError):
             opt_loss.ChannelActivation(model.layer, 0) ** "string"
+
+    def test_rpow_error(self) -> None:
+        model = BasicModel_ConvNet_Optim()
         with self.assertRaises(TypeError):
             "string" ** opt_loss.ChannelActivation(model.layer, 0)
 
