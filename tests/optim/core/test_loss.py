@@ -192,10 +192,10 @@ class TestNeuronDirection(BaseTest):
         dot = torch.sum(b * vec)
         self.assertAlmostEqual(get_loss_value(model, loss), dot.item(), places=6)
 
-    def test_neuron_direction_channel_index_none(self) -> None:
+    def test_neuron_direction_channel_index(self) -> None:
         model = BasicModel_ConvNet_Optim()
         vec = torch.ones(2)
-        loss = opt_loss.NeuronDirection(model.layer, vec=vec, channel_index=None)
+        loss = opt_loss.NeuronDirection(model.layer, vec=vec, channel_index=0)
 
         b = torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS])
         dot = torch.sum(b * vec)
