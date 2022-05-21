@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import operator
 import unittest
-from typing import cast, Any, List, Optional, Type
+from typing import Any, List, Optional, Type
 
 import captum.optim._core.loss as opt_loss
 import torch
