@@ -472,7 +472,7 @@ class TestCompositeLoss(BaseTest):
         model = BasicModel_ConvNet_Optim()
         loss = 10.0 / opt_loss.ChannelActivation(model.layer, 0)
         self.assertAlmostEqual(
-            get_loss_value(model, loss), 10.0 / CHANNEL_ACTIVATION_0_LOSS, places=6
+            get_loss_value(model, loss).mean(), 10.0 / CHANNEL_ACTIVATION_0_LOSS, places=6
         )
 
     def test_rdiv_error(self) -> None:
@@ -498,7 +498,7 @@ class TestCompositeLoss(BaseTest):
         model = BasicModel_ConvNet_Optim()
         loss = 2.0 ** opt_loss.ChannelActivation(model.layer, 0)
         self.assertAlmostEqual(
-            get_loss_value(model, loss),
+            get_loss_value(model, loss).mean(),
             2.0**CHANNEL_ACTIVATION_0_LOSS,
             places=6,
         )
