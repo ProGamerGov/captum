@@ -16,7 +16,7 @@ CHANNEL_ACTIVATION_1_LOSS = 1.3
 
 def get_loss_value(
     model: torch.nn.Module, loss: opt_loss.Loss, input_shape: List[int] = [1, 3, 1, 1]
-) -> Union[int, float, torch.Tensor]:
+) -> torch.Tensor:
     module_outputs = collect_activations(model, loss.target, torch.ones(*input_shape))
     return loss(module_outputs).detach()
 
