@@ -577,7 +577,7 @@ class TestModuleOP(BaseTest):
         loss = opt_loss.ChannelActivation(model.layer, 0)
         composed_loss = opt_loss.module_op(loss, 1.0, operator.add)
 
-        expected_name = "ChannelActivation [Conv2d(3, 2, ke..., 0]"
+        expected_name = "Compose(ChannelActivation [Conv2d(3, 2, ke..., 0])"
         self.assertEqual(composed_loss.__name__, expected_name)
         output = get_loss_value(model, composed_loss)
         self.assertEqual(output, CHANNEL_ACTIVATION_0_LOSS + 1.0)
@@ -616,7 +616,7 @@ class TestRModuleOP(BaseTest):
         composed_loss = opt_loss.rmodule_op(loss, 1.0, operator.pow)
 
         output = get_loss_value(model, composed_loss)
-        self.assertEqual(output, 1.0 ** CHANNEL_ACTIVATION_0_LOSS)
+        self.assertEqual(output, 1.0**CHANNEL_ACTIVATION_0_LOSS)
 
     def test_rmodule_op_loss_pow_error(self) -> None:
         model = BasicModel_ConvNet_Optim()
