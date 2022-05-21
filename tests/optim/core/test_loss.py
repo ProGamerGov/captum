@@ -453,7 +453,7 @@ class TestMakeArgStr(BaseTest):
 
 class TestLossWrapper(BaseTest):
     def test_loss_wrapper(self) -> None:
-        @opt.loss.loss_wrapper
+        @opt_loss.loss_wrapper
         class TestClass:
             def __init__(
                 self,
