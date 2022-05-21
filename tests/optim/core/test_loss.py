@@ -331,6 +331,14 @@ class _OverrideAbstractFunctions:
         self.class_type.__abstractmethods__ = self.abstract_methods
 
 
+class TestLoss(BaseTest):
+    def test_loss_init(self) -> None:
+        with _OverrideAbstractFunctions(opt_loss.Loss):
+            loss = opt_loss.Loss()
+            self.assertIsNone(loss.target)
+            self.assertEqual(opt_loss.Loss, "Loss")
+
+
 class TestBaseLoss(BaseTest):
     def test_subclass(self) -> None:
         self.assertTrue(issubclass(opt_loss.BaseLoss, opt_loss.Loss))
