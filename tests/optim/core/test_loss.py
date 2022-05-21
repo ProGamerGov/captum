@@ -581,7 +581,8 @@ class TestModuleOP(BaseTest):
         expected_name = "ChannelActivation [Conv2d(3, 2, ke..., 0]"
         self.assertEqual(composed_loss.__name__, expected_name)
         output = get_loss_value(model, composed_loss)
-        self.assertEqual(output, CHANNEL_ACTIVATION_0_LOSS + 1.0)
+        expected = torch.tensor([CHANNEL_ACTIVATION_0_LOSS]) + 1.0
+        self.assertEqual(output, expected.item())
 
     def test_module_op_loss_loss_add(self) -> None:
         model = BasicModel_ConvNet_Optim()
