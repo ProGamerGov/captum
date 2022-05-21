@@ -339,7 +339,7 @@ class TestLoss(BaseTest):
         with _OverrideAbstractFunctions(opt_loss.Loss):
             loss = opt_loss.Loss()
             self.assertIsNone(loss.target)
-            self.assertEqual(opt_loss.Loss, "Loss")
+            self.assertEqual(opt_loss.Loss.__name__, "Loss")
 
 
 class TestBaseLoss(BaseTest):
