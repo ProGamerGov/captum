@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
+import operator
 import unittest
 from typing import cast, Any, List, Optional, Type, Union
 
 import captum.optim._core.loss as opt_loss
 import numpy as np
 import torch
-import operator
 from captum.optim.models import collect_activations
 from packaging import version
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
@@ -435,9 +435,13 @@ class TestCompositeLoss(BaseTest):
 
     def test_multiplication_loss_type(self) -> None:
         model = BasicModel_ConvNet_Optim()
-        loss = opt_loss.ChannelActivation(model.layer, 0) * opt_loss.ChannelActivation(model.layer, 1)
+        loss = opt_loss.ChannelActivation(model.layer, 0) * opt_loss.ChannelActivation(
+            model.layer, 1
+        )
         self.assertAlmostEqual(
-            get_loss_value(model, loss), CHANNEL_ACTIVATION_0_LOSS * CHANNEL_ACTIVATION_0_LOSS, places=5
+            get_loss_value(model, loss),
+            CHANNEL_ACTIVATION_0_LOSS * CHANNEL_ACTIVATION_0_LOSS,
+            places=5,
         )
 
     def test_multiplication(self) -> None:
@@ -466,9 +470,12 @@ class TestCompositeLoss(BaseTest):
 
     def test_division_loss_type(self) -> None:
         model = BasicModel_ConvNet_Optim()
-        loss = opt_loss.ChannelActivation(model.layer, 0) / opt_loss.ChannelActivation(model.layer, 1)
+        loss = opt_loss.ChannelActivation(model.layer, 0) / opt_loss.ChannelActivation(
+            model.layer, 1
+        )
         self.assertAlmostEqual(
-            get_loss_value(model, loss), CHANNEL_ACTIVATION_0_LOSS / CHANNEL_ACTIVATION_0_LOSS
+            get_loss_value(model, loss),
+            CHANNEL_ACTIVATION_0_LOSS / CHANNEL_ACTIVATION_0_LOSS,
         )
 
     def test_division(self) -> None:
@@ -487,7 +494,9 @@ class TestCompositeLoss(BaseTest):
         model = BasicModel_ConvNet_Optim()
         loss = 10.0 / opt_loss.ChannelActivation(model.layer, 0)
         self.assertAlmostEqual(
-            get_loss_value(model, loss).mean(), 10.0 / CHANNEL_ACTIVATION_0_LOSS, places=6
+            get_loss_value(model, loss).mean(),
+            10.0 / CHANNEL_ACTIVATION_0_LOSS,
+            places=6,
         )
 
     def test_rdiv_error(self) -> None:
@@ -497,7 +506,9 @@ class TestCompositeLoss(BaseTest):
 
     def test_pow_loss_type(self) -> None:
         model = BasicModel_ConvNet_Optim()
-        loss = opt_loss.ChannelActivation(model.layer, 0) ** opt_loss.ChannelActivation(model.layer, 1)
+        loss = opt_loss.ChannelActivation(model.layer, 0) ** opt_loss.ChannelActivation(
+            model.layer, 1
+        )
         self.assertAlmostEqual(
             get_loss_value(model, loss),
             CHANNEL_ACTIVATION_0_LOSS**CHANNEL_ACTIVATION_0_LOSS,
@@ -567,17 +578,25 @@ class TestModuleOP(BaseTest):
         loss2 = opt_loss.ChannelActivation(model.layer, 1)
         composed_loss = opt_loss.module_op(loss1, loss2, operator.add)
 
-        expected_name = "Compose(ChannelActivation [Conv2d(3, 2, ke..., 0], " \
+        expected_name = (
+            "Compose(ChannelActivation [Conv2d(3, 2, ke..., 0], "
             + "ChannelActivation [Conv2d(3, 2, ke..., 1])"
+        )
         self.assertEqual(composed_loss.__name__, expected_name)
         output = get_loss_value(model, composed_loss)
-        expected = torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_0_LOSS]).sum().item()
+        expected = (
+            torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_0_LOSS])
+            .sum()
+            .item()
+        )
         self.assertEqual(output, expected)
 
     def test_module_op_loss_pow_error(self) -> None:
         model = BasicModel_ConvNet_Optim()
         with self.assertRaises(TypeError):
-             opt_loss.module_op(opt_loss.ChannelActivation(model.layer, 0), "string", operator.pow)
+            opt_loss.module_op(
+                opt_loss.ChannelActivation(model.layer, 0), "string", operator.pow
+            )
 
 
 class TestDefaultLossSummarize(BaseTest):
