@@ -313,37 +313,52 @@ class TestActivationWeights(BaseTest):
         )
 
 
+class _OverrideAbstractFunctions:
+    """Context manager for testing classes with abstract functions"""
+    def __init__(self, class_type: Type) -> None:
+        """
+        Args:
+
+            class_type (type): The path to the library class type.
+        """
+        self.class_type = class_type
+
+    def __enter__(self) -> None:
+        self.abstract_methods = self.class_type.__abstractmethods__
+        self.class_type.__abstractmethods__ = frozenset()
+
+    def __exit__(self, *args: Any) -> None:
+        self.class_type.__abstractmethods__ = self.abstract_methods
+
+
 class TestBaseLoss(BaseTest):
     def test_subclass(self) -> None:
         self.assertTrue(issubclass(opt_loss.BaseLoss, opt_loss.Loss))
 
     def test_base_loss_init(self) -> None:
         model = torch.nn.Identity()
-        BaseLoss = opt_loss.BaseLoss
-        BaseLoss.__abstractmethods__.__call__ = None
-        loss = BaseLoss(model)
-        self.assertEqual(loss._batch_index, (None, None))
-        self.assertEqual(loss.batch_index, (None, None))
-        self.assertEqual(loss._target, model)
-        self.assertEqual(loss.target, model)
+        with _OverrideAbstractFunctions(opt_loss.BaseLoss):
+            loss = opt_loss.BaseLoss(model)
+            self.assertEqual(loss._batch_index, (None, None))
+            self.assertEqual(loss.batch_index, (None, None))
+            self.assertEqual(loss._target, model)
+            self.assertEqual(loss.target, model)
 
     def test_base_loss_batch_index(self) -> None:
         model = torch.nn.Identity()
         batch_index = 5
-        BaseLoss = opt_loss.BaseLoss
-        BaseLoss.__abstractmethods__.__call__ = None
-        loss = BaseLoss(model, batch_index=batch_index)
-        self.assertEqual(loss._batch_index, (batch_index, batch_index + 1))
-        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
+        with _OverrideAbstractFunctions(opt_loss.BaseLoss):
+            loss = opt_loss.BaseLoss(model, batch_index=batch_index)
+            self.assertEqual(loss._batch_index, (batch_index, batch_index + 1))
+            self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
 
     def test_base_loss_target_list(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         targets = [model[0], model[1]]
-        BaseLoss = opt_loss.BaseLoss
-        BaseLoss.__abstractmethods__.__call__ = None
-        loss = BaseLoss(targets)
-        self.assertEqual(loss._target, targets)
-        self.assertEqual(loss.target, targets)
+        with _OverrideAbstractFunctions(opt_loss.BaseLoss):
+            loss = opt_loss.BaseLoss(targets)
+            self.assertEqual(loss._target, targets)
+            self.assertEqual(loss.target, targets)
 
 
 class TestCompositeLoss(BaseTest):
