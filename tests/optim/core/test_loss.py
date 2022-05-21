@@ -453,11 +453,13 @@ class TestMakeArgStr(BaseTest):
 
 class TestLossWrapper(BaseTest):
     def test_loss_wrapper(self) -> None:
-
         @opt.loss.loss_wrapper
         class TestClass:
             def __init__(
-                self, target: torch.nn.Module, test_var: int, batch_index: Optional[int] = None
+                self,
+                target: torch.nn.Module,
+                test_var: int,
+                batch_index: Optional[int] = None,
             ) -> None:
                 self.target = target
                 self.batch_index = batch_index
@@ -465,12 +467,12 @@ class TestLossWrapper(BaseTest):
 
             def __call__(self) -> int:
                 return self.test_var
-        
+
         test_module = TestClass(torch.nn.Identity(), test_var=5, batch_index=0)
         self.assertEqual(test_module.__name__, "TestClass [Identity()]")
 
         test_module = TestClass(torch.nn.Identity(), 5, 0)
         self.assertEqual(test_module.__name__, "TestClass [Identity(), 5, 0]")
-        
+
         test_module = TestClass(torch.nn.Identity(), 5)
         self.assertEqual(test_module.__name__, "TestClass [Identity(), 5]")
