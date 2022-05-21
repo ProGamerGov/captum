@@ -330,14 +330,10 @@ class TestCompositeLoss(BaseTest):
             get_loss_value(model, loss), CHANNEL_ACTIVATION_0_LOSS * 10, places=5
         )
 
-    # def test_multiplication_error(self) -> None:
-    #     model = BasicModel_ConvNet_Optim()
-    #     with self.assertRaises(TypeError):
-    #         opt_loss.ChannelActivation(model.layer, 0) * "string"
-    #     with self.assertRaises(TypeError):
-    #         opt_loss.ChannelActivation(model.layer, 0) * opt_loss.ChannelActivation(
-    #             model.layer, 1
-    #         )
+    def test_multiplication_error(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        with self.assertRaises(TypeError):
+            opt_loss.ChannelActivation(model.layer, 0) * "string"
 
     def test_division(self) -> None:
         model = BasicModel_ConvNet_Optim()
@@ -346,14 +342,10 @@ class TestCompositeLoss(BaseTest):
             get_loss_value(model, loss), CHANNEL_ACTIVATION_0_LOSS / 10
         )
 
-    # def test_division_error(self) -> None:
-    #     model = BasicModel_ConvNet_Optim()
-    #     with self.assertRaises(TypeError):
-    #         opt_loss.ChannelActivation(model.layer, 0) / "string"
-    #     with self.assertRaises(TypeError):
-    #         opt_loss.ChannelActivation(model.layer, 0) / opt_loss.ChannelActivation(
-    #             model.layer, 1
-    #         )
+    def test_division_error(self) -> None:
+        model = torch.nn.Identity()
+        with self.assertRaises(TypeError):
+            opt_loss.ChannelActivation(model.layer, 0) / "string"
 
     def test_pow(self) -> None:
         model = BasicModel_ConvNet_Optim()
@@ -364,14 +356,10 @@ class TestCompositeLoss(BaseTest):
             places=6,
         )
 
-    # def test_pow_error(self) -> None:
-    #     model = BasicModel_ConvNet_Optim()
-    #     with self.assertRaises(TypeError):
-    #         opt_loss.ChannelActivation(model.layer, 0) ** "string"
-    #     with self.assertRaises(TypeError):
-    #         opt_loss.ChannelActivation(model.layer, 0) ** opt_loss.ChannelActivation(
-    #             model.layer, 1
-    #         )
+    def test_pow_error(self) -> None:
+        model = torch.nn.Identity()
+        with self.assertRaises(TypeError):
+            opt_loss.ChannelActivation(model, 0) ** "string"
 
     def test_sum_loss_list(self) -> None:
         n_batch = 400
