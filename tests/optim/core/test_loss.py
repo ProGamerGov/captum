@@ -273,7 +273,7 @@ class TestActivationWeights(BaseTest):
     def test_neuron_activation_init(self) -> None:
         model = torch.nn.Identity()
         weights = torch.zeros(1)
-        loss = opt_loss.ActivationWeights(model.layer, weights=weights)
+        loss = opt_loss.ActivationWeights(model, weights=weights)
         self.assertIsNone(loss.x)
         self.assertIsNone(loss.y)
         self.assertIsNone(loss.wx)
@@ -433,7 +433,7 @@ class TestCompositeLoss(BaseTest):
         model = BasicModel_ConvNet_Optim()
         loss = 10.0 / opt_loss.ChannelActivation(model.layer, 0)
         self.assertAlmostEqual(
-            get_loss_value(model, loss), 10.0 / CHANNEL_ACTIVATION_0_LOSS
+            get_loss_value(model, loss), 10.0 / CHANNEL_ACTIVATION_0_LOSS, places=6
         )
 
     def test_rdiv_error(self) -> None:
