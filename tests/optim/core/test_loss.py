@@ -426,3 +426,10 @@ class TestCompositeLoss(BaseTest):
         loss_fn = opt_loss.sum_loss_list(loss_fn_list) + opt_loss.LayerActivation(model)
         out = get_loss_value(model, loss_fn, [n_batch, 3, 1, 1])
         self.assertEqual(out, float(n_batch + 1.0))
+
+
+class TestDefaultLossSummarize(BaseTest):
+    def test_default_loss_summarize(self) -> None:
+        x = torch.arange(0, 1 * 3 * 5 * 5).view(1, 3, 5, 5).float()
+        output = opt_loss.default_loss_summarize(x)
+        self.assertEqual(output.item(), -37.0)
