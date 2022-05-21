@@ -432,6 +432,11 @@ class TestCompositeLoss(BaseTest):
         )
 
     def test_rsub(self) -> None:
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
+            raise unittest.SkipTest(
+                "Skipping CompositeLoss rsub test due to insufficient Torch"
+                + " version."
+            )
         model = BasicModel_ConvNet_Optim()
         loss = 1.0 - opt_loss.ChannelActivation(model.layer, 0)
         self.assertAlmostEqual(
@@ -568,6 +573,11 @@ class TestCompositeLoss(BaseTest):
 
 class TestModuleOP(BaseTest):
     def test_module_op_loss_unary_op(self) -> None:
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
+            raise unittest.SkipTest(
+                "Skipping ModuleOP unary op test due to insufficient Torch"
+                + " version."
+            )
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.ChannelActivation(model.layer, 0)
         composed_loss = opt_loss.module_op(loss, None, operator.neg)
@@ -579,6 +589,11 @@ class TestModuleOP(BaseTest):
         self.assertEqual(output, expected)
 
     def test_module_op_loss_num_add(self) -> None:
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
+            raise unittest.SkipTest(
+                "Skipping ModuleOP loss add num test due to insufficient Torch"
+                + " version."
+            )
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.ChannelActivation(model.layer, 0)
         composed_loss = opt_loss.module_op(loss, 1.0, operator.add)
@@ -590,6 +605,11 @@ class TestModuleOP(BaseTest):
         self.assertEqual(output, expected.item())
 
     def test_module_op_loss_loss_add(self) -> None:
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
+            raise unittest.SkipTest(
+                "Skipping ModuleOP Loss add Loss test due to insufficient Torch"
+                + " version."
+            )
         model = BasicModel_ConvNet_Optim()
         loss1 = opt_loss.ChannelActivation(model.layer, 0)
         loss2 = opt_loss.ChannelActivation(model.layer, 1)
