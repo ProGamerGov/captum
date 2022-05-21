@@ -5,6 +5,7 @@ from typing import cast, Any, List, Optional, Type, Union
 import captum.optim._core.loss as opt_loss
 import numpy as np
 import torch
+import operator
 from captum.optim.models import collect_activations
 from packaging import version
 from tests.helpers.basic import BaseTest, assertTensorAlmostEqual
