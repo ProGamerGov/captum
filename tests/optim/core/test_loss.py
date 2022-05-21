@@ -441,6 +441,16 @@ class TestDefaultLossSummarize(BaseTest):
         self.assertEqual(output.item(), -37.0)
 
 
+class TestMakeArgStr(BaseTest):
+    def test_make_arg_str(self) -> None:
+        args = {"a": 5, "b": None}
+        output = opt_loss._make_arg_str(args)
+        self.assertEqual(output, "{'a': 5, 'b': N...")
+        args = {"c": torch.nn.Identity, "d": "test"}
+        output = opt_loss._make_arg_str(args)
+        self.assertEqual(output, "{'c': <class 't...")
+
+
 class TestLossWrapper(BaseTest):
     def test_loss_wrapper(self) -> None:
 
