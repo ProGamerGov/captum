@@ -308,7 +308,7 @@ class TestActivationWeights(BaseTest):
         assertTensorAlmostEqual(
             self,
             get_loss_value(model, loss),
-            [CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS],
+            torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS])[None, :, None, None],
             mode="max",
         )
 
