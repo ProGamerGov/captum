@@ -26,9 +26,6 @@ def get_loss_value(
 
 
 class TestDeepDream(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.DeepDream, opt_loss.BaseLoss))
-
     def test_channel_deepdream(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.DeepDream(model.layer)
@@ -39,9 +36,6 @@ class TestDeepDream(BaseTest):
 
 
 class TestChannelActivation(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.ChannelActivation, opt_loss.BaseLoss))
-
     def test_channel_activation_init(self) -> None:
         model = torch.nn.Identity()
         channel_index = 5
@@ -64,9 +58,6 @@ class TestChannelActivation(BaseTest):
 
 
 class TestNeuronActivation(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.NeuronActivation, opt_loss.BaseLoss))
-
     def test_neuron_activation_init(self) -> None:
         model = torch.nn.Identity()
         channel_index = 5
@@ -84,9 +75,6 @@ class TestNeuronActivation(BaseTest):
 
 
 class TestTotalVariation(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.TotalVariation, opt_loss.BaseLoss))
-
     def test_total_variation(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.TotalVariation(model.layer)
@@ -94,9 +82,6 @@ class TestTotalVariation(BaseTest):
 
 
 class TestL1(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.L1, opt_loss.BaseLoss))
-
     def test_l1_init(self) -> None:
         model = torch.nn.Identity()
         loss = opt_loss.L1(model)
@@ -113,9 +98,6 @@ class TestL1(BaseTest):
 
 
 class TestL2(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.L2, opt_loss.BaseLoss))
-
     def test_l2_init(self) -> None:
         model = torch.nn.Identity()
         loss = opt_loss.L2(model)
@@ -133,9 +115,6 @@ class TestL2(BaseTest):
 
 
 class TestDiversity(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.Diversity, opt_loss.BaseLoss))
-
     def test_diversity(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.Diversity(model.layer)
@@ -146,9 +125,6 @@ class TestDiversity(BaseTest):
 
 
 class TestActivationInterpolation(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.ActivationInterpolation, opt_loss.BaseLoss))
-
     def test_activation_interpolation_0_1(self) -> None:
         if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
@@ -170,9 +146,6 @@ class TestActivationInterpolation(BaseTest):
 
 
 class TestAlignment(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.Alignment, opt_loss.BaseLoss))
-
     def test_alignment(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.Alignment(model.layer)
@@ -182,9 +155,6 @@ class TestAlignment(BaseTest):
 
 
 class TestDirection(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.Direction, opt_loss.BaseLoss))
-
     def test_direction_init(self) -> None:
         model = torch.nn.Identity()
         vec = torch.ones(2) * 0.5
@@ -203,9 +173,6 @@ class TestDirection(BaseTest):
 
 
 class TestNeuronDirection(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.NeuronDirection, opt_loss.BaseLoss))
-
     def test_neuron_direction_init(self) -> None:
         model = torch.nn.Identity()
         vec = torch.ones(2) * 0.5
@@ -236,9 +203,6 @@ class TestNeuronDirection(BaseTest):
 
 
 class TestAngledNeuronDirection(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.AngledNeuronDirection, opt_loss.BaseLoss))
-
     def test_neuron_activation_init(self) -> None:
         model = torch.nn.Identity()
         vec = torch.ones(1, 2) * 0.5
@@ -296,9 +260,6 @@ class TestAngledNeuronDirection(BaseTest):
 
 
 class TestTensorDirection(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.TensorDirection, opt_loss.BaseLoss))
-
     def test_tensor_direction(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.TensorDirection(model.layer, vec=torch.ones(1, 1, 1, 1))
@@ -309,9 +270,6 @@ class TestTensorDirection(BaseTest):
 
 
 class TestActivationWeights(BaseTest):
-    def test_subclass(self) -> None:
-        self.assertTrue(issubclass(opt_loss.ActivationWeights, opt_loss.BaseLoss))
-
     def test_activation_weights_0(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.ActivationWeights(model.layer, weights=torch.zeros(1))
@@ -395,7 +353,7 @@ class TestCompositeLoss(BaseTest):
         )
 
     def test_division_error(self) -> None:
-        model = torch.nn.Identity()
+        model = BasicModel_ConvNet_Optim()
         with self.assertRaises(TypeError):
             opt_loss.ChannelActivation(model.layer, 0) / "string"
         with self.assertRaises(TypeError):
@@ -411,11 +369,11 @@ class TestCompositeLoss(BaseTest):
         )
 
     def test_pow_error(self) -> None:
-        model = torch.nn.Identity()
+        model = BasicModel_ConvNet_Optim()
         with self.assertRaises(TypeError):
-            opt_loss.ChannelActivation(model, 0) ** "string"
+            opt_loss.ChannelActivation(model.layer, 0) ** "string"
         with self.assertRaises(TypeError):
-            "string" ** opt_loss.ChannelActivation(model, 0)
+            "string" ** opt_loss.ChannelActivation(model.layer, 0)
 
     def test_sum_loss_list(self) -> None:
         n_batch = 400
