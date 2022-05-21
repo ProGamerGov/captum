@@ -627,7 +627,7 @@ class TestRModuleOP(BaseTest):
     def test_rmodule_op_loss_pow_error(self) -> None:
         model = BasicModel_ConvNet_Optim()
         with self.assertRaises(TypeError):
-            loss = pt_loss.ChannelActivation(model.layer, 0)
+            loss = opt_loss.ChannelActivation(model.layer, 0)
             opt_loss.rmodule_op(loss, "string", operator.pow)  # type: ignore
 
 
