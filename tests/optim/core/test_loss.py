@@ -319,6 +319,7 @@ class TestBaseLoss(BaseTest):
 
     def test_base_loss_init(self) -> None:
         model = torch.nn.Identity()
+        BaseLoss.__abstractmethods__.__call__ = None
         loss = opt_loss.BaseLoss(model)
         self.assertEqual(loss._batch_index, (None, None))
         self.assertEqual(loss.batch_index, (None, None))
@@ -328,6 +329,7 @@ class TestBaseLoss(BaseTest):
     def test_base_loss_batch_index(self) -> None:
         model = torch.nn.Identity()
         batch_index = 5
+        BaseLoss.__abstractmethods__.__call__ = None
         loss = opt_loss.BaseLoss(model, batch_index=batch_index)
         self.assertEqual(loss._batch_index, (batch_index, batch_index + 1))
         self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
@@ -335,6 +337,7 @@ class TestBaseLoss(BaseTest):
     def test_base_loss_target_list(self) -> None:
         model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
         targets = [model[0], model[1]]
+        BaseLoss.__abstractmethods__.__call__ = None
         loss = opt_loss.BaseLoss(targets)
         self.assertEqual(loss._target, targets)
         self.assertEqual(loss.target, targets)
