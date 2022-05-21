@@ -294,6 +294,28 @@ class TestBaseLoss(BaseTest):
     def test_subclass(self) -> None:
         self.assertTrue(issubclass(opt_loss.BaseLoss, opt_loss.Loss))
 
+    def test_base_loss_init(self) -> None:
+        model = torch.nn.Identity()
+        loss = opt_loss.BaseLoss(model)
+        self.assertEqual(loss._batch_index, (None, None))
+        self.assertEqual(loss.batch_index, (None, None))
+        self.assertEqual(loss._target, model)
+        self.assertEqual(loss.target, model)
+
+    def test_base_loss_batch_index(self) -> None:
+        model = torch.nn.Identity()
+        batch_index = 5
+        loss = opt_loss.BaseLoss(model, batch_index=batch_index)
+        self.assertEqual(loss._batch_index, (batch_index, batch_index+1))
+        self.assertEqual(loss.batch_index, (batch_index, batch_index+1))
+
+    def test_base_loss_target_list(self) -> None:
+        model = torch.nn.Sequential(torch.nn.Identity(), torch.nn.Identity())
+        targets = [model[0], model[1]]
+        loss = opt_loss.BaseLoss(targets)
+        self.assertEqual(loss._target, targets)
+        self.assertEqual(loss.target, targets)
+
 
 class TestCompositeLoss(BaseTest):
     def test_subclass(self) -> None:
