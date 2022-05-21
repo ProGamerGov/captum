@@ -332,6 +332,11 @@ class TestActivationWeights(BaseTest):
         )
 
 
+class TestBaseLoss(BaseTest):
+    def test_subclass(self) -> None:
+        self.assertTrue(issubclass(opt_loss.BaseLoss, opt_loss.Loss))
+
+
 class TestCompositeLoss(BaseTest):
     def test_subclass(self) -> None:
         self.assertTrue(issubclass(opt_loss.CompositeLoss, opt_loss.BaseLoss))
