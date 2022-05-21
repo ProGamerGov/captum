@@ -270,6 +270,17 @@ class TestTensorDirection(BaseTest):
 
 
 class TestActivationWeights(BaseTest):
+    def test_neuron_activation_init(self) -> None:
+        model = torch.nn.Identity()
+        weights = torch.zeros(1)
+        loss = opt_loss.ActivationWeights(model.layer, weights=weights)
+        self.assertIsNone(loss.x)
+        self.assertIsNone(loss.y)
+        self.assertIsNone(loss.wx)
+        self.assertIsNone(loss.wy)
+        self.assertFalse(loss.neuron)
+        assertTensorAlmostEqual(self, loss.weights, weights, delta=0.0)
+
     def test_activation_weights_0(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.ActivationWeights(model.layer, weights=torch.zeros(1))
@@ -281,6 +292,18 @@ class TestActivationWeights(BaseTest):
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.ActivationWeights(
             model.layer, weights=torch.ones(1), neuron=True
+        )
+        assertTensorAlmostEqual(
+            self,
+            get_loss_value(model, loss),
+            [CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS],
+            mode="max",
+        )
+
+    def test_activation_weights_neuron_1(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        loss = opt_loss.ActivationWeights(
+            model.layer, weights=torch.ones(1), neuron=True, x=0, y=0, wx=1, wy=1
         )
         assertTensorAlmostEqual(
             self,
