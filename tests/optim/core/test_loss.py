@@ -548,6 +548,37 @@ class TestCompositeLoss(BaseTest):
         self.assertEqual(out, float(n_batch + 1.0))
 
 
+class TestModuleOP(BaseTest):
+    def test_module_op_loss_unary_op(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        loss = opt_loss.ChannelActivation(model.layer, 0)
+        composed_loss = opt_loss.module_op(loss, None, operator.neg)
+
+        expected_name = "ChannelActivation [Conv2d(3, 2, ke..., 0]"
+        self.assertEqual(composed_loss.__name__, expected_name)
+        output = get_loss_value(model, composed_loss)
+        expected = -torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS]).sum().item()
+        self.assertEqual(output, expected)
+
+    def test_module_op_loss_loss_add(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        loss1 = opt_loss.ChannelActivation(model.layer, 0)
+        loss2 = opt_loss.ChannelActivation(model.layer, 1)
+        composed_loss = opt_loss.module_op(loss1, loss2, operator.add)
+
+        expected_name = "Compose(ChannelActivation [Conv2d(3, 2, ke..., 0], " \
+            + "ChannelActivation [Conv2d(3, 2, ke..., 1])"
+        self.assertEqual(composed_loss.__name__, expected_name)
+        output = get_loss_value(model, composed_loss)
+        expected = torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_0_LOSS]).sum().item()
+        self.assertEqual(output, expected)
+
+    def test_module_op_loss_pow_error(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        with self.assertRaises(TypeError):
+             opt_loss.module_op(opt_loss.ChannelActivation(model.layer, 0), "string", operator.pow)
+
+
 class TestDefaultLossSummarize(BaseTest):
     def test_default_loss_summarize(self) -> None:
         x = torch.arange(0, 1 * 3 * 5 * 5).view(1, 3, 5, 5).float()
