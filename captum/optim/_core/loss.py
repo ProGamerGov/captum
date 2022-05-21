@@ -108,7 +108,7 @@ def module_op(
 
 
 def rmodule_op(
-    self: Loss, other: Union[int, float, "Loss"], math_op: Callable
+    self: Loss, other: Union[int, float, Loss], math_op: Callable
 ) -> "CompositeLoss":
     """
     This is a general function for applying the "r" versions of math operations to
