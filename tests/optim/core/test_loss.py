@@ -384,6 +384,8 @@ class TestCompositeLoss(BaseTest):
         model = BasicModel_ConvNet_Optim()
         with self.assertRaises(TypeError):
             opt_loss.ChannelActivation(model.layer, 0) * "string"
+        with self.assertRaises(TypeError):
+            "string" * opt_loss.ChannelActivation(model.layer, 0)
 
     def test_division(self) -> None:
         model = BasicModel_ConvNet_Optim()
@@ -396,6 +398,8 @@ class TestCompositeLoss(BaseTest):
         model = torch.nn.Identity()
         with self.assertRaises(TypeError):
             opt_loss.ChannelActivation(model.layer, 0) / "string"
+        with self.assertRaises(TypeError):
+            "string" / opt_loss.ChannelActivation(model.layer, 0)
 
     def test_pow(self) -> None:
         model = BasicModel_ConvNet_Optim()
@@ -410,6 +414,8 @@ class TestCompositeLoss(BaseTest):
         model = torch.nn.Identity()
         with self.assertRaises(TypeError):
             opt_loss.ChannelActivation(model, 0) ** "string"
+        with self.assertRaises(TypeError):
+            "string" ** opt_loss.ChannelActivation(model, 0)
 
     def test_sum_loss_list(self) -> None:
         n_batch = 400
