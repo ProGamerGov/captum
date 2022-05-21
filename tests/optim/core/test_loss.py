@@ -348,7 +348,6 @@ class TestLoss(BaseTest):
             loss = opt_loss.Loss()
             self.assertIsNone(loss.target)
             self.assertEqual(opt_loss.Loss.__name__, "Loss")
-            _ = repr(loss)
 
 
 class TestBaseLoss(BaseTest):
