@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import operator
 import unittest
-from typing import Any, List, Optional, Type, Union
+from typing import cast, Any, List, Optional, Type, Union
 
 import captum.optim._core.loss as opt_loss
 import torch
@@ -17,7 +17,11 @@ CHANNEL_ACTIVATION_1_LOSS = 1.3
 def get_loss_value(
     model: torch.nn.Module, loss: opt_loss.Loss, model_input: Union[List[int], torch.Tensor] = [1, 3, 1, 1]
 ) -> torch.Tensor:
-    module_outputs = collect_activations(model, loss.target, torch.ones(*model_input))
+    if isinstance(model_input, (list, tuple):
+        model_input = torch.ones(*model_input)
+    else:
+        assert isinstance(model_input, torch.Tensor)):
+    module_outputs = collect_activations(model, loss.target, model_input)
     return loss(module_outputs).detach()
 
 
