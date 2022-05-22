@@ -242,6 +242,23 @@ class TestDirection(BaseTest):
         assertTensorAlmostEqual(self, loss.vec, vec.reshape((1, -1, 1, 1)), delta=0.0)
         self.assertEqual(loss.cossim_pow, 0.0)
 
+    def test_direction_batch_index(self) -> None:
+        model = torch.nn.Identity()
+        batch_index = 1
+        vec = torch.tensor([0, 1, 0]).float()
+        loss = opt.loss.Direction(model, vec=vec, batch_index=batch_index)
+        
+        model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
+        output = get_loss_value(model, loss, model_input)
+       
+
+        expected = torch.tensor([[[100., 101., 102., 103., 104.],
+         [105., 106., 107., 108., 109.],
+         [110., 111., 112., 113., 114.],
+         [115., 116., 117., 118., 119.],
+         [120., 121., 122., 123., 124.]]])
+         assertTensorAlmostEqual(self, output, expected, delta=0.0)
+
     def test_direction(self) -> None:
         model = BasicModel_ConvNet_Optim()
         vec = torch.ones(2)
