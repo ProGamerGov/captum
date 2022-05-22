@@ -429,7 +429,7 @@ class TestTensorDirection(BaseTest):
         batch_index = 1
         vec = torch.tensor([1, 0, 1, 0]).float().reshape((1, -1, 1, 1))
         loss = opt_loss.TensorDirection(model, vec=vec, batch_index=batch_index)
-        
+
         model_input = torch.arange(0, 5 * 1 * 5 * 5).view(5, 1, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
         self.assertEqual(output.item(), 74.0)
