@@ -377,6 +377,7 @@ class TestFacetLoss(BaseTest):
         self.assertAlmostEqual(output, expected / 10.0, places=6)
 
     def test_facetloss_batch_index(self) -> None:
+        raise unittest.SkipTest("Remove after PR merged")
         batch_index = 1
         layer = torch.nn.Conv2d(2, 3, 1, bias=True)
         layer.weight.data.fill_(0.1)  # type: ignore
