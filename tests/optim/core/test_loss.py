@@ -22,7 +22,19 @@ def get_loss_value(
 
 
 class TestDeepDream(BaseTest):
-    def test_channel_deepdream(self) -> None:
+    def test_deepdream_batch_index(self) -> None:
+        model = torch.nn.Identity()
+        batch_index = 1
+        loss = opt_loss.DeepDream(model, batch_index=batch_index)
+        
+        model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
+        
+        module_outputs = collect_activations(model, loss.target, model_input)
+        output = loss(module_outputs).detach()
+        self.assertEqual(loss.batch_index, (1, 2))
+        assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1]**2, delta=0.0)
+
+    def test_deepdream(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.DeepDream(model.layer)
         expected = torch.as_tensor(
@@ -32,6 +44,18 @@ class TestDeepDream(BaseTest):
 
 
 class TestLayerActivation(BaseTest):
+    def test_layer_activation_batch_index(self) -> None:
+        model = torch.nn.Identity()
+        batch_index = 1
+        loss = opt_loss.LayerActivation(model, batch_index=batch_index)
+        
+        model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
+        
+        module_outputs = collect_activations(model, loss.target, model_input)
+        output = loss(module_outputs).detach()
+        self.assertEqual(loss.batch_index, (1, 2))
+        assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1], delta=0.0)
+
     def test_layer_activation(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.LayerActivation(model.layer)
@@ -47,6 +71,19 @@ class TestChannelActivation(BaseTest):
         channel_index = 5
         loss = opt_loss.ChannelActivation(model, channel_index=channel_index)
         self.assertEqual(loss.channel_index, channel_index)
+
+    def test_channel_index_activation_batch_index(self) -> None:
+        model = torch.nn.Identity()
+        batch_index = 1
+        channel_index = 2
+        loss = opt_loss.ChannelActivation(model, channel_index=channel_index, batch_index=batch_index)
+        
+        model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
+        
+        module_outputs = collect_activations(model, loss.target, model_input)
+        output = loss(module_outputs).detach()
+        self.assertEqual(loss.batch_index, (1, 2))
+        assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1, channel_index], delta=0.0)
 
     def test_channel_activation_0(self) -> None:
         model = BasicModel_ConvNet_Optim()
@@ -71,6 +108,19 @@ class TestNeuronActivation(BaseTest):
         self.assertEqual(loss.channel_index, channel_index)
         self.assertIsNone(loss.x)
         self.assertIsNone(loss.y)
+
+    def test_neuron_activation_batch_index(self) -> None:
+        model = torch.nn.Identity()
+        batch_index = 1
+        channel_index = 2
+        loss = opt_loss.NeuronActivation(model, channel_index=channel_index, batch_index=batch_index)
+
+        model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
+        
+        module_outputs = collect_activations(model, loss.target, model_input)
+        output = loss(module_outputs).detach()
+        self.assertEqual(loss.batch_index, (1, 2))
+        assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1, channel_index, 2:3, 2:3], delta=0.0)
 
     def test_neuron_activation_0(self) -> None:
         model = BasicModel_ConvNet_Optim()
