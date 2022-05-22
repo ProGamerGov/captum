@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import operator
 import unittest
-from typing import cast, Any, List, Optional, Type, Union
+from typing import Any, List, Optional, Type, Union
 
 import captum.optim._core.loss as opt_loss
 import torch
@@ -17,10 +17,10 @@ CHANNEL_ACTIVATION_1_LOSS = 1.3
 def get_loss_value(
     model: torch.nn.Module, loss: opt_loss.Loss, model_input: Union[List[int], torch.Tensor] = [1, 3, 1, 1]
 ) -> torch.Tensor:
-    if isinstance(model_input, (list, tuple):
+    if isinstance(model_input, (list, tuple)):
         model_input = torch.ones(*model_input)
     else:
-        assert isinstance(model_input, torch.Tensor)):
+        assert isinstance(model_input, torch.Tensor))
     module_outputs = collect_activations(model, loss.target, model_input)
     return loss(module_outputs).detach()
 
@@ -32,9 +32,7 @@ class TestDeepDream(BaseTest):
         loss = opt_loss.DeepDream(model, batch_index=batch_index)
         
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
-        
-        module_outputs = collect_activations(model, loss.target, model_input)
-        output = loss(module_outputs).detach()
+        output = get_loss_value(model, loss, model_input)
         self.assertEqual(loss.batch_index, (1, 2))
         assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1]**2, delta=0.0)
 
@@ -54,9 +52,7 @@ class TestLayerActivation(BaseTest):
         loss = opt_loss.LayerActivation(model, batch_index=batch_index)
         
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
-        
-        module_outputs = collect_activations(model, loss.target, model_input)
-        output = loss(module_outputs).detach()
+        output = get_loss_value(model, loss, model_input)
         self.assertEqual(loss.batch_index, (1, 2))
         assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1], delta=0.0)
 
@@ -83,9 +79,7 @@ class TestChannelActivation(BaseTest):
         loss = opt_loss.ChannelActivation(model, channel_index=channel_index, batch_index=batch_index)
         
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
-        
-        module_outputs = collect_activations(model, loss.target, model_input)
-        output = loss(module_outputs).detach()
+        output = get_loss_value(model, loss, model_input)
         self.assertEqual(loss.batch_index, (1, 2))
         assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1, channel_index], delta=0.0)
 
@@ -120,9 +114,7 @@ class TestNeuronActivation(BaseTest):
         loss = opt_loss.NeuronActivation(model, channel_index=channel_index, batch_index=batch_index)
 
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
-        
-        module_outputs = collect_activations(model, loss.target, model_input)
-        output = loss(module_outputs).detach()
+        output = get_loss_value(model, loss, model_input)
         self.assertEqual(loss.batch_index, (1, 2))
         assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1, channel_index, 2:3, 2:3], delta=0.0)
 
