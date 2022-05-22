@@ -223,6 +223,7 @@ class TestL2Mean(BaseTest):
         self.assertAlmostEqual(output, expected, places=6)
 
     def test_l2mean_batch_index(self) -> None:
+        raise unittest.SkipTest("Remove after PR merged")
         model = torch.nn.Identity()
         batch_index = 1
         loss = opt_loss.L2Mean(model, batch_index=batch_index)
@@ -256,6 +257,7 @@ class TestVectorLoss(BaseTest):
         self.assertAlmostEqual(output, CHANNEL_ACTIVATION_1_LOSS * 2, places=6)
 
     def test_vectorloss_batch_index() -> None:
+        raise unittest.SkipTest("Remove after PR merged")
         model = torch.nn.Identity()
         batch_index = 1
         vec = torch.tensor([0, 1, 0, 0]).float()
