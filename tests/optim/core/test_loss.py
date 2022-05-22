@@ -43,7 +43,7 @@ class TestDeepDream(BaseTest):
 
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
-        self.assertEqual(loss.batch_index, (batch_index, batch_index+1))
+        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
         assertTensorAlmostEqual(
             self, output, model_input[batch_index : batch_index + 1] ** 2, delta=0.0
         )
@@ -67,7 +67,7 @@ class TestLayerActivation(BaseTest):
 
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
-        self.assertEqual(loss.batch_index, (batch_index, batch_index+1))
+        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
         assertTensorAlmostEqual(
             self, output, model_input[batch_index : batch_index + 1], delta=0.0
         )
@@ -104,7 +104,7 @@ class TestChannelActivation(BaseTest):
 
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
-        self.assertEqual(loss.batch_index, (batch_index, batch_index+1))
+        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
         assertTensorAlmostEqual(
             self,
             output,
@@ -139,7 +139,7 @@ class TestNeuronActivation(BaseTest):
 
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
-        self.assertEqual(loss.batch_index, (batch_index, batch_index+1))
+        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
         assertTensorAlmostEqual(
             self,
             output,
@@ -161,7 +161,7 @@ class TestTotalVariation(BaseTest):
 
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
-        self.assertEqual(loss.batch_index, (batch_index, batch_index+1))
+        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
         self.assertEqual(output.item(), 360.0)
 
 
@@ -187,7 +187,7 @@ class TestL1(BaseTest):
 
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
-        self.assertEqual(loss.batch_index, (batch_index, batch_index+1))
+        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
         self.assertEqual(output.item(), 8400.0)
 
 
@@ -214,7 +214,7 @@ class TestL2(BaseTest):
 
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
-        self.assertEqual(loss.batch_index, (batch_index, batch_index+1))
+        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
         self.assertEqual(output.item(), 987.9017944335938)
 
 
@@ -295,7 +295,7 @@ class TestDirection(BaseTest):
                 ]
             ]
         )
-        self.assertEqual(loss.batch_index, (batch_index, batch_index+1))
+        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
         assertTensorAlmostEqual(self, output, expected, delta=0.0)
 
 
@@ -336,7 +336,7 @@ class TestNeuronDirection(BaseTest):
 
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
-        self.assertEqual(loss.batch_index, (batch_index, batch_index+1))
+        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
         self.assertEqual(output.item(), 112.0)
 
 
@@ -404,7 +404,7 @@ class TestAngledNeuronDirection(BaseTest):
 
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
-        self.assertEqual(loss.batch_index, (batch_index, batch_index+1))
+        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
         self.assertEqual(output.item(), 1.5350958108901978)
 
 
