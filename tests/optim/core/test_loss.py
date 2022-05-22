@@ -283,7 +283,7 @@ class TestNeuronDirection(BaseTest):
         model = torch.nn.Identity()
         batch_index = 1
         vec = torch.tensor([0, 1, 0]).float()
-        loss = opt.loss.NeuronDirection(model, vec=vec, batch_index=batch_index)
+        loss = opt_loss.NeuronDirection(model, vec=vec, batch_index=batch_index)
         
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
@@ -321,6 +321,16 @@ class TestAngledNeuronDirection(BaseTest):
         self.assertIsNone(loss.y)
         self.assertIsNone(loss.vec_whitened)
         assertTensorAlmostEqual(self, loss.vec, vec, delta=0.0)
+
+    def test_angled_neuron_direction_batch_index(self) -> None:
+        model = torch.nn.Identity()
+        batch_index = 1
+        vec = torch.tensor([1, 0, 1]).float()
+        loss = opt_loss.AngledNeuronDirection(model, vec=vec, batch_index=batch_index)
+        
+        model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
+        output = get_loss_value(model, loss, model_input)
+        self.assertEqual(output.item(), 1.5350958108901978)
 
     def test_angled_neuron_direction(self) -> None:
         model = BasicModel_ConvNet_Optim()
