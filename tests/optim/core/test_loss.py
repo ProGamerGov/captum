@@ -31,6 +31,16 @@ class TestDeepDream(BaseTest):
         assertTensorAlmostEqual(self, get_loss_value(model, loss), expected, mode="max")
 
 
+class TestLayerActivation(BaseTest):
+    def test_layer_activation(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        loss = opt_loss.LayerActivation(model.layer)
+        output = get_loss_value(model, loss)
+        expected = torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS])
+
+        assertTensorAlmostEqual(self, output, expected[None, :, None, None], delta=0.0)
+
+
 class TestChannelActivation(BaseTest):
     def test_channel_activation_init(self) -> None:
         model = torch.nn.Identity()
