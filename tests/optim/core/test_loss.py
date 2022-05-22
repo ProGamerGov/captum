@@ -15,7 +15,9 @@ CHANNEL_ACTIVATION_1_LOSS = 1.3
 
 
 def get_loss_value(
-    model: torch.nn.Module, loss: opt_loss.Loss, model_input: Union[List[int], torch.Tensor] = [1, 3, 1, 1]
+    model: torch.nn.Module,
+    loss: opt_loss.Loss,
+    model_input: Union[List[int], torch.Tensor] = [1, 3, 1, 1],
 ) -> torch.Tensor:
     if isinstance(model_input, (list, tuple)):
         model_input = torch.ones(*model_input)
@@ -33,37 +35,43 @@ class TestDeepDream(BaseTest):
             [[[CHANNEL_ACTIVATION_0_LOSS**2]], [[CHANNEL_ACTIVATION_1_LOSS**2]]]
         )[None, :]
         assertTensorAlmostEqual(self, get_loss_value(model, loss), expected, mode="max")
-        
+
     def test_deepdream_batch_index(self) -> None:
         model = torch.nn.Identity()
         batch_index = 1
         loss = opt_loss.DeepDream(model, batch_index=batch_index)
-        
+
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
         self.assertEqual(loss.batch_index, (1, 2))
-        assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1]**2, delta=0.0)
-        
+        assertTensorAlmostEqual(
+            self, output, model_input[batch_index : batch_index + 1] ** 2, delta=0.0
+        )
+
 
 class TestLayerActivation(BaseTest):
     def test_layer_activation(self) -> None:
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.LayerActivation(model.layer)
         output = get_loss_value(model, loss)
-        expected = torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS])
+        expected = torch.as_tensor(
+            [CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_1_LOSS]
+        )
 
         assertTensorAlmostEqual(self, output, expected[None, :, None, None], delta=0.0)
-        
+
     def test_layer_activation_batch_index(self) -> None:
         model = torch.nn.Identity()
         batch_index = 1
         loss = opt_loss.LayerActivation(model, batch_index=batch_index)
-        
+
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
         self.assertEqual(loss.batch_index, (1, 2))
-        assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1], delta=0.0)
-        
+        assertTensorAlmostEqual(
+            self, output, model_input[batch_index : batch_index + 1], delta=0.0
+        )
+
 
 class TestChannelActivation(BaseTest):
     def test_channel_activation_init(self) -> None:
@@ -85,18 +93,25 @@ class TestChannelActivation(BaseTest):
         self.assertAlmostEqual(
             get_loss_value(model, loss).item(), CHANNEL_ACTIVATION_1_LOSS, places=6
         )
-        
+
     def test_channel_index_activation_batch_index(self) -> None:
         model = torch.nn.Identity()
         batch_index = 1
         channel_index = 2
-        loss = opt_loss.ChannelActivation(model, channel_index=channel_index, batch_index=batch_index)
-        
+        loss = opt_loss.ChannelActivation(
+            model, channel_index=channel_index, batch_index=batch_index
+        )
+
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
         self.assertEqual(loss.batch_index, (1, 2))
-        assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1, channel_index], delta=0.0)
-        
+        assertTensorAlmostEqual(
+            self,
+            output,
+            model_input[batch_index : batch_index + 1, channel_index],
+            delta=0.0,
+        )
+
 
 class TestNeuronActivation(BaseTest):
     def test_neuron_activation_init(self) -> None:
@@ -113,18 +128,25 @@ class TestNeuronActivation(BaseTest):
         self.assertAlmostEqual(
             get_loss_value(model, loss).item(), CHANNEL_ACTIVATION_0_LOSS, places=6
         )
-        
+
     def test_neuron_activation_batch_index(self) -> None:
         model = torch.nn.Identity()
         batch_index = 1
         channel_index = 2
-        loss = opt_loss.NeuronActivation(model, channel_index=channel_index, batch_index=batch_index)
+        loss = opt_loss.NeuronActivation(
+            model, channel_index=channel_index, batch_index=batch_index
+        )
 
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
         self.assertEqual(loss.batch_index, (1, 2))
-        assertTensorAlmostEqual(self, output, model_input[batch_index:batch_index+1, channel_index, 2:3, 2:3], delta=0.0)
-        
+        assertTensorAlmostEqual(
+            self,
+            output,
+            model_input[batch_index : batch_index + 1, channel_index, 2:3, 2:3],
+            delta=0.0,
+        )
+
 
 class TestTotalVariation(BaseTest):
     def test_total_variation(self) -> None:
@@ -136,11 +158,11 @@ class TestTotalVariation(BaseTest):
         model = torch.nn.Identity()
         batch_index = 1
         loss = opt_loss.TotalVariation(model, batch_index=batch_index)
-        
+
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
         self.assertEqual(output.item(), 360.0)
-        
+
 
 class TestL1(BaseTest):
     def test_l1_init(self) -> None:
@@ -161,11 +183,11 @@ class TestL1(BaseTest):
         model = torch.nn.Identity()
         batch_index = 1
         loss = opt_loss.L1(model, batch_index=batch_index)
-        
+
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
         self.assertEqual(output.item(), 8400.0)
-        
+
 
 class TestL2(BaseTest):
     def test_l2_init(self) -> None:
@@ -182,17 +204,17 @@ class TestL2(BaseTest):
             (CHANNEL_ACTIVATION_0_LOSS**2 + CHANNEL_ACTIVATION_1_LOSS**2) ** 0.5,
             places=5,
         )
-        
+
     def test_l2_batch_index(self) -> None:
         model = torch.nn.Identity()
         batch_index = 1
         loss = opt_loss.L2(model, batch_index=batch_index)
-        
+
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
         self.assertEqual(output.item(), 987.9017944335938)
 
-        
+
 class TestDiversity(BaseTest):
     def test_diversity(self) -> None:
         model = BasicModel_ConvNet_Optim()
@@ -254,19 +276,25 @@ class TestDirection(BaseTest):
         model = torch.nn.Identity()
         batch_index = 1
         vec = torch.tensor([0, 1, 0]).float()
-        loss = opt.loss.Direction(model, vec=vec, batch_index=batch_index)
-        
+        loss = opt_loss.Direction(model, vec=vec, batch_index=batch_index)
+
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
-       
-        expected = torch.tensor([[[100., 101., 102., 103., 104.],
-         [105., 106., 107., 108., 109.],
-         [110., 111., 112., 113., 114.],
-         [115., 116., 117., 118., 119.],
-         [120., 121., 122., 123., 124.]]])
+
+        expected = torch.tensor(
+            [
+                [
+                    [100.0, 101.0, 102.0, 103.0, 104.0],
+                    [105.0, 106.0, 107.0, 108.0, 109.0],
+                    [110.0, 111.0, 112.0, 113.0, 114.0],
+                    [115.0, 116.0, 117.0, 118.0, 119.0],
+                    [120.0, 121.0, 122.0, 123.0, 124.0],
+                ]
+            ]
+        )
         assertTensorAlmostEqual(self, output, expected, delta=0.0)
 
-        
+
 class TestNeuronDirection(BaseTest):
     def test_neuron_direction_init(self) -> None:
         model = torch.nn.Identity()
@@ -301,7 +329,7 @@ class TestNeuronDirection(BaseTest):
         batch_index = 1
         vec = torch.tensor([0, 1, 0]).float()
         loss = opt_loss.NeuronDirection(model, vec=vec, batch_index=batch_index)
-        
+
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
         self.assertEqual(output.item(), 112.0)
@@ -368,7 +396,7 @@ class TestAngledNeuronDirection(BaseTest):
         batch_index = 1
         vec = torch.tensor([1, 0, 1]).float()
         loss = opt_loss.AngledNeuronDirection(model, vec=vec, batch_index=batch_index)
-        
+
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
         self.assertEqual(output.item(), 1.5350958108901978)
