@@ -222,6 +222,15 @@ class TestL2Mean(BaseTest):
         expected = (CHANNEL_ACTIVATION_0_LOSS - constant) ** 2
         self.assertAlmostEqual(output, expected, places=6)
 
+    def test_l2mean_batch_index(self) -> None:
+        model = torch.nn.Identity()
+        batch_index = 1
+        loss = opt_loss.L2Mean(model, batch_index=batch_index)
+        
+        model_input = torch.arange(0, 5 * 4 * 5 * 5).view(5, 4, 5, 5).float()
+        output = get_loss_value(model, loss, model_input)
+        self.assertEqual(output.item(), 23034.25)
+
 
 class TestVectorLoss(BaseTest):
     def test_vectorloss_init(self) -> None:
@@ -245,6 +254,16 @@ class TestVectorLoss(BaseTest):
         loss = opt_loss.VectorLoss(model.layer, vec=vec)
         output = get_loss_value(model, loss, input_shape=[1, 3, 6, 6])
         self.assertAlmostEqual(output, CHANNEL_ACTIVATION_1_LOSS * 2, places=6)
+
+    def test_vectorloss_batch_index() -> None:
+        model = torch.nn.Identity()
+        batch_index = 1
+        vec = torch.tensor([0, 1, 0, 0]).float()
+        loss = opt_loss.VectorLoss(model, vec=vec, batch_index=batch_index)
+        
+        model_input = torch.arange(0, 5 * 4 * 5 * 5).view(5, 4, 5, 5).float()
+        output = get_loss_value(model, loss, model_input)
+        self.assertEqual(output.item(), 137.0)
 
 
 class TestFacetLoss(BaseTest):
