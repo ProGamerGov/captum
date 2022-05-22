@@ -376,6 +376,30 @@ class TestFacetLoss(BaseTest):
         expected = (CHANNEL_ACTIVATION_0_LOSS * 2) * 1.5
         self.assertAlmostEqual(output, expected / 10.0, places=6)
 
+    def test_facetloss_batch_index(self) -> None:
+        batch_index = 1
+        layer = torch.nn.Conv2d(2, 3, 1, bias=True)
+        layer.weight.data.fill_(0.1)  # type: ignore
+        layer.bias.data.fill_(1)  # type: ignore
+        model = torch.nn.Sequential(BasicModel_ConvNet_Optim(), layer)
+
+        vec = torch.tensor([0, 1, 0]).float()
+        facet_weights = torch.ones([1, 2, 1, 1]) * 1.5
+        loss = opt_loss.FacetLoss(
+            ultimate_target=model[1],
+            layer_target=model[0].layer,
+            vec=vec,
+            facet_weights=facet_weights,
+            batch_index=batch_index,
+        )
+        model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
+        output = get_loss_value(model, loss, model_input)
+        self.assertAlmostEqual(
+            output.item(),
+            10.38000202178955,
+            places=5
+        )
+
 
 class TestCompositeLoss(BaseTest):
     def test_negative(self) -> None:
