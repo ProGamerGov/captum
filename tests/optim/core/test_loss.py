@@ -15,9 +15,9 @@ CHANNEL_ACTIVATION_1_LOSS = 1.3
 
 
 def get_loss_value(
-    model: torch.nn.Module, loss: opt_loss.Loss, input_shape: Union[List[int], torch.Tensor] = [1, 3, 1, 1]
+    model: torch.nn.Module, loss: opt_loss.Loss, model_input: Union[List[int], torch.Tensor] = [1, 3, 1, 1]
 ) -> torch.Tensor:
-    module_outputs = collect_activations(model, loss.target, torch.ones(*input_shape))
+    module_outputs = collect_activations(model, loss.target, torch.ones(*model_input))
     return loss(module_outputs).detach()
 
 
@@ -175,7 +175,7 @@ class TestDiversity(BaseTest):
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.Diversity(model.layer)
         self.assertAlmostEqual(
-            get_loss_value(model, loss, input_shape=[2, 3, 1, 1]).item(),
+            get_loss_value(model, loss, model_input=[2, 3, 1, 1]).item(),
             -1,
         )
 
@@ -195,7 +195,7 @@ class TestActivationInterpolation(BaseTest):
             channel_index2=1,
         )
         self.assertAlmostEqual(
-            get_loss_value(model, loss, input_shape=[2, 3, 1, 1]).item(),
+            get_loss_value(model, loss, model_input=[2, 3, 1, 1]).item(),
             CHANNEL_ACTIVATION_0_LOSS + CHANNEL_ACTIVATION_1_LOSS,
             places=6,
         )
@@ -206,7 +206,7 @@ class TestAlignment(BaseTest):
         model = BasicModel_ConvNet_Optim()
         loss = opt_loss.Alignment(model.layer)
         self.assertAlmostEqual(
-            get_loss_value(model, loss, input_shape=[2, 3, 1, 1]).item(), 0.0
+            get_loss_value(model, loss, model_input=[2, 3, 1, 1]).item(), 0.0
         )
 
 
