@@ -86,7 +86,7 @@ class TestInceptionV1Places365(BaseTest):
         self.assertEqual([list(o.shape) for o in outputs], [[1, 365]] * 3)
 
     def test_inceptionv1_places365_load_and_forward_diff_sizes(self) -> None:
-        if version.parse(torch.__version__) <= version.parse("1.6.0")":
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping pretrained InceptionV1 Places365 forward with different"
                 + " sized inputs test due to insufficient Torch version."
