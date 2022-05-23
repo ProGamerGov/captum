@@ -14,7 +14,6 @@ from captum.optim._utils.image.common import (  # noqa: F401
     save_tensor_as_image,
     show,
     weights_to_heatmap_2d,
-    MaxPool2dRelaxed,
 )
 
 __all__ = [
@@ -34,5 +33,4 @@ __all__ = [
     "save_tensor_as_image",
     "show",
     "weights_to_heatmap_2d",
-    "MaxPool2dRelaxed",
 ]
