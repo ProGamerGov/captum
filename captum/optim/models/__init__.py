@@ -5,6 +5,7 @@ from ._common import (  # noqa: F401
     get_model_layers,
     replace_layers,
     skip_layers,
+    MaxPool2dRelaxed,
 )
 from ._image.clip_resnet50x4_image import CLIP_ResNet50x4Image  # noqa: F401
 from ._image.clip_resnet50x4_image import clip_resnet50x4_image  # noqa: F401
@@ -38,4 +39,5 @@ __all__ = [
     "clip_resnet50x4_image",
     "CLIP_ResNet50x4Text",
     "clip_resnet50x4_text",
+    "MaxPool2dRelaxed",
 ]
