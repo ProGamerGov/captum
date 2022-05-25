@@ -554,12 +554,12 @@ class TestCreateNewVector(BaseTest):
     def test_create_new_vector_channels_last(self) -> None:
         x = torch.arange(0, 4 * 5 * 5 * 3).view(4, 5, 5, 3).float()
         vec = torch.tensor([0, 1, 0]).float()
-        out = _create_new_vector(x, vec, move_channel_dim_to_final_dim=False)
+        out = common._create_new_vector(x, vec, move_channel_dim_to_final_dim=False)
         self.assertEqual(out.tolist(), [37.0, 112.0, 187.0, 262.0])
 
     def test_create_new_vector_dim_2(self) -> None:
         x = torch.arange(0, 1 * 3).view(1, 3).float()
         vec = torch.tensor([0, 1, 0]).float()
-        out = _create_new_vector(x, vec)
+        out = common._create_new_vector(x, vec)
         self.assertEqual(list(out.shape), [1, 1])
         self.assertEqual(out.item(), 1.0)
