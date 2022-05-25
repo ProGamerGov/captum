@@ -385,7 +385,7 @@ def _create_new_vector(
     Args:
 
         x (torch.Tensor): A set of 2d or 4d activations.
-        vec (torch.Tensor): A direction vector to use, with a compatible shape for
+        vec (torch.Tensor): A 1D direction vector to use, with a compatible shape for
             computing the matrix product of the activations. See torch.matmul for
             See torch.matmul for more details on compatible shapes:
             https://pytorch.org/docs/stable/generated/torch.matmul.html
@@ -405,7 +405,7 @@ def _create_new_vector(
             stored vector.
     """
     assert x.device == vec.device
-    assert x.dim() > 1
+    assert x.dim() > 1 and vec.dim() == 1
     if activation_fn:
         x = activation_fn(x)
     if x.dim() > 2 and move_channel_dim_to_final_dim:
