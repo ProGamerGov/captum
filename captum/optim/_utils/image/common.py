@@ -411,7 +411,7 @@ def _create_new_vector(
     if x.dim() > 2 and move_channel_dim_to_final_dim:
         permute_vals = [0] + list(range(x.dim()))[2:] + [1]
         x = x.permute(*permute_vals)
-        mean_vals = list(range(1, x.dim()-1))
+        mean_vals = list(range(1, x.dim() - 1))
         return torch.mean(x @ vec, mean_vals)
     else:
         return (x @ vec)[:, None]
