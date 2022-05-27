@@ -1031,7 +1031,9 @@ class FacetLoss(BaseLoss):
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations_ultimate = targets_to_values[self.ultimate_target]
-        activations_ultimate = activations_ultimate[self.batch_index[0] : self.batch_index[1]]
+        activations_ultimate = activations_ultimate[
+            self.batch_index[0] : self.batch_index[1]
+        ]
         new_vec = _create_new_vector(activations_ultimate, self.vec)
         target_activations = targets_to_values[self.layer_target]
 
