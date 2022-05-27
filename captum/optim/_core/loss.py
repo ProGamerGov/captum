@@ -1042,9 +1042,6 @@ class FacetLoss(BaseLoss):
             self.batch_index[0] : self.batch_index[1]
         ]
         target_activations = targets_to_values[self.layer_target]
-        zeros = torch.zeros_like(target_activations)
-        zeros[self.batch_index[0] : self.batch_index[1]] = 1.0
-        target_activations = target_activations * zeros
 
         layer_grad = torch.autograd.grad(
             outputs=new_vec,
