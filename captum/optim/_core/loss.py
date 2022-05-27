@@ -1050,6 +1050,7 @@ class FacetLoss(BaseLoss):
             retain_graph=True,
         )[0]
         layer = target_activations[self.batch_index[0] : self.batch_index[1]]
+        layer_grad = layer_grad[self.batch_index[0] : self.batch_index[1]]
 
         flat_attr = layer * torch.nn.functional.relu(layer_grad.detach())
         if self.facet_weights.dim() == 2 and flat_attr.dim() == 4:
