@@ -1037,10 +1037,7 @@ class FacetLoss(BaseLoss):
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations_ultimate = targets_to_values[self.ultimate_target]
-        activations_ultimate = activations_ultimate
-        new_vec = _create_new_vector(activations_ultimate, self.vec)[
-            self.batch_index[0] : self.batch_index[1]
-        ]
+        new_vec = _create_new_vector(activations_ultimate[self.batch_index[0] : self.batch_index[1]], self.vec)
         target_activations = targets_to_values[self.layer_target]
 
         layer_grad = torch.autograd.grad(
@@ -1048,11 +1045,10 @@ class FacetLoss(BaseLoss):
             inputs=target_activations,
             grad_outputs=torch.ones_like(new_vec),
             retain_graph=True,
-        )[0]
+        )[0].detach()[self.batch_index[0] : self.batch_index[1]]
         layer = target_activations[self.batch_index[0] : self.batch_index[1]]
-        layer_grad = layer_grad[self.batch_index[0] : self.batch_index[1]]
 
-        flat_attr = layer * torch.nn.functional.relu(layer_grad.detach())
+        flat_attr = layer * torch.nn.functional.relu(layer_grad)
         if self.facet_weights.dim() == 2 and flat_attr.dim() == 4:
             flat_attr = torch.sum(flat_attr, dim=(2, 3))
 
