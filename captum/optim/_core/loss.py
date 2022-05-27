@@ -5,7 +5,11 @@ from typing import Any, Callable, List, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn
-from captum.optim._utils.image.common import _dot_cossim, get_neuron_pos
+from captum.optim._utils.image.common import (
+    _create_new_vector,
+    _dot_cossim,
+    get_neuron_pos,
+)
 from captum.optim._utils.typing import ModuleOutputMapping
 
 
@@ -842,6 +846,7 @@ class ActivationWeights(BaseLoss):
         return activations
 
 
+
 @loss_wrapper
 class L2Mean(BaseLoss):
     """
@@ -900,9 +905,7 @@ class VectorLoss(BaseLoss):
     perform a similar role to the ChannelActivation objective by using one-hot 1D
     vectors.
 
-    The einsum equation: "ijkl,j->ikl", used by the paper's associated code is the
-    same thing as: "[..., C] @ vec", where vec has a shape of 'C'.
-
+    See here for more details:
     https://distill.pub/2021/multimodal-neurons/
     https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py
     """
@@ -919,12 +922,8 @@ class VectorLoss(BaseLoss):
         Args:
 
             target (nn.Module): A target layer instance.
-            vec (torch.Tensor): A direction vector to use, with a compatible shape for
-                computing the matrix product of the activations. See torch.matmul for
-                See torch.matmul for more details on compatible shapes:
-                https://pytorch.org/docs/stable/generated/torch.matmul.html
-                By default, vec is expected to share the same size as the channel
-                dimension of the activations.
+            vec (torch.Tensor): A 1D channel vector with the same size as the
+                channel / feature dimension of the target layer instance.
             activation_fn (Callable, optional): An optional activation function to
                 apply to the activations before computing the matrix product. If set
                 to None, then no activation function will be used.
@@ -939,22 +938,20 @@ class VectorLoss(BaseLoss):
                 Default: None
         """
         BaseLoss.__init__(self, target, batch_index)
+        assert vec.dim() == 1
         self.vec = vec
         self.activation_fn = activation_fn
-        self._move_channel_dim_to_final_dim = move_channel_dim_to_final_dim
+        self.move_channel_dim_to_final_dim = move_channel_dim_to_final_dim
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
         activations = activations[self.batch_index[0] : self.batch_index[1]]
-        if self.activation_fn is not None:
-            activations = self.activation_fn(activations)
-
-        if activations.dim() > 2 and self._move_channel_dim_to_final_dim:
-            permute_vals = [0] + list(range(activations.dim()))[2:] + [1]
-            activations = activations.permute(*permute_vals)
-        if activations.dim() == 2:
-            return activations @ self.vec
-        return torch.mean(activations @ self.vec, [1, 2]).mean()
+        return _create_new_vector(
+            activations,
+            vec=self.vec,
+            activation_fn=self.activation_fn,
+            move_channel_dim_to_final_dim=self.move_channel_dim_to_final_dim,
+        ).mean()
 
 
 @loss_wrapper
@@ -974,7 +971,7 @@ class FacetLoss(BaseLoss):
         self,
         vec: torch.Tensor,
         ultimate_target: torch.nn.Module,
-        layer_targets: Union[torch.nn.Module, List[torch.nn.Module]],
+        layer_target: Union[torch.nn.Module, List[torch.nn.Module]],
         facet_weights: torch.Tensor,
         strength: Optional[Union[float, List[float]]] = None,
         batch_index: Optional[Union[int, List[int]]] = None,
@@ -982,42 +979,37 @@ class FacetLoss(BaseLoss):
         """
         Args:
 
-            vec (torch.Tensor): A 1D channel vector.
+            vec (torch.Tensor): A 1D channel vector with the same size as the
+                channel / feature dimension of ultimate_target.
             ultimate_target (nn.Module): The main target layer that we are
                 visualizing targets from. This is normally the penultimate layer of
                 the model.
-            layer_targets (nn.Module or list of nn.Module): One or more lower
-                layers that we have facet_weights for. These target layers should be
-                below the ultimate_target layer in the model.
-            strength (float, list of float, optional): A list of floats to use for batch
-                dimension weighting. Default is set to None for no weighting.
-                Default: None
+            layer_target (nn.Module): A layer that we have facet_weights for. This
+                target layer should be below the ultimate_target layer in the model.
+            strength (float, list of float, optional): A single float or list of floats
+                to use for batch dimension weighting. If using a single value, then it
+                will be applied to all batch dimensions equally. Otherwise a list of
+                floats with a shape of: [start, end] should be used for torch.linspace
+                to calculate the step values in between. Default is set to None for no
+                weighting.
             facet_weights (torch.Tensor): Weighting that steers the objective
                 towards a particular theme or concept. These weight values should
-                come from linear probes trained on layers in target_layers.
+                come from linear probes trained on layer_target.
             batch_index (int, optional): The index of the activations to optimize if
                 optimizing a batch of activations. If set to None, defaults to all
                 activations in the batch.
                 Default: None
         """
-        if not isinstance(layer_targets, (tuple, list)):
-            layer_targets = [layer_targets]
-        BaseLoss.__init__(self, [ultimate_target] + layer_targets, batch_index)
+        BaseLoss.__init__(self, [ultimate_target, layer_target], batch_index)
         self.ultimate_target = ultimate_target
-        self.layer_targets = layer_targets
+        self.layer_target = layer_target
+        assert vec.dim() == 1
         self.vec = vec
+        if isinstance(strength, (tuple, list)):
+            assert len(strength) == 2
         self.strength = strength
+        assert facet_weights.dim() == 4 or facet_weights.dim() == 2
         self.facet_weights = facet_weights
-
-    def vector_fn(self, x: torch.Tensor) -> torch.Tensor:
-        """Acts as an internal version of the VectorLoss objective."""
-        x = torch.nn.functional.relu(x)
-        if x.dim() > 2:
-            permute_vals = [0] + list(range(x.dim()))[2:] + [1]
-            x = x.permute(*permute_vals)
-            return torch.mean(x @ self.vec, [1, 2])
-        else:
-            return (x @ self.vec)[:, None]
 
     def _get_strength(self, batch: int, device: torch.device) -> torch.Tensor:
         """
@@ -1046,54 +1038,27 @@ class FacetLoss(BaseLoss):
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations_ultimate = targets_to_values[self.ultimate_target]
         activations_ultimate = activations_ultimate
-        new_vec = self.vector_fn(activations_ultimate)[
+        new_vec = _create_new_vector(activations_ultimate, self.vec)[
             self.batch_index[0] : self.batch_index[1]
         ]
+        target_activations = targets_to_values[self.layer_target]
 
-        target_activations = []
-        for target in self.layer_targets:
-            target_activations.append(targets_to_values[target])
-
-        layer_grads = torch.autograd.grad(
+        layer_grad = torch.autograd.grad(
             outputs=new_vec,
             inputs=target_activations,
             grad_outputs=torch.ones_like(new_vec),
             retain_graph=True,
-        )
+        )[0]
+        layer = target_activations[self.batch_index[0] : self.batch_index[1]]
 
-        assert self.facet_weights.dim() == 4 or self.facet_weights.dim() == 2
-        flat_attr = []
-        for layer, grad in zip(target_activations, layer_grads):
-            layer = layer[self.batch_index[0] : self.batch_index[1]]
-            attr_t = layer * torch.nn.functional.relu(grad.detach())
-            if self.facet_weights.dim() == 2:
-                if attr_t.dim() == 4:
-                    flat_attr_t = torch.sum(attr_t, dim=(2, 3))
-                elif attr_t.dim() == 2:
-                    flat_attr_t = attr_t
-            elif self.facet_weights.dim() == 4:
-                flat_attr_t = attr_t
-            flat_attr.append(flat_attr_t)
-        flat_attr = torch.cat(flat_attr, 0)
+        flat_attr = layer * torch.nn.functional.relu(layer_grad.detach())
+        if self.facet_weights.dim() == 2 and flat_attr.dim() == 4:
+            flat_attr = torch.sum(flat_attr, dim=(2, 3))
 
-        # Resize facet_weights if required
-        if (
-            self.facet_weights.dim() == 4
-            and target_activations[0].dim() == 4
-            and self.facet_weights.shape[2:] != target_activations[0].shape[2:]
-        ):
-            facet_weights = torch.nn.functional.interpolate(
-                self.facet_weights, size=target_activations[0].shape[2:]
-            )
-        else:
-            facet_weights = self.facet_weights
-        facet_weights = facet_weights.to(flat_attr.device, dtype=flat_attr.dtype)
-
-        if self.strength is None:
-            return torch.sum(flat_attr * facet_weights)
-        else:
+        if self.strength:
             strength_t = self._get_strength(new_vec.shape[0], flat_attr.device)
-            return torch.sum(strength_t * flat_attr * facet_weights)
+            flat_attr = strength_t * flat_attr
+        return torch.sum(flat_attr * self.facet_weights)
 
 
 def sum_loss_list(
