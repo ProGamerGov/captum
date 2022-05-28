@@ -1028,10 +1028,10 @@ class FacetLoss(BaseLoss):
         if self.strength:
             if isinstance(self.strength, (tuple, list)):
                 strength_t = torch.linspace(
-                self.strength[0],
-                self.strength[1],
-                steps=flat_attr.shape[0],
-                device=flat_attr.device,
+                    self.strength[0],
+                    self.strength[1],
+                    steps=flat_attr.shape[0],
+                    device=flat_attr.device,
                 )[:, None, None, None]
             else:
                 strength_t = self.strength
