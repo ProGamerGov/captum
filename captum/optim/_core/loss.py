@@ -1032,7 +1032,7 @@ class FacetLoss(BaseLoss):
                     self.strength[1],
                     steps=flat_attr.shape[0],
                     device=flat_attr.device,
-                )[:, None, None, None]
+                ).reshape(flat_attr.shape[0], *[1] * (flat_attr.dim() - 1))
             else:
                 strength_t = self.strength
             flat_attr = strength_t * flat_attr
