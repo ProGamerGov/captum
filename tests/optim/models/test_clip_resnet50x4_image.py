@@ -81,7 +81,7 @@ class TestCLIPResNet50x4Image(BaseTest):
                 + " insufficient Torch version."
             )
         x = torch.zeros(1, 3, 288, 288)
-        model = clip_resnet50x4_image(pretrained=True)
+        model = clip_resnet50x4_image(pretrained=True, use_attnpool=True)
         output = model(x)
         self.assertEqual(list(output.shape), [1, 640])
 
@@ -92,7 +92,7 @@ class TestCLIPResNet50x4Image(BaseTest):
                 + " insufficient Torch version."
             )
         x = torch.zeros(1, 3, 288, 288)
-        model = clip_resnet50x4_image(pretrained=False)
+        model = clip_resnet50x4_image(pretrained=False, use_attnpool=True)
         output = model(x)
         self.assertEqual(list(output.shape), [1, 640])
 
@@ -121,7 +121,7 @@ class TestCLIPResNet50x4Image(BaseTest):
                 + " not supporting CUDA."
             )
         x = torch.zeros(1, 3, 288, 288).cuda()
-        model = clip_resnet50x4_image(pretrained=True).cuda()
+        model = clip_resnet50x4_image(pretrained=True, use_attnpool=True).cuda()
         output = model(x)
 
         self.assertTrue(output.is_cuda)
@@ -135,7 +135,7 @@ class TestCLIPResNet50x4Image(BaseTest):
             )
         x = torch.zeros(1, 3, 288, 288)
         model = clip_resnet50x4_image(
-            pretrained=True, replace_relus_with_redirectedrelu=False
+            pretrained=True, replace_relus_with_redirectedrelu=False, use_attnpool=True
         )
         jit_model = torch.jit.script(model)
         output = jit_model(x)
@@ -149,7 +149,7 @@ class TestCLIPResNet50x4Image(BaseTest):
             )
         x = torch.zeros(1, 3, 288, 288)
         model = clip_resnet50x4_image(
-            pretrained=True, replace_relus_with_redirectedrelu=True
+            pretrained=True, replace_relus_with_redirectedrelu=True, use_attnpool=True
         )
         jit_model = torch.jit.script(model)
         output = jit_model(x)
