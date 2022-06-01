@@ -60,6 +60,8 @@ def clip_resnet50x4_image(
             kwargs["replace_relus_with_redirectedrelu"] = True
         if "use_linear_modules_only" not in kwargs:
             kwargs["use_linear_modules_only"] = False
+        if "use_attnpool" not in kwargs:
+            kwargs["use_attnpool"] = True
 
         model = CLIP_ResNet50x4Image(**kwargs)
 
@@ -81,13 +83,14 @@ class CLIP_ResNet50x4Image(nn.Module):
     Visual Models From Natural Language Supervision': https://arxiv.org/abs/2103.00020
     """
 
-    __constants__ = ["transform_input"]
+    __constants__ = ["transform_input", "use_attnpool"]
 
     def __init__(
         self,
         transform_input: bool = False,
         replace_relus_with_redirectedrelu: bool = False,
         use_linear_modules_only: bool = False,
+        use_attnpool: bool = True
     ) -> None:
         """
         Args:
@@ -112,6 +115,7 @@ class CLIP_ResNet50x4Image(nn.Module):
                 activ = nn.ReLU
 
         self.transform_input = transform_input
+        self.use_attnpool = use_attnpool
 
         # Stem layers
         self.conv1 = nn.Conv2d(3, 40, kernel_size=3, stride=2, padding=1, bias=False)
@@ -216,7 +220,8 @@ class CLIP_ResNet50x4Image(nn.Module):
         x = self.layer4(x)
 
         # Attention Pooling
-        x = self.attnpool(x)
+        if self.use_attnpool:
+            x = self.attnpool(x)
         return x
 
 
