@@ -237,11 +237,35 @@ class CompositeLoss(BaseLoss):
         name: str = "",
         target: Union[nn.Module, List[nn.Module]] = [],
     ) -> None:
+        """
+        Args:
+
+            loss_fn (Callable): A function that takes a dict of captured activations
+                with nn.Modules as keys, and then passes those activations through loss
+                objective(s) & math operations.
+            name (str, optional): The name of all composable operations in the
+                instance.
+                Default: ""
+            target (nn.Module or list of nn.module): A target nn.Module or list of
+                nn.Module.
+        """
         super().__init__(target)
         self.__name__ = name
         self.loss_fn = loss_fn
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
+        """
+        Pass collected activations through the loss function.
+
+        Args:
+
+            module (ModuleOutputMapping): A dict of captured activations with
+                nn.Modules as keys.
+
+        Returns:
+            loss (torch.Tensor): The target activations after being run through the
+                loss function.
+        """
         return self.loss_fn(targets_to_values)
 
 
