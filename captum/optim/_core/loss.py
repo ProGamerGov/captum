@@ -771,7 +771,7 @@ class AngledNeuronDirection(BaseLoss):
     More information on the algorithm this objective uses can be found here:
     https://github.com/tensorflow/lucid/issues/116
 
-    This Lucid equivalents of this loss function can be found here:
+    This Lucid equivalents of this loss objective can be found here:
     https://github.com/tensorflow/lucid/blob/master/notebooks/
     activation-atlas/activation-atlas-simple.ipynb
     https://github.com/tensorflow/lucid/blob/master/notebooks/
@@ -1030,11 +1030,14 @@ def sum_loss_list(
 
 def default_loss_summarize(loss_value: torch.Tensor) -> torch.Tensor:
     """
-    Helper function to summarize tensor outputs from loss functions.
+    Helper function to summarize tensor outputs from loss objectives.
 
     default_loss_summarize applies `mean` to the loss tensor
     and negates it so that optimizing it maximizes the activations we
     are interested in.
+    
+    Args:
+        loss_value (torch.Tensor): A tensor containing the loss values.
     """
     return -1 * loss_value.mean()
 
