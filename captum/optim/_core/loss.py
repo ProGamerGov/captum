@@ -846,7 +846,6 @@ class ActivationWeights(BaseLoss):
         return activations
 
 
-
 @loss_wrapper
 class L2Mean(BaseLoss):
     """
@@ -986,15 +985,16 @@ class FacetLoss(BaseLoss):
                 the model.
             layer_target (nn.Module): A layer that we have facet_weights for. This
                 target layer should be below the ultimate_target layer in the model.
+            facet_weights (torch.Tensor): Weighting that steers the objective
+                towards a particular theme or concept. These weight values should
+                come from linear probes trained on layer_target.
             strength (float, list of float, optional): A single float or list of floats
                 to use for batch dimension weighting. If using a single value, then it
                 will be applied to all batch dimensions equally. Otherwise a list of
                 floats with a shape of: [start, end] should be used for torch.linspace
                 to calculate the step values in between. Default is set to None for no
                 weighting.
-            facet_weights (torch.Tensor): Weighting that steers the objective
-                towards a particular theme or concept. These weight values should
-                come from linear probes trained on layer_target.
+                Default: None
             batch_index (int, optional): The index of the activations to optimize if
                 optimizing a batch of activations. If set to None, defaults to all
                 activations in the batch.
@@ -1010,30 +1010,6 @@ class FacetLoss(BaseLoss):
         self.strength = strength
         assert facet_weights.dim() == 4 or facet_weights.dim() == 2
         self.facet_weights = facet_weights
-
-    def _get_strength(self, batch: int, device: torch.device) -> torch.Tensor:
-        """
-        Calculate batch weighting.
-
-        Args:
-
-            batch (int): The size of the batch dimension to use.
-            device (torch.device): The device to use.
-
-        Returns:
-            strength_t (torch.Tensor): A tensor containing the weights to multiply the
-                different batch dimensions by.
-        """
-        if isinstance(self.strength, (tuple, list)):
-            strength_t = torch.linspace(
-                self.strength[0],
-                self.strength[1],
-                steps=batch,
-                device=device,
-            )
-        else:
-            strength_t = torch.ones([1], device=device) * self.strength
-        return strength_t[:, None, None, None]
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations_ultimate = targets_to_values[self.ultimate_target]
@@ -1056,9 +1032,29 @@ class FacetLoss(BaseLoss):
             flat_attr = torch.sum(flat_attr, dim=(2, 3))
 
         if self.strength:
-            strength_t = self._get_strength(new_vec.shape[0], flat_attr.device)
+            if isinstance(self.strength, (tuple, list)):
+                strength_t = torch.linspace(
+                    self.strength[0],
+                    self.strength[1],
+                    steps=flat_attr.shape[0],
+                    device=flat_attr.device,
+                ).reshape(flat_attr.shape[0], *[1] * (flat_attr.dim() - 1))
+            else:
+                strength_t = self.strength
             flat_attr = strength_t * flat_attr
-        return torch.sum(flat_attr * self.facet_weights)
+
+        if (
+            self.facet_weights.dim() == 4
+            and layer.dim() == 4
+            and self.facet_weights.shape[2:] != layer.shape[2:]
+        ):
+            facet_weights = torch.nn.functional.interpolate(
+                self.facet_weights, size=layer.shape[2:]
+            )
+        else:
+            facet_weights = self.facet_weights
+
+        return torch.sum(flat_attr * facet_weights)
 
 
 def sum_loss_list(
@@ -1135,6 +1131,9 @@ __all__ = [
     "AngledNeuronDirection",
     "TensorDirection",
     "ActivationWeights",
+    "L2Mean",
+    "VectorLoss",
+    "FacetLoss",
     "sum_loss_list",
     "default_loss_summarize",
 ]
