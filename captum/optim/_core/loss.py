@@ -783,6 +783,10 @@ class AngledNeuronDirection(BaseLoss):
             eps (float, optional): If cossim_pow is greater than zero, the desired
                 epsilon value to use for cosine similarity calculations.
                 Default: 1.0e-4
+            batch_index (int, optional): The index of activations to optimize if
+                optimizing a batch of activations. If set to None, defaults to all
+                activations in the batch.
+                Default: None
         """
         BaseLoss.__init__(self, target, batch_index)
         self.vec = vec.unsqueeze(0) if vec.dim() == 1 else vec
