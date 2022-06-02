@@ -136,6 +136,19 @@ def module_op(
     elif isinstance(other, (int, float)):
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+            """
+            Pass collected activations through the loss objective and then apply the
+            math operations with numbers.
+
+            Args:
+
+                module (ModuleOutputMapping): A dict of captured activations with
+                        nn.Modules as keys.
+
+                Returns:
+                    loss (torch.Tensor): The target activations after being run
+                        through the loss objective, and then the math_op with a number.
+            """
             return math_op(self(module), other)
 
         name = self.__name__
@@ -143,6 +156,19 @@ def module_op(
     elif isinstance(other, Loss):
         # We take the mean of the output tensor to resolve shape mismatches
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+            """
+            Pass collected activations through the loss objectives and then combine the
+            outputs with a math operation.
+
+            Args:
+
+                module (ModuleOutputMapping): A dict of captured activations with
+                        nn.Modules as keys.
+
+                Returns:
+                    loss (torch.Tensor): The target activations after being run
+                        through the loss objectives, and then merged with the math_op.
+            """
             return math_op(torch.mean(self(module)), torch.mean(other(module)))
 
         name = f"Compose({', '.join([self.__name__, other.__name__])})"
