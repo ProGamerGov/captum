@@ -1002,13 +1002,13 @@ def sum_loss_list(
 
     Args:
 
-        loss_list (list): A list of loss function objectives.
-        to_scalar_fn (Callable): A function for converting loss function outputs to
+        loss_list (list): A list of loss objectives.
+        to_scalar_fn (Callable): A function for converting loss objective outputs to
             scalar values, in order to prevent size mismatches.
             Default: torch.mean
 
     Returns:
-        loss_fn (CompositeLoss): A composite loss function containing all the loss
+        loss_fn (CompositeLoss): A CompositeLoss instance containing all the loss
             functions from `loss_list`.
     """
 
