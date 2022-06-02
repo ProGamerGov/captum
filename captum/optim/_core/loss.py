@@ -1037,7 +1037,11 @@ def default_loss_summarize(loss_value: torch.Tensor) -> torch.Tensor:
     are interested in.
     
     Args:
+
         loss_value (torch.Tensor): A tensor containing the loss values.
+    
+    Returns:
+        loss_value (torch.Tensor): The loss_value's mean multiplied by -1.
     """
     return -1 * loss_value.mean()
 
