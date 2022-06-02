@@ -14,7 +14,7 @@ def _make_arg_str(arg: Any) -> str:
     Args:
 
         args (Any): A set of arguments to covert to a string.
-    
+
     Returns:
         args (str): The args in str form.
     """
@@ -113,7 +113,7 @@ def module_op(
 ) -> "CompositeLoss":
     """
     This is a general function for applying math operations to Losses
-    
+
     Args:
 
         self (Loss): A Loss objective instance.
@@ -121,7 +121,7 @@ def module_op(
             use on the self Loss objective as part of a math operation. If math_op
             is a unary operation, then other should be set to None.
         math_op (Callable): A math operator to use on the Loss instance.
-    
+
     Returns:
         loss (CompositeLoss): A CompositeLoss instance with the math operations
             created by the specified arguments.
@@ -1085,11 +1085,11 @@ def default_loss_summarize(loss_value: torch.Tensor) -> torch.Tensor:
     default_loss_summarize applies `mean` to the loss tensor
     and negates it so that optimizing it maximizes the activations we
     are interested in.
-    
+
     Args:
 
         loss_value (torch.Tensor): A tensor containing the loss values.
-    
+
     Returns:
         loss_value (torch.Tensor): The loss_value's mean multiplied by -1.
     """
