@@ -413,7 +413,7 @@ class TestFacetLoss(BaseTest):
             facet_weights=facet_weights,
         )
         output = get_loss_value(model, loss, input_shape=[1, 3, 6, 6])
-        self.assertAlmostEqual(output.item(), 1.560000, places=6)
+        self.assertAlmostEqual(output, 1.560000, places=6)
 
 
 class TestCompositeLoss(BaseTest):
