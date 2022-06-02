@@ -993,9 +993,9 @@ def sum_loss_list(
 ) -> CompositeLoss:
     """
     Summarize a large number of losses without recursion errors. By default using 300+
-    loss functions for a single optimization task will result in exceeding Python's
+    loss objectives for a single optimization task will result in exceeding Python's
     default maximum recursion depth limit. This function can be used to avoid the
-    recursion depth limit for tasks such as summarizing a large list of loss functions
+    recursion depth limit for tasks such as summarizing a large list of loss objectives
     with the built-in sum() function.
 
     This function works similar to Lucid's optvis.objectives.Objective.sum() function.
