@@ -93,7 +93,7 @@ class CLIP_ResNet50x4Image(nn.Module):
         transform_input: bool = False,
         replace_relus_with_redirectedrelu: bool = False,
         use_linear_modules_only: bool = False,
-        use_attnpool: bool = True
+        use_attnpool: bool = True,
     ) -> None:
         """
         Args:
