@@ -1039,7 +1039,8 @@ class FacetLoss(BaseLoss):
             flat_attr = strength_t * flat_attr
 
         if (
-            self.facet_weights.dim() == 4 and layer.dim() == 4
+            self.facet_weights.dim() == 4
+            and layer.dim() == 4
             and self.facet_weights.shape[2:] != layer.shape[2:]
         ):
             facet_weights = torch.nn.functional.interpolate(
