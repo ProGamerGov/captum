@@ -163,6 +163,17 @@ class BaseLoss(Loss):
         target: Union[nn.Module, List[nn.Module]] = [],
         batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
+        """
+        Args:
+
+            target (nn.Module or list of nn.module): A target nn.Module or list of
+                nn.Module.
+            batch_index (int or list of int, optional): The index or index range of
+                activations to optimize if optimizing a batch of activations. If set to
+                None, defaults to all activations in the batch. Index ranges should be
+                in the format of: [start, end].
+                Default: None
+        """
         super().__init__()
         self._target = target
         if batch_index is None:
@@ -176,10 +187,20 @@ class BaseLoss(Loss):
 
     @property
     def target(self) -> Union[nn.Module, List[nn.Module]]:
+        """
+        Returns:
+            target (nn.Module or list of nn.Module): A target nn.Module or list of
+                nn.Module.
+        """
         return self._target
 
     @property
     def batch_index(self) -> Tuple:
+        """
+        Returns:
+            batch_index (tuple of int): A tuple of batch indices with a format
+                of: [start, end].
+        """
         return self._batch_index
 
 
