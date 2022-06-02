@@ -199,7 +199,7 @@ class BaseLoss(Loss):
         """
         Returns:
             batch_index (tuple of int): A tuple of batch indices with a format
-                of: [start, end].
+                of: (start, end).
         """
         return self._batch_index
 
