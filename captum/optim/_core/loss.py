@@ -136,7 +136,7 @@ def module_op(
             Args:
 
                 module (ModuleOutputMapping): A dict of captured activations with
-                        nn.Modules as keys.
+                    nn.Modules as keys.
 
                 Returns:
                     loss (torch.Tensor): The target activations after being run
@@ -156,7 +156,7 @@ def module_op(
             Args:
 
                 module (ModuleOutputMapping): A dict of captured activations with
-                        nn.Modules as keys.
+                    nn.Modules as keys.
 
                 Returns:
                     loss (torch.Tensor): The target activations after being run
@@ -176,7 +176,7 @@ def module_op(
             Args:
 
                 module (ModuleOutputMapping): A dict of captured activations with
-                        nn.Modules as keys.
+                    nn.Modules as keys.
 
                 Returns:
                     loss (torch.Tensor): The target activations after being run
