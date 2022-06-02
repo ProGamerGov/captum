@@ -129,6 +129,19 @@ def module_op(
     if other is None and math_op == operator.neg:
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+            """
+            Pass collected activations through loss objective, and then apply a unary
+            math op.
+
+            Args:
+
+                module (ModuleOutputMapping): A dict of captured activations with
+                        nn.Modules as keys.
+
+                Returns:
+                    loss (torch.Tensor): The target activations after being run
+                        through the loss objective, and the unary math_op.
+            """
             return math_op(self(module))
 
         name = self.__name__
