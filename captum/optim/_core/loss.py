@@ -115,11 +115,16 @@ def module_op(
     This is a general function for applying math operations to Losses
     
     Args:
-        Loss (Loss): 
-        other (int, float, Loss, or None): 
+
+        self (Loss): A Loss objective instance.
+        other (int, float, Loss, or None): The Loss objective instance or number to
+            use on the self Loss objective as part of a math operation. If a unary
+            operation is used, then other should be set to None.
+        math_op (Callable): A math operator to use on the Loss instance.
     
     Returns:
-        loss (CompositeLoss): A CompositeLoss instance.
+        loss (CompositeLoss): A CompositeLoss instance with the math operations
+            created by the specified arguments.
     """
     if other is None and math_op == operator.neg:
 
