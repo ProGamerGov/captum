@@ -113,6 +113,13 @@ def module_op(
 ) -> "CompositeLoss":
     """
     This is a general function for applying math operations to Losses
+    
+    Args:
+        Loss (Loss): 
+        other (int, float, Loss, or None): 
+    
+    Returns:
+        loss (CompositeLoss): A CompositeLoss instance.
     """
     if other is None and math_op == operator.neg:
 
