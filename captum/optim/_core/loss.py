@@ -31,7 +31,7 @@ class Loss(ABC):
     """
 
     def __init__(self) -> None:
-        super(Loss, self).__init__()
+        super().__init__()
 
     @abstractproperty
     def target(self) -> Union[nn.Module, List[nn.Module]]:
@@ -163,7 +163,7 @@ class BaseLoss(Loss):
         target: Union[nn.Module, List[nn.Module]] = [],
         batch_index: Optional[Union[int, List[int]]] = None,
     ) -> None:
-        super(BaseLoss, self).__init__()
+        super().__init__()
         self._target = target
         if batch_index is None:
             self._batch_index = (None, None)
@@ -190,7 +190,7 @@ class CompositeLoss(BaseLoss):
         name: str = "",
         target: Union[nn.Module, List[nn.Module]] = [],
     ) -> None:
-        super(CompositeLoss, self).__init__(target)
+        super().__init__(target)
         self.__name__ = name
         self.loss_fn = loss_fn
 
