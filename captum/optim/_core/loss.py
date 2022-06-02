@@ -118,8 +118,8 @@ def module_op(
 
         self (Loss): A Loss objective instance.
         other (int, float, Loss, or None): The Loss objective instance or number to
-            use on the self Loss objective as part of a math operation. If a unary
-            operation is used, then other should be set to None.
+            use on the self Loss objective as part of a math operation. If math_op
+            is a unary operation, then other should be set to None.
         math_op (Callable): A math operator to use on the Loss instance.
     
     Returns:
