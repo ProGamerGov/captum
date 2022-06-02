@@ -16,7 +16,7 @@ def _make_arg_str(arg: Any) -> str:
         args (Any): A set of arguments to covert to a string.
     
     Returns:
-        args_str (str): The args in str form.
+        args (str): The args in str form.
     """
     arg = str(arg)
     too_big = len(arg) > 15 or "\n" in arg
