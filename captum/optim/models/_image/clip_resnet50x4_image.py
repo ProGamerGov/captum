@@ -23,8 +23,7 @@ def clip_resnet50x4_image(
     This model can be combined with the CLIP ResNet 50x4 Text model to create the full
     CLIP ResNet 50x4 model.
 
-    Note that model inputs are expected to have a shape of: [B, 3, 288, 288] or
-    [3, 288, 288].
+    Note that the model was trained on inputs with a shape of: [B, 3, 288, 288].
 
     See here for more details:
     https://github.com/openai/CLIP
@@ -48,6 +47,10 @@ def clip_resnet50x4_image(
         transform_input (bool, optional): If True, preprocesses the input according to
             the method with which it was trained.
             Default: *True* when pretrained is True otherwise *False*
+        use_attnpool (bool, optional): Whether or not to use the final AttentionPool2d
+            layer in the forward function. If set to True, model inputs are required
+            to have a shape of: [B, 3, 288, 288] or [3, 288, 288].
+            Default: False
 
     Returns:
         **CLIP_ResNet50x4Image** (CLIP_ResNet50x4Image): A CLIP ResNet 50x4 model's
@@ -61,7 +64,7 @@ def clip_resnet50x4_image(
         if "use_linear_modules_only" not in kwargs:
             kwargs["use_linear_modules_only"] = False
         if "use_attnpool" not in kwargs:
-            kwargs["use_attnpool"] = True
+            kwargs["use_attnpool"] = False
 
         model = CLIP_ResNet50x4Image(**kwargs)
 
@@ -104,6 +107,11 @@ class CLIP_ResNet50x4Image(nn.Module):
             transform_input (bool, optional): If True, preprocesses the input according
                 to the method with which it was trained on.
                 Default: False
+            use_attnpool (bool, optional): Whether or not to use the final
+                AttentionPool2d layer in the forward function. If set to True, model
+                inputs are required to have a shape of: [B, 3, 288, 288] or
+                [3, 288, 288].
+                Default: True
         """
         super().__init__()
         if use_linear_modules_only:
