@@ -1538,7 +1538,7 @@ class CLIPTokenizer(torch.nn.Module):
                 across the batch dimension.
         """
         x = [x] if isinstance(x, str) else x
-        
+
         if self.preprocessing_module:
             x = self.preprocessing_module(x)
 
