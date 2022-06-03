@@ -1539,7 +1539,7 @@ class CLIPTokenizer(torch.nn.Module):
         """
         x = [x] if isinstance(x, str) else x
 
-        if self.preprocessing_module:
+        if self.preprocessing_module is not None:
             x = self.preprocessing_module(x)
 
         # Optionally add start & end tokens to inputs
