@@ -748,7 +748,7 @@ class TestSumLossList(BaseTest):
         n_batch = 100
         model = torch.nn.Identity()
         loss_fn_list = [opt_loss.LayerActivation(model) for i in range(n_batch)]
-        loss_fn = opt_loss.sum_loss_list(loss_fn_list, torch.Identity())
+        loss_fn = opt_loss.sum_loss_list(loss_fn_list, torch.nn.Identity())
         out = get_loss_value(model, loss_fn, [n_batch, 3, 1, 1])
         self.assertEqual(list(out.shape), [n_batch, 3, 1, 1])
         self.assertEqual(out.item(), 30000.0)
