@@ -220,7 +220,7 @@ class TestL2(BaseTest):
         model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
         output = get_loss_value(model, loss, model_input)
         self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
-        self.assertEqual(output.item(), 987.9017944335938)
+        self.assertAlmostEqual(output.item(), 987.9017944335938, places=3)
 
 
 class TestDiversity(BaseTest):
@@ -751,7 +751,7 @@ class TestSumLossList(BaseTest):
         loss_fn = opt_loss.sum_loss_list(loss_fn_list, torch.nn.Identity())
         out = get_loss_value(model, loss_fn, [n_batch, 3, 1, 1])
         self.assertEqual(list(out.shape), [n_batch, 3, 1, 1])
-        self.assertEqual(out.item(), 30000.0)
+        self.assertEqual(out.sum().item(), 30000.0)
 
 
 class TestModuleOP(BaseTest):
