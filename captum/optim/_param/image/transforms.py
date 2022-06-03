@@ -1353,6 +1353,7 @@ class CLIPTokenizer(torch.nn.Module):
         num_merges: Optional[int] = None,
         padding_value: int = 0,
         truncate: bool = False,
+        preprocessing_module: Optional[Callable] = None,
     ) -> None:
         """
         Args:
@@ -1384,6 +1385,11 @@ class CLIPTokenizer(torch.nn.Module):
             truncate (bool, optional): Whether or not to truncate outputs larger than
                 context_length.
                 Default: False
+            preprocessing_module (Callable, optional): An optional function that takes
+                a list of str and returns a list of str. This can be used to implement
+                whitespace cleaning, HTML to unicode conversions, or heuristic unicode
+                correction. Set to None for no text str preprocessing.
+                Default: None
         """
         super().__init__()
         self.context_length = context_length
@@ -1402,6 +1408,7 @@ class CLIPTokenizer(torch.nn.Module):
         )
         self.padding_value = padding_value
         self.truncate = truncate
+        self.preprocessing_module = preprocessing_module
 
     @staticmethod
     @torch.jit.ignore
@@ -1539,6 +1546,9 @@ class CLIPTokenizer(torch.nn.Module):
         """
         x = [x] if isinstance(x, str) else x
 
+        if self.preprocessing_module is not None:
+            x = self.preprocessing_module(x)
+
         # Optionally add start & end tokens to inputs
         if self.start_token:
             x = [self.start_token + " " + s for s in x]
@@ -1577,6 +1587,7 @@ class CLIPTokenizer(torch.nn.Module):
             for token_set in tokens
         ]
         return torch.as_tensor(tokens).int()
+
 
 
 __all__ = [
