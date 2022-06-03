@@ -736,6 +736,23 @@ class TestSumLossList(BaseTest):
         out = get_loss_value(model, loss_fn, [n_batch, 3, 1, 1])
         self.assertEqual(out, float(n_batch + 1.0))
 
+    def test_sum_loss_list_sum(self) -> None:
+        n_batch = 100
+        model = torch.nn.Identity()
+        loss_fn_list = [opt_loss.LayerActivation(model) for i in range(n_batch)]
+        loss_fn = opt_loss.sum_loss_list(loss_fn_list, torch.sum)
+        out = get_loss_value(model, loss_fn, [n_batch, 3, 1, 1])
+        self.assertEqual(out.item(), 30000.0)
+
+    def test_sum_loss_list_identity(self) -> None:
+        n_batch = 100
+        model = torch.nn.Identity()
+        loss_fn_list = [opt_loss.LayerActivation(model) for i in range(n_batch)]
+        loss_fn = opt_loss.sum_loss_list(loss_fn_list, torch.Identity())
+        out = get_loss_value(model, loss_fn, [n_batch, 3, 1, 1])
+        self.assertEqual(list(out.shape), [n_batch, 3, 1, 1])
+        self.assertEqual(out.item(), 30000.0)
+
 
 class TestModuleOP(BaseTest):
     def test_module_op_loss_unary_op(self) -> None:
