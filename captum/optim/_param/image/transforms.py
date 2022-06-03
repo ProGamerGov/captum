@@ -1,6 +1,6 @@
 import math
 import numbers
-from typing import List, Optional, Sequence, Tuple, Union, cast
+from typing import Callable, List, Optional, Sequence, Tuple, Union, cast
 
 import numpy as np
 import torch
