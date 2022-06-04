@@ -435,6 +435,10 @@ class LaplacianImage(ImageParameterization):
         self.scaler = scaler
 
     def forward(self) -> torch.Tensor:
+        """
+        Returns:
+            **output** (torch.tensor): A tensor created from a laplacian pyramid.
+        """
         A = []
         for xi, upsamplei in zip(self.tensor_params, self.scaler):
             A.append(upsamplei(xi))
