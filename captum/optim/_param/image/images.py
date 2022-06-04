@@ -378,7 +378,7 @@ class LaplacianImage(ImageParameterization):
 
     def __init__(
         self,
-        size: Tuple[int, int] = None,
+        size: Tuple[int, int] = (224, 225),
         channels: int = 3,
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
@@ -390,6 +390,7 @@ class LaplacianImage(ImageParameterization):
 
             size (Tuple[int, int]): The height & width dimensions to use for the
                 parameterized output image tensor.
+                Default: (224, 224)
             channels (int, optional): The number of channels to use for each image.
                 Default: 3
             batch (int, optional): The number of images to stack along the batch
@@ -403,7 +404,8 @@ class LaplacianImage(ImageParameterization):
             scale_list (list of float, optional): The desired list of scale values to
                 use in the laplacian pyramid. The height & width dimensions specified
                 in size or used in the init tensor should be divisable by every scale
-                value in the scale list with no remainder left over.
+                value in the scale list with no remainder left over. The default
+                scale_list values are set to work with a size of (224, 224).
                 Default: [1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
         """
         super().__init__()
