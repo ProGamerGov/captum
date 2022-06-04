@@ -381,17 +381,26 @@ class TestLaplacianImage(BaseTest):
     def test_subclass(self) -> None:
         self.assertTrue(issubclass(images.LaplacianImage, images.ImageParameterization))
 
+    def test_laplacianimage_init_function(self) -> None:
+        image_param = images.LaplacianImage(size=(224, 224))
+        self.assertEqual(image_param.power, 0.1)
+        self.assertEqual(image_param.scale_list, [1.0, 2.0, 4.0, 8.0, 16.0, 32.0])
+
     def test_laplacianimage_random_forward(self) -> None:
         size = (224, 224)
         channels = 3
-        image_param = images.LaplacianImage(size=size, channels=channels)
+        batch = 1
+        image_param = images.LaplacianImage(size=size, channels=channels, batch=batch)
         test_tensor = image_param.forward().rename(None)
+        self.assertEqual(list(test_tensor.shape), [batch, channels, size[0], size[1]])
 
-        self.assertEqual(test_tensor.dim(), 4)
-        self.assertEqual(test_tensor.size(0), 1)
-        self.assertEqual(test_tensor.size(1), channels)
-        self.assertEqual(test_tensor.size(2), size[0])
-        self.assertEqual(test_tensor.size(3), size[1])
+    def test_laplacianimage_random_forward_batch_5(self) -> None:
+        size = (224, 224)
+        channels = 3
+        batch = 5
+        image_param = images.LaplacianImage(size=size, channels=channels, batch=batch)
+        test_tensor = image_param.forward().rename(None)
+        self.assertEqual(list(test_tensor.shape), [batch, channels, size[0], size[1]])
 
     def test_laplacianimage_init(self) -> None:
         init_t = torch.zeros(1, 224, 224)
