@@ -1031,7 +1031,7 @@ class GaussianSmoothing(nn.Module):
 
         self.register_buffer("weight", kernel)
         self.groups = channels
-        self.padding = "same" if same_padding else 0
+        self.padding = "same" if use_same_padding else 0
 
         if dim == 1:
             self.conv = F.conv1d
