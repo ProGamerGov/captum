@@ -393,6 +393,7 @@ class TestLaplacianImage(BaseTest):
         image_param = images.LaplacianImage(size=size, channels=channels, batch=batch)
         test_tensor = image_param.forward().rename(None)
         self.assertEqual(list(test_tensor.shape), [batch, channels, size[0], size[1]])
+        self.assertTrue(test_tensor.requires_grad)
 
     def test_laplacianimage_random_forward_batch_5(self) -> None:
         size = (224, 224)
