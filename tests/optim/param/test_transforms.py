@@ -1591,6 +1591,7 @@ class TestGaussianSmoothing(BaseTest):
         self.assertEqual(smoothening_module.groups, channels)
         weight = torch.tensor([[0.3192, 0.3617, 0.3192]]).repeat(6, 1, 1)
         assertTensorAlmostEqual(self, smoothening_module.weight, weight, 0.001)
+        self.assertFalse(smoothening_module.use_same_padding)
 
     def test_gaussian_smoothing_init_2d(self) -> None:
         channels = 3
