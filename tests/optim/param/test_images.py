@@ -412,7 +412,7 @@ class TestLaplacianImage(BaseTest):
     def test_laplacianimage_random_forward_scale_list_error(self) -> None:
         scale_list = [1.0, 2.0, 4.0, 8.0, 16.0, 64.0, 144.0]
         with self.assertRaises(AssertionError):
-            image_param = images.LaplacianImage(
+            images.LaplacianImage(
                 size=(224, 224), channels=3, batch=1, scale_list=scale_list
             )
 
