@@ -411,14 +411,19 @@ class LaplacianImage(ImageParameterization):
 
         tensor_params, scaler = [], []
         for scale in scale_list:
+            assert size[0] % scale == 0 and size[1] % scale == 0, (
+                "The chosen image height & width dimensions"
+                + " must be divisable by all scale values"
+            )
+
             h, w = int(size[0] // scale), int(size[1] // scale)
             if init is None:
                 x = torch.randn([batch, channels, h, w]) / 10
             else:
                 x = F.interpolate(init.clone(), size=(h, w), mode="bilinear")
-                x = x / 10  # Prevents output from being all white
+                x = x / 10
             upsample = torch.nn.Upsample(scale_factor=scale, mode="nearest")
-            x = x * (scale**power) / (32**power)
+            x = x * (scale**power) / (max(scale_list) ** power)
             x = torch.nn.Parameter(x)
             tensor_params.append(x)
             scaler.append(upsample)
