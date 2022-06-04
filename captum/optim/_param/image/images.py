@@ -404,7 +404,7 @@ class LaplacianImage(ImageParameterization):
             scale_list (list of float, optional): The desired list of scale values to
                 use in the laplacian pyramid. The height & width dimensions specified
                 in size or used in the init tensor should be divisable by every scale
-                value in the scale list.
+                value in the scale list with no remainder left over.
                 Default: [1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
         """
         super().__init__()
@@ -417,7 +417,8 @@ class LaplacianImage(ImageParameterization):
         for scale in scale_list:
             assert size[0] % scale == 0 and size[1] % scale == 0, (
                 "The chosen image height & width dimensions"
-                + " must be divisable by all scale values"
+                + " must be divisable by all scale values "
+                + " with no remainder left over."
             )
 
             h, w = int(size[0] // scale), int(size[1] // scale)
