@@ -381,11 +381,6 @@ class TestLaplacianImage(BaseTest):
     def test_subclass(self) -> None:
         self.assertTrue(issubclass(images.LaplacianImage, images.ImageParameterization))
 
-    def test_laplacianimage_init_function(self) -> None:
-        image_param = images.LaplacianImage(size=(224, 224))
-        self.assertEqual(image_param.power, 0.1)
-        self.assertEqual(image_param.scale_list, [1.0, 2.0, 4.0, 8.0, 16.0, 32.0])
-
     def test_laplacianimage_random_forward(self) -> None:
         size = (224, 224)
         channels = 3
