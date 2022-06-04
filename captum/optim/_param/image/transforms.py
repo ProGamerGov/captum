@@ -987,7 +987,7 @@ class GaussianSmoothing(nn.Module):
         kernel_size: Union[int, Sequence[int]],
         sigma: Union[float, Sequence[float]],
         dim: int = 2,
-        same_padding: bool = True,
+        use_same_padding: bool = True,
     ) -> None:
         """
         Args:
@@ -998,6 +998,9 @@ class GaussianSmoothing(nn.Module):
             sigma (float, sequence): Standard deviation of the gaussian kernel.
             dim (int, optional): The number of dimensions of the data.
                 Default value is 2 (spatial).
+            use_same_padding (bool, optional): Whether or not to use "same" padding so
+                that the output shape is the same as the input shape.
+                Default: True
         """
         super().__init__()
         if isinstance(kernel_size, numbers.Number):
