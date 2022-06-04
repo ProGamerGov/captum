@@ -419,6 +419,17 @@ class TestLaplacianImage(BaseTest):
         output = image_param.forward().detach().rename(None)
         assertTensorAlmostEqual(self, torch.ones_like(output) * 0.5, output, mode="max")
 
+    def test_laplacianimage_random_forward_cuda(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping LaplacianImage CUDA test due to not supporting CUDA."
+            )
+        image_param = images.LaplacianImage(size=(224, 224), channels=3, batch=1).cuda()
+        test_tensor = image_param.forward().rename(None)
+        self.assertTrue(test_tensor.is_cuda)
+        self.assertEqual(list(test_tensor.shape), [1, 3, 224, 224])
+        self.assertTrue(test_tensor.requires_grad)
+
 
 class TestSimpleTensorParameterization(BaseTest):
     def test_subclass(self) -> None:
