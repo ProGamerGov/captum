@@ -402,7 +402,9 @@ class LaplacianImage(ImageParameterization):
             power (float, optional): The desired power value to use.
                 Default: 0.1
             scale_list (list of float, optional): The desired list of scale values to
-                use in the laplacian pyramid.
+                use in the laplacian pyramid. The height & width dimensions specified
+                in size or used in the init tensor should be divisable by every scale
+                value in the scale list.
                 Default: [1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
         """
         super().__init__()
