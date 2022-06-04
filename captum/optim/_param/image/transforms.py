@@ -979,7 +979,7 @@ class GaussianSmoothing(nn.Module):
     in the input using a depthwise convolution.
     """
 
-    __constants__ = ["groups", "use_same_padding"]
+    __constants__ = ["groups", "padding"]
 
     def __init__(
         self,
