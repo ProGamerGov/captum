@@ -407,7 +407,9 @@ class LaplacianImage(ImageParameterization):
         """
         super().__init__()
         if init is not None:
+            assert init.dim() in [3, 4]
             init = init.unsqueeze(0) if init.dim() == 3 else init
+            size = list(init.shape[2:])
 
         tensor_params, scaler = [], []
         for scale in scale_list:
