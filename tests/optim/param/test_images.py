@@ -408,7 +408,9 @@ class TestLaplacianImage(BaseTest):
         channels = 3
         batch = 1
         scale_list = [1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 56.0, 112.0]
-        image_param = images.LaplacianImage(size=size, channels=channels, batch=batch, scale_list)
+        image_param = images.LaplacianImage(
+            size=size, channels=channels, batch=batch, scale_list=scale_list
+        )
         test_tensor = image_param.forward().rename(None)
         self.assertEqual(image_param.scale_list, scale_list)
         self.assertEqual(list(test_tensor.shape), [batch, channels, size[0], size[1]])
