@@ -412,7 +412,6 @@ class TestLaplacianImage(BaseTest):
             size=size, channels=channels, batch=batch, scale_list=scale_list
         )
         test_tensor = image_param.forward().rename(None)
-        self.assertEqual(image_param.scale_list, scale_list)
         self.assertEqual(list(test_tensor.shape), [batch, channels, size[0], size[1]])
 
     def test_laplacianimage_init_tensor(self) -> None:
