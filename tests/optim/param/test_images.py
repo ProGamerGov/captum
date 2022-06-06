@@ -1148,7 +1148,7 @@ class TestNaturalImage(BaseTest):
         init_tensor = torch.ones(3, 1, 1)
         image_param = images.NaturalImage(init=init_tensor)
         image = image_param.forward().detach()
-        assertTensorAlmostEqual(self, image, torch.sigmoid(init_tensor), mode="max")
+        assertTensorAlmostEqual(self, image, torch.sigmoid(init_tensor).unsqueeze(0))
 
     def test_natural_image_cuda(self) -> None:
         if not torch.cuda.is_available():
