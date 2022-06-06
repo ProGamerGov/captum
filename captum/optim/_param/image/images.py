@@ -810,7 +810,8 @@ class NaturalImage(ImageParameterization):
                 parameterization class, or instance of an image parameterization class.
                 Default: FFTImage
             squash_func (Callable[[torch.Tensor], torch.Tensor]], optional): The squash
-                function to use after color recorrelation. A funtion or lambda function.
+                function to use after color recorrelation. A function, lambda function,
+                or callable class instance.
                 Default: None
             decorrelation_module (nn.Module, optional): A ToRGB instance.
                 Default: ToRGB
