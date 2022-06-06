@@ -846,11 +846,6 @@ class NaturalImage(ImageParameterization):
             )
         self.parameterization = parameterization
 
-    @torch.jit.export
-    def _clamp_image(self, x: torch.Tensor) -> torch.Tensor:
-        """JIT supported squash function."""
-        return x.clamp(0, 1)
-
     @torch.jit.ignore
     def _to_image_tensor(self, x: torch.Tensor) -> torch.Tensor:
         """
