@@ -1202,9 +1202,7 @@ class TestNaturalImage(BaseTest):
                 + " test due to insufficient Torch version."
             )
         init_tensor = torch.ones(1, 3, 1, 1)
-        image_param = images.NaturalImage(
-            init=init_tensor, decorrelation_module=None
-        )
+        image_param = images.NaturalImage(init=init_tensor, decorrelation_module=None)
         image = image_param.forward().detach()
         self.assertIsNone(image_param.decorrelate)
         assertTensorAlmostEqual(self, image, torch.sigmoid(init_tensor))
