@@ -813,7 +813,9 @@ class NaturalImage(ImageParameterization):
                 function to use after color recorrelation. A function, lambda function,
                 or callable class instance.
                 Default: None
-            decorrelation_module (nn.Module, optional): A ToRGB instance.
+            decorrelation_module (nn.Module, optional): A module instance that
+                recorrelates the colors of an input image. Set to None for no
+                recorrelation.
                 Default: ToRGB
             decorrelate_init (bool, optional): Whether or not to apply color
                 decorrelation to the init tensor input.
