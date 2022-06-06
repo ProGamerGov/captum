@@ -798,14 +798,21 @@ class NaturalImage(ImageParameterization):
         Args:
 
             size (Tuple[int, int], optional): The height and width to use for the
-                nn.Parameter image tensor.
+                nn.Parameter image tensor. This parameter is not used if
+                parameterization is an instance.
                 Default: (224, 224)
             channels (int, optional): The number of channels to use when creating the
-                nn.Parameter tensor.
+                nn.Parameter tensor. This parameter is not used if parameterization is
+                an instance.
                 Default: 3
             batch (int, optional): The number of channels to use when creating the
-                nn.Parameter tensor, or stacking init images.
+                nn.Parameter tensor, or stacking init images. This parameter is not
+                used if parameterization is an instance.
                 Default: 1
+            init (torch.tensor, optional): Optionally specify a tensor to use instead
+                of creating one from random noise. This parameter is not used if
+                parameterization is an instance. Set to None for random init.
+                Default: None
             parameterization (ImageParameterization, optional): An image
                 parameterization class, or instance of an image parameterization class.
                 Default: FFTImage
@@ -814,11 +821,14 @@ class NaturalImage(ImageParameterization):
                 or callable class instance.
                 Default: None
             decorrelation_module (nn.Module, optional): A module instance that
-                recorrelates the colors of an input image. Set to None for no
-                recorrelation.
+                recorrelates the colors of an input image. Custom modules can make use
+                of the decorrelate_init parameter by having a second inverse parameter
+                in their forward functions that performs the inverse operation when it
+                is set to True. Set to None for no recorrelation.
                 Default: ToRGB
             decorrelate_init (bool, optional): Whether or not to apply color
-                decorrelation to the init tensor input.
+                decorrelation to the init tensor input. This parameter is not used if
+                parameterization is an instance or if init is None.
                 Default: True
         """
         super().__init__()
