@@ -1,6 +1,6 @@
 from collections import defaultdict
 from enum import Enum
-from typing import cast, DefaultDict, Iterable, List, Tuple, Union
+from typing import cast, Callable, DefaultDict, Iterable, List, Tuple, Union
 
 import torch
 from captum._utils.common import _format_tensor_into_tuples, _register_backward_hook
@@ -103,8 +103,8 @@ class SampleGradientWrapper:
     def __init__(self, model) -> None:
         self.model = model
         self.hooks_added = False
-        self.activation_dict: DefaultDict[Module, Tensor] = defaultdict(list)
-        self.gradient_dict: DefaultDict[Module, Tensor] = defaultdict(list)
+        self.activation_dict: DefaultDict[Module, List[Tensor]] = defaultdict(list)
+        self.gradient_dict: DefaultDict[Module, List[Tensor]] = defaultdict(list)
         self.forward_hooks: List[Callable] = []
         self.backward_hooks: List[Callable] = []
 
@@ -152,8 +152,8 @@ class SampleGradientWrapper:
         self.backward_hooks: List[Callable] = []
 
     def _reset(self) -> None:
-        self.activation_dict: DefaultDict[Module, Tensor] = defaultdict(list)
-        self.gradient_dict: DefaultDict[Module, Tensor] = defaultdict(list)
+        self.activation_dict: DefaultDict[Module, List[Tensor]] = defaultdict(list)
+        self.gradient_dict: DefaultDict[Module, List[Tensor]] = defaultdict(list)
 
     def compute_param_sample_gradients(self, loss_blob, loss_mode="mean") -> None:
         assert (
