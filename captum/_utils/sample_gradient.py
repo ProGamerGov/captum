@@ -100,7 +100,7 @@ class SampleGradientWrapper:
     - https://github.com/pytorch/opacus/tree/main/opacus/grad_sample
     """
 
-    def __init__(self, model):
+    def __init__(self, model) -> None:
         self.model = model
         self.hooks_added = False
         self.activation_dict = defaultdict(list)

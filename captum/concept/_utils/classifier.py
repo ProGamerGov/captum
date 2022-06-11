@@ -126,7 +126,7 @@ class DefaultClassifier(Classifier):
     class and handles large concept datasets accordingly.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         warnings.warn(
             "Using default classifier for TCAV which keeps input"
             " both train and test datasets in the memory. Consider defining"
