@@ -148,8 +148,8 @@ class SampleGradientWrapper:
         for hook in self.backward_hooks:
             hook.remove()
 
-        self.forward_hooks: List[Callable] = []
-        self.backward_hooks: List[Callable] = []
+        self.forward_hooks = []
+        self.backward_hooks = []
 
     def _reset(self) -> None:
         self.activation_dict: DefaultDict[Module, List[Tensor]] = defaultdict(list)
