@@ -2,10 +2,6 @@
 
 <hr/>
 
-<!--- BADGES: START --->
-[![GitHub - License](https://img.shields.io/github/license/pytorch/captum?logo=github&style=flat&color=green)][#github-license]
-<!--- BADGES: END --->
-
 
 Captum is a model interpretability and understanding library for PyTorch.
 Captum means comprehension in Latin and contains general purpose implementations
