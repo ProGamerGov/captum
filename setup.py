@@ -99,5 +99,4 @@ if __name__ == "__main__":
             "test": TEST_REQUIRES,
             "tutorials": TUTORIALS_REQUIRES,
         },
-        package_data={"captum": package_files},
     )
