@@ -4,19 +4,6 @@
 
 <!--- BADGES: START --->
 [![GitHub - License](https://img.shields.io/github/license/pytorch/captum?logo=github&style=flat&color=green)][#github-license]
-[![Conda](https://img.shields.io/conda/vn/pytorch/captum?logo=anaconda&style=flat&color=orange)](https://anaconda.org/pytorch/captum)
-[![PyPI](https://img.shields.io/pypi/v/captum.svg)][#pypi-package]
-[![CircleCI](https://circleci.com/gh/pytorch/captum.svg?style=shield)](https://circleci.com/gh/pytorch/captum)
-[![Conda - Platform](https://img.shields.io/conda/pn/conda-forge/captum?logo=anaconda&style=flat)][#conda-forge-package]
-[![Conda (channel only)](https://img.shields.io/conda/vn/conda-forge/captum?logo=anaconda&style=flat&color=orange)][#conda-forge-package]
-[![Conda Recipe](https://img.shields.io/static/v1?logo=conda-forge&style=flat&color=green&label=recipe&message=captum)][#conda-forge-feedstock]
-[![Docs - GitHub.io](https://img.shields.io/static/v1?logo=captum&style=flat&color=pink&label=docs&message=captum)][#docs-package]
-
-[#github-license]: https://github.com/pytorch/captum/blob/master/LICENSE
-[#pypi-package]: https://pypi.org/project/captum/
-[#conda-forge-package]: https://anaconda.org/conda-forge/captum
-[#conda-forge-feedstock]: https://github.com/conda-forge/captum-feedstock
-[#docs-package]: https://captum.ai/
 <!--- BADGES: END --->
 
 
@@ -48,35 +35,11 @@ Captum can also be used by application engineers who are using trained models in
 
 **Installation Requirements**
 - Python >= 3.6
-- PyTorch >= 1.2
+- PyTorch >= 1.6
 
 
 ##### Installing the latest release
 
-The latest release of Captum is easily installed either via
-[Anaconda](https://www.anaconda.com/distribution/#download-section) (recommended) or via `pip`.
-
-**with `conda`**
-
-You can install captum from any of the following supported conda channels:
-
-- channel: `pytorch`
-
-  ```sh
-  conda install captum -c pytorch
-  ```
-
-- channel: `conda-forge`
-
-  ```sh
-  conda install captum -c conda-forge
-  ```
-
-**With `pip`**
-
-```bash
-pip install captum
-```
 
 **Manual / Dev install**
 
