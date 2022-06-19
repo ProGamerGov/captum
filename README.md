@@ -64,7 +64,7 @@ pytest -ra
 
 ## Getting Started
 
-Please see the provided tutorials for more information.
+Please see the provided tutorials located in `tutorials/optimviz` for more information.
 
 ## License
 Captum is BSD licensed, as found in the [LICENSE](LICENSE) file.
