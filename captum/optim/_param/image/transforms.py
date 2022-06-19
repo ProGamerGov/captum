@@ -944,24 +944,6 @@ class RGBToBGR(nn.Module):
         return x[:, [2, 1, 0]]
 
 
-# class TransformationRobustness(nn.Module):
-#     def __init__(self, jitter=False, scale=False):
-#         super().__init__()
-#         if jitter:
-#             self.jitter = RandomSpatialJitter(4)
-#         if scale:
-#             self.scale = RandomScale()
-
-#     def forward(self, x):
-#         original_shape = x.shape
-#         if hasattr(self, "jitter"):
-#             x = self.jitter(x)
-#         if hasattr(self, "scale"):
-#             x = self.scale(x)
-#         cropped = center_crop(x, original_shape)
-#         return cropped
-
-
 # class RandomHomography(nn.Module):
 #     def __init__(self):
 #         super().__init__()
@@ -984,7 +966,7 @@ class GaussianSmoothing(nn.Module):
     in the input using a depthwise convolution.
     """
 
-    __constants__ = ["groups"]
+    __constants__ = ["groups", "padding"]
 
     def __init__(
         self,
@@ -992,6 +974,7 @@ class GaussianSmoothing(nn.Module):
         kernel_size: Union[int, Sequence[int]],
         sigma: Union[float, Sequence[float]],
         dim: int = 2,
+        use_same_padding: bool = True,
     ) -> None:
         """
         Args:
@@ -1002,6 +985,9 @@ class GaussianSmoothing(nn.Module):
             sigma (float, sequence): Standard deviation of the gaussian kernel.
             dim (int, optional): The number of dimensions of the data.
                 Default value is 2 (spatial).
+            use_same_padding (bool, optional): Whether or not to use "same" padding so
+                that the output shape is the same as the input shape.
+                Default: True
         """
         super().__init__()
         if isinstance(kernel_size, numbers.Number):
@@ -1012,9 +998,18 @@ class GaussianSmoothing(nn.Module):
         # The gaussian kernel is the product of the
         # gaussian function of each dimension.
         kernel = 1
-        meshgrids = torch.meshgrid(
-            [torch.arange(size, dtype=torch.float32) for size in kernel_size]
-        )
+
+        # PyTorch v1.10.0 adds a new indexing argument
+        if version.parse(torch.__version__) >= version.parse("1.10.0"):
+            meshgrids = torch.meshgrid(
+                [torch.arange(size, dtype=torch.float32) for size in kernel_size],
+                indexing="ij",
+            )
+        else:
+            meshgrids = torch.meshgrid(
+                [torch.arange(size, dtype=torch.float32) for size in kernel_size]
+            )
+
         for size, std, mgrid in zip(kernel_size, sigma, meshgrids):
             mean = (size - 1) / 2
             kernel *= (
@@ -1032,6 +1027,7 @@ class GaussianSmoothing(nn.Module):
 
         self.register_buffer("weight", kernel)
         self.groups = channels
+        self.padding = "same" if use_same_padding else 0
 
         if dim == 1:
             self.conv = F.conv1d
@@ -1055,7 +1051,9 @@ class GaussianSmoothing(nn.Module):
         Returns:
             **filtered** (torch.Tensor): Filtered output.
         """
-        return self.conv(input, weight=self.weight, groups=self.groups)
+        return self.conv(
+            input, weight=self.weight, groups=self.groups, padding=self.padding
+        )
 
 
 class SymmetricPadding(torch.autograd.Function):
