@@ -1,4 +1,5 @@
 from ._common import (  # noqa: F401
+    MaxPool2dRelaxed,
     RedirectedReluLayer,
     SkipLayer,
     collect_activations,
@@ -22,6 +23,7 @@ from ._image.inception_v1_places365_classes import (  # noqa: F401
 
 
 __all__ = [
+    "MaxPool2dRelaxed",
     "RedirectedReluLayer",
     "SkipLayer",
     "collect_activations",

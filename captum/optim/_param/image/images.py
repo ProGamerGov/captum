@@ -69,6 +69,11 @@ class ImageTensor(torch.Tensor):
         img_np = np.array(img.convert(mode)).astype(np.float32)
         return cls(img_np.transpose(2, 0, 1) / scale)
 
+    @classmethod
+    def load(cls, path: str, scale: float = 255.0, mode: str = "RGB") -> "ImageTensor":
+        """Alias of ImageTensor.open()"""
+        return cls.open(path=path, scale=scale, mode=mode)
+
     def __repr__(self) -> str:
         prefix = "ImageTensor("
         indent = len(prefix)
@@ -117,10 +122,11 @@ class ImageTensor(torch.Tensor):
                 grid image. Default is set to None for no grid image creation.
                 Default: None
             padding (int, optional): The amount of padding between images in the grid
-                images. This parameter only has an effect if `nrow` is not None.
+                images. This parameter only has an effect if `images_per_row` is not
+                None.
                 Default: 2
             pad_value (float, optional): The value to use for the padding. This
-                parameter only has an effect if `nrow` is not None.
+                parameter only has an effect if `images_per_row` is not None.
                 Default: 0.0
         """
         show(
@@ -158,10 +164,10 @@ class ImageTensor(torch.Tensor):
                 grid image. Default is set to None for no grid image creation.
                 Default: None
             padding (int, optional): The amount of padding between images in the grid
-                images. This parameter only has an effect if `nrow` is not None.
-                Default: 2
+                images. This parameter only has an effect if `images_per_row` is not
+                None.
             pad_value (float, optional): The value to use for the padding. This
-                parameter only has an effect if `nrow` is not None.
+                parameter only has an effect if `images_per_row` is not None.
                 Default: 0.0
         """
         save_tensor_as_image(
