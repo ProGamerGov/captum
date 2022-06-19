@@ -54,7 +54,6 @@ DEV_REQUIRES = (
 # get version string from module
 with open(os.path.join(os.path.dirname(__file__), "captum/__init__.py"), "r") as f:
     version = re.search(r"__version__ = ['\"]([^'\"]*)['\"]", f.read(), re.M).group(1)
-    report("-- Building version " + version)
 
 # read in README.md as the long description
 with open("README.md", "r") as fh:
