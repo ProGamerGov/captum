@@ -44,7 +44,7 @@ class InputOptimization(Objective, Parameterized):
         when initializing InputOptimization.
     :ivar transform: initial value (nn.Module): The given transform instance given
         when initializing InputOptimization. If it was set to None during
-        initializing, then an instance torch.nn.Identity is used.
+        initialization, then an instance of torch.nn.Identity will be returned.
     """
 
     def __init__(
