@@ -109,6 +109,11 @@ class InputOptimization(Objective, Parameterized):
         self.hooks = ModuleOutputsHook(value)
 
     def parameters(self) -> Iterable[nn.Parameter]:
+        """
+        Returns:
+            parameters (iterable of nn.Parameter): An iterable of parameters in the
+                image parameterization.
+        """
         return self.input_param.parameters()
 
     def optimize(
