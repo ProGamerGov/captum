@@ -187,7 +187,7 @@ class Conv2dSame(nn.Conv2d):
             in_channels, out_channels, kernel_size, stride, 0, dilation, groups, bias
         )
 
-    def calc_same_pad(self, i: int, k: int, s: int, d: int) -> int:
+    def _calc_same_pad(self, i: int, k: int, s: int, d: int) -> int:
         """
         Calculate the required padding for a dimension.
 
@@ -214,8 +214,8 @@ class Conv2dSame(nn.Conv2d):
         """
         ih, iw = x.size()[-2:]
         kh, kw = self.weight.size()[-2:]
-        pad_h = self.calc_same_pad(i=ih, k=kh, s=self.stride[0], d=self.dilation[0])
-        pad_w = self.calc_same_pad(i=iw, k=kw, s=self.stride[1], d=self.dilation[1])
+        pad_h = self._calc_same_pad(i=ih, k=kh, s=self.stride[0], d=self.dilation[0])
+        pad_w = self._calc_same_pad(i=iw, k=kw, s=self.stride[1], d=self.dilation[1])
 
         if pad_h > 0 or pad_w > 0:
             x = F.pad(
