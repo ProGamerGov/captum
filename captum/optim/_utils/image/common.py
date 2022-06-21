@@ -241,13 +241,16 @@ def hue_to_rgb(
 ) -> torch.Tensor:
     """
     Create an RGB unit vector based on a hue of the input angle.
+
     Args:
+
         angle (float): The hue angle to create an RGB color for.
         device (torch.device, optional): The device to create the angle color tensor
             on.
             Default: torch.device("cpu")
         warp (bool, optional): Whether or not to make colors more distinguishable.
             Default: True
+
     Returns:
         color_vec (torch.Tensor): A color vector.
     """
