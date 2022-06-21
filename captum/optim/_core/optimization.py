@@ -35,6 +35,9 @@ class InputOptimization(Objective, Parameterized):
     For more details, see the following:
         https://github.com/tensorflow/lucid
         https://distill.pub/2017/feature-visualization/
+    
+    :ivar model: initial value: torch.nn.Identity()
+    :ivar transform
     """
 
     def __init__(
