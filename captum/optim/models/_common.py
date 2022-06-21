@@ -237,7 +237,8 @@ def collect_activations(
     targets: Union[nn.Module, List[nn.Module]],
     model_input: TupleOfTensorsOrTensorType = torch.zeros(1, 3, 224, 224),
 ) -> ModuleOutputMapping:
-    """
+    """collect_activations(model, targets, model_input=torch.zeros(1, 3, 224, 224))
+
     Collect target activations for a model.
 
     Args:
