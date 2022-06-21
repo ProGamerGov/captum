@@ -112,13 +112,16 @@ def _transfer_layer_vars(
     """
     Given a layer instance, create a new layer instance of another class
     with the same initialization variables as the original layer.
+
     Args:
+
         layer1: (nn.Module): A layer instance that you want to transfer
             initialization variables from.
         layer2: (nn.Module): The layer class to create with the variables
             from of layer1.
         kwargs: (Any, optional): Any additional variables to use when creating
             the new layer.
+
     Returns:
         layer2 instance (nn.Module): An instance of layer2 with the initialization
             variables that it shares with layer1, and any specified additional
