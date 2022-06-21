@@ -35,6 +35,18 @@ class InputOptimization(Objective, Parameterized):
     For more details, see the following:
         https://github.com/tensorflow/lucid
         https://distill.pub/2017/feature-visualization/
+
+    Instance variables that be used in the optimize function and StopCriteria:
+
+    :ivar model: initial value (nn.Module): The given model instance given when
+        initializing InputOptimization.
+    :ivar input_param: initial value (ImageParameterization): The given image
+        parameterization instance given when initializing InputOptimization.
+    :ivar loss_fn: initial value (Loss): The given composable loss instance given
+        when initializing InputOptimization.
+    :ivar transform: initial value (nn.Module): The given transform instance given
+        when initializing InputOptimization. If it was set to None during
+        initialization, then an instance of torch.nn.Identity will be returned.
     """
 
     def __init__(
