@@ -35,7 +35,9 @@ class InputOptimization(Objective, Parameterized):
     For more details, see the following:
         https://github.com/tensorflow/lucid
         https://distill.pub/2017/feature-visualization/
-    
+
+    Instance variables that be used in the optimize function and StopCriteria:
+
     :ivar model: initial value (nn.Module): The given model instance given when
         initializing InputOptimization.
     :ivar input_param: initial value (ImageParameterization): The given image
@@ -105,7 +107,9 @@ class InputOptimization(Objective, Parameterized):
         return loss_value
 
     def cleanup(self) -> None:
-        r"""Garbage collection, mainly removing hooks."""
+        r"""Garbage collection, mainly removing hooks.
+        This should only be run after optimize is finished running.
+        """
         self.hooks.remove_hooks()
 
     # Targets are managed by ModuleOutputHooks; we mainly just want a convenient setter
