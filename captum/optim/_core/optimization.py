@@ -107,7 +107,9 @@ class InputOptimization(Objective, Parameterized):
         return loss_value
 
     def cleanup(self) -> None:
-        r"""Garbage collection, mainly removing hooks."""
+        r"""Garbage collection, mainly removing hooks.
+        This should only be run after optimize is finished running.
+        """
         self.hooks.remove_hooks()
 
     # Targets are managed by ModuleOutputHooks; we mainly just want a convenient setter
@@ -121,6 +123,11 @@ class InputOptimization(Objective, Parameterized):
         self.hooks = ModuleOutputsHook(value)
 
     def parameters(self) -> Iterable[nn.Parameter]:
+        """
+        Returns:
+            parameters (iterable of nn.Parameter): An iterable of parameters in the
+                image parameterization.
+        """
         return self.input_param.parameters()
 
     def optimize(
