@@ -36,8 +36,15 @@ class InputOptimization(Objective, Parameterized):
         https://github.com/tensorflow/lucid
         https://distill.pub/2017/feature-visualization/
     
-    :ivar model: initial value: torch.nn.Identity()
-    :ivar transform
+    :ivar model: initial value (nn.Module): The given model instance given when
+        initializing InputOptimization.
+    :ivar input_param: initial value (ImageParameterization): The given image
+        parameterization instance given when initializing InputOptimization.
+    :ivar loss_fn: initial value (Loss): The given composable loss instance given
+        when initializing InputOptimization.
+    :ivar transform: initial value (nn.Module): The given transform instance given
+        when initializing InputOptimization. If it was set to None during
+        initializing, then an instance torch.nn.Identity is used.
     """
 
     def __init__(
