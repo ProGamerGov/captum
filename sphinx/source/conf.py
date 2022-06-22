@@ -72,6 +72,9 @@ pygments_style = "sphinx"
 # Default options for autodoc directives. Applied to all autodoc directives
 autodoc_default_options = {}
 
+# Preserve signature defaults
+autodoc_preserve_defaults = True
+
 # Inlcude init docstrings into body of autoclass directives
 autoclass_content = "both"
 
