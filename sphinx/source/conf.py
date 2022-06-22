@@ -73,6 +73,8 @@ pygments_style = "sphinx"
 autodoc_default_options = {}
 
 # Preserve signature defaults
+# Prevents entire tensors from being printed, and gives callable functions
+# proper names
 autodoc_preserve_defaults = True
 
 # Inlcude init docstrings into body of autoclass directives
