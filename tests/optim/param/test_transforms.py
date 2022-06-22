@@ -1835,7 +1835,10 @@ class TestSymmetricPadding(BaseTest):
                 return transforms.SymmetricPadding.apply(x_pt, padding)
 
         sym_pad = SymmetricPaddingLayer()
-        sym_pad.register_backward_hook(check_grad)
+        if version.parse(torch.__version__) >= version.parse("1.8.0"):
+            sym_pad.register_full_backward_hook(check_grad)
+        else:
+            sym_pad.register_backward_hook(check_grad)
         x_out = sym_pad(x_pt, offset_pad)
         (x_out.sum() * 1).backward()
 
