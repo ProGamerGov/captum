@@ -1830,9 +1830,9 @@ class TestSymmetricPadding(BaseTest):
 
         class SymmetricPaddingLayer(torch.nn.Module):
             def forward(
-                self, x: torch.Tensor, padding: List[List[int]]
+                self, x_input: torch.Tensor, padding: List[List[int]]
             ) -> torch.Tensor:
-                return transforms.SymmetricPadding.apply(x_pt, padding)
+                return transforms.SymmetricPadding.apply(x_input, padding)
 
         sym_pad = SymmetricPaddingLayer()
         if version.parse(torch.__version__) >= version.parse("1.8.0"):
