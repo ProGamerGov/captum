@@ -29,7 +29,7 @@ class TestInputOptimization(BaseTest):
         self.assertEqual(loss_fn, obj.loss_function)
         self.assertEqual(list(image_param.parameters()), list(obj.parameters()))
 
-    def test_input_optimization_custom_optimize(self) -> torch.Tensor:
+    def test_input_optimization_custom_optimize(self) -> None:
         if version.parse(torch.__version__) <= version.parse("1.6.0"):
             raise unittest.SkipTest(
                 "Skipping InputOptimization custom optimze test due to insufficient"
