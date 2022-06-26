@@ -200,6 +200,7 @@ class BaseLoss(Loss):
     """
     The base class used for all Loss objectives.
     """
+
     def __init__(
         self,
         target: Union[nn.Module, List[nn.Module]] = [],
@@ -320,6 +321,7 @@ class CompositeLoss(BaseLoss):
             target = list(dict.fromkeys(target))
             return opt.loss.CompositeLoss(loss_fn, name=name, target=target)
     """
+
     def __init__(
         self,
         loss_fn: Callable,
