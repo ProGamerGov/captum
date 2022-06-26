@@ -71,11 +71,14 @@ def calc_grid_indices(
 
     Each cell in the above example would contain a list of indices inside a tensor for
     that particular cell, like this:
-    indices = [
-        [tensor([0, 5]), tensor([1]), tensor([2, 3])],
-        [tensor([]), tensor([4]), tensor([])],
-        [tensor([6, 7, 8]), tensor([]), tensor([])],
-    ]
+
+    ::
+
+        indices = [
+            [tensor([0, 5]), tensor([1]), tensor([2, 3])],
+            [tensor([]), tensor([4]), tensor([])],
+            [tensor([6, 7, 8]), tensor([]), tensor([])],
+        ]
 
     Args:
 
