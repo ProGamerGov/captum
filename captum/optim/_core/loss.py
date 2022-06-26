@@ -249,7 +249,75 @@ class BaseLoss(Loss):
 class CompositeLoss(BaseLoss):
     """
     When math operations are performed using one or more loss objectives, this class
-    is used to store and run those operations.
+    is used to store and run those operations. Below we show examples of common
+    CompositeLoss use cases.
+
+
+    Using composite loss with unary op or with a Loss instance and a float or integer:
+
+    ::
+        # CompositeLoss unary and Loss instance with number example
+        def compose_single_loss(loss: opt.loss.Loss) -> opt.loss.CompositeLoss:
+            def loss_fn(
+                module: Dict[nn.Module, Optional[torch.Tensor]]
+            ) -> torch.Tensor:
+                return loss(module)
+
+            # Name of new composable loss instance
+            name = loss.__name__
+            # All targets being used in the composable loss instance
+            target = loss.target
+            return opt.loss.CompositeLoss(loss_fn, name=name, target=target)
+
+    Using composite loss with binary op using two Loss instances:
+
+    ::
+
+        # CompositeLoss binary Loss instances example
+        def compose_binary_loss(
+            loss1: opt.loss.Loss, loss2: opt.loss.Loss
+        ) -> opt.loss.CompositeLoss:
+            def loss_fn(
+                module: Dict[nn.Module, Optional[torch.Tensor]]
+            ) -> torch.Tensor:
+                # Operation using 2 loss instances
+                return loss1(module) + loss2(module)
+
+            # Name of new composable loss instance
+            name = "Compose(" + ", ".join([loss1.__name__, loss2.__name__]) + ")"
+            # All targets being used in the composable loss instance
+            target1 = loss1.target if type(loss1.target) is list else [loss1.target]
+            target2 = loss2.target if type(loss2.target) is list else [loss2.target]
+            target = target1 + target2
+            return opt.loss.CompositeLoss(loss_fn, name=name, target=target)
+
+    Using composite loss with a list of Loss instances:
+
+    ::
+
+        # CompositeLoss list of Loss instances example
+        def compose_multiple_loss(loss: List[opt.loss.Loss]) -> opt.loss.CompositeLoss:
+            def loss_fn(
+                module: Dict[nn.Module, Optional[torch.Tensor]]
+            ) -> torch.Tensor:
+                loss_tensors = [loss_obj(module) for loss_obj in loss]
+                # We can use any operation that combines the list of tensors into a
+                # single tensor
+                return sum(loss_tensors)
+
+            # Name of new composable loss instance
+            name = name = "Sum(" + ", ".join([obj.__name__ for obj in loss]) + ")"
+
+            # All targets being used in the composable loss instance
+            # targets will either be List[nn.Module] or nn.Module
+            targets = [loss_obj.target for loss_obj in loss]
+            # Flatten list of targets
+            target = [
+                o for l in [t if type(t) is list else [t] for t in targets] for o in l
+            ]
+            # Remove duplicate targets
+            target = list(dict.fromkeys(target))
+            return opt.loss.CompositeLoss(loss_fn, name=name, target=target)
     """
     def __init__(
         self,
