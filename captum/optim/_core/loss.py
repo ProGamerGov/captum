@@ -36,6 +36,7 @@ class Loss(ABC):
 
     def __init__(self) -> None:
         super().__init__()
+        self.__name__ = self.__class__.__name__
 
     @abstractproperty
     def target(self) -> Union[nn.Module, List[nn.Module]]:
@@ -307,17 +308,25 @@ class LayerActivation(BaseLoss):
     Maximize activations at the target layer.
     This is the most basic loss available and it simply returns the activations in
     their original form.
-
-    Args:
-
-        target (nn.Module): A target layer, transform, or image parameterization
-            instance to optimize the output of.
-        batch_index (int or list of int, optional): The index or index range of
-            activations to optimize if optimizing a batch of activations. If set to
-            None, defaults to all activations in the batch. Index ranges should be
-            in the format of: [start, end].
-            Default: None
     """
+
+    def __init__(
+        self,
+        target: nn.Module,
+        batch_index: Optional[Union[int, List[int]]] = None,
+    ) -> None:
+        """
+        Args:
+
+            target (nn.Module): A target layer, transform, or image parameterization
+                instance to optimize the output of.
+            batch_index (int or list of int, optional): The index or index range of
+                activations to optimize if optimizing a batch of activations. If set
+                to None, defaults to all activations in the batch. Index ranges should
+                be in the format of: [start, end].
+                Default: None
+        """
+        BaseLoss.__init__(self, target, batch_index)
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
@@ -434,17 +443,25 @@ class DeepDream(BaseLoss):
     This loss returns the squared layer activations. When combined with a negative
     mean loss summarization, this loss will create hallucinogenic visuals commonly
     referred to as 'Deep Dream'.
-
-    Args:
-
-        target (nn.Module): A target layer, transform, or image parameterization
-            instance to optimize the output of.
-        batch_index (int or list of int, optional): The index or index range of
-            activations to optimize if optimizing a batch of activations. If set to
-            None, defaults to all activations in the batch. Index ranges should be
-            in the format of: [start, end].
-            Default: None
     """
+
+    def __init__(
+        self,
+        target: nn.Module,
+        batch_index: Optional[Union[int, List[int]]] = None,
+    ) -> None:
+        """
+        Args:
+
+            target (nn.Module): A target layer, transform, or image parameterization
+                instance to optimize the output of.
+            batch_index (int or list of int, optional): The index or index range of
+                activations to optimize if optimizing a batch of activations. If set
+                to None, defaults to all activations in the batch. Index ranges should
+                be in the format of: [start, end].
+                Default: None
+        """
+        BaseLoss.__init__(self, target, batch_index)
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
         activations = targets_to_values[self.target]
