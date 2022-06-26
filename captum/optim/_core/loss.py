@@ -253,10 +253,11 @@ class CompositeLoss(BaseLoss):
     CompositeLoss use cases.
 
 
-    Using composite loss with unary op or with a Loss instance and a float or integer:
+    Using CompositeLoss with a unary op or with a Loss instance and a float or integer:
 
-    ::
-        # CompositeLoss unary and Loss instance with number example
+    .. code-block:: python
+        :linenos:
+
         def compose_single_loss(loss: opt.loss.Loss) -> opt.loss.CompositeLoss:
             def loss_fn(
                 module: Dict[nn.Module, Optional[torch.Tensor]]
@@ -269,11 +270,11 @@ class CompositeLoss(BaseLoss):
             target = loss.target
             return opt.loss.CompositeLoss(loss_fn, name=name, target=target)
 
-    Using composite loss with binary op using two Loss instances:
+    Using CompositeLoss with a binary op using two Loss instances:
 
-    ::
+    .. code-block:: python
+        :linenos:
 
-        # CompositeLoss binary Loss instances example
         def compose_binary_loss(
             loss1: opt.loss.Loss, loss2: opt.loss.Loss
         ) -> opt.loss.CompositeLoss:
@@ -291,11 +292,11 @@ class CompositeLoss(BaseLoss):
             target = target1 + target2
             return opt.loss.CompositeLoss(loss_fn, name=name, target=target)
 
-    Using composite loss with a list of Loss instances:
+    Using CompositeLoss with a list of Loss instances:
 
-    ::
+    .. code-block:: python
+        :linenos:
 
-        # CompositeLoss list of Loss instances example
         def compose_multiple_loss(loss: List[opt.loss.Loss]) -> opt.loss.CompositeLoss:
             def loss_fn(
                 module: Dict[nn.Module, Optional[torch.Tensor]]
