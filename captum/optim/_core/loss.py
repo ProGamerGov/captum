@@ -197,6 +197,9 @@ def module_op(
 
 
 class BaseLoss(Loss):
+    """
+    The base class used for all Loss objectives.
+    """
     def __init__(
         self,
         target: Union[nn.Module, List[nn.Module]] = [],
@@ -244,6 +247,10 @@ class BaseLoss(Loss):
 
 
 class CompositeLoss(BaseLoss):
+    """
+    When math operations are performed using one or more loss objectives, this class
+    is used to store and run those operations.
+    """
     def __init__(
         self,
         loss_fn: Callable,
