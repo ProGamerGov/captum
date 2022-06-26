@@ -254,7 +254,8 @@ class CompositeLoss(BaseLoss):
     CompositeLoss use cases.
 
 
-    Using CompositeLoss with a unary op or with a Loss instance and a float or integer:
+    Using CompositeLoss with a unary op or with a binary op involving a Loss instance
+    and a float or integer:
 
     .. code-block:: python
         :linenos:
