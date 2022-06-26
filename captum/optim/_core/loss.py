@@ -287,10 +287,14 @@ class CompositeLoss(BaseLoss):
 
             # Name of new composable loss instance
             name = "Compose(" + ", ".join([loss1.__name__, loss2.__name__]) + ")"
+
             # All targets being used in the composable loss instance
             target1 = loss1.target if type(loss1.target) is list else [loss1.target]
             target2 = loss2.target if type(loss2.target) is list else [loss2.target]
             target = target1 + target2
+
+            # Remove duplicate targets
+            target = list(dict.fromkeys(target))
             return opt.loss.CompositeLoss(loss_fn, name=name, target=target)
 
     Using CompositeLoss with a list of Loss instances:
