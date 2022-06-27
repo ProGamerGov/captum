@@ -822,9 +822,10 @@ class NaturalImage(ImageParameterization):
                 Default: ``None``
             decorrelation_module (nn.Module, optional): A module instance that
                 recorrelates the colors of an input image. Custom modules can make use
-                of the ``decorrelate_init`` parameter by having a second inverse
-                parameter in their forward functions that performs the inverse operation
-                when it is set to ``True``. Set to ``None`` for no recorrelation.
+                of the ``decorrelate_init`` parameter by having a second ``inverse``
+                parameter in their forward functions that performs the inverse
+                operation when it is set to ``True`` (see ``ToRGB`` for an example).
+                Set to ``None`` for no recorrelation.
                 Default: ``ToRGB``
             decorrelate_init (bool, optional): Whether or not to apply color
                 decorrelation to the init tensor input. This parameter is not used if
