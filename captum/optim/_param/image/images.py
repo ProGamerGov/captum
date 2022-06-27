@@ -196,6 +196,16 @@ class FFTImage(ImageParameterization):
         True
         >>> print(output_image.shape)
         torch.Size([1, 3, 224, 224])
+
+    Example for using an initialization tensor::
+
+        >>> init = torch.randn(1, 3, 224, 224)
+        >>> fft_image = opt.images.FFTImage(init=init)
+        >>> output_image = fft_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
     """
 
     __constants__ = ["size"]
@@ -351,6 +361,16 @@ class PixelImage(ImageParameterization):
         True
         >>> print(output_image.shape)
         torch.Size([1, 3, 224, 224])
+
+    Example for using an initialization tensor::
+
+        >>> init = torch.randn(1, 3, 224, 224)
+        >>> pixel_image = opt.images.PixelImage(init=init)
+        >>> output_image = pixel_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
     """
 
     def __init__(
@@ -397,6 +417,16 @@ class LaplacianImage(ImageParameterization):
     Example::
 
         >>> laplacian_image = opt.images.LaplacianImage(size=(224, 224))
+        >>> output_image = laplacian_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
+
+    Example for using an initialization tensor::
+
+        >>> init = torch.randn(1, 3, 224, 224)
+        >>> laplacian_image = opt.images.LaplacianImage(init=init)
         >>> output_image = laplacian_image()
         >>> print(output_image.required_grad)
         True
