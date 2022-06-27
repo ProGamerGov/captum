@@ -31,7 +31,8 @@ def extract_expanded_weights(
         target2 (nn.Module): The end target layer. Must be above the layer
             specified for target1.
         crop_shape (int or tuple of ints, optional): Specify the exact output size
-            to crop out.
+            to crop out. Set to ``None`` for no cropping.
+            Default: ``None``
         model_input (tensor or tuple of tensors, optional): The input to use
             with the specified model.
             Default: ``torch.zeros(1, 3, 224, 224)``
