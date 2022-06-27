@@ -21,6 +21,25 @@ TORCH_VERSION = torch.__version__
 
 
 class ImageTensor(torch.Tensor):
+    r"""
+
+    Example using file path or URL::
+
+        >>> image_tensor = opt.images.ImageTensor.load(<path/to/image_file>)
+        >>> image_tensor.export(filename="image_tensor.jpg")  # Save image(s)
+        >>> image_tensor.show(figsize=(8, 8))  # Displays image(s) via Matplotlib
+
+    Example using ``torch.Tensor``::
+
+        >>> image_tensor = torch.randn(1, 3, 224, 224)
+        >>> image_tensor = opt.images.ImageTensor(image_tensor)
+
+    Example using ``np.ndarray``::
+
+        >>> image_tensor = np.random.rand(1, 3, 224, 224)
+        >>> image_tensor = opt.images.ImageTensor(image_tensor)
+    """
+
     @staticmethod
     def __new__(
         cls: Type["ImageTensor"],
