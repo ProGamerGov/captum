@@ -36,6 +36,17 @@ class InputOptimization(Objective, Parameterized):
         https://github.com/tensorflow/lucid
         https://distill.pub/2017/feature-visualization/
 
+    Example::
+
+        >>> model = opt.models.googlenet(pretrained=True)
+        >>> loss_fn = opt.loss.LayerActivation(model.mixed4c)
+        >>> image = opt.images.NaturalImage(size=(224, 224))
+        >>> transform = opt.transforms.TransformationRobustness()
+        >>>
+        >>> obj = opt.InputOptimization(model, loss_fn, image, transform)
+        >>> history = obj.optimize(opt.optimization.n_steps(512))
+        >>> image().show(figsize=(8, 8)) # Display results
+
     Instance variables that be used in the optimize function and StopCriteria:
 
     :ivar model: initial value (nn.Module): The given model instance given when
