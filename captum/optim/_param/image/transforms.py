@@ -1322,6 +1322,8 @@ class CLIPTokenizer(torch.nn.Module):
 
         >>> clip_tokenizer = opt.transforms.CLIPTokenizer(pretrained_merges=True)
         >>> tokens = clip_tokenizer("An example sentence.")
+        >>> print(tokens[0][:6])
+        tensor([49406,   550,  6228, 12737,   269, 49407], dtype=torch.int32)
         >>> decoded_str = clip_tokenizer.decode(tokens)
         >>> print(decoded_str)
         ['an example sentence .']
