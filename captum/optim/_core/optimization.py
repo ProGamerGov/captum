@@ -194,7 +194,12 @@ class InputOptimization(Objective, Parameterized):
 def n_steps(n: int, show_progress: bool = True) -> StopCriteria:
     """StopCriteria generator that uses number of steps as a stop criteria.
 
+    Example::
+
+        >>> stop_criteria = opt.optimization.n_steps(512, True)
+
     Args:
+
         n (int):  Number of steps to run optimization.
         show_progress (bool, optional):  Whether or not to show progress bar.
             Default: ``True``
