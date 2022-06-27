@@ -70,7 +70,7 @@ class ImageTensor(torch.Tensor):
 
     @classmethod
     def load(cls, path: str, scale: float = 255.0, mode: str = "RGB") -> "ImageTensor":
-        """Alias of ImageTensor.open()"""
+        r"""Alias for :func:`open`."""
         return cls.open(path=path, scale=scale, mode=mode)
 
     def __repr__(self) -> str:
