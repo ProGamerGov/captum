@@ -20,6 +20,25 @@ TORCH_VERSION = torch.__version__
 
 
 class ImageTensor(torch.Tensor):
+    r"""
+
+    Example using file path or URL::
+
+        >>> image_tensor = opt.images.ImageTensor.load(<path/to/image_file>)
+        >>> image_tensor.export(filename="image_tensor.jpg")  # Save image(s)
+        >>> image_tensor.show(figsize=(8, 8))  # Displays image(s) via Matplotlib
+
+    Example using ``torch.Tensor``::
+
+        >>> image_tensor = torch.randn(1, 3, 224, 224)
+        >>> image_tensor = opt.images.ImageTensor(image_tensor)
+
+    Example using ``np.ndarray``::
+
+        >>> image_tensor = np.random.rand(1, 3, 224, 224)
+        >>> image_tensor = opt.images.ImageTensor(image_tensor)
+    """
+
     @staticmethod
     def __new__(
         cls: Type["ImageTensor"],
@@ -44,7 +63,7 @@ class ImageTensor(torch.Tensor):
             return super().__new__(cls, x, *args, **kwargs)
 
     @classmethod
-    def open(cls, path: str, scale: float = 255.0, mode: str = "RGB") -> "ImageTensor":
+    def load(cls, path: str, scale: float = 255.0, mode: str = "RGB") -> "ImageTensor":
         """
         Load an image file from a URL or local filepath directly into an
         ``ImageTensor``.
@@ -70,9 +89,9 @@ class ImageTensor(torch.Tensor):
         return cls(img_np.transpose(2, 0, 1) / scale)
 
     @classmethod
-    def load(cls, path: str, scale: float = 255.0, mode: str = "RGB") -> "ImageTensor":
-        r"""Alias for :func:`open`."""
-        return cls.open(path=path, scale=scale, mode=mode)
+    def open(cls, path: str, scale: float = 255.0, mode: str = "RGB") -> "ImageTensor":
+        r"""Alias for :func:`load`."""
+        return cls.load(path=path, scale=scale, mode=mode)
 
     def __repr__(self) -> str:
         prefix = "ImageTensor("
@@ -109,7 +128,7 @@ class ImageTensor(torch.Tensor):
         pad_value: float = 0.0,
     ) -> None:
         """
-        Display an `ImageTensor`.
+        Display an ``ImageTensor`` instance.
 
         Args:
 
@@ -1004,7 +1023,6 @@ class NaturalImage(ImageParameterization):
             image = self.decorrelate(image)
         image = image.rename(None)  # TODO: the world is not yet ready
         return self._to_image_tensor(self.squash_func(image))
-
 
 
 __all__ = [
