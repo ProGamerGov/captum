@@ -23,6 +23,13 @@ def clip_resnet50x4_text(
     This model can be combined with the CLIP ResNet 50x4 Image model to create the full
     CLIP ResNet 50x4 model.
 
+    Example::
+
+        >>> model = opt.models.clip_resnet50x4_text(pretrained=True)
+        >>> clip_tokenizer = opt.transforms.CLIPTokenizer(pretrained_merges=True)
+        >>> tokenized_input = clip_tokenizer("Some example text.")
+        >>> output = model(tokenized_input)
+
     See here for more details:
     https://github.com/openai/CLIP
     https://github.com/mlfoundations/open_clip
