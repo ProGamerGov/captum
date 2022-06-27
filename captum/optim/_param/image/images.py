@@ -187,7 +187,7 @@ class ImageParameterization(InputParameterization):
 class FFTImage(ImageParameterization):
     """
     Parameterize an image using inverse real 2D FFT
-    
+
     Example::
 
         >>> fft_image = opt.images.FFTImage(size=(224, 224))
