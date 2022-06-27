@@ -22,7 +22,7 @@ class BlendAlpha(nn.Module):
 
             background (tensor, optional):  An NCHW image tensor to be used as the
                 Alpha channel's background.
-                Default: None
+                Default: ``None``
         """
         super().__init__()
         self.background = background
@@ -143,12 +143,12 @@ class ToRGB(nn.Module):
         """
         Args:
 
-            x (torch.tensor):  A CHW or NCHW RGB or RGBA image tensor.
-            inverse (bool, optional):  Whether to recorrelate or decorrelate colors.
-                Default: False.
+            x (torch.tensor): A CHW or NCHW RGB or RGBA image tensor.
+            inverse (bool, optional): Whether to recorrelate or decorrelate colors.
+                Default: ``False``
 
         Returns:
-            chw (torch.tensor):  A tensor with it's colors recorrelated or
+            chw (torch.tensor): A tensor with it's colors recorrelated or
                 decorrelated.
         """
 
@@ -197,12 +197,12 @@ class ToRGB(nn.Module):
 
         Args:
 
-            x (torch.tensor):  A CHW pr NCHW RGB or RGBA image tensor.
-            inverse (bool, optional):  Whether to recorrelate or decorrelate colors.
-                Default: False.
+            x (torch.tensor): A CHW pr NCHW RGB or RGBA image tensor.
+            inverse (bool, optional): Whether to recorrelate or decorrelate colors.
+                Default: ``False``
 
         Returns:
-            chw (torch.tensor):  A tensor with it's colors recorrelated or
+            chw (torch.tensor): A tensor with it's colors recorrelated or
                 decorrelated.
         """
 
@@ -244,12 +244,12 @@ class ToRGB(nn.Module):
 
         Args:
 
-            x (torch.tensor):  A CHW or NCHW RGB or RGBA image tensor.
-            inverse (bool, optional):  Whether to recorrelate or decorrelate colors.
-                Default: False.
+            x (torch.tensor): A CHW or NCHW RGB or RGBA image tensor.
+            inverse (bool, optional): Whether to recorrelate or decorrelate colors.
+                Default: ``False``
 
         Returns:
-            chw (torch.tensor):  A tensor with it's colors recorrelated or
+            chw (torch.tensor): A tensor with it's colors recorrelated or
                 decorrelated.
         """
         if torch.jit.is_scripting():
@@ -288,21 +288,23 @@ class CenterCrop(torch.nn.Module):
                 pixels_from_edges (bool, optional): Whether to treat crop size
                 values as the number of pixels from the tensor's edge, or an
                 exact shape in the center.
-            pixels_from_edges (bool, optional): Whether to treat crop size
+            pixels_from_edges (bool, optional): Whether to treat crop ``size``
                 values as the number of pixels from the tensor's edge, or an
                 exact shape in the center.
-                Default: False
+                Default: ``False``
             offset_left (bool, optional): If the cropped away sides are not
                 equal in size, offset center by +1 to the left and/or top.
-                This parameter is only valid when `pixels_from_edges` is False.
-                Default: False
+                This parameter is only valid when ``pixels_from_edges`` is
+                ``False``.
+                Default: ``False``
             padding_mode (optional, str): One of "constant", "reflect", "replicate"
                 or "circular". This parameter is only used if the crop size is larger
                 than the image size.
-                Default: "constant"
-            padding_value (float, optional): fill value for "constant" padding. This
-                parameter is only used if the crop size is larger than the image size.
-                Default: 0.0
+                Default: ``"constant"``
+            padding_value (float, optional): fill value for ``"constant"`` padding.
+                This parameter is only used if the crop size is larger than the image
+                size.
+                Default: ``0.0``
         """
         super().__init__()
         if not hasattr(size, "__iter__"):
