@@ -313,7 +313,7 @@ class CompositeLoss(BaseLoss):
                 return sum(loss_tensors)
 
             # Name of new composable loss instance
-            name = name = "Sum(" + ", ".join([obj.__name__ for obj in loss]) + ")"
+            name = "Compose(" + ", ".join([obj.__name__ for obj in loss]) + ")"
 
             # All targets being used in the composable loss instance
             # targets will either be List[nn.Module] or nn.Module
