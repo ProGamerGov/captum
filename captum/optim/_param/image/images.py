@@ -958,7 +958,8 @@ class NaturalImage(ImageParameterization):
     def forward(self) -> torch.Tensor:
         """
         Returns:
-            image_tensor (torch.Tensor): A recorrelated tensor.
+            image_tensor (torch.Tensor): The parameterization output, that has
+                optionally had its colors recorrelated.
         """
         image = self.parameterization()
         if self.decorrelate is not None:
