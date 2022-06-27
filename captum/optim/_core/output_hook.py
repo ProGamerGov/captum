@@ -105,7 +105,7 @@ class ActivationFetcher:
             targets (nn.Module or list of nn.Module): The target layers to
                 collect activations from.
         """
-        super(ActivationFetcher, self).__init__()
+        super().__init__()
         self.model = model
         self.layers = ModuleOutputsHook(targets)
 
