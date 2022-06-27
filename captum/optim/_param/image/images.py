@@ -203,13 +203,13 @@ class FFTImage(ImageParameterization):
             size (Tuple[int, int]): The height & width dimensions to use for the
                 parameterized output image tensor.
             channels (int, optional): The number of channels to use for each image.
-                Default: 3
+                Default: ``3``
             batch (int, optional): The number of images to stack along the batch
                 dimension.
-                Default: 1
+                Default: ``1``
             init (torch.tensor, optional): Optionally specify a tensor to
                 use instead of creating one.
-                Default: None
+                Default: ``None``
         """
         super().__init__()
         if init is None:
@@ -347,13 +347,13 @@ class PixelImage(ImageParameterization):
             size (Tuple[int, int]): The height & width dimensions to use for the
                 parameterized output image tensor.
             channels (int, optional): The number of channels to use for each image.
-                Default: 3
+                Default: ``3``
             batch (int, optional): The number of images to stack along the batch
                 dimension.
-                Default: 1
+                Default: ``1``
             init (torch.tensor, optional): Optionally specify a tensor to
                 use instead of creating one.
-                Default: None
+                Default: ``None``
         """
         super().__init__()
         if init is None:
@@ -388,25 +388,25 @@ class LaplacianImage(ImageParameterization):
         """
         Args:
 
-            size (Tuple[int, int]): The height & width dimensions to use for the
-                parameterized output image tensor.
-                Default: (224, 224)
+            size (Tuple[int, int], optional): The height & width dimensions to use for
+                the parameterized output image tensor.
+                Default: ``(224, 224)``
             channels (int, optional): The number of channels to use for each image.
-                Default: 3
+                Default: ``3``
             batch (int, optional): The number of images to stack along the batch
                 dimension.
-                Default: 1
+                Default: ``1``
             init (torch.tensor, optional): Optionally specify a tensor to
                 use instead of creating one.
-                Default: None
+                Default: ``None``
             power (float, optional): The desired power value to use.
-                Default: 0.1
+                Default: ``0.1``
             scale_list (list of float, optional): The desired list of scale values to
                 use in the laplacian pyramid. The height & width dimensions specified
-                in size or used in the init tensor should be divisable by every scale
-                value in the scale list with no remainder left over. The default
-                scale_list values are set to work with a size of (224, 224).
-                Default: [1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
+                in ``size`` or used in the ``init`` tensor should be divisable by every
+                scale value in the scale list with no remainder left over. The default
+                scale_list values are set to work with a ``size`` of ``(224, 224)``.
+                Default: ``[1.0, 2.0, 4.0, 8.0, 16.0, 32.0]``
         """
         super().__init__()
         if init is not None:
@@ -513,7 +513,7 @@ class SharedImage(ImageParameterization):
                 instance.
             offset (int or list of int or list of list of ints , optional): The offsets
                 to use for the shared tensors.
-                Default: None
+                Default: ``None``
         """
         super().__init__()
         assert shapes is not None
@@ -723,12 +723,12 @@ class StackImage(ImageParameterization):
                  of image parameterizations to stack across their batch dimensions.
             dim (int, optional): Optionally specify the dim to concatinate
                  parameterization outputs on. Default is set to the batch dimension.
-                 Default: 0
+                 Default: ``0``
             output_device (torch.device, optional): If the parameterizations are on
                 different devices, then their outputs will be moved to the device
-                specified by this variable. Default is set to None with the expectation
-                that all parameterizations are on the same device.
-                Default: None
+                specified by this variable. Default is set to ``None`` with the
+                expectation that all parameterization outputs are on the same device.
+                Default: ``None``
         """
         super().__init__()
         assert len(parameterizations) > 0
@@ -800,36 +800,36 @@ class NaturalImage(ImageParameterization):
             size (Tuple[int, int], optional): The height and width to use for the
                 nn.Parameter image tensor. This parameter is not used if
                 parameterization is an instance.
-                Default: (224, 224)
+                Default: ``(224, 224)``
             channels (int, optional): The number of channels to use when creating the
                 nn.Parameter tensor. This parameter is not used if parameterization is
                 an instance.
-                Default: 3
+                Default: ``3``
             batch (int, optional): The number of channels to use when creating the
-                nn.Parameter tensor, or stacking init images. This parameter is not
-                used if parameterization is an instance.
-                Default: 1
+                nn.Parameter tensor. This parameter is not used if ``parameterization``
+                is an instance.
+                Default: ``1``
             init (torch.tensor, optional): Optionally specify a tensor to use instead
                 of creating one from random noise. This parameter is not used if
-                parameterization is an instance. Set to None for random init.
-                Default: None
+                ``parameterization`` is an instance. Set to ``None`` for random init.
+                Default: ``None``
             parameterization (ImageParameterization, optional): An image
                 parameterization class, or instance of an image parameterization class.
                 Default: FFTImage
             squash_func (Callable[[torch.Tensor], torch.Tensor]], optional): The squash
                 function to use after color recorrelation. A function, lambda function,
                 or callable class instance.
-                Default: None
+                Default: ``None``
             decorrelation_module (nn.Module, optional): A module instance that
                 recorrelates the colors of an input image. Custom modules can make use
-                of the decorrelate_init parameter by having a second inverse parameter
-                in their forward functions that performs the inverse operation when it
-                is set to True. Set to None for no recorrelation.
-                Default: ToRGB
+                of the ``decorrelate_init`` parameter by having a second inverse
+                parameter in their forward functions that performs the inverse operation
+                when it is set to ``True``. Set to ``None`` for no recorrelation.
+                Default: ``ToRGB``
             decorrelate_init (bool, optional): Whether or not to apply color
                 decorrelation to the init tensor input. This parameter is not used if
-                parameterization is an instance or if init is None.
-                Default: True
+                ``parameterization`` is an instance or if init is ``None``.
+                Default: ``True``
         """
         super().__init__()
         if not isinstance(parameterization, ImageParameterization):
