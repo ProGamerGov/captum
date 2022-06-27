@@ -1318,6 +1318,12 @@ class CLIPTokenizer(torch.nn.Module):
     Note that this module does not implement preprocessing like whitespace cleaning,
     HTML to unicode conversions, or heuristic unicode correction.
 
+    Example::
+
+        >>> clip_tokenizer = CLIPTokenizer(pretrained=True)
+        >>> tokens = clip_tokenizer("An example sentence")
+        >>> decoded_str = clip_tokenizer.decode(tokens)
+
     See here for more details:
     https://pytorch.org/text/main/transforms.html#torchtext.transforms.CLIPTokenizer
 
