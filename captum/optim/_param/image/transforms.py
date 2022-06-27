@@ -1123,7 +1123,8 @@ class NChannelsToRGB(nn.Module):
         Args:
 
             warp (bool, optional): Whether or not to make the resulting RGB colors more
-                distict from each other. Default is set to False.
+                distict from each other.
+                Default: ``False``
         """
         super().__init__()
         self.warp = warp
@@ -1244,26 +1245,26 @@ class TransformationRobustness(nn.Module):
         Args:
 
             padding_transform (nn.Module, optional): A padding module instance. No
-                padding will be applied before transforms if set to None.
-                Default: nn.ConstantPad2d(2, value=0.5)
+                padding will be applied before transforms if set to ``None``.
+                Default: ``nn.ConstantPad2d(2, value=0.5)``
             translate (int or list of int, optional): The max horizontal and vertical
                  translation to use for each jitter transform.
-                 Default: [4] * 10
+                 Default: ``[4] * 10``
             scale (float, sequence, or torch.distribution, optional): Sequence of
                 rescaling values to randomly select from, or a torch.distributions
-                instance. If set to None, no rescaling transform will be used.
+                instance. If set to ``None``, no rescaling transform will be used.
                 Default: A set of optimal values.
             degrees (float, sequence, or torch.distribution, optional): Sequence of
                 degrees to randomly select from, or a torch.distributions
-                instance. If set to None, no rotation transform will be used.
+                instance. If set to ``None``, no rotation transform will be used.
                 Default: A set of optimal values.
             final_translate (int, optional): The max horizontal and vertical
                  translation to use for the final jitter transform on fractional
                  pixels.
-                 Default: 2
+                 Default: ``2``
             crop_or_pad_output (bool, optional): Whether or not to crop or pad the
                 transformed output so that it is the same shape as the input.
-                Default: False
+                Default: ``False``
         """
         super().__init__()
         self.padding_transform = padding_transform
