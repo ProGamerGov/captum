@@ -156,7 +156,7 @@ class InputOptimization(Objective, Parameterized):
             stop_criteria (StopCriteria, optional):  A function that is called
                 every iteration and returns a bool that determines whether to stop the
                 optimization.
-                Default: ``n_steps``
+                Default: ``n_steps(512)``
             optimizer (Optimizer, optional):  An ``torch.optim.Optimizer`` used to
                 optimize the input based on the loss function.
             loss_summarize_fn (Callable, optional): The function to use for summarizing
