@@ -764,6 +764,18 @@ class SharedImage(ImageParameterization):
 class StackImage(ImageParameterization):
     """
     Stack multiple NCHW image parameterizations along their batch dimensions.
+
+
+    Example::
+
+        >>> fft_image_1 = opt.images.FFTImage(size=(224, 224), batch=1)
+        >>> fft_image_2 = opt.images.FFTImage(size=(224, 224), batch=1)
+        >>> stack_image = opt.images.StackImage([fft_image_1, fft_image_2])
+        >>> output_image = stack_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([2, 3, 224, 224])
     """
 
     __constants__ = ["dim", "output_device"]
