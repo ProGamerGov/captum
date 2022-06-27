@@ -258,7 +258,6 @@ class CompositeLoss(BaseLoss):
     and a float or integer:
 
     .. code-block:: python
-        :linenos:
 
         def compose_single_loss(loss: opt.loss.Loss) -> opt.loss.CompositeLoss:
             def loss_fn(
@@ -275,7 +274,6 @@ class CompositeLoss(BaseLoss):
     Using CompositeLoss with a binary op using two Loss instances:
 
     .. code-block:: python
-        :linenos:
 
         def compose_binary_loss(
             loss1: opt.loss.Loss, loss2: opt.loss.Loss
@@ -301,7 +299,6 @@ class CompositeLoss(BaseLoss):
     Using CompositeLoss with a list of Loss instances:
 
     .. code-block:: python
-        :linenos:
 
         def compose_multiple_loss(loss: List[opt.loss.Loss]) -> opt.loss.CompositeLoss:
             def loss_fn(
