@@ -23,12 +23,13 @@ class ChannelReducer:
 
     Args:
 
-        n_components (int, optional):  The number of channels to reduce the target
+        n_components (int, optional): The number of channels to reduce the target
             dimension to.
-        reduction_alg (str or callable, optional):  The desired dimensionality
-            reduction algorithm to use. The default reduction_alg is set to NMF from
-            sklearn, which requires users to put inputs on CPU before passing them to
-            fit_transform.
+        reduction_alg (str or callable, optional): The desired dimensionality
+            reduction algorithm to use. The default ``reduction_alg`` is set to NMF
+            from sklearn, which requires users to put inputs on CPU before passing them
+            to ``fit_transform``.
+            Default: ``NMF``
         **kwargs (optional): Arbitrary keyword arguments used by the specified
             reduction_alg.
     """
@@ -75,10 +76,11 @@ class ChannelReducer:
 
         Args:
 
-            tensor (tensor):  A tensor to perform dimensionality reduction on.
-            swap_2nd_and_last_dims (bool, optional): If true, input channels are
+            tensor (tensor): A tensor to perform dimensionality reduction on.
+            swap_2nd_and_last_dims (bool, optional): If ``True``, input channels are
                 expected to be in the second dimension unless the input tensor has a
-                shape of CHW. Default is set to True.
+                shape of CHW.
+                Default: ``True``.
 
         Returns:
             *tensor*:  A tensor with one of it's dimensions reduced.
@@ -136,11 +138,12 @@ def posneg(x: torch.Tensor, dim: int = 0) -> torch.Tensor:
 
     Args:
 
-        x (tensor):  A tensor to make positive.
-        dim (int, optional):  The dimension to concatinate the two tensor halves at.
+        x (tensor): A tensor to make positive.
+        dim (int, optional): The dimension to concatinate the two tensor halves at.
+            Default: ``0``
 
     Returns:
-        tensor (torch.tensor):  A positive tensor for one-sided dimensionality
+        tensor (torch.tensor): A positive tensor for one-sided dimensionality
             reduction.
     """
 
