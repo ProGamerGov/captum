@@ -26,6 +26,7 @@ def googlenet_places365(
     Example::
 
         >>> model = opt.models.googlenet_places365(pretrained=True)
+        >>> output = model(torch.zeros(1, 3, 224, 224))
 
     Args:
 
