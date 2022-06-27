@@ -20,6 +20,14 @@ TORCH_VERSION = torch.__version__
 
 
 class ImageTensor(torch.Tensor):
+    r"""
+
+    Example::
+
+        >>> image_tensor = opt.images.ImageTensor.load(<path/to/image_file>)
+        >>> image_tensor.export(filename="image_tensor.jpg")  # Save image(s)
+        >>> image_tensor.show(figsize=(8, 8))  # Diplays image(s) via Matplotlib
+    """
     @staticmethod
     def __new__(
         cls: Type["ImageTensor"],
