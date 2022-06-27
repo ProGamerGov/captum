@@ -213,8 +213,8 @@ class BaseLoss(Loss):
                 nn.Module.
             batch_index (int or list of int, optional): The index or index range of
                 activations to optimize if optimizing a batch of activations. If set to
-                None, defaults to all activations in the batch. Index ranges should be
-                in the format of: [start, end].
+                ``None``, defaults to all activations in the batch. Index ranges should
+                be in the format of: [start, end].
                 Default: ``None``
         """
         super().__init__()
