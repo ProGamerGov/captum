@@ -25,10 +25,10 @@ def extract_expanded_weights(
 
     Args:
 
-        model (nn.Module):  The reference to PyTorch model instance.
-        target1 (nn.module):  The starting target layer. Must be below the layer
+        model (nn.Module): The reference to PyTorch model instance.
+        target1 (nn.module): The starting target layer. Must be below the layer
             specified for target2.
-        target2 (nn.Module):  The end target layer. Must be above the layer
+        target2 (nn.Module): The end target layer. Must be above the layer
             specified for target1.
         crop_shape (int or tuple of ints, optional): Specify the exact output size
             to crop out.
@@ -38,7 +38,6 @@ def extract_expanded_weights(
         crop_func (Callable, optional): Specify a function to crop away the padding
             from the output weights.
             Default: ``center_crop``
-
 
     Returns:
         *tensor* (torch.Tensor): A tensor containing the expanded weights in the form
