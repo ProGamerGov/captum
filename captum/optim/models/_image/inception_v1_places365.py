@@ -23,6 +23,10 @@ def googlenet_places365(
     The pretrained GoogleNet model was trained using the MIT Places365 Standard
     dataset. See here for more information: https://arxiv.org/abs/1610.02055
 
+    Example::
+
+        >>> model = opt.models.googlenet_places365(pretrained=True)
+
     Args:
 
         pretrained (bool, optional): If ``True``, returns a model pre-trained on the
