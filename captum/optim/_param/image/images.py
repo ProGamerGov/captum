@@ -114,7 +114,7 @@ class ImageTensor(torch.Tensor):
         Args:
 
             figsize (Tuple[int, int], optional): height & width to use
-                for displaying the `ImageTensor` figure.
+                for displaying the ``ImageTensor`` figure.
             scale (float, optional): Value to multiply the ``ImageTensor`` by so that
                 it's value range is [0-255] for display.
                 Default: ``255.0``
