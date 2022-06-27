@@ -779,16 +779,50 @@ class StackImage(ImageParameterization):
 
 
 class NaturalImage(ImageParameterization):
-    r"""Outputs an optimizable input image.
+    r"""Outputs an optimizable input image wrapped in :class:`.ImageTensor`.
 
-    By convention, single images are CHW and float32s in [0,1].
-    The underlying parameterization can be decorrelated via a ToRGB transform.
+    By convention, single images are CHW and float32s in [0, 1].
+    The underlying parameterization can be decorrelated via a ``ToRGB`` transform.
     When used with the (default) FFT parameterization, this results in a fully
     uncorrelated image parameterization. :-)
 
     If a model requires a normalization step, such as normalizing imagenet RGB values,
-    or rescaling to [0,255], it can perform those steps with the provided transforms or
-    inside its computation.
+    or rescaling to [0, 255], it can perform those steps with the provided transforms or
+    inside its module class.
+
+    :ivar parameterization: initial value (ImageParameterization): The given image
+        parameterization instance given when initializing ``NaturalImage``.
+    :ivar decorrelation_module: initial value (nn.Module): The given decorrelation
+        module instance given when initializing ``NaturalImage``.
+
+    Example::
+
+        >>> image = opt.images.NaturalImage(size=(224, 224), channels=3, batch=1)
+        >>> image_tensor = image()
+        >>> print(image_tensor.required_grad)
+        True
+        >>> print(image_tensor.shape)
+        torch.Size([1, 3, 224, 224])
+
+    Example::
+
+        >>> init = torch.randn(1, 3, 224, 224)
+        >>> image = opt.images.NaturalImage(init=init)
+        >>> image_tensor = image()
+        >>> print(image_tensor.required_grad)
+        True
+        >>> print(image_tensor.shape)
+        torch.Size([1, 3, 224, 224])
+
+    Example::
+
+        >>> fft_image = opt.images.FFTImage(size=(224, 224), channels=3, batch=1)
+        >>> image = opt.images.NaturalImage(parameterization=fft_image)
+        >>> image_tensor = image()
+        >>> print(image_tensor.required_grad)
+        True
+        >>> print(image_tensor.shape)
+        torch.Size([1, 3, 224, 224])
     """
 
     def __init__(
