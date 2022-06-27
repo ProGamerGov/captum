@@ -25,6 +25,11 @@ def clip_resnet50x4_image(
 
     Note that the model was trained on inputs with a shape of: [B, 3, 288, 288].
 
+    Example::
+
+        >>> model = opt.models.clip_resnet50x4_image(pretrained=True)
+        >>> output = model(torch.zeros(1, 3, 288, 288))
+
     See here for more details:
     https://github.com/openai/CLIP
     https://github.com/mlfoundations/open_clip
