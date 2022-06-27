@@ -957,6 +957,10 @@ class NaturalImage(ImageParameterization):
         return ImageTensor(x)
 
     def forward(self) -> torch.Tensor:
+        """
+        Returns:
+            image_tensor (torch.Tensor): A recorrelated tensor.
+        """
         image = self.parameterization()
         if self.decorrelate is not None:
             image = self.decorrelate(image)
