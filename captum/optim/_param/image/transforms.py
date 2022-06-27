@@ -1416,10 +1416,10 @@ class CLIPTokenizer(torch.nn.Module):
         Args:
 
             file_dir (str, optional): Optionally provide a location to save the
-                file to. The torch.hub.get_dir() function will be used to get the
-                directory if set to None, resulting in a path
+                file to. The ``torch.hub.get_dir()`` function will be used to get
+                the directory if set to None, resulting in a path
                 of: <PATH_TO_HUB_DIR>/vocab.
-                Default: None
+                Default: ``None``
 
             Returns:
                 filename (str): The path to the downloaded file with the filename.
@@ -1470,7 +1470,7 @@ class CLIPTokenizer(torch.nn.Module):
                 lists of tokens.
             include_special_tokens (bool, optional): Whether or not to included added
                 special tokens in the output.
-                Default: False
+                Default: ``False``
 
         Returns:
             token_str (list of list of str): A set of strings that correspond to the
