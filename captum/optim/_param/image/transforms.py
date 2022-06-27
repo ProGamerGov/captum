@@ -1320,9 +1320,11 @@ class CLIPTokenizer(torch.nn.Module):
 
     Example::
 
-        >>> clip_tokenizer = CLIPTokenizer(pretrained=True)
-        >>> tokens = clip_tokenizer("An example sentence")
+        >>> clip_tokenizer = opt.transforms.CLIPTokenizer(pretrained_merges=True)
+        >>> tokens = clip_tokenizer("An example sentence.")
         >>> decoded_str = clip_tokenizer.decode(tokens)
+        >>> print(decoded_str)
+        ['an example sentence .']
 
     See here for more details:
     https://pytorch.org/text/main/transforms.html#torchtext.transforms.CLIPTokenizer
