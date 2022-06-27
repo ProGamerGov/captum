@@ -39,7 +39,7 @@ def clip_resnet50x4_image(
         pretrained (bool, optional): If ``True``, returns a pre-trained model.
             Default: ``False``
         progress (bool, optional): If ``True``, displays a progress bar of the download
-            to stderr
+            to stderr.
             Default: ``True``
         model_path (str, optional): Optional path for the model file.
             Default: ``None``
