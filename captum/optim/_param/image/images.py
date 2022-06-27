@@ -786,6 +786,17 @@ class StackImage(ImageParameterization):
         True
         >>> print(output_image.shape)
         torch.Size([2, 3, 224, 224])
+
+    Example with ``ImageParameterization`` & ``torch.Tensor``::
+
+        >>> fft_image = opt.images.FFTImage(size=(224, 224), batch=1)
+        >>> tensor_image = torch.randn(1, 3, 224, 224)
+        >>> stack_image = opt.images.StackImage([fft_image, tensor_image])
+        >>> output_image = stack_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([2, 3, 224, 224])
     """
 
     __constants__ = ["dim", "output_device"]
