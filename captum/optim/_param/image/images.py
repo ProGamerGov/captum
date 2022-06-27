@@ -28,6 +28,7 @@ class ImageTensor(torch.Tensor):
         >>> image_tensor.export(filename="image_tensor.jpg")  # Save image(s)
         >>> image_tensor.show(figsize=(8, 8))  # Diplays image(s) via Matplotlib
     """
+
     @staticmethod
     def __new__(
         cls: Type["ImageTensor"],
