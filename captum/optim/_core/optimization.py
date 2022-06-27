@@ -45,7 +45,7 @@ class InputOptimization(Objective, Parameterized):
         >>>
         >>> obj = opt.InputOptimization(model, loss_fn, image, transform)
         >>> history = obj.optimize(opt.optimization.n_steps(512))
-        >>> image().show(figsize=(8, 8)) # Display results
+        >>> image().show(figsize=(10, 10)) # Display results
 
     Instance variables that be used in the optimize function and StopCriteria:
 
