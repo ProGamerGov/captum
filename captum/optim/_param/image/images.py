@@ -188,12 +188,32 @@ class InputParameterization(torch.nn.Module):
 
 
 class ImageParameterization(InputParameterization):
+    r"""The base class for all Image Parameterizations"""
     pass
 
 
 class FFTImage(ImageParameterization):
     """
     Parameterize an image using inverse real 2D FFT
+    
+    Example::
+
+        >>> fft_image = opt.images.FFTImage(size=(224, 224))
+        >>> output_image = fft_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
+
+    Example for using an initialization tensor::
+
+        >>> init = torch.randn(1, 3, 224, 224)
+        >>> fft_image = opt.images.FFTImage(init=init)
+        >>> output_image = fft_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
     """
 
     __constants__ = ["size"]
@@ -211,13 +231,13 @@ class FFTImage(ImageParameterization):
             size (Tuple[int, int]): The height & width dimensions to use for the
                 parameterized output image tensor.
             channels (int, optional): The number of channels to use for each image.
-                Default: 3
+                Default: ``3``
             batch (int, optional): The number of images to stack along the batch
                 dimension.
-                Default: 1
+                Default: ``1``
             init (torch.tensor, optional): Optionally specify a tensor to
                 use instead of creating one.
-                Default: None
+                Default: ``None``
         """
         super().__init__()
         if init is None:
@@ -340,6 +360,25 @@ class FFTImage(ImageParameterization):
 class PixelImage(ImageParameterization):
     """
     Parameterize a simple pixel image tensor that requires no additional transforms.
+
+    Example::
+
+        >>> pixel_image = opt.images.PixelImage(size=(224, 224))
+        >>> output_image = pixel_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
+
+    Example for using an initialization tensor::
+
+        >>> init = torch.randn(1, 3, 224, 224)
+        >>> pixel_image = opt.images.PixelImage(init=init)
+        >>> output_image = pixel_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
     """
 
     def __init__(
@@ -355,13 +394,13 @@ class PixelImage(ImageParameterization):
             size (Tuple[int, int]): The height & width dimensions to use for the
                 parameterized output image tensor.
             channels (int, optional): The number of channels to use for each image.
-                Default: 3
+                Default: ``3``
             batch (int, optional): The number of images to stack along the batch
                 dimension.
-                Default: 1
+                Default: ``1``
             init (torch.tensor, optional): Optionally specify a tensor to
                 use instead of creating one.
-                Default: None
+                Default: ``None``
         """
         super().__init__()
         if init is None:
@@ -382,6 +421,25 @@ class PixelImage(ImageParameterization):
 class LaplacianImage(ImageParameterization):
     """
     Parameterize an image tensor with a laplacian pyramid.
+
+    Example::
+
+        >>> laplacian_image = opt.images.LaplacianImage(size=(224, 224))
+        >>> output_image = laplacian_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
+
+    Example for using an initialization tensor::
+
+        >>> init = torch.randn(1, 3, 224, 224)
+        >>> laplacian_image = opt.images.LaplacianImage(init=init)
+        >>> output_image = laplacian_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
     """
 
     def __init__(
@@ -396,25 +454,25 @@ class LaplacianImage(ImageParameterization):
         """
         Args:
 
-            size (Tuple[int, int]): The height & width dimensions to use for the
-                parameterized output image tensor.
-                Default: (224, 224)
+            size (Tuple[int, int], optional): The height & width dimensions to use for
+                the parameterized output image tensor.
+                Default: ``(224, 224)``
             channels (int, optional): The number of channels to use for each image.
-                Default: 3
+                Default: ``3``
             batch (int, optional): The number of images to stack along the batch
                 dimension.
-                Default: 1
+                Default: ``1``
             init (torch.tensor, optional): Optionally specify a tensor to
                 use instead of creating one.
-                Default: None
+                Default: ``None``
             power (float, optional): The desired power value to use.
-                Default: 0.1
+                Default: ``0.1``
             scale_list (list of float, optional): The desired list of scale values to
                 use in the laplacian pyramid. The height & width dimensions specified
-                in size or used in the init tensor should be divisable by every scale
-                value in the scale list with no remainder left over. The default
-                scale_list values are set to work with a size of (224, 224).
-                Default: [1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
+                in ``size`` or used in the ``init`` tensor should be divisable by every
+                scale value in the scale list with no remainder left over. The default
+                scale_list values are set to work with a ``size`` of ``(224, 224)``.
+                Default: ``[1.0, 2.0, 4.0, 8.0, 16.0, 32.0]``
         """
         super().__init__()
         if init is not None:
@@ -502,6 +560,17 @@ class SharedImage(ImageParameterization):
 
     Mordvintsev, et al., "Differentiable Image Parameterizations", Distill, 2018.
     https://distill.pub/2018/differentiable-parameterizations/
+
+    Example::
+
+        >>> fft_image = opt.images.FFTImage(size=(224, 224), batch=2)
+        >>> shared_shapes = ((1, 3, 64, 64), (4, 3, 32, 32))
+        >>> shared_image = opt.images.SharedImage(shared_shapes, fft_image)
+        >>> output_image = shared_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([2, 3, 224, 224])
     """
 
     __constants__ = ["offset"]
@@ -521,7 +590,7 @@ class SharedImage(ImageParameterization):
                 instance.
             offset (int or list of int or list of list of ints , optional): The offsets
                 to use for the shared tensors.
-                Default: None
+                Default: ``None``
         """
         super().__init__()
         assert shapes is not None
@@ -714,6 +783,17 @@ class SharedImage(ImageParameterization):
 class StackImage(ImageParameterization):
     """
     Stack multiple NCHW image parameterizations along their batch dimensions.
+
+    Example::
+
+        >>> fft_image_1 = opt.images.FFTImage(size=(224, 224), batch=1)
+        >>> fft_image_2 = opt.images.FFTImage(size=(224, 224), batch=1)
+        >>> stack_image = opt.images.StackImage([fft_image_1, fft_image_2])
+        >>> output_image = stack_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([2, 3, 224, 224])
     """
 
     __constants__ = ["dim", "output_device"]
@@ -731,12 +811,12 @@ class StackImage(ImageParameterization):
                  of image parameterizations to stack across their batch dimensions.
             dim (int, optional): Optionally specify the dim to concatinate
                  parameterization outputs on. Default is set to the batch dimension.
-                 Default: 0
+                 Default: ``0``
             output_device (torch.device, optional): If the parameterizations are on
                 different devices, then their outputs will be moved to the device
-                specified by this variable. Default is set to None with the expectation
-                that all parameterizations are on the same device.
-                Default: None
+                specified by this variable. Default is set to ``None`` with the
+                expectation that all parameterization outputs are on the same device.
+                Default: ``None``
         """
         super().__init__()
         assert len(parameterizations) > 0
@@ -790,11 +870,6 @@ class NaturalImage(ImageParameterization):
     or rescaling to [0, 255], it can perform those steps with the provided transforms or
     inside its module class.
 
-    :ivar parameterization: initial value (ImageParameterization): The given image
-        parameterization instance given when initializing ``NaturalImage``.
-    :ivar decorrelation_module: initial value (nn.Module): The given decorrelation
-        module instance given when initializing ``NaturalImage``.
-
     Example::
 
         >>> image = opt.images.NaturalImage(size=(224, 224), channels=3, batch=1)
@@ -804,7 +879,7 @@ class NaturalImage(ImageParameterization):
         >>> print(image_tensor.shape)
         torch.Size([1, 3, 224, 224])
 
-    Example::
+    Example for using an initialization tensor::
 
         >>> init = torch.randn(1, 3, 224, 224)
         >>> image = opt.images.NaturalImage(init=init)
@@ -814,7 +889,7 @@ class NaturalImage(ImageParameterization):
         >>> print(image_tensor.shape)
         torch.Size([1, 3, 224, 224])
 
-    Example::
+    Example for using a parameterization::
 
         >>> fft_image = opt.images.FFTImage(size=(224, 224), channels=3, batch=1)
         >>> image = opt.images.NaturalImage(parameterization=fft_image)
@@ -823,6 +898,11 @@ class NaturalImage(ImageParameterization):
         True
         >>> print(image_tensor.shape)
         torch.Size([1, 3, 224, 224])
+
+    :ivar parameterization: initial value (ImageParameterization): The given image
+        parameterization instance given when initializing ``NaturalImage``.
+    :ivar decorrelation_module: initial value (nn.Module): The given decorrelation
+        module instance given when initializing ``NaturalImage``.
     """
 
     def __init__(
@@ -842,36 +922,37 @@ class NaturalImage(ImageParameterization):
             size (Tuple[int, int], optional): The height and width to use for the
                 nn.Parameter image tensor. This parameter is not used if
                 parameterization is an instance.
-                Default: (224, 224)
+                Default: ``(224, 224)``
             channels (int, optional): The number of channels to use when creating the
                 nn.Parameter tensor. This parameter is not used if parameterization is
                 an instance.
-                Default: 3
+                Default: ``3``
             batch (int, optional): The number of channels to use when creating the
-                nn.Parameter tensor, or stacking init images. This parameter is not
-                used if parameterization is an instance.
-                Default: 1
+                nn.Parameter tensor. This parameter is not used if ``parameterization``
+                is an instance.
+                Default: ``1``
             init (torch.tensor, optional): Optionally specify a tensor to use instead
                 of creating one from random noise. This parameter is not used if
-                parameterization is an instance. Set to None for random init.
-                Default: None
+                ``parameterization`` is an instance. Set to ``None`` for random init.
+                Default: ``None``
             parameterization (ImageParameterization, optional): An image
                 parameterization class, or instance of an image parameterization class.
                 Default: FFTImage
             squash_func (Callable[[torch.Tensor], torch.Tensor]], optional): The squash
                 function to use after color recorrelation. A function, lambda function,
                 or callable class instance.
-                Default: None
+                Default: ``None``
             decorrelation_module (nn.Module, optional): A module instance that
                 recorrelates the colors of an input image. Custom modules can make use
-                of the decorrelate_init parameter by having a second inverse parameter
-                in their forward functions that performs the inverse operation when it
-                is set to True. Set to None for no recorrelation.
-                Default: ToRGB
+                of the ``decorrelate_init`` parameter by having a second ``inverse``
+                parameter in their forward functions that performs the inverse
+                operation when it is set to ``True`` (see ``ToRGB`` for an example).
+                Set to ``None`` for no recorrelation.
+                Default: ``ToRGB``
             decorrelate_init (bool, optional): Whether or not to apply color
                 decorrelation to the init tensor input. This parameter is not used if
-                parameterization is an instance or if init is None.
-                Default: True
+                ``parameterization`` is an instance or if init is ``None``.
+                Default: ``True``
         """
         super().__init__()
         if not isinstance(parameterization, ImageParameterization):
@@ -908,16 +989,22 @@ class NaturalImage(ImageParameterization):
             x (torch.tensor): An input tensor.
 
         Returns:
-            x (ImageTensor): An instance of ImageTensor with the input tensor.
+            x (ImageTensor): An instance of ``ImageTensor`` with the input tensor.
         """
         return ImageTensor(x)
 
     def forward(self) -> torch.Tensor:
+        """
+        Returns:
+            image_tensor (torch.Tensor): The parameterization output wrapped in
+                ``ImageTensor``, that has optionally had its colors recorrelated.
+        """
         image = self.parameterization()
         if self.decorrelate is not None:
             image = self.decorrelate(image)
         image = image.rename(None)  # TODO: the world is not yet ready
         return self._to_image_tensor(self.squash_func(image))
+
 
 
 __all__ = [
