@@ -1253,11 +1253,13 @@ class TransformationRobustness(nn.Module):
             scale (float, sequence, or torch.distribution, optional): Sequence of
                 rescaling values to randomly select from, or a torch.distributions
                 instance. If set to ``None``, no rescaling transform will be used.
-                Default: A set of optimal values.
+                Default: ``[0.995**n for n in range(-5, 80)] + [0.998**n for n in 2 *
+                list(range(20, 40))]``
             degrees (float, sequence, or torch.distribution, optional): Sequence of
                 degrees to randomly select from, or a torch.distributions
                 instance. If set to ``None``, no rotation transform will be used.
-                Default: A set of optimal values.
+                Default: ``list(range(-20, 20)) + list(range(-10, 10)) +
+                list(range(-5, 5)) + 5 * [0]``
             final_translate (int, optional): The max horizontal and vertical
                  translation to use for the final jitter transform on fractional
                  pixels.
