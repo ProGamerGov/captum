@@ -206,6 +206,15 @@ class ImageParameterization(InputParameterization):
 class FFTImage(ImageParameterization):
     """
     Parameterize an image using inverse real 2D FFT
+    
+    Example::
+
+        >>> fft_image = opt.images.FFTImage(size=(224, 224))
+        >>> output_image = fft_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
     """
 
     __constants__ = ["size"]
@@ -352,6 +361,15 @@ class FFTImage(ImageParameterization):
 class PixelImage(ImageParameterization):
     """
     Parameterize a simple pixel image tensor that requires no additional transforms.
+
+    Example::
+
+        >>> pixel_image = opt.images.PixelImage(size=(224, 224))
+        >>> output_image = pixel_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
     """
 
     def __init__(
@@ -394,6 +412,15 @@ class PixelImage(ImageParameterization):
 class LaplacianImage(ImageParameterization):
     """
     Parameterize an image tensor with a laplacian pyramid.
+
+    Example::
+
+        >>> laplacian_image = opt.images.LaplacianImage(size=(224, 224))
+        >>> output_image = laplacian_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([1, 3, 224, 224])
     """
 
     def __init__(
@@ -514,6 +541,17 @@ class SharedImage(ImageParameterization):
 
     Mordvintsev, et al., "Differentiable Image Parameterizations", Distill, 2018.
     https://distill.pub/2018/differentiable-parameterizations/
+
+    Example::
+
+        >>> fft_image = opt.images.FFTImage(size=(224, 224), batch=2)
+        >>> shared_shapes = ((1, 3, 64, 64), (4, 3, 32, 32))
+        >>> shared_image = opt.images.SharedImage(shared_shapes, fft_image)
+        >>> output_image = shared_image()
+        >>> print(output_image.required_grad)
+        True
+        >>> print(output_image.shape)
+        torch.Size([2, 3, 224, 224])
     """
 
     __constants__ = ["offset"]
