@@ -746,7 +746,6 @@ class StackImage(ImageParameterization):
     """
     Stack multiple NCHW image parameterizations along their batch dimensions.
 
-
     Example::
 
         >>> fft_image_1 = opt.images.FFTImage(size=(224, 224), batch=1)
