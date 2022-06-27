@@ -464,8 +464,8 @@ class RandomScale(nn.Module):
             scale (float, sequence, or torch.distribution): Sequence of rescaling
                 values to randomly select from, or a torch.distributions instance.
             mode (str, optional): Interpolation mode to use. See documentation of
-                F.interpolate for more details. One of; "bilinear", "nearest", "area",
-                or "bicubic".
+                ``F.interpolate`` for more details. One of; ``"bilinear"``,
+                ``"nearest"``, ``"area"``, or ``"bicubic"``.
                 Default: ``"bilinear"``
             align_corners (bool, optional): Whether or not to align corners. See
                 documentation of ``F.interpolate`` for more details.
@@ -474,8 +474,9 @@ class RandomScale(nn.Module):
                 scale factor See documentation of ``F.interpolate`` for more details.
                 Default: ``False``
             antialias (bool, optional): Whether or not use to anti-aliasing. This
-                feature is currently only available for "bilinear" and "bicubic"
-                modes. See documentation of ``F.interpolate`` for more details.
+                feature is currently only available for ``"bilinear"`` and
+                ``"bicubic"`` modes. See documentation of ``F.interpolate`` for more
+                details.
                 Default: ``False``
         """
         super().__init__()
@@ -597,12 +598,12 @@ class RandomScaleAffine(nn.Module):
             scale (float, sequence, or torch.distribution): Sequence of rescaling
                 values to randomly select from, or a torch.distributions instance.
             mode (str, optional): Interpolation mode to use. See documentation of
-                ``F.grid_sampl``e for more details. One of; "bilinear", "nearest",
-                or "bicubic".
+                ``F.grid_sample`` for more details. One of; ``"bilinear"``,
+                ``"nearest"``, or ``"bicubic"``.
                 Default: ``"bilinear"``
             padding_mode (str, optional): Padding mode for values that fall outside of
                 the grid. See documentation of ``F.grid_sample`` for more details. One
-                of; "zeros", "border", or "reflection".
+                of; ``"zeros"``, ``"border"``, or ``"reflection"``.
                 Default: ``"zeros"``
             align_corners (bool, optional): Whether or not to align corners. See
                 documentation of ``F.affine_grid`` & ``F.grid_sample`` for more
@@ -780,12 +781,12 @@ class RandomRotation(nn.Module):
             degrees (float, sequence, or torch.distribution): Tuple or list of degrees
                 values to randomly select from, or a ``torch.distributions`` instance.
             mode (str, optional): Interpolation mode to use. See documentation of
-                F.grid_sample for more details. One of; "bilinear", "nearest", or
-                "bicubic".
+                F.grid_sample for more details. One of; ``"bilinear"``, ``"nearest"``,
+                or ``"bicubic"``.
                 Default: ``"bilinear"``
             padding_mode (str, optional): Padding mode for values that fall outside of
                 the grid. See documentation of F.grid_sample for more details. One of;
-                "zeros", "border", or "reflection".
+                ``"zeros"``, ``"border"``, or ``"reflection"``.
                 Default: ``"zeros"``
             align_corners (bool, optional): Whether or not to align corners. See
                 documentation of ``F.affine_grid`` & ``F.grid_sample`` for more
