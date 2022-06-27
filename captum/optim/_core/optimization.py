@@ -47,17 +47,18 @@ class InputOptimization(Objective, Parameterized):
         >>> history = obj.optimize(opt.optimization.n_steps(512))
         >>> image().show(figsize=(10, 10)) # Display results
 
-    Instance variables that be used in the optimize function and StopCriteria:
+    Instance variables that be used in the optimize function and StopCriteria
+    functions:
 
     :ivar model: initial value (nn.Module): The given model instance given when
-        initializing InputOptimization.
+        initializing ``InputOptimization``.
     :ivar input_param: initial value (ImageParameterization): The given image
-        parameterization instance given when initializing InputOptimization.
+        parameterization instance given when initializing ``InputOptimization``.
     :ivar loss_function: initial value (Loss): The given composable loss instance
-        given when initializing InputOptimization.
+        given when initializing ``InputOptimization``.
     :ivar transform: initial value (nn.Module): The given transform instance given
-        when initializing InputOptimization. If it was set to None during
-        initialization, then an instance of torch.nn.Identity will be returned.
+        when initializing ``InputOptimization``. If it was set to ``None`` during
+        initialization, then an instance of ``torch.nn.Identity`` will be returned.
     """
 
     def __init__(
@@ -153,17 +154,17 @@ class InputOptimization(Objective, Parameterized):
         Args:
 
             stop_criteria (StopCriteria, optional):  A function that is called
-                        every iteration and returns a bool that determines whether
-                        to stop the optimization.
-                        See captum.optim.typing.StopCriteria for details.
-            optimizer (Optimizer, optional):  An torch.optim.Optimizer used to
-                        optimize the input based on the loss function.
+                every iteration and returns a bool that determines whether to stop the
+                optimization.
+                Default: ``n_steps``
+            optimizer (Optimizer, optional):  An ``torch.optim.Optimizer`` used to
+                optimize the input based on the loss function.
             loss_summarize_fn (Callable, optional): The function to use for summarizing
                 tensor outputs from loss functions.
-                Default: default_loss_summarize
+                Default: ``default_loss_summarize``
             lr: (float, optional): If no optimizer is given, then lr is used as the
                 learning rate for the Adam optimizer.
-                Default: 0.025
+                Default: ``0.025``
 
         Returns:
             history (torch.Tensor): A stack of loss values per iteration. The size
@@ -196,10 +197,10 @@ def n_steps(n: int, show_progress: bool = True) -> StopCriteria:
     Args:
         n (int):  Number of steps to run optimization.
         show_progress (bool, optional):  Whether or not to show progress bar.
-            Default: True
+            Default: ``True``
 
     Returns:
-        *StopCriteria* callable
+        *StopCriteria* (callable): A stop criteria function.
     """
 
     if show_progress:
