@@ -288,7 +288,7 @@ class CenterCrop(torch.nn.Module):
                 pixels_from_edges (bool, optional): Whether to treat crop size
                 values as the number of pixels from the tensor's edge, or an
                 exact shape in the center.
-            pixels_from_edges (bool, optional): Whether to treat crop ``size``
+            pixels_from_edges (bool, optional): Whether to treat crop size
                 values as the number of pixels from the tensor's edge, or an
                 exact shape in the center.
                 Default: ``False``
@@ -362,23 +362,25 @@ def center_crop(
 
     Args:
 
-        input (tensor):  A CHW or NCHW image tensor to center crop.
+        input (tensor): A CHW or NCHW image tensor to center crop.
         size (int, sequence, int): Number of pixels to center crop away.
         pixels_from_edges (bool, optional): Whether to treat crop size
             values as the number of pixels from the tensor's edge, or an
             exact shape in the center.
-            Default: False
+            Default: ``False``
         offset_left (bool, optional): If the cropped away sides are not
             equal in size, offset center by +1 to the left and/or top.
-            This parameter is only valid when `pixels_from_edges` is False.
-            Default: False
+            This parameter is only valid when ``pixels_from_edges`` is
+            ``False``.
+            Default: ``False``
         padding_mode (optional, str): One of "constant", "reflect", "replicate" or
             "circular". This parameter is only used if the crop size is larger than
             the image size.
-            Default: "constant"
-        padding_value (float, optional): fill value for "constant" padding. This
-            parameter is only used if the crop size is larger than the image size.
-            Default: 0.0
+            Default: ``"constant"``
+        padding_value (float, optional): fill value for ``"constant"`` padding.
+            This parameter is only used if the crop size is larger than the image
+            size.
+            Default: ``0.0``
 
     Returns:
         **tensor**:  A center cropped *tensor*.
@@ -464,17 +466,17 @@ class RandomScale(nn.Module):
             mode (str, optional): Interpolation mode to use. See documentation of
                 F.interpolate for more details. One of; "bilinear", "nearest", "area",
                 or "bicubic".
-                Default: "bilinear"
+                Default: ``"bilinear"``
             align_corners (bool, optional): Whether or not to align corners. See
-                documentation of F.interpolate for more details.
-                Default: False
+                documentation of ``F.interpolate`` for more details.
+                Default: ``False``
             recompute_scale_factor (bool, optional): Whether or not to recompute the
-                scale factor See documentation of F.interpolate for more details.
-                Default: False
+                scale factor See documentation of ``F.interpolate`` for more details.
+                Default: ``False``
             antialias (bool, optional): Whether or not use to anti-aliasing. This
                 feature is currently only available for "bilinear" and "bicubic"
-                modes. See documentation of F.interpolate for more details.
-                Default: False
+                modes. See documentation of ``F.interpolate`` for more details.
+                Default: ``False``
         """
         super().__init__()
         assert mode not in ["linear", "trilinear"]
@@ -595,16 +597,17 @@ class RandomScaleAffine(nn.Module):
             scale (float, sequence, or torch.distribution): Sequence of rescaling
                 values to randomly select from, or a torch.distributions instance.
             mode (str, optional): Interpolation mode to use. See documentation of
-                F.grid_sample for more details. One of; "bilinear", "nearest", or
-                "bicubic".
-                Default: "bilinear"
+                ``F.grid_sampl``e for more details. One of; "bilinear", "nearest",
+                or "bicubic".
+                Default: ``"bilinear"``
             padding_mode (str, optional): Padding mode for values that fall outside of
-                the grid. See documentation of F.grid_sample for more details. One of;
-                "zeros", "border", or "reflection".
-                Default: "zeros"
+                the grid. See documentation of ``F.grid_sample`` for more details. One
+                of; "zeros", "border", or "reflection".
+                Default: ``"zeros"``
             align_corners (bool, optional): Whether or not to align corners. See
-                documentation of F.affine_grid & F.grid_sample for more details.
-                Default: False
+                documentation of ``F.affine_grid`` & ``F.grid_sample`` for more
+                details.
+                Default: ``False``
         """
         super().__init__()
         if isinstance(scale, torch.distributions.distribution.Distribution):
@@ -774,19 +777,20 @@ class RandomRotation(nn.Module):
         """
         Args:
 
-            degrees (float, sequence, or torch.distribution): Tuple of degrees values
-                to randomly select from, or a torch.distributions instance.
+            degrees (float, sequence, or torch.distribution): Tuple or list of degrees
+                values to randomly select from, or a ``torch.distributions`` instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 F.grid_sample for more details. One of; "bilinear", "nearest", or
                 "bicubic".
-                Default: "bilinear"
+                Default: ``"bilinear"``
             padding_mode (str, optional): Padding mode for values that fall outside of
                 the grid. See documentation of F.grid_sample for more details. One of;
                 "zeros", "border", or "reflection".
-                Default: "zeros"
+                Default: ``"zeros"``
             align_corners (bool, optional): Whether or not to align corners. See
-                documentation of F.affine_grid & F.grid_sample for more details.
-                Default: False
+                documentation of ``F.affine_grid`` & ``F.grid_sample`` for more
+                details.
+                Default: ``False``
         """
         super().__init__()
         if isinstance(degrees, torch.distributions.distribution.Distribution):
