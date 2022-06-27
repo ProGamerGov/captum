@@ -951,15 +951,15 @@ class NaturalImage(ImageParameterization):
             x (torch.tensor): An input tensor.
 
         Returns:
-            x (ImageTensor): An instance of ImageTensor with the input tensor.
+            x (ImageTensor): An instance of ``ImageTensor`` with the input tensor.
         """
         return ImageTensor(x)
 
     def forward(self) -> torch.Tensor:
         """
         Returns:
-            image_tensor (torch.Tensor): The parameterization output, that has
-                optionally had its colors recorrelated.
+            image_tensor (torch.Tensor): The parameterization output wrapped in
+                ``ImageTensor``, that has optionally had its colors recorrelated.
         """
         image = self.parameterization()
         if self.decorrelate is not None:
