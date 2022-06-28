@@ -134,7 +134,7 @@ class TestFFTImage(BaseTest):
             .float()
         )
 
-        test_output = image._torch_irfft(test_fft_tensor)
+        test_output = image.torch_irfft(test_fft_tensor)
 
         if version.parse(torch.__version__) >= version.parse("1.8.0"):
             # torch.fft.irfftn output
