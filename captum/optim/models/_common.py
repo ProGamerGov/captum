@@ -87,10 +87,11 @@ def replace_layers(
         layer1: (Type[nn.Module]): The layer class that you want to transfer
             initialization variables from.
         layer2: (Type[nn.Module]): The layer class to create with the variables
-            from layer1.
-        transfer_vars (bool, optional): Wether or not to try and copy
-            initialization variables from layer1 instances to the replacement
-            layer2 instances.
+            from ``layer1``.
+        transfer_vars (bool, optional): Whether or not to try and copy
+            initialization variables from ``layer1`` instances to the replacement
+            ``layer2`` instances.
+            Default: ``False``
         kwargs: (Any, optional): Any additional variables to use when creating
             the new layer.
     """
@@ -112,13 +113,16 @@ def _transfer_layer_vars(
     """
     Given a layer instance, create a new layer instance of another class
     with the same initialization variables as the original layer.
+
     Args:
+
         layer1: (nn.Module): A layer instance that you want to transfer
             initialization variables from.
         layer2: (nn.Module): The layer class to create with the variables
             from of layer1.
         kwargs: (Any, optional): Any additional variables to use when creating
             the new layer.
+
     Returns:
         layer2 instance (nn.Module): An instance of layer2 with the initialization
             variables that it shares with layer1, and any specified additional
@@ -144,8 +148,7 @@ def _transfer_layer_vars(
 class Conv2dSame(nn.Conv2d):
     """
     Tensorflow like 'SAME' convolution wrapper for 2D convolutions.
-    TODO: Replace with torch.nn.Conv2d when support for padding='same'
-    is in stable version
+    torch.nn.Conv2d with padding='same' can be used when the stride is equal to 1.
     """
 
     def __init__(
@@ -170,18 +173,19 @@ class Conv2dSame(nn.Conv2d):
            kernel_size (int or tuple of int): The desired kernel size to use.
            stride (int or tuple of int, optional): The desired stride for the
                cross-correlation.
-               Default: 1
+               Default: ``1``
            padding (int or tuple of int, optional): This value is always set to 0.
-               Default: 0
+               Default: ``0``
            dilation (int or tuple of int, optional): The desired spacing between the
                kernel points.
-               Default: 1
+               Default: ``1``
            groups (int, optional): Number of blocked connections from input channels
                to output channels. Both in_channels and out_channels must be divisable
                by groups.
-               Default: 1
+               Default: ``1``
            bias (bool, optional): Whether or not to apply a learnable bias to the
                output.
+               Default: ``True``
         """
         super().__init__(
             in_channels, out_channels, kernel_size, stride, 0, dilation, groups, bias
@@ -247,7 +251,7 @@ def collect_activations(
             given model.
         model_input (torch.Tensor or tuple of torch.Tensor, optional): Optionally
             provide an input tensor to use when collecting the target activations.
-            Default: torch.zeros(1, 3, 224, 224)
+            Default: ``torch.zeros(1, 3, 224, 224)``
 
     Returns:
         activ_dict (ModuleOutputMapping): A dictionary of collected activations where
@@ -267,9 +271,9 @@ class SkipLayer(torch.nn.Module):
     during the forward pass. Use cases include removing nonlinear activation layers
     like ReLU for circuits research.
 
-    This layer works almost exactly the same way that nn.Indentiy does, except it also
-    ignores any additional arguments passed to the forward function. Any layer replaced
-    by SkipLayer must have the same input and output shapes.
+    This layer works almost exactly the same way that ``nn.Indentiy`` does, except it
+    also ignores any additional arguments passed to the forward function. Any layer
+    replaced by ``SkipLayer`` must have the same input and output shapes.
 
     See nn.Identity for more details:
     https://pytorch.org/docs/stable/generated/torch.nn.Identity.html
@@ -363,15 +367,15 @@ class MaxPool2dRelaxed(torch.nn.Module):
         Args:
 
             kernel_size (int or tuple of int): The size of the window to perform max &
-            average pooling with.
+                average pooling with.
             stride (int or tuple of int, optional): The stride window size to use.
-                Default: None
+                Default: ``None``
             padding (int or tuple of int): The amount of zero padding to add to both
-                sides in the nn.MaxPool2d & nn.AvgPool2d modules.
-                Default: 0
+                sides in the ``nn.MaxPool2d`` & ``nn.AvgPool2d`` modules.
+                Default: ``0``
             ceil_mode (bool, optional): Whether to use ceil or floor for creating the
                 output shape.
-                Default: False
+                Default: ``False``
         """
         super().__init__()
         self.maxpool = torch.nn.MaxPool2d(
