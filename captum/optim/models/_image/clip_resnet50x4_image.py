@@ -25,35 +25,41 @@ def clip_resnet50x4_image(
 
     Note that the model was trained on inputs with a shape of: [B, 3, 288, 288].
 
+    Example::
+
+        >>> model = opt.models.clip_resnet50x4_image(pretrained=True)
+        >>> output = model(torch.zeros(1, 3, 288, 288))
+
     See here for more details:
     https://github.com/openai/CLIP
     https://github.com/mlfoundations/open_clip
 
     Args:
 
-        pretrained (bool, optional): If True, returns a pre-trained model.
-            Default: False
-        progress (bool, optional): If True, displays a progress bar of the download to
-            stderr
-            Default: True
+        pretrained (bool, optional): If ``True``, returns a pre-trained model.
+            Default: ``False``
+        progress (bool, optional): If ``True``, displays a progress bar of the download
+            to stderr.
+            Default: ``True``
         model_path (str, optional): Optional path for the model file.
-            Default: None
-        replace_relus_with_redirectedrelu (bool, optional): If True, return pretrained
-            model with Redirected ReLU in place of ReLU layers.
-            Default: *True* when pretrained is True otherwise *False*
-        use_linear_modules_only (bool, optional): If True, return model
+            Default: ``None``
+        replace_relus_with_redirectedrelu (bool, optional): If ``True``, return
+            pretrained model with Redirected ReLU in place of ReLU layers.
+            Default: *``True``* when ``pretrained`` is ``True`` otherwise *``False``*
+        use_linear_modules_only (bool, optional): If ``True``, return model
             with all nonlinear layers replaced with linear equivalents.
-            Default: False
-        transform_input (bool, optional): If True, preprocesses the input according to
-            the method with which it was trained.
-            Default: *True* when pretrained is True otherwise *False*
-        use_attnpool (bool, optional): Whether or not to use the final AttentionPool2d
-            layer in the forward function. If set to True, model inputs are required
-            to have a shape of: [B, 3, 288, 288] or [3, 288, 288].
-            Default: False
+            Default: ``False``
+        transform_input (bool, optional): If ``True``, preprocesses the input according
+            to the method with which it was trained.
+            Default: *``True``* when ``pretrained`` is ``True`` otherwise *``False``*
+        use_attnpool (bool, optional): Whether or not to use the final
+            ``AttentionPool2d`` layer in the forward function. If set to ``True``,
+            model inputs are required to have a shape of: [B, 3, 288, 288] or
+            [3, 288, 288].
+            Default: ``False``
 
     Returns:
-        **CLIP_ResNet50x4Image** (CLIP_ResNet50x4Image): A CLIP ResNet 50x4 model's
+        **model** (CLIP_ResNet50x4Image): An instance of a CLIP ResNet 50x4 model's
             image portion.
     """
     if pretrained:
@@ -98,20 +104,20 @@ class CLIP_ResNet50x4Image(nn.Module):
         """
         Args:
 
-            replace_relus_with_redirectedrelu (bool, optional): If True, return
+            replace_relus_with_redirectedrelu (bool, optional): If ``True``, return
                 model with Redirected ReLU in place of ReLU layers.
                 Default: False
-            use_linear_modules_only (bool, optional): If True, return model with
+            use_linear_modules_only (bool, optional): If ``True``, return model with
                 all nonlinear layers replaced with linear equivalents.
-                Default: False
-            transform_input (bool, optional): If True, preprocesses the input according
-                to the method with which it was trained on.
-                Default: False
+                Default: ``False``
+            transform_input (bool, optional): If ``True``, preprocesses the input
+                according to the method with which it was trained on.
+                Default: ``False``
             use_attnpool (bool, optional): Whether or not to use the final
-                AttentionPool2d layer in the forward function. If set to True, model
-                inputs are required to have a shape of: [B, 3, 288, 288] or
+                ``AttentionPool2d`` layer in the forward function. If set to ``True``,
+                model inputs are required to have a shape of: [B, 3, 288, 288] or
                 [3, 288, 288].
-                Default: True
+                Default: ``True``
         """
         super().__init__()
         if use_linear_modules_only:
@@ -161,21 +167,21 @@ class CLIP_ResNet50x4Image(nn.Module):
 
             inplanes (int, optional): The number of input channels / features to use
                 for the first layer.
-                Default: 80
+                Default: ``80``
             planes (int, optional): The number of output channels / features to use
                 for the first layer. This variable is then multiplied by 4 to get the
                 number of input channels / features to use for the subsequent layers.
-                Default: 80
+                Default: ``80``
             blocks (int, optional): The number of Bottleneck layers to create.
-                Default: 4
+                Default: ``4``
             stride (int, optional): The stride value to use for the Bottleneck layers.
-                Default: 1
+                Default: ``1``
             activ (type of nn.Module, optional): The nn.Module class type to use for
                 activation layers.
-                Default: nn.ReLU
+                Default: ``nn.ReLU``
 
         Returns:
-            residual_layer (nn.Sequential): A full residual layer.
+            residual_layer (nn.Sequential): A full residual layer instance.
         """
         layers = [Bottleneck(inplanes, planes, stride, activ=activ)]
         for _ in range(blocks - 1):
@@ -246,15 +252,15 @@ class Bottleneck(nn.Module):
 
             inplanes (int, optional): The number of input channels / features to use
                 for the first layer.
-                Default: 80
+                Default: ``80``
             planes (int, optional): The number of output channels / features to use
                 for the subsequent layers.
-                Default: 80
+                Default: ``80``
             stride (int, optional): The stride value to use for the Bottleneck layers.
-                Default: 1
+                Default: ``1``
             activ (type of nn.Module, optional): The nn.Module class type to use for
                 activation layers.
-                Default: nn.ReLU
+                Default: ``nn.ReLU``
         """
         super().__init__()
         self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
@@ -317,14 +323,15 @@ class AttentionPool2d(nn.Module):
 
             spacial_size (int, optional): The desired size to user for the positional
                 embedding.
-                Default: 9
+                Default: ``9``
             in_features (int, optional): The desired input size for the nn.Linear
                 layers.
-                Default: 2560
+                Default: ``2560``
             out_features (int, optional): The desired output size for the nn.Linear
                 layers.
+                Default: ``640``
             num_heads (int, optional): The number of heads to use.
-                Default: 40
+                Default: ``40``
         """
         super().__init__()
         self.positional_embedding = nn.Parameter(
