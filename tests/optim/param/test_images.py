@@ -109,7 +109,7 @@ class TestFFTImage(BaseTest):
 
     def test_pytorch_fftfreq(self) -> None:
         image = images.FFTImage((1, 1))
-        _, _, fftfreq = image.get_fft_funcs()
+        _, _, fftfreq = image._get_fft_funcs()
         assertTensorAlmostEqual(
             self, fftfreq(4, 4), torch.as_tensor(np.fft.fftfreq(4, 4)), mode="max"
         )
@@ -121,7 +121,7 @@ class TestFFTImage(BaseTest):
 
         assertTensorAlmostEqual(
             self,
-            image.rfft2d_freqs(height, width),
+            image._rfft2d_freqs(height, width),
             torch.tensor([[0.0000, 0.3333], [0.5000, 0.6009]]),
         )
 
@@ -134,7 +134,7 @@ class TestFFTImage(BaseTest):
             .float()
         )
 
-        test_output = image.torch_irfft(test_fft_tensor)
+        test_output = image._torch_irfft(test_fft_tensor)
 
         if version.parse(torch.__version__) >= version.parse("1.8.0"):
             # torch.fft.irfftn output
