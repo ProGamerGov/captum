@@ -21,6 +21,8 @@ TORCH_VERSION = torch.__version__
 
 class ImageTensor(torch.Tensor):
     r"""
+    A subclass of torch.Tensor that provides functions for easy loading, saving, and
+    displaying image tensors.
 
     Example using file path or URL::
 
