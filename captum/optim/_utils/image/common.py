@@ -79,7 +79,7 @@ def show(
     """
     Show CHW & NCHW tensors as an image.
 
-    Alias: :func:`opt.images.show`
+    Alias: :func:`captum.optim.images.show`
 
     Args:
 
@@ -132,7 +132,7 @@ def save_tensor_as_image(
     """
     Save RGB & RGBA image tensors with a shape of CHW or NCHW as images.
 
-    Alias: :func:`opt.images.save_tensor_as_image`
+    Alias: :func:`captum.optim.images.save_tensor_as_image`
 
     Args:
 
