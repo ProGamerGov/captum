@@ -343,7 +343,7 @@ class FFTImage(ImageParameterization):
         """
 
         scaled_spectrum = self.fourier_coeffs * self.spectrum_scale
-        output = self._torch_irfft(scaled_spectrum)
+        output = self.torch_irfft(scaled_spectrum)
         if torch.jit.is_scripting():
             return output
         return output.refine_names("B", "C", "H", "W")
