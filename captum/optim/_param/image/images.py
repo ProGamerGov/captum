@@ -86,7 +86,7 @@ class ImageTensor(torch.Tensor):
            x (ImageTensor): An `ImageTensor` instance.
         """
         if path.endswith(".pt"):
-            #assert path.startswith("https://") or path.startswith("http://")
+            assert not path.startswith("https://") and not path.startswith("http://")
             return cls(torch.load(path, map_location="cpu"))
         if path.startswith("https://") or path.startswith("http://"):
             headers = {"User-Agent": "Captum"}
