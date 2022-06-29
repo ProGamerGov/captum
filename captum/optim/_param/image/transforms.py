@@ -1319,6 +1319,14 @@ class TransformationRobustness(nn.Module):
         self.crop_or_pad_output = crop_or_pad_output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+
+            x (torch.Tensor): An NCHW tensor.
+        
+        Returns:
+            x (torch.Tensor): A transformed NCHW tensor.
+        """
         assert x.dim() == 4
         crop_size = x.shape[2:]
 
