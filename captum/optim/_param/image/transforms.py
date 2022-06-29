@@ -485,10 +485,12 @@ class RandomScale(nn.Module):
         Args:
 
             scale (float, sequence, or torch.distribution): Sequence of rescaling
-                values to randomly select from, or a torch.distributions instance.
+                values to randomly select from, or a :func:`torch.distributions`
+                instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.interpolate` for more details. One of;
-                ``"bilinear"``, ``"nearest"``, ``"area"``, or ``"bicubic"``.
+                ``"bilinear"``, ``"nearest"``, ``"nearest-exact"``, ``"area"``, or
+                ``"bicubic"``.
                 Default: ``"bilinear"``
             align_corners (bool, optional): Whether or not to align corners. See
                 documentation of :func:`torch.nn.functional.interpolate` for more
@@ -592,11 +594,11 @@ class RandomScaleAffine(nn.Module):
     """
     Apply random rescaling on a NCHW tensor.
 
-    This random scaling transform utilizes F.affine_grid & F.grid_sample, and as a
-    result has two key differences to the default RandomScale transforms This
-    transform either shrinks an image while adding a background, or center crops image
-    and then resizes it to a larger size. This means that the output image shape is the
-    same shape as the input image.
+    This random scaling transform utilizes :func:`torch.nn.functional.affine_grid`
+    & :func:`torch.nn.functional.grid_sample`, and as a result has two key differences
+    to the default RandomScale transforms This transform either shrinks an image while
+    adding a background, or center crops image and then resizes it to a larger size.
+    This means that the output image shape is the same shape as the input image.
 
     In constrast to RandomScaleAffine, the default RandomScale transform simply resizes
     the input image using F.interpolate.
@@ -621,7 +623,8 @@ class RandomScaleAffine(nn.Module):
         Args:
 
             scale (float, sequence, or torch.distribution): Sequence of rescaling
-                values to randomly select from, or a torch.distributions instance.
+                values to randomly select from, or a :func:`torch.distributions`
+                instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.grid_sample` for more details. One of;
                 ``"bilinear"``, ``"nearest"``, or ``"bicubic"``.
@@ -782,8 +785,7 @@ class RandomSpatialJitter(torch.nn.Module):
 
 class RandomRotation(nn.Module):
     """
-    Apply random rotation transforms on a NCHW tensor, using a sequence of degrees or
-    torch.distributions instance.
+    Apply random rotation transforms on a NCHW tensor.
     """
 
     __constants__ = [
@@ -805,7 +807,8 @@ class RandomRotation(nn.Module):
         Args:
 
             degrees (float, sequence, or torch.distribution): Tuple or list of degrees
-                values to randomly select from, or a ``torch.distributions`` instance.
+                values to randomly select from, or a :func:`torch.distributions`
+                instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.grid_sample` for more details. One of;
                 ``"bilinear"``, ``"nearest"``, or ``"bicubic"``.
@@ -1280,13 +1283,13 @@ class TransformationRobustness(nn.Module):
                  translation to use for each :class:`.RandomSpatialJitter` transform.
                  Default: ``[4] * 10``
             scale (float, sequence, or torch.distribution, optional): Sequence of
-                rescaling values to randomly select from, or a torch.distributions
-                instance. If set to ``None``, no :class:`.RandomScale` transform will
-                be used.
+                rescaling values to randomly select from, or a
+                :func:`torch.distributions` instance. If set to ``None``, no
+                :class:`.RandomScale` transform will be used.
                 Default: ``[0.995**n for n in range(-5, 80)] + [0.998**n for n in 2 *
                 list(range(20, 40))]``
             degrees (float, sequence, or torch.distribution, optional): Sequence of
-                degrees to randomly select from, or a torch.distributions
+                degrees to randomly select from, or a :func:`torch.distributions`
                 instance. If set to ``None``, no :class:`.RandomRotation` transform
                 will be used.
                 Default: ``list(range(-20, 20)) + list(range(-10, 10)) +
