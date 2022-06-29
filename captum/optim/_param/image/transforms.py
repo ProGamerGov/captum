@@ -276,6 +276,8 @@ class CenterCrop(torch.nn.Module):
     """
     Center crop a specified amount from a tensor. If input are smaller than the
     specified crop size, padding will be applied.
+
+    See :func:`.center_crop` for the functional version of this transform.
     """
 
     __constants__ = [
@@ -373,7 +375,7 @@ def center_crop(
     Center crop a specified amount from a tensor. If input are smaller than the
     specified crop size, padding will be applied.
     
-    This function is the functional version of: :class:`CenterCrop`.
+    This function is the functional version of: :class:`.CenterCrop`.
 
     Args:
 
