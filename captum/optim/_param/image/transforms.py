@@ -480,7 +480,8 @@ class RandomScale(nn.Module):
         Args:
 
             scale (float, sequence, or torch.distribution): Sequence of rescaling
-                values to randomly select from, or a torch.distributions instance.
+                values to randomly select from, or a :func:`torch.distributions`
+                instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.interpolate` for more details. One of;
                 ``"bilinear"``, ``"nearest"``, ``"area"``, or ``"bicubic"``.
@@ -616,7 +617,8 @@ class RandomScaleAffine(nn.Module):
         Args:
 
             scale (float, sequence, or torch.distribution): Sequence of rescaling
-                values to randomly select from, or a torch.distributions instance.
+                values to randomly select from, or a :func:`torch.distributions`
+                instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.grid_sample` for more details. One of;
                 ``"bilinear"``, ``"nearest"``, or ``"bicubic"``.
@@ -777,8 +779,7 @@ class RandomSpatialJitter(torch.nn.Module):
 
 class RandomRotation(nn.Module):
     """
-    Apply random rotation transforms on a NCHW tensor, using a sequence of degrees or
-    torch.distributions instance.
+    Apply random rotation transforms on a NCHW tensor.
     """
 
     __constants__ = [
@@ -800,7 +801,8 @@ class RandomRotation(nn.Module):
         Args:
 
             degrees (float, sequence, or torch.distribution): Tuple or list of degrees
-                values to randomly select from, or a ``torch.distributions`` instance.
+                values to randomly select from, or a :func:`torch.distributions`
+                instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.grid_sample` for more details. One of;
                 ``"bilinear"``, ``"nearest"``, or ``"bicubic"``.
