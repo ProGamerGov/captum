@@ -16,7 +16,7 @@ the relevant type hints.
 
 
 class BasicLinearReLULinear(nn.Module):
-    def __init__(self, in_features, out_features=5, bias=False):
+    def __init__(self, in_features, out_features=5, bias=False) -> None:
         super().__init__()
         self.fc1 = nn.Linear(in_features, out_features, bias=bias)
         self.relu1 = nn.ReLU()
@@ -30,7 +30,7 @@ class BasicLinearReLULinear(nn.Module):
 
 
 class MixedKwargsAndArgsModule(nn.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
     def forward(self, x, y=None):
@@ -135,7 +135,7 @@ class BasicLinearModel(nn.Module):
 
 
 class BasicLinearModel2(nn.Module):
-    def __init__(self, in_features, out_features):
+    def __init__(self, in_features, out_features) -> None:
         super().__init__()
         self.linear = nn.Linear(in_features, out_features, bias=False)
 
@@ -144,7 +144,7 @@ class BasicLinearModel2(nn.Module):
 
 
 class BasicLinearModel_Multilayer(nn.Module):
-    def __init__(self, in_features, hidden_nodes, out_features):
+    def __init__(self, in_features, hidden_nodes, out_features) -> None:
         super().__init__()
         self.linear1 = nn.Linear(in_features, hidden_nodes, bias=False)
         self.linear2 = nn.Linear(hidden_nodes, out_features, bias=False)
@@ -433,7 +433,7 @@ class BasicModel_MultiLayer_MultiInput(nn.Module):
 
 
 class BasicModel_MultiLayer_TrueMultiInput(nn.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.m1 = BasicModel_MultiLayer()
         self.m234 = BasicModel_MultiLayer_MultiInput()
@@ -584,18 +584,3 @@ class BasicModel_ConvNet_MaxPool3d(nn.Module):
         x = self.relu3(self.fc1(x))
         x = self.fc2(x)
         return self.softmax(x)
-
-
-class BasicModel_ConvNet_Optim(nn.Module):
-    def __init__(self) -> None:
-        super().__init__()
-        self.layer = nn.Conv2d(3, 2, 1, bias=True)
-        # Initialize weights and biases for
-        # easy reproducibility
-        self.layer.weight.data.fill_(0.1)
-        if self.layer.bias is not None:
-            self.layer.bias.data.fill_(1)
-
-    @no_type_check
-    def forward(self, x: Tensor):
-        return self.layer(x)
