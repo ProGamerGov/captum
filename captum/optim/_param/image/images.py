@@ -171,7 +171,7 @@ class ImageTensor(torch.Tensor):
         pad_value: float = 0.0,
     ) -> None:
         """
-        Save image(s) in the `ImageTensor` instance an image file, using
+        Save image(s) in the `ImageTensor` instance as an image file, using
         :func:`captum.optim.save_tensor_as_image`.
 
         Args:
