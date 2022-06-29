@@ -72,7 +72,7 @@ class ImageTensor(torch.Tensor):
 
         .. note::
 
-            Only the ``path`` variable is used if loading a '.pt' tensor file.
+            Only the ``path`` variable is used if loading a local '.pt' tensor file.
 
         Args:
 
@@ -85,12 +85,15 @@ class ImageTensor(torch.Tensor):
         Returns:
            x (ImageTensor): An `ImageTensor` instance.
         """
+        if path.endswith(".pt"):
+            #assert path.startswith("https://") or path.startswith("http://")
+            return cls(torch.load(path, map_location="cpu"))
         if path.startswith("https://") or path.startswith("http://"):
             headers = {"User-Agent": "Captum"}
-            path = requests.get(path, stream=True, headers=headers).raw
-        if path.endswith(".pt"):
-            return cls(torch.load(path, map_location="cpu"))
-        img = Image.open(path)
+            response = requests.get(path, stream=True, headers=headers)
+            img = Image.open(response.raw)
+        else:
+            img = Image.open(path)
         img_np = np.array(img.convert(mode)).astype(np.float32)
         return cls(img_np.transpose(2, 0, 1) / scale)
 
@@ -173,7 +176,7 @@ class ImageTensor(torch.Tensor):
         pad_value: float = 0.0,
     ) -> None:
         """
-        Save image(s) in the ``ImageTensor`` instance an image file, using
+        Save image(s) in the ``ImageTensor`` instance as an image file, using
         :func:`captum.optim.save_tensor_as_image`.
         
         .. note::
@@ -203,7 +206,7 @@ class ImageTensor(torch.Tensor):
                 parameter only has an effect if ``images_per_row`` is not ``None``.
                 Default: ``0.0``
         """
-        if path.endswith(".pt"):
+        if filename.endswith(".pt"):
             torch.save(self.clone().cpu().detach(), filename)
         else:
             save_tensor_as_image(
