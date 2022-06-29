@@ -70,6 +70,10 @@ class ImageTensor(torch.Tensor):
         Load an image file from a URL or local filepath directly into an
         ``ImageTensor``.
 
+        .. note::
+
+            Only the ``path`` variable is used if loading a '.pt' tensor file.
+
         Args:
 
             path (str): A URL or filepath to an image.
@@ -83,10 +87,10 @@ class ImageTensor(torch.Tensor):
         """
         if path.startswith("https://") or path.startswith("http://"):
             headers = {"User-Agent": "Captum"}
-            response = requests.get(path, stream=True, headers=headers)
-            img = Image.open(response.raw)
-        else:
-            img = Image.open(path)
+            path = requests.get(path, stream=True, headers=headers).raw
+        if path.endswith(".pt"):
+            return cls(torch.load(path, map_location="cpu"))
+        img = Image.open(path)
         img_np = np.array(img.convert(mode)).astype(np.float32)
         return cls(img_np.transpose(2, 0, 1) / scale)
 
@@ -169,12 +173,19 @@ class ImageTensor(torch.Tensor):
         pad_value: float = 0.0,
     ) -> None:
         """
-        Save an `ImageTensor` as an image file.
+        Save image(s) in the ``ImageTensor`` instance an image file, using
+        :func:`captum.optim.save_tensor_as_image`.
+        
+        .. note::
+
+            Only the ``filename`` variable is used if saving the ``ImageTensor``
+            instance as a tensor file by ending the filename with ".pt". Ex:
+            ``my_tensor.pt``.
 
         Args:
 
-            filename (str): The filename to use when saving the ``ImageTensor`` as an
-                image file.
+            filename (str): The filename to use when saving the ``ImageTensor``
+                instance as an image file or '.pt' tensor file.
             scale (float, optional): Value to multiply the ``ImageTensor`` by so that
                 it's value range is [0-255] for saving.
                 Default: ``255.0``
@@ -192,15 +203,18 @@ class ImageTensor(torch.Tensor):
                 parameter only has an effect if ``images_per_row`` is not ``None``.
                 Default: ``0.0``
         """
-        save_tensor_as_image(
-            self,
-            filename=filename,
-            scale=scale,
-            mode=mode,
-            images_per_row=images_per_row,
-            padding=padding,
-            pad_value=pad_value,
-        )
+        if path.endswith(".pt"):
+            torch.save(self.clone().cpu().detach(), filename)
+        else:
+            save_tensor_as_image(
+                self,
+                filename=filename,
+                scale=scale,
+                mode=mode,
+                images_per_row=images_per_row,
+                padding=padding,
+                pad_value=pad_value,
+            )
 
 
 class InputParameterization(torch.nn.Module):
