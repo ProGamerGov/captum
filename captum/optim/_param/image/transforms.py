@@ -485,7 +485,7 @@ class RandomScale(nn.Module):
         Args:
 
             scale (float, sequence, or torch.distribution): Sequence of rescaling
-                values to randomly select from, or a :func:`torch.distributions`
+                values to randomly select from, or a :mod:`torch.distributions`
                 instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.interpolate` for more details. One of;
@@ -623,7 +623,7 @@ class RandomScaleAffine(nn.Module):
         Args:
 
             scale (float, sequence, or torch.distribution): Sequence of rescaling
-                values to randomly select from, or a :func:`torch.distributions`
+                values to randomly select from, or a :mod:`torch.distributions`
                 instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.grid_sample` for more details. One of;
@@ -807,7 +807,7 @@ class RandomRotation(nn.Module):
         Args:
 
             degrees (float, sequence, or torch.distribution): Tuple or list of degrees
-                values to randomly select from, or a :func:`torch.distributions`
+                values to randomly select from, or a :mod:`torch.distributions`
                 instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.grid_sample` for more details. One of;
