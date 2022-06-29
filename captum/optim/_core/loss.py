@@ -1152,7 +1152,6 @@ class ActivationWeights(BaseLoss):
         return activations
 
 
-@loss_wrapper
 class L2Mean(BaseLoss):
     """
     Simple L2Loss penalty where the mean is used instead of the square root of the
@@ -1198,7 +1197,6 @@ class L2Mean(BaseLoss):
         return ((activations - self.constant) ** 2).mean()
 
 
-@loss_wrapper
 class VectorLoss(BaseLoss):
     """
     This objective is useful for optimizing towards channel directions. This can
@@ -1259,7 +1257,6 @@ class VectorLoss(BaseLoss):
         ).mean()
 
 
-@loss_wrapper
 class FacetLoss(BaseLoss):
     """
     The Facet loss objective used for Faceted Feature Visualization as described in:
