@@ -78,7 +78,7 @@ class ToRGB(nn.Module):
     KLT corresponds to the empirically measured channel correlations on imagenet.
     I1I2I3 corresponds to an approximation for natural images from Ohta et al.[0]
     If you wish to calculate your own KLT transform matrix on a custom dataset,
-    then see :func:`captum.optim.dataset.dataset_klt_matrix` for an example
+    then please see :func:`captum.optim.dataset.dataset_klt_matrix` for an example
     of how to do so.
 
     [0] Y. Ohta, T. Kanade, and T. Sakai, "Color information for region segmentation,"
