@@ -484,7 +484,8 @@ class RandomScale(nn.Module):
                 instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.interpolate` for more details. One of;
-                ``"bilinear"``, ``"nearest"``, ``"area"``, or ``"bicubic"``.
+                ``"bilinear"``, ``"nearest"``, ``"nearest-exact"``, ``"area"``, or
+                ``"bicubic"``.
                 Default: ``"bilinear"``
             align_corners (bool, optional): Whether or not to align corners. See
                 documentation of :func:`torch.nn.functional.interpolate` for more
