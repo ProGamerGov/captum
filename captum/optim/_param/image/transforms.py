@@ -1323,7 +1323,7 @@ class TransformationRobustness(nn.Module):
         Args:
 
             x (torch.Tensor): An NCHW tensor.
-        
+
         Returns:
             x (torch.Tensor): A transformed NCHW tensor.
         """
