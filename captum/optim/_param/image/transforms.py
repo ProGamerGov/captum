@@ -480,7 +480,7 @@ class RandomScale(nn.Module):
         Args:
 
             scale (float, sequence, or torch.distribution): Sequence of rescaling
-                values to randomly select from, or a :func:`torch.distributions`
+                values to randomly select from, or a :mod:`torch.distributions`
                 instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.interpolate` for more details. One of;
@@ -618,7 +618,7 @@ class RandomScaleAffine(nn.Module):
         Args:
 
             scale (float, sequence, or torch.distribution): Sequence of rescaling
-                values to randomly select from, or a :func:`torch.distributions`
+                values to randomly select from, or a :mod:`torch.distributions`
                 instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.grid_sample` for more details. One of;
@@ -802,7 +802,7 @@ class RandomRotation(nn.Module):
         Args:
 
             degrees (float, sequence, or torch.distribution): Tuple or list of degrees
-                values to randomly select from, or a :func:`torch.distributions`
+                values to randomly select from, or a :mod:`torch.distributions`
                 instance.
             mode (str, optional): Interpolation mode to use. See documentation of
                 :func:`torch.nn.functional.grid_sample` for more details. One of;
@@ -1280,12 +1280,12 @@ class TransformationRobustness(nn.Module):
                  Default: ``[4] * 10``
             scale (float, sequence, or torch.distribution, optional): Sequence of
                 rescaling values to randomly select from, or a
-                :func:`torch.distributions` instance. If set to ``None``, no
+                :mod:`torch.distributions` instance. If set to ``None``, no
                 :class:`.RandomScale` transform will be used.
                 Default: ``[0.995**n for n in range(-5, 80)] + [0.998**n for n in 2 *
                 list(range(20, 40))]``
             degrees (float, sequence, or torch.distribution, optional): Sequence of
-                degrees to randomly select from, or a :func:`torch.distributions`
+                degrees to randomly select from, or a :mod:`torch.distributions`
                 instance. If set to ``None``, no :class:`.RandomRotation` transform
                 will be used.
                 Default: ``list(range(-20, 20)) + list(range(-10, 10)) +
