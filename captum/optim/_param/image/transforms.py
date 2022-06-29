@@ -1278,13 +1278,13 @@ class TransformationRobustness(nn.Module):
                  translation to use for each :class:`.RandomSpatialJitter` transform.
                  Default: ``[4] * 10``
             scale (float, sequence, or torch.distribution, optional): Sequence of
-                rescaling values to randomly select from, or a torch.distributions
-                instance. If set to ``None``, no :class:`.RandomScale` transform will
-                be used.
+                rescaling values to randomly select from, or a
+                :func:`torch.distributions` instance. If set to ``None``, no
+                :class:`.RandomScale` transform will be used.
                 Default: ``[0.995**n for n in range(-5, 80)] + [0.998**n for n in 2 *
                 list(range(20, 40))]``
             degrees (float, sequence, or torch.distribution, optional): Sequence of
-                degrees to randomly select from, or a torch.distributions
+                degrees to randomly select from, or a :func:`torch.distributions`
                 instance. If set to ``None``, no :class:`.RandomRotation` transform
                 will be used.
                 Default: ``list(range(-20, 20)) + list(range(-10, 10)) +
