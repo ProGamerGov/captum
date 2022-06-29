@@ -126,7 +126,7 @@ def compute_avg_cell_samples(
     """
     Create direction vectors for sets of activation samples, attribution samples, and
     grid indices. Grid cells without the minimum number of points as specified by
-    ``min_density`` will be ignored. The :func:`calc_grid_indices function` can be used
+    ``min_density`` will be ignored. The :func:`calc_grid_indices` function can be used
     to produce the values required for the ``grid_indices`` variable.
 
     Carter, et al., "Activation Atlas", Distill, 2019.
