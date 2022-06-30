@@ -5,7 +5,6 @@ import captum.influence as influence  # noqa
 import captum.insights as insights  # noqa
 import captum.log as log  # noqa
 import captum.metrics as metrics  # noqa
-import captum.optim as optim  # noqa
 import captum.robust as robust  # noqa
 
 
