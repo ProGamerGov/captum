@@ -1001,7 +1001,7 @@ class NaturalImage(ImageParameterization):
     def forward(self) -> torch.Tensor:
         """
         Returns:
-            image_tensor (torch.Tensor): The parameterization output wrapped in
+            image_tensor (ImageTensor): The parameterization output wrapped in
                 :class:`.ImageTensor`, that has optionally had its colors
                 recorrelated.
         """
