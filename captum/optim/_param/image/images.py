@@ -998,7 +998,7 @@ class NaturalImage(ImageParameterization):
         """
         return ImageTensor(x)
 
-    def forward(self) -> torch.Tensor:
+    def forward(self) -> ImageTensor:
         """
         Returns:
             image_tensor (ImageTensor): The parameterization output wrapped in
