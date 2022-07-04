@@ -80,7 +80,8 @@ class ChannelReducer:
         self, x: torch.Tensor, swap_2nd_and_last_dims: bool = True
     ) -> torch.Tensor:
         """
-        Perform dimensionality reduction on an input tensor.
+        Perform dimensionality reduction on an input tensor using the specified
+        ``reduction_alg``'s ``.fit_transform`` function.
 
         Args:
 
