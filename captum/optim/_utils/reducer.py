@@ -38,7 +38,7 @@ class ChannelReducer:
             from sklearn, which requires users to put inputs on CPU before passing them
             to :func:`ChannelReducer.fit_transform`.
             Default: ``NMF``
-        **kwargs (optional): Arbitrary keyword arguments used by the specified
+        **kwargs (any, optional): Arbitrary keyword arguments used by the specified
             reduction_alg.
     """
 
