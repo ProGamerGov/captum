@@ -1084,7 +1084,7 @@ class GaussianSmoothing(nn.Module):
             input (torch.Tensor): Input to apply gaussian filter on.
 
         Returns:
-            **filtered** (torch.Tensor): Filtered output.
+            filtered (torch.Tensor): Filtered output.
         """
         return self.conv(
             input, weight=self.weight, groups=self.groups, padding=self.padding
@@ -1108,7 +1108,7 @@ class SymmetricPadding(torch.autograd.Function):
             x (torch.Tensor): Input to apply symmetric padding on.
 
         Returns:
-            **tensor** (torch.Tensor): Padded tensor.
+            tensor (torch.Tensor): Padded tensor.
         """
         ctx.padding = padding
         x_device = x.device
@@ -1131,7 +1131,7 @@ class SymmetricPadding(torch.autograd.Function):
             grad_output (torch.Tensor): Input to remove symmetric padding from.
 
         Returns:
-            **grad_input** (torch.Tensor): Unpadded tensor.
+            grad_input (torch.Tensor): Unpadded tensor.
         """
         grad_input = grad_output.clone()
         B, C, H, W = grad_input.size()
@@ -1170,7 +1170,7 @@ class NChannelsToRGB(nn.Module):
             x (torch.Tensor): Input to reduce channel dimensions on.
 
         Returns:
-            **3 channel RGB tensor** (torch.Tensor): RGB image tensor.
+            x (torch.Tensor): A 3 channel RGB image tensor.
         """
         assert x.dim() == 4
         return nchannels_to_rgb(x, self.warp)
@@ -1220,6 +1220,16 @@ class RandomCrop(nn.Module):
         ]
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Randomly crop an NCHW image tensor.
+
+        Args:
+
+            x (torch.Tensor): The NCHW image tensor to randomly crop.
+
+        Returns
+            x (torch.Tensor): The randomly cropped NCHW image tensor.
+        """
         assert x.dim() == 4
         hs = int(math.ceil((x.shape[2] - self.crop_size[0]) / 2.0))
         ws = int(math.ceil((x.shape[3] - self.crop_size[1]) / 2.0))
@@ -1286,12 +1296,12 @@ class TransformationRobustness(nn.Module):
                  Default: ``[4] * 10``
             scale (float, sequence, or torch.distribution, optional): Sequence of
                 rescaling values to randomly select from, or a
-                :func:`torch.distributions` instance. If set to ``None``, no
+                :mod:`torch.distributions` instance. If set to ``None``, no
                 :class:`.RandomScale` transform will be used.
                 Default: ``[0.995**n for n in range(-5, 80)] + [0.998**n for n in 2 *
                 list(range(20, 40))]``
             degrees (float, sequence, or torch.distribution, optional): Sequence of
-                degrees to randomly select from, or a :func:`torch.distributions`
+                degrees to randomly select from, or a :mod:`torch.distributions`
                 instance. If set to ``None``, no :class:`.RandomRotation` transform
                 will be used.
                 Default: ``list(range(-20, 20)) + list(range(-10, 10)) +
@@ -1325,6 +1335,14 @@ class TransformationRobustness(nn.Module):
         self.crop_or_pad_output = crop_or_pad_output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+
+            x (torch.Tensor): An NCHW tensor.
+
+        Returns:
+            x (torch.Tensor): A transformed NCHW tensor.
+        """
         assert x.dim() == 4
         crop_size = x.shape[2:]
 
