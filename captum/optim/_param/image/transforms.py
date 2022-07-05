@@ -20,7 +20,7 @@ class BlendAlpha(nn.Module):
         """
         Args:
 
-            background (tensor, optional):  An NCHW image tensor to be used as the
+            background (tensor, optional): An NCHW image tensor to be used as the
                 Alpha channel's background.
                 Default: ``None``
         """
@@ -134,7 +134,7 @@ class ToRGB(nn.Module):
         """
         Args:
 
-            transform (str or tensor):  Either a string for one of the precalculated
+            transform (str or tensor): Either a string for one of the precalculated
                 transform matrices, or a 3x3 matrix for the 3 RGB channels of input
                 tensors.
         """
@@ -933,7 +933,7 @@ class ScaleInputRange(nn.Module):
         """
         Args:
 
-            multiplier (float, optional):  A float value used to scale the input.
+            multiplier (float, optional): A float value used to scale the input.
         """
         super().__init__()
         self.multiplier = multiplier
