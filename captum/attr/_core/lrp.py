@@ -106,6 +106,7 @@ class LRP(GradientAttribution):
                         that for all given input tensors, dimension 0 corresponds
                         to the number of examples, and if multiple input tensors
                         are provided, the examples must be aligned appropriately.
+
             target (int, tuple, tensor or list, optional):  Output indices for
                         which gradients are computed (for classification cases,
                         this is usually the target class).
@@ -172,6 +173,7 @@ class LRP(GradientAttribution):
                         Delta is calculated per example, meaning that the number of
                         elements in returned delta tensor is equal to the number of
                         of examples in the inputs.
+
         Examples::
 
                 >>> # ImageClassifier takes a single input tensor of images Nx3x32x32,
