@@ -169,6 +169,7 @@ class LRP(GradientAttribution):
                         corresponding sized tensors is returned. The sum of attributions
                         is one and not corresponding to the prediction score as in other
                         implementations.
+
             - **delta** (*tensor*, returned if return_convergence_delta=True):
                         Delta is calculated per example, meaning that the number of
                         elements in returned delta tensor is equal to the number of
