@@ -59,7 +59,7 @@ def clip_resnet50x4_image(
             Default: ``False``
 
     Returns:
-        **model** (CLIP_ResNet50x4Image): An instance of a CLIP ResNet 50x4 model's
+        model (CLIP_ResNet50x4Image): An instance of a CLIP ResNet 50x4 model's
             image portion.
     """
     if pretrained:
