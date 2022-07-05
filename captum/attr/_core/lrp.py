@@ -155,7 +155,7 @@ class LRP(GradientAttribution):
 
         Returns:
             *tensor* or tuple of *tensors* of **attributions**
-            or 2-element tuple of **attributions**, **delta**::
+            or 2-element tuple of **attributions**, **delta**:
             - **attributions** (*tensor* or tuple of *tensors*):
                         The propagated relevance values with respect to each
                         input feature. The values are normalized by the output score
