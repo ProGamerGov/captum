@@ -216,7 +216,6 @@ class ImageParameterization(InputParameterization):
     pass
 
 
-
 class FFTImage(ImageParameterization):
     """
     Parameterize an image using inverse real 2D FFT
