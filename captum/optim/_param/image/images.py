@@ -28,7 +28,7 @@ class ImageTensor(torch.Tensor):
 
         >>> image_tensor = opt.images.ImageTensor.load(<path/to/image_file>)
         >>> image_tensor.export(filename="image_tensor.jpg")  # Save image(s)
-        >>> image_tensor.show(figsize=(8, 8))  # Displays image(s) via Matplotlib
+        >>> image_tensor.show()  # Displays image(s) via Matplotlib
 
     Example using ``torch.Tensor``::
 
@@ -70,10 +70,6 @@ class ImageTensor(torch.Tensor):
         Load an image file from a URL or local filepath directly into an
         ``ImageTensor``.
 
-        .. note::
-
-            Only the ``path`` variable is used if loading a local '.pt' tensor file.
-
         Args:
 
             path (str): A URL or filepath to an image.
@@ -85,9 +81,6 @@ class ImageTensor(torch.Tensor):
         Returns:
            x (ImageTensor): An `ImageTensor` instance.
         """
-        if path.endswith(".pt"):
-            assert not path.startswith("https://") and not path.startswith("http://")
-            return cls(torch.load(path, map_location="cpu"))
         if path.startswith("https://") or path.startswith("http://"):
             headers = {"User-Agent": "Captum"}
             response = requests.get(path, stream=True, headers=headers)
@@ -137,12 +130,14 @@ class ImageTensor(torch.Tensor):
         pad_value: float = 0.0,
     ) -> None:
         """
-        Display an ``ImageTensor`` instance.
+        Display image(s) in the ``ImageTensor`` instance using
+        :func:`captum.optim.show`.
 
         Args:
 
             figsize (Tuple[int, int], optional): height & width to use
                 for displaying the ``ImageTensor`` figure.
+                Default: ``None``
             scale (float, optional): Value to multiply the ``ImageTensor`` by so that
                 it's value range is [0-255] for display.
                 Default: ``255.0``
@@ -176,19 +171,13 @@ class ImageTensor(torch.Tensor):
         pad_value: float = 0.0,
     ) -> None:
         """
-        Save image(s) in the ``ImageTensor`` instance as an image file, using
+        Save image(s) in the `ImageTensor` instance as an image file, using
         :func:`captum.optim.save_tensor_as_image`.
-        
-        .. note::
-
-            Only the ``filename`` variable is used if saving the ``ImageTensor``
-            instance as a tensor file by ending the filename with ".pt". Ex:
-            ``my_tensor.pt``.
 
         Args:
 
-            filename (str): The filename to use when saving the ``ImageTensor``
-                instance as an image file or '.pt' tensor file.
+            filename (str): The filename to use when saving the ``ImageTensor`` as an
+                image file.
             scale (float, optional): Value to multiply the ``ImageTensor`` by so that
                 it's value range is [0-255] for saving.
                 Default: ``255.0``
@@ -206,18 +195,15 @@ class ImageTensor(torch.Tensor):
                 parameter only has an effect if ``images_per_row`` is not ``None``.
                 Default: ``0.0``
         """
-        if filename.endswith(".pt"):
-            torch.save(self.clone().cpu().detach(), filename)
-        else:
-            save_tensor_as_image(
-                self,
-                filename=filename,
-                scale=scale,
-                mode=mode,
-                images_per_row=images_per_row,
-                padding=padding,
-                pad_value=pad_value,
-            )
+        save_tensor_as_image(
+            self,
+            filename=filename,
+            scale=scale,
+            mode=mode,
+            images_per_row=images_per_row,
+            padding=padding,
+            pad_value=pad_value,
+        )
 
 
 class InputParameterization(torch.nn.Module):
