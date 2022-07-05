@@ -36,7 +36,7 @@ class InputOptimization(Objective, Parameterized):
         https://github.com/tensorflow/lucid
         https://distill.pub/2017/feature-visualization/
 
-    Alias: :func:`captum.optim.optimization.InputOptimization`
+    Alias: :func:`captum.optim.InputOptimization`
 
     Example::
 
