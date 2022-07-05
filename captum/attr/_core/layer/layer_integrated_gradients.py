@@ -302,6 +302,7 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
                         attribute to the input or output, is a single tensor.
                         Support for multiple tensors will be added later.
                         Default: False
+
             Returns:
                 **attributions** or 2-element tuple of **attributions**, **delta**:
                 - **attributions** (*tensor*, tuple of *tensors* or tuple of *tensors*):
