@@ -43,7 +43,6 @@ class NoiseTunnel(Attribution):
     returned.
 
     More details about adding noise can be found in the following papers:
-
         https://arxiv.org/abs/1810.03292
         https://arxiv.org/abs/1810.03307
         https://arxiv.org/abs/1706.03825
