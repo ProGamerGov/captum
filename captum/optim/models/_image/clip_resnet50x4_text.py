@@ -56,7 +56,7 @@ def clip_resnet50x4_text(
             Default: ``49408``
 
     Returns:
-        **model** (CLIP_ResNet50x4Text): An instance of a CLIP ResNet 50x4 model's text
+        model (CLIP_ResNet50x4Text): An instance of a CLIP ResNet 50x4 model's text
             portion.
     """
     if pretrained:
