@@ -70,7 +70,7 @@ def make_grid_image(
 
 def show(
     x: torch.Tensor,
-    figsize: Optional[Tuple[int, int]] = (10, 10),
+    figsize: Optional[Tuple[int, int]] = None,
     scale: float = 255.0,
     images_per_row: Optional[int] = None,
     padding: int = 2,
@@ -79,14 +79,12 @@ def show(
     """
     Show CHW & NCHW tensors as an image.
 
-    Alias: :func:`captum.optim.images.show`
-
     Args:
 
         x (torch.Tensor): The tensor you want to display as an image.
         figsize (Tuple[int, int], optional): height & width to use
             for displaying the image figure.
-            Default: ``(10, 10)``
+            Default: ``None``
         scale (float, optional): Value to multiply the input tensor by so that
             it's value range is [0-255] for display.
             Default: ``255.0``
@@ -131,8 +129,6 @@ def save_tensor_as_image(
 ) -> None:
     """
     Save RGB & RGBA image tensors with a shape of CHW or NCHW as images.
-
-    Alias: :func:`captum.optim.images.save_tensor_as_image`
 
     Args:
 
@@ -352,7 +348,7 @@ def weights_to_heatmap_2d(
             Default: ``["0571b0", "92c5de", "f7f7f7", "f4a582", "ca0020"]``
 
     Returns:
-        color_tensor (torch.Tensor):  A weight heatmap.
+        color_tensor (torch.Tensor): A weight heatmap.
     """
 
     assert weight.dim() == 2
