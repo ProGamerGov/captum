@@ -1217,7 +1217,7 @@ class RandomCrop(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """
-        Randomly center crop an NCHW image tensor.
+        Randomly crop an NCHW image tensor.
 
         Args:
 
