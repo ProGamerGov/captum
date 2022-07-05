@@ -9,7 +9,7 @@ Captum.Utils
 
 .. currentmodule:: captum._utils.common
 
-.. autofunction:: _format_input
+.. autofunction:: _format_inputs
 .. autofunction:: _format_output
 .. autofunction:: _zeros
 .. autofunction:: _run_forward
