@@ -567,7 +567,7 @@ class RandomScale(nn.Module):
             x (torch.Tensor): NCHW image tensor to randomly scale.
 
         Returns:
-            x (torch.Tensor): A randomly scaled NCHW image *tensor*.
+            x (torch.Tensor): A randomly scaled NCHW image tensor.
         """
         assert x.dim() == 4
         if self._is_distribution:
@@ -710,7 +710,7 @@ class RandomScaleAffine(nn.Module):
             x (torch.Tensor): NCHW image tensor to randomly scale.
 
         Returns:
-            x (torch.Tensor): A randomly scaled NCHW image *tensor*.
+            x (torch.Tensor): A randomly scaled NCHW image tensor.
         """
         assert x.dim() == 4
         if self._is_distribution:
