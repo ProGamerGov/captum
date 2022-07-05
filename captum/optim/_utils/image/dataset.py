@@ -120,7 +120,8 @@ def dataset_klt_matrix(
     Calculate the color correlation matrix, also known as
     a Karhunen-Loève transform (KLT) matrix, for a dataset.
     The color correlation matrix can then used in color decorrelation
-    transforms for models trained on the dataset.
+    transforms like :class:`captum.optim.transforms.ToRGB` for models trained on the
+    dataset.
 
     Args:
 
