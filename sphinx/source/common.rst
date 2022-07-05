@@ -1,7 +1,7 @@
 Captum.Utils
 ============
 
-.. automodule:: captum._utils.common
+.. automodule:: captum.attr._utils.common
 
 .. autofunction:: _validate_input
 .. autofunction:: _validate_noise_tunnel_type
