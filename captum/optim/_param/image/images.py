@@ -437,6 +437,10 @@ class PixelImage(ImageParameterization):
         self.image = nn.Parameter(init)
 
     def forward(self) -> torch.Tensor:
+        """
+        Returns:
+            output (torch.tensor): An NCHW tensor requiring grad.
+        """
         if torch.jit.is_scripting():
             return self.image
         return self.image.refine_names("B", "C", "H", "W")
