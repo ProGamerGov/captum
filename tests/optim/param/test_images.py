@@ -429,7 +429,7 @@ class TestPixelImage(BaseTest):
         self.assertEqual(output.dtype, torch.float32)
 
     def test_pixelimage_forward_dtype_float16(self) -> None:
-        image_param = images.PixelImage(size=(224, 224)).to(dtype=torch.float64)
+        image_param = images.PixelImage(size=(224, 224)).to(dtype=torch.float16)
         output = image_param()
         self.assertEqual(output.dtype, torch.float16)
 
