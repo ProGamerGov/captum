@@ -21,6 +21,16 @@ class TestImageTensor(BaseTest):
         self.assertTrue(torch.is_tensor(test_tensor))
         self.assertEqual(x.shape, test_tensor.shape)
 
+    def test_new_dtype_float64(self) -> None:
+        x = torch.ones(5, dtype=torch.float64)
+        test_tensor = images.ImageTensor(x)
+        self.assertEqual(test_tensor.dtype, torch.float64)
+
+    def test_new_dtype_float16(self) -> None:
+        x = torch.ones(5, dtype=torch.float16)
+        test_tensor = images.ImageTensor(x)
+        self.assertEqual(test_tensor.dtype, torch.float16)
+
     def test_new_numpy(self) -> None:
         x = torch.ones(5).numpy()
         test_tensor = images.ImageTensor(x)
