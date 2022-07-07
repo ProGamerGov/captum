@@ -62,7 +62,7 @@ We also provide multiple tutorials covering a wide array of research for the opt
 
 
 FAQ
-=================
+-----------------
 
 **How do I know if my model is compatible with the Optim module?**
 
