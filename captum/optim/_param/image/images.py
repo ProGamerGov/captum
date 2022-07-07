@@ -36,7 +36,7 @@ class ImageTensor(torch.Tensor):
         Returns:
            x (ImageTensor): An `ImageTensor` instance.
         """
-        if isinstance(x, torch.Tensor) and x.is_cuda:
+        if isinstance(x, torch.Tensor):
             x.show = MethodType(cls.show, x)
             x.export = MethodType(cls.export, x)
             return x
