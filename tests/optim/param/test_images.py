@@ -1196,7 +1196,7 @@ class TestNaturalImage(BaseTest):
             init=torch.ones(1, 3, 1, 1).float(),
             parameterization=images.PixelImage,
             squash_func=torch.sigmoid,
-        )
+        ).to(dtype=torch.float32)
         output_tensor = image_param()
 
         self.assertEqual(image_param.squash_func, torch.sigmoid)
@@ -1243,7 +1243,7 @@ class TestNaturalImage(BaseTest):
                 + " insufficient Torch version."
             )
         init_tensor = torch.ones(1, 3, 1, 1).float()
-        image_param = images.NaturalImage(init=init_tensor)
+        image_param = images.NaturalImage(init=init_tensor).to(dtype=torch.float32)
         jit_image_param = torch.jit.script(image_param)
         output_tensor = jit_image_param()
         assertTensorAlmostEqual(self, output_tensor, torch.sigmoid(init_tensor))
@@ -1257,7 +1257,7 @@ class TestNaturalImage(BaseTest):
         init_tensor = torch.ones(1, 3, 1, 1).float()
         image_param = images.NaturalImage(
             init=init_tensor, parameterization=images.PixelImage
-        )
+        ).to(dtype=torch.float32)
         jit_image_param = torch.jit.script(image_param)
         output_tensor = jit_image_param()
         assertTensorAlmostEqual(self, output_tensor, torch.sigmoid(init_tensor))
