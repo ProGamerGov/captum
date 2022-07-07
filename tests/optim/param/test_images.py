@@ -347,7 +347,6 @@ class TestFFTImage(BaseTest):
                 "Skipping FFTImage float16 dtype test due to not supporting"
                 + " CUDA."
             )
-        test_input
         image_param = images.FFTImage(size=(256, 256)).to(dtype=torch.float16)
         output = image_param()
         self.assertEqual(output.dtype, torch.float16)
