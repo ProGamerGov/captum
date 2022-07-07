@@ -331,6 +331,11 @@ class TestFFTImage(BaseTest):
         output = image_param()
         self.assertEqual(output.dtype, torch.float64)
 
+    def test_fftimage_forward_dtype_float32(self) -> None:
+        image_param = images.FFTImage(size=(224, 224)).to(dtype=torch.float32)
+        output = image_param()
+        self.assertEqual(output.dtype, torch.float32)
+
     def test_fftimage_forward_dtype_float16(self) -> None:
         if version.parse(torch.__version__) <= version.parse("1.12.0"):
             raise unittest.SkipTest(
@@ -420,6 +425,11 @@ class TestPixelImage(BaseTest):
         output = image_param()
         self.assertEqual(output.dtype, torch.float64)
 
+    def test_pixelimage_forward_dtype_float32(self) -> None:
+        image_param = images.PixelImage(size=(224, 224)).to(dtype=torch.float32)
+        output = image_param()
+        self.assertEqual(output.dtype, torch.float32)
+
     def test_pixelimage_forward_dtype_float16(self) -> None:
         image_param = images.PixelImage(size=(224, 224)).to(dtype=torch.float64)
         output = image_param()
@@ -486,6 +496,11 @@ class TestLaplacianImage(BaseTest):
         image_param = images.LaplacianImage(size=(224, 224)).to(dtype=torch.float64)
         output = image_param()
         self.assertEqual(output.dtype, torch.float64)
+
+    def test_laplcianimage_forward_dtype_float32(self) -> None:
+        image_param = images.LaplacianImage(size=(224, 224)).to(dtype=torch.float32)
+        output = image_param()
+        self.assertEqual(output.dtype, torch.float32)
 
 
 class TestSimpleTensorParameterization(BaseTest):
@@ -1265,3 +1280,8 @@ class TestNaturalImage(BaseTest):
         image_param = images.NaturalImage(size=(224, 224)).to(dtype=torch.float64)
         output = image_param()
         self.assertEqual(output.dtype, torch.float64)
+
+    def test_natural_image_forward_dtype_float32(self) -> None:
+        image_param = images.NaturalImage(size=(224, 224)).to(dtype=torch.float32)
+        output = image_param()
+        self.assertEqual(output.dtype, torch.float32)
