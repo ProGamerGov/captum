@@ -1276,12 +1276,12 @@ class TestNaturalImage(BaseTest):
 
     def test_natural_image_forward_dtype_float64(self) -> None:
         raise unittest.SkipTest("Skipping test due to bug")
-        image_param = images.NaturalImage(size=(224, 224)).to(dtype=torch.float64)
+        image_param = images.NaturalImage(size=(224, 224), decorrelation_module=ToRGB("KLT")).to(dtype=torch.float64)
         output = image_param()
         self.assertEqual(output.dtype, torch.float64)
 
     def test_natural_image_forward_dtype_float32(self) -> None:
         raise unittest.SkipTest("Skipping test due to bug")
-        image_param = images.NaturalImage(size=(224, 224)).to(dtype=torch.float32)
+        image_param = images.NaturalImage(size=(224, 224), decorrelation_module=ToRGB("KLT")).to(dtype=torch.float32)
         output = image_param()
         self.assertEqual(output.dtype, torch.float32)
