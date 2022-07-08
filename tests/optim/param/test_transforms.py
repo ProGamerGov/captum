@@ -275,13 +275,6 @@ class TestRandomScale(BaseTest):
         output = scale_module(x)
         self.assertEqual(output.dtype, dtype)
 
-    def test_random_scale_dtype_float16(self) -> None:
-        dtype = torch.float16
-        scale_module = transforms.RandomScale(scale=[0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
-        x = torch.ones([1, 3, 224, 224], dtype=dtype)
-        output = scale_module(x)
-        self.assertEqual(output.dtype, dtype)
-
 
 class TestRandomScaleAffine(BaseTest):
     def test_random_scale_affine_init(self) -> None:
@@ -460,13 +453,6 @@ class TestRandomScaleAffine(BaseTest):
 
     def test_random_scale_affine_dtype_float32(self) -> None:
         dtype = torch.float32
-        scale_module = transforms.RandomScaleAffine(scale=[0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
-        x = torch.ones([1, 3, 224, 224], dtype=dtype)
-        output = scale_module(x)
-        self.assertEqual(output.dtype, dtype)
-
-    def test_random_scale_affine_dtype_float16(self) -> None:
-        dtype = torch.float16
         scale_module = transforms.RandomScaleAffine(scale=[0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = scale_module(x)
@@ -687,14 +673,6 @@ class TestRandomRotation(BaseTest):
         output = rotation_module(x)
         self.assertEqual(output.dtype, dtype)
 
-    def test_random_rotation_dtype_float16(self) -> None:
-        dtype = torch.float16
-        degrees = list(range(-25, -5)) + list(range(5, 25))
-        rotation_module = transforms.RandomRotation(degrees=degrees).to(dtype=dtype)
-        x = torch.ones([1, 3, 224, 224], dtype=dtype)
-        output = rotation_module(x)
-        self.assertEqual(output.dtype, dtype)
-
 
 class TestRandomSpatialJitter(BaseTest):
     def test_random_spatial_jitter_init(self) -> None:
@@ -789,13 +767,6 @@ class TestRandomSpatialJitter(BaseTest):
 
     def test_random_spatial_jitter_dtype_float32(self) -> None:
         dtype = torch.float32
-        spatialjitter = transforms.RandomSpatialJitter(5).to(dtype=dtype)
-        x = torch.ones([1, 3, 224, 224], dtype=dtype)
-        output = spatialjitter(x)
-        self.assertEqual(output.dtype, dtype)
-
-    def test_random_spatial_jitter_dtype_float16(self) -> None:
-        dtype = torch.float16
         spatialjitter = transforms.RandomSpatialJitter(5).to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = spatialjitter(x)
@@ -1685,8 +1656,6 @@ class TestToRGB(BaseTest):
         test_tensor = torch.ones(1, 3, 224, 224, dtype=dtype)
         output = to_rgb(test_tensor.refine_names("B", "C", "H", "W"))
         self.assertEqual(output.dtype, dtype)
-        inverse_output = to_rgb(output, inverse=True)
-        self.assertEqual(inverse_output.dtype, dtype)
 
 
 class TestGaussianSmoothing(BaseTest):
@@ -2165,13 +2134,6 @@ class TestTransformationRobustness(BaseTest):
 
     def test_transform_robustness_dtype_float32(self) -> None:
         dtype = torch.float32
-        transform_robustness = transforms.TransformationRobustness().to(dtype=dtype)
-        x = torch.ones([1, 3, 224, 224], dtype=dtype)
-        output = transform_robustness(x)
-        self.assertEqual(output.dtype, dtype)
-
-    def test_transform_robustness_dtype_float16(self) -> None:
-        dtype = torch.float16
         transform_robustness = transforms.TransformationRobustness().to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = transform_robustness(x)
