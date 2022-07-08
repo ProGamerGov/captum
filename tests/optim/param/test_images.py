@@ -1307,9 +1307,11 @@ class TestNaturalImage(BaseTest):
             raise unittest.SkipTest(
                 "Skipping NaturalImage float16 dtype test due to not supporting CUDA."
             )
-        image_param = images.NaturalImage(
-            size=(256, 256), decorrelation_module=ToRGB("klt")
-        ).cuda().to(dtype=torch.float16)
+        image_param = (
+            images.NaturalImage(size=(256, 256), decorrelation_module=ToRGB("klt"))
+            .cuda()
+            .to(dtype=torch.float16)
+        )
         output = image_param()
         self.assertEqual(output.dtype, torch.float16)
 
