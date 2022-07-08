@@ -1287,3 +1287,18 @@ class TestNaturalImage(BaseTest):
         ).to(dtype=torch.float32)
         output = image_param()
         self.assertEqual(output.dtype, torch.float32)
+
+    def test_fftimage_forward_dtype_float16(self) -> None:
+        if version.parse(torch.__version__) <= version.parse("1.12.0"):
+            raise unittest.SkipTest(
+                "Skipping NaturalImage float16 dtype test due to"
+                + "  insufficient Torch version."
+            )
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping NaturalImage float16 dtype test due to not supporting CUDA."
+            )        image_param = images.NaturalImage(
+            size=(256, 256), decorrelation_module=ToRGB("KLT")
+        ).to(dtype=torch.float16)
+        output = image_param()
+        self.assertEqual(output.dtype, torch.float16)
