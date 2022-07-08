@@ -419,19 +419,28 @@ class TestPixelImage(BaseTest):
         assertTensorAlmostEqual(self, test_tensor, init_tensor[None, :], 0)
 
     def test_pixelimage_forward_dtype_float64(self) -> None:
-        image_param = images.PixelImage(size=(224, 224)).to(dtype=torch.float64)
+        dtype = torch.float64
+        image_param = images.PixelImage(size=(224, 224)).to(dtype=dtype)
         output = image_param()
         self.assertEqual(output.dtype, torch.float64)
 
     def test_pixelimage_forward_dtype_float32(self) -> None:
-        image_param = images.PixelImage(size=(224, 224)).to(dtype=torch.float32)
+        dtype = torch.float32
+        image_param = images.PixelImage(size=(224, 224)).to(dtype=dtype)
         output = image_param()
         self.assertEqual(output.dtype, torch.float32)
 
     def test_pixelimage_forward_dtype_float16(self) -> None:
-        image_param = images.PixelImage(size=(224, 224)).to(dtype=torch.float16)
+        dtype = torch.float16
+        image_param = images.PixelImage(size=(224, 224)).to(dtype)
         output = image_param()
-        self.assertEqual(output.dtype, torch.float16)
+        self.assertEqual(output.dtype, dtype)
+
+    def test_pixelimage_forward_dtype_bfloat16(self) -> None:
+        dtype = torch.bfloat16
+        image_param = images.PixelImage(size=(224, 224)).to(dtype=dtype)
+        output = image_param()
+        self.assertEqual(output.dtype, dtype)
 
 
 class TestLaplacianImage(BaseTest):
