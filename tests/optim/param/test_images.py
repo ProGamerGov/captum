@@ -1303,3 +1303,10 @@ class TestNaturalImage(BaseTest):
         ).to(dtype=torch.float16)
         output = image_param()
         self.assertEqual(output.dtype, torch.float16)
+
+    def test_natural_image_forward_dtype_bfloat16(self) -> None:
+        image_param = images.NaturalImage(
+            size=(224, 224), decorrelation_module=ToRGB("klt")
+        ).to(dtype=torch.bfloat16)
+        output = image_param()
+        self.assertEqual(output.dtype, torch.bfloat16)
