@@ -261,6 +261,27 @@ class TestRandomScale(BaseTest):
             0,
         )
 
+    def test_random_scale_dtype_float64(self) -> None:
+        dtype = torch.float64
+        scale_module = transforms.RandomScale(scale=[1, 0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output_tensor = scale_module(x)
+        self.assertEqual(output.dtype, dtype)
+
+    def test_random_scale_dtype_float32(self) -> None:
+        dtype = torch.float32
+        scale_module = transforms.RandomScale(scale=[1, 0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = scale_module(x)
+        self.assertEqual(output.dtype, dtype)
+
+    def test_random_scale_dtype_float16(self) -> None:
+        dtype = torch.float16
+        scale_module = transforms.RandomScale(scale=[1, 0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = scale_module(x)
+        self.assertEqual(output.dtype, dtype)
+
 
 class TestRandomScaleAffine(BaseTest):
     def test_random_scale_affine_init(self) -> None:
@@ -429,6 +450,27 @@ class TestRandomScaleAffine(BaseTest):
             .unsqueeze(0),
             0,
         )
+
+    def test_random_scale_affine_dtype_float64(self) -> None:
+        dtype = torch.float64
+        scale_module = transforms.RandomScale(scale=[1, 0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = scale_module(x)
+        self.assertEqual(output.dtype, dtype)
+
+    def test_random_scale_affine_dtype_float32(self) -> None:
+        dtype = torch.float32
+        scale_module = transforms.RandomScale(scale=[1, 0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = scale_module(x)
+        self.assertEqual(output.dtype, dtype)
+
+    def test_random_scale_affine_dtype_float16(self) -> None:
+        dtype = torch.float16
+        scale_module = transforms.RandomScale(scale=[1, 0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = scale_module(x)
+        self.assertEqual(output.dtype, dtype)
 
 
 class TestRandomRotation(BaseTest):
@@ -628,6 +670,30 @@ class TestRandomRotation(BaseTest):
             .unsqueeze(0)
         )
         assertTensorAlmostEqual(self, test_output, expected_output, 0.005)
+
+    def test_random_rotation_dtype_float64(self) -> None:
+        dtype = torch.float64
+        degrees = list(range(-25, 25))
+        rotation_module = transforms.RandomRotation(degrees=degrees).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = rotation_module(x)
+        self.assertEqual(output.dtype, dtype)
+
+    def test_random_rotation_dtype_float32(self) -> None:
+        dtype = torch.float32
+        degrees = list(range(-25, 25))
+        rotation_module = transforms.RandomRotation(degrees=degrees).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = rotation_module(x)
+        self.assertEqual(output.dtype, dtype)
+
+    def test_random_rotation_dtype_float16(self) -> None:
+        dtype = float16
+        degrees = list(range(-25, 25))
+        rotation_module = transforms.RandomRotation(degrees=degrees).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = rotation_module(x)
+        self.assertEqual(output.dtype, dtype)
 
 
 class TestRandomSpatialJitter(BaseTest):
