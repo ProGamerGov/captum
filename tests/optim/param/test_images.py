@@ -1309,7 +1309,7 @@ class TestNaturalImage(BaseTest):
             )
         image_param = images.NaturalImage(
             size=(256, 256), decorrelation_module=ToRGB("klt")
-        ).to(dtype=torch.float16)
+        ).cuda().to(dtype=torch.float16)
         output = image_param()
         self.assertEqual(output.dtype, torch.float16)
 
