@@ -279,15 +279,6 @@ class TestRandomScale(BaseTest):
         output = scale_module(x)
         self.assertEqual(output.dtype, dtype)
 
-    def test_random_scale_dtype_bfloat16(self) -> None:
-        dtype = torch.bfloat16
-        scale_module = transforms.RandomScale(scale=[0.975, 1.025, 0.95, 1.05]).to(
-            dtype=dtype
-        )
-        x = torch.ones([1, 3, 224, 224], dtype=dtype)
-        output = scale_module(x)
-        self.assertEqual(output.dtype, dtype)
-
 
 class TestRandomScaleAffine(BaseTest):
     def test_random_scale_affine_init(self) -> None:
@@ -722,10 +713,17 @@ class TestRandomRotation(BaseTest):
         self.assertEqual(output.dtype, dtype)
 
     def test_random_rotation_dtype_bfloat16(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping RandomRotation bfloat16 dtype test due to not supporting"
+                + " CUDA."
+            )
         dtype = torch.bfloat16
         degrees = list(range(-25, -5)) + list(range(5, 25))
-        rotation_module = transforms.RandomRotation(degrees=degrees).to(dtype=dtype)
-        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        rotation_module = (
+            transforms.RandomRotation(degrees=degrees).cuda().to(dtype=dtype)
+        )
+        x = torch.ones([1, 3, 224, 224], dtype=dtype).cuda()
         output = rotation_module(x)
         self.assertEqual(output.dtype, dtype)
 
@@ -1713,7 +1711,33 @@ class TestToRGB(BaseTest):
         output = to_rgb(test_tensor.refine_names("B", "C", "H", "W"))
         self.assertEqual(output.dtype, dtype)
 
+    def test_to_rgb_dtype_float16_cuda(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping RandomRotation float16 dtype test due to not supporting"
+                + " CUDA."
+            )
+        dtype = torch.float16
+        to_rgb = transforms.ToRGB(transform="klt").to(dtype=dtype)
+        test_tensor = torch.ones(1, 3, 224, 224, dtype=dtype)
+        output = to_rgb(test_tensor.refine_names("B", "C", "H", "W"))
+        self.assertEqual(output.dtype, dtype)
+        inverse_output = to_rgb(output, inverse=True)
+        self.assertEqual(inverse_output.dtype, dtype)
+
     def test_to_rgb_dtype_bfloat16(self) -> None:
+        dtype = torch.bfloat16
+        to_rgb = transforms.ToRGB(transform="klt").to(dtype=dtype)
+        test_tensor = torch.ones(1, 3, 224, 224, dtype=dtype)
+        output = to_rgb(test_tensor.refine_names("B", "C", "H", "W"))
+        self.assertEqual(output.dtype, dtype)
+
+    def test_to_rgb_dtype_bfloat16_cuda(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping RandomRotation bfloat16 dtype test due to not supporting"
+                + " CUDA."
+            )
         dtype = torch.bfloat16
         to_rgb = transforms.ToRGB(transform="klt").to(dtype=dtype)
         test_tensor = torch.ones(1, 3, 224, 224, dtype=dtype)
@@ -2199,13 +2223,6 @@ class TestTransformationRobustness(BaseTest):
 
     def test_transform_robustness_dtype_float32(self) -> None:
         dtype = torch.float32
-        transform_robustness = transforms.TransformationRobustness().to(dtype=dtype)
-        x = torch.ones([1, 3, 224, 224], dtype=dtype)
-        output = transform_robustness(x)
-        self.assertEqual(output.dtype, dtype)
-
-    def test_transform_robustness_dtype_bfloat16(self) -> None:
-        dtype = torch.bfloat16
         transform_robustness = transforms.TransformationRobustness().to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = transform_robustness(x)
