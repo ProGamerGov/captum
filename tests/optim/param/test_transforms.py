@@ -263,14 +263,18 @@ class TestRandomScale(BaseTest):
 
     def test_random_scale_dtype_float64(self) -> None:
         dtype = torch.float64
-        scale_module = transforms.RandomScale(scale=[0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
+        scale_module = transforms.RandomScale(scale=[0.975, 1.025, 0.95, 1.05]).to(
+            dtype=dtype
+        )
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = scale_module(x)
         self.assertEqual(output.dtype, dtype)
 
     def test_random_scale_dtype_float32(self) -> None:
         dtype = torch.float32
-        scale_module = transforms.RandomScale(scale=[0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
+        scale_module = transforms.RandomScale(scale=[0.975, 1.025, 0.95, 1.05]).to(
+            dtype=dtype
+        )
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = scale_module(x)
         self.assertEqual(output.dtype, dtype)
@@ -446,14 +450,18 @@ class TestRandomScaleAffine(BaseTest):
 
     def test_random_scale_affine_dtype_float64(self) -> None:
         dtype = torch.float64
-        scale_module = transforms.RandomScaleAffine(scale=[0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
+        scale_module = transforms.RandomScaleAffine(
+            scale=[0.975, 1.025, 0.95, 1.05]
+        ).to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = scale_module(x)
         self.assertEqual(output.dtype, dtype)
 
     def test_random_scale_affine_dtype_float32(self) -> None:
         dtype = torch.float32
-        scale_module = transforms.RandomScaleAffine(scale=[0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
+        scale_module = transforms.RandomScaleAffine(
+            scale=[0.975, 1.025, 0.95, 1.05]
+        ).to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = scale_module(x)
         self.assertEqual(output.dtype, dtype)
@@ -465,7 +473,11 @@ class TestRandomScaleAffine(BaseTest):
                 + " CUDA."
             )
         dtype = torch.float16
-        scale_module = transforms.RandomScaleAffine(scale=[0.975, 1.025, 0.95, 1.05]).cuda().to(dtype=dtype)
+        scale_module = (
+            transforms.RandomScaleAffine(scale=[0.975, 1.025, 0.95, 1.05])
+            .cuda()
+            .to(dtype=dtype)
+        )
         x = torch.ones([1, 3, 224, 224], dtype=dtype).cuda()
         output = scale_module(x)
         self.assertEqual(output.dtype, dtype)
@@ -693,7 +705,9 @@ class TestRandomRotation(BaseTest):
             )
         dtype = torch.float16
         degrees = list(range(-25, -5)) + list(range(5, 25))
-        rotation_module = transforms.RandomRotation(degrees=degrees).cuda().to(dtype=dtype)
+        rotation_module = (
+            transforms.RandomRotation(degrees=degrees).cuda().to(dtype=dtype)
+        )
         x = torch.ones([1, 3, 224, 224], dtype=dtype).cuda()
         output = rotation_module(x)
         self.assertEqual(output.dtype, dtype)
