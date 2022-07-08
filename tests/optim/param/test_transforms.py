@@ -1640,6 +1640,33 @@ class TestToRGB(BaseTest):
             self, inverse_tensor, torch.ones_like(inverse_tensor.rename(None))
         )
 
+    def test_to_rgb_dtype_float64(self) -> None:
+        dtype = torch.float64
+        to_rgb = transforms.ToRGB(transform="klt").to(dtype=dtype)
+        test_tensor = torch.ones(1, 3, 224, 224, dtype=dtype)
+        output = to_rgb(test_tensor.refine_names("B", "C", "H", "W"))
+        self.assertEqual(output.dtype, dtype)
+        inverse_output = to_rgb(output, inverse=True)
+        self.assertEqual(inverse_output.dtype, dtype)
+
+    def test_to_rgb_dtype_float32(self) -> None:
+        dtype = torch.float32
+        to_rgb = transforms.ToRGB(transform="klt").to(dtype=dtype)
+        test_tensor = torch.ones(1, 3, 224, 224, dtype=dtype)
+        output = to_rgb(test_tensor.refine_names("B", "C", "H", "W"))
+        self.assertEqual(output.dtype, dtype)
+        inverse_output = to_rgb(output, inverse=True)
+        self.assertEqual(inverse_output.dtype, dtype)
+
+    def test_to_rgb_dtype_float16(self) -> None:
+        dtype = torch.float16
+        to_rgb = transforms.ToRGB(transform="klt").to(dtype=dtype)
+        test_tensor = torch.ones(1, 3, 224, 224, dtype=dtype)
+        output = to_rgb(test_tensor.refine_names("B", "C", "H", "W"))
+        self.assertEqual(output.dtype, dtype)
+        inverse_output = to_rgb(output, inverse=True)
+        self.assertEqual(inverse_output.dtype, dtype)
+
 
 class TestGaussianSmoothing(BaseTest):
     def test_gaussian_smoothing_init_1d(self) -> None:
