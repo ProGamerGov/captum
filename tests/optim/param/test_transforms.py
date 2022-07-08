@@ -265,7 +265,7 @@ class TestRandomScale(BaseTest):
         dtype = torch.float64
         scale_module = transforms.RandomScale(scale=[0.975, 1.025, 0.95, 1.05]).to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
-        output_tensor = scale_module(x)
+        output = scale_module(x)
         self.assertEqual(output.dtype, dtype)
 
     def test_random_scale_dtype_float32(self) -> None:
@@ -673,7 +673,7 @@ class TestRandomRotation(BaseTest):
 
     def test_random_rotation_dtype_float64(self) -> None:
         dtype = torch.float64
-        degrees = list(range(-25, 25))
+        degrees = list(range(-25, -5)) + list(range(5, 25))
         rotation_module = transforms.RandomRotation(degrees=degrees).to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = rotation_module(x)
@@ -681,15 +681,15 @@ class TestRandomRotation(BaseTest):
 
     def test_random_rotation_dtype_float32(self) -> None:
         dtype = torch.float32
-        degrees = list(range(-25, 25))
+        degrees = list(range(-25, -5)) + list(range(5, 25))
         rotation_module = transforms.RandomRotation(degrees=degrees).to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = rotation_module(x)
         self.assertEqual(output.dtype, dtype)
 
     def test_random_rotation_dtype_float16(self) -> None:
-        dtype = float16
-        degrees = list(range(-25, 25))
+        dtype = torch.float16
+        degrees = list(range(-25, -5)) + list(range(5, 25))
         rotation_module = transforms.RandomRotation(degrees=degrees).to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = rotation_module(x)
