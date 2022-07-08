@@ -2156,21 +2156,21 @@ class TestTransformationRobustness(BaseTest):
         test_output = transform_robustness(test_input)
         self.assertEqual(test_output.shape, test_input.shape)
 
-    def test_random_scale_dtype_float64(self) -> None:
+    def test_transform_robustness_dtype_float64(self) -> None:
         dtype = torch.float64
         transform_robustness = transforms.TransformationRobustness().to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = transform_robustness(x)
         self.assertEqual(output.dtype, dtype)
 
-    def test_random_scale_dtype_float32(self) -> None:
+    def test_transform_robustness_dtype_float32(self) -> None:
         dtype = torch.float32
         transform_robustness = transforms.TransformationRobustness().to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
         output = transform_robustness(x)
         self.assertEqual(output.dtype, dtype)
 
-    def test_random_scale_dtype_float16(self) -> None:
+    def test_transform_robustness_dtype_float16(self) -> None:
         dtype = torch.float16
         transform_robustness = transforms.TransformationRobustness().to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
