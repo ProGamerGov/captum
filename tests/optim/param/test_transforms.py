@@ -458,6 +458,18 @@ class TestRandomScaleAffine(BaseTest):
         output = scale_module(x)
         self.assertEqual(output.dtype, dtype)
 
+    def test_random_scale_affine_dtype_float16(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping RandomScaleAffine float16 dtype test due to not supporting"
+                + " CUDA."
+            )
+        dtype = torch.float16
+        scale_module = transforms.RandomScaleAffine(scale=[0.975, 1.025, 0.95, 1.05]).cuda().to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype).cuda()
+        output = scale_module(x)
+        self.assertEqual(output.dtype, dtype)
+
 
 class TestRandomRotation(BaseTest):
     def test_random_rotation_init(self) -> None:
@@ -670,6 +682,19 @@ class TestRandomRotation(BaseTest):
         degrees = list(range(-25, -5)) + list(range(5, 25))
         rotation_module = transforms.RandomRotation(degrees=degrees).to(dtype=dtype)
         x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = rotation_module(x)
+        self.assertEqual(output.dtype, dtype)
+
+    def test_random_rotation_dtype_float16(self) -> None:
+        if not torch.cuda.is_available():
+            raise unittest.SkipTest(
+                "Skipping RandomRotation float16 dtype test due to not supporting"
+                + " CUDA."
+            )
+        dtype = torch.float16
+        degrees = list(range(-25, -5)) + list(range(5, 25))
+        rotation_module = transforms.RandomRotation(degrees=degrees).cuda().to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype).cuda()
         output = rotation_module(x)
         self.assertEqual(output.dtype, dtype)
 
