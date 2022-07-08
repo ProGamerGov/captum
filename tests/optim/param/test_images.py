@@ -1276,14 +1276,14 @@ class TestNaturalImage(BaseTest):
 
     def test_natural_image_forward_dtype_float64(self) -> None:
         image_param = images.NaturalImage(
-            size=(224, 224), decorrelation_module=ToRGB("KLT")
+            size=(224, 224), decorrelation_module=ToRGB("klt")
         ).to(dtype=torch.float64)
         output = image_param()
         self.assertEqual(output.dtype, torch.float64)
 
     def test_natural_image_forward_dtype_float32(self) -> None:
         image_param = images.NaturalImage(
-            size=(224, 224), decorrelation_module=ToRGB("KLT")
+            size=(224, 224), decorrelation_module=ToRGB("klt")
         ).to(dtype=torch.float32)
         output = image_param()
         self.assertEqual(output.dtype, torch.float32)
@@ -1299,7 +1299,7 @@ class TestNaturalImage(BaseTest):
                 "Skipping NaturalImage float16 dtype test due to not supporting CUDA."
             )
         image_param = images.NaturalImage(
-            size=(256, 256), decorrelation_module=ToRGB("KLT")
+            size=(256, 256), decorrelation_module=ToRGB("klt")
         ).to(dtype=torch.float16)
         output = image_param()
         self.assertEqual(output.dtype, torch.float16)
