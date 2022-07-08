@@ -780,6 +780,27 @@ class TestRandomSpatialJitter(BaseTest):
         jittered_tensor = jit_spatialjitter(test_input)
         self.assertEqual(list(jittered_tensor.shape), list(test_input.shape))
 
+    def test_random_spatial_jitter_dtype_float64(self) -> None:
+        dtype = torch.float64
+        spatialjitter = transforms.RandomSpatialJitter(5).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = spatialjitter(x)
+        self.assertEqual(output.dtype, dtype)
+
+    def test_random_spatial_jitter_dtype_float32(self) -> None:
+        dtype = torch.float32
+        spatialjitter = transforms.RandomSpatialJitter(5).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = spatialjitter(x)
+        self.assertEqual(output.dtype, dtype)
+
+    def test_random_spatial_jitter_dtype_float16(self) -> None:
+        dtype = torch.float16
+        spatialjitter = transforms.RandomSpatialJitter(5).to(dtype=dtype)
+        x = torch.ones([1, 3, 224, 224], dtype=dtype)
+        output = spatialjitter(x)
+        self.assertEqual(output.dtype, dtype)
+
 
 class TestCenterCrop(BaseTest):
     def test_center_crop_init(self) -> None:
