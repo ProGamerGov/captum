@@ -85,7 +85,7 @@ For the most part, yes. Image parameterizations, transforms, and many of the hel
 
 **What dtypes does the Optim module support?**
 
-By default, the ``torch.float32`` [dtype](https://pytorch.org/docs/stable/tensor_attributes.html#torch.dtype) is used for all rendering modules. In addition to the default ``torch.float32`` dtype, the Optim module also easily supports ``torch.float64``. 
+By default, the ``torch.float32`` dtype is used for all rendering modules. Varying levels of support exist for the other non default [float dtypes](https://pytorch.org/docs/stable/tensor_attributes.html#torch.dtype). For example, the Optim module easily supports ``torch.float64``, while FP16 support is sporadic. 
 
 There are currently multiple limitations for ``torch.float16`` & ``torch.bfloat16`` support, due to PyTorch's ongoing work on implementing support for these dtypes. These limitations include:
 
