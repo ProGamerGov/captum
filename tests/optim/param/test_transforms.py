@@ -1699,8 +1699,7 @@ class TestToRGB(BaseTest):
     def test_to_rgb_dtype_float16_cuda(self) -> None:
         if not torch.cuda.is_available():
             raise unittest.SkipTest(
-                "Skipping RandomRotation float16 dtype test due to not supporting"
-                + " CUDA."
+                "Skipping ToRGB float16 dtype test due to not supporting CUDA."
             )
         dtype = torch.float16
         to_rgb = transforms.ToRGB(transform="klt").cuda().to(dtype=dtype)
@@ -1720,8 +1719,7 @@ class TestToRGB(BaseTest):
     def test_to_rgb_dtype_bfloat16_cuda(self) -> None:
         if not torch.cuda.is_available():
             raise unittest.SkipTest(
-                "Skipping RandomRotation bfloat16 dtype test due to not supporting"
-                + " CUDA."
+                "Skipping ToRGB bfloat16 dtype test due to not supporting CUDA."
             )
         dtype = torch.bfloat16
         to_rgb = transforms.ToRGB(transform="klt").cuda().to(dtype=dtype)
