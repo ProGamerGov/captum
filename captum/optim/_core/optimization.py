@@ -100,9 +100,9 @@ class InputOptimization(Objective, Parameterized):
         r"""Compute loss value for current iteration.
 
         Returns:
-            *tensor* representing **loss**:
-            - **loss** (*tensor*):
-                        Size of the tensor corresponds to the targets passed.
+            tensor representing **loss**:
+            - **loss** (torch.Tensor): Size of the tensor corresponds to the targets
+                passed.
         """
         input_t = self.input_param()
 
@@ -205,7 +205,7 @@ def n_steps(n: int, show_progress: bool = True) -> StopCriteria:
             Default: ``True``
 
     Returns:
-        *StopCriteria* (callable): A stop criteria function.
+        StopCriteria (callable): A stop criteria function.
     """
 
     if show_progress:
