@@ -71,13 +71,13 @@ class InputOptimization(Objective, Parameterized):
         r"""
         Args:
 
-            model (nn.Module, optional):  The reference to PyTorch model instance.
-            input_param (nn.Module, optional):  A module that generates an input,
-                        consumed by the model.
-            transform (nn.Module, optional):  A module that transforms or preprocesses
-                        the input before being passed to the model.
-            loss_function (callable): The loss function to minimize during optimization
-                        optimization.
+            model (nn.Module, optional): The reference to PyTorch model instance.
+            input_param (nn.Module, optional): A module that generates an input,
+                consumed by the model.
+            transform (nn.Module, optional): A module that transforms or preprocesses
+                the input before being passed to the model.
+            loss_function (callable): The loss function to minimize during
+                optimization.
         """
         self.model = model or nn.Identity()
         # Grab targets from loss_function
@@ -153,11 +153,11 @@ class InputOptimization(Objective, Parameterized):
 
         Args:
 
-            stop_criteria (StopCriteria, optional):  A function that is called
+            stop_criteria (StopCriteria, optional): A function that is called
                 every iteration and returns a bool that determines whether to stop the
                 optimization.
                 Default: ``n_steps(512)``
-            optimizer (Optimizer, optional):  An ``torch.optim.Optimizer`` used to
+            optimizer (Optimizer, optional): An ``torch.optim.Optimizer`` used to
                 optimize the input based on the loss function.
             loss_summarize_fn (Callable, optional): The function to use for summarizing
                 tensor outputs from loss functions.
@@ -200,8 +200,8 @@ def n_steps(n: int, show_progress: bool = True) -> StopCriteria:
 
     Args:
 
-        n (int):  Number of steps to run optimization.
-        show_progress (bool, optional):  Whether or not to show progress bar.
+        n (int): Number of steps to run optimization.
+        show_progress (bool, optional): Whether or not to show progress bar.
             Default: ``True``
 
     Returns:
