@@ -157,7 +157,7 @@ class InputOptimization(Objective, Parameterized):
                 every iteration and returns a bool that determines whether to stop the
                 optimization.
                 Default: ``n_steps(512)``
-            optimizer (Optimizer, optional): A :class:`torch.optim.Optimizer` used to
+            optimizer (Optimizer, optional): A :mod:`torch.optim.Optimizer` used to
                 optimize the input based on the loss function.
                 Default: ``torch.optim.Adam``
             loss_summarize_fn (Callable, optional): The function to use for summarizing
