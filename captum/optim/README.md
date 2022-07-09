@@ -94,7 +94,7 @@ There are currently multiple limitations for ``torch.float16`` & ``torch.bfloat1
 * The ``RandomRotation`` and ``RandomScaleAffine`` transforms currently only support ``torch.float16`` with CUDA.
 * The ``ToRGB`` transform's inverse parameter does not currently support ``torch.float16`` or ``torch.bfloat16``.
 
-These limitations can be partially overcome by utilizing PyTorch's [Automatic Mixed Precision package](https://pytorch.org/docs/stable/amp.html) (AMP).
+These limitations can be partially overcome by utilizing PyTorch's [Automatic Mixed Precision package](https://pytorch.org/docs/stable/amp.html) (AMP)'s ``torch.autocast`` context manager.
 
 
 References
