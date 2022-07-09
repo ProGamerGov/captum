@@ -92,7 +92,7 @@ There are currently multiple limitations for ``torch.float16`` & ``torch.bfloat1
 * The ``FFTImage`` parameterization currently only works with ``torch.float16`` & CUDA on PyTorch v1.12.0 and above using size values that are powers of 2.
 * The ``RandomScale`` and ``RandomSpatialJitter`` transforms do not currently support ``torch.float16``.
 * The ``RandomRotation`` and ``RandomScaleAffine`` transforms currently only support ``torch.float16`` with CUDA.
-* The ToRGB transform's inverse parameter does not currently support ``torch.float16``.
+* The ``ToRGB`` transform's inverse parameter does not currently support ``torch.float16`` or ``torch.bfloat16``.
 
 These limitations can be partially overcome by utilizing PyTorch's [Automatic Mixed Precision package](https://pytorch.org/docs/stable/amp.html) (AMP).
 
