@@ -362,12 +362,7 @@ class TestPixelImage(BaseTest):
         size = (224, 224)
         channels = 3
         image_param = images.PixelImage(size=size, channels=channels)
-
-        self.assertEqual(image_param.image.dim(), 4)
-        self.assertEqual(image_param.image.size(0), 1)
-        self.assertEqual(image_param.image.size(1), channels)
-        self.assertEqual(image_param.image.size(2), size[0])
-        self.assertEqual(image_param.image.size(3), size[1])
+        self.assertEqual(list(image_param.image.shape), [1, channels] + size)
         self.assertTrue(image_param.image.requires_grad)
 
     def test_pixelimage_init(self) -> None:
@@ -376,11 +371,7 @@ class TestPixelImage(BaseTest):
         init_tensor = torch.randn(channels, *size)
         image_param = images.PixelImage(size=size, channels=channels, init=init_tensor)
 
-        self.assertEqual(image_param.image.dim(), 4)
-        self.assertEqual(image_param.image.size(0), 1)
-        self.assertEqual(image_param.image.size(1), channels)
-        self.assertEqual(image_param.image.size(2), size[0])
-        self.assertEqual(image_param.image.size(3), size[1])
+        self.assertEqual(list(image_param.image.shape), [1, channels] + size)
         assertTensorAlmostEqual(self, image_param.image, init_tensor[None, :], 0)
         self.assertTrue(image_param.image.requires_grad)
 
@@ -389,12 +380,7 @@ class TestPixelImage(BaseTest):
         channels = 3
         image_param = images.PixelImage(size=size, channels=channels)
         test_tensor = image_param.forward().rename(None)
-
-        self.assertEqual(test_tensor.dim(), 4)
-        self.assertEqual(test_tensor.size(0), 1)
-        self.assertEqual(test_tensor.size(1), channels)
-        self.assertEqual(test_tensor.size(2), size[0])
-        self.assertEqual(test_tensor.size(3), size[1])
+        self.assertEqual(list(test_tensor.shape), [1, channels] + size)
 
     def test_pixelimage_forward_jit_module(self) -> None:
         if version.parse(torch.__version__) <= version.parse("1.8.0"):
@@ -414,11 +400,7 @@ class TestPixelImage(BaseTest):
         image_param = images.PixelImage(size=size, channels=channels, init=init_tensor)
         test_tensor = image_param.forward().rename(None)
 
-        self.assertEqual(test_tensor.dim(), 4)
-        self.assertEqual(test_tensor.size(0), 1)
-        self.assertEqual(test_tensor.size(1), channels)
-        self.assertEqual(test_tensor.size(2), size[0])
-        self.assertEqual(test_tensor.size(3), size[1])
+        self.assertEqual(list(test_tensor.shape), [1, channels] + size)
         assertTensorAlmostEqual(self, test_tensor, init_tensor[None, :], 0)
 
     def test_pixelimage_forward_dtype_float64(self) -> None:
