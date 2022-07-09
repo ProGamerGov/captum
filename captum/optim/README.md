@@ -69,7 +69,7 @@ FAQ
 In general model layers need to be nn.Modules as functional layers don't support hooks and also cannot be replaced.
 Please check out the 'Getting Started Model Preparation' tutorial notebook for more information.
 
-**Are only RGB images supported or can I use a different color space?**
+**Are only 3 RGB images and 4 channel RGBA images supported or can I use a different color space?**
 
 By default the rendering modules in Optim are setup for rendering RGB images, but they can easily support other [color spaces](https://en.wikipedia.org/wiki/Color_space) with a simple settings change. In the case of ``ToRGB``, you may have to provide a new 3x3 transform matrix for 3 channel color spaces. For color spaces using less than or greater than 3 channels, you will need to create a custom color recorrelation module to replace ``ToRGB``. New color correlation matrices can be created using the dataset module, or with your own custom algorithms.
 
@@ -95,6 +95,10 @@ There are currently multiple limitations for ``torch.float16`` & ``torch.bfloat1
 * The ``ToRGB`` transform's inverse parameter does not currently support ``torch.float16`` or ``torch.bfloat16``.
 
 These limitations can be partially overcome by utilizing PyTorch's [Automatic Mixed Precision package](https://pytorch.org/docs/stable/amp.html) (AMP)'s ``torch.autocast`` context manager.
+
+**How can I avoid out of memory errors when rendering?**
+
+If you are getting out of memory (OOM) errors when trying to render visualizations, you may have to reduce the batch size and or size of the image parameterization being used. If you are using a custom module, then you should make sure that there are no memory leaks present in it.
 
 
 References
