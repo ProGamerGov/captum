@@ -87,12 +87,14 @@ For the most part, yes. Image parameterizations, transforms, and many of the hel
 
 In addition to the default ``torch.float32`` dtype, the Optim module also easily supports ``torch.float64``. 
 
-``torch.float16`` support is lacking due to limitations with PyTorch's ``torch.float16`` support.
-* The ``FFTImage`` parameterization currently only works with ``torch.float16`` on PyTorch v1.12.0 and above using size values that are powers of 2.
+There are currently multiple limitations for ``torch.float16`` & ``torch.bfloat16`` support, due to PyTorch's ongoing work on implementing support for these dtypes:
+
+* The ``FFTImage`` parameterization currently only works with ``torch.float16`` & CUDA on PyTorch v1.12.0 and above using size values that are powers of 2.
 * The ``RandomScale`` and ``RandomSpatialJitter`` transforms do not currently support ``torch.float16``.
 * The ``RandomRotation`` and ``RandomScaleAffine`` transforms currently only support ``torch.float16`` with CUDA.
 * The ToRGB transform's inverse parameter does not currently support ``torch.float16``.
 
+These limitations can be partially overcome by utilizing PyTorch's [Automatic Mixed Precision package](https://pytorch.org/docs/stable/amp.html) (AMP).
 
 References
 -----------------
