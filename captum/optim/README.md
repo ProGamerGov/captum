@@ -139,7 +139,7 @@ If you are getting out of memory (OOM) errors when trying to render visualizatio
 
 **Does the Optim module work with torch.fx?**
 
-No, the Optim module's dynamic control flow is not supported by [torch.fx](https://pytorch.org/docs/stable/fx.html).
+No, the Optim module's dynamic control flow is not supported by [torch.fx](https://pytorch.org/docs/stable/fx.html). Custom modules though may be able to have some level of support for ``torch.fx``.
 
 This means that Torchvision's ``torchvision.models.feature_extraction`` [package](https://pytorch.org/vision/stable/feature_extraction.html) won't work as it requires ``torch.fx`` support. The Optim module's ``collect_activations`` function should be used instead.
 
