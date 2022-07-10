@@ -78,9 +78,9 @@ transforms = opt.transforms.TransformationRobustness()
 We can now render the visualization.
 
 ```
-def visualize(model, loss_fn, image, transforms, num_iter=512, lr=0.02):
+def visualize(model, loss_fn, image, transforms):
     obj = opt.InputOptimization(model, loss_fn, image, transforms)
-    history = obj.optimize(opt.optimization.n_steps(num_iter), lr=lr)
+    history = obj.optimize()
     image().show(figsize=(10, 10))
 
 visualize(model, loss_fn, image, transforms)
