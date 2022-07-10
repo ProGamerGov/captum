@@ -153,6 +153,8 @@ References
 
 * Inceptionism: Going Deeper into Neural Networks: https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html
 
+* Lucid: https://github.com/tensorflow/lucid
+
 * Feature Visualization: https://distill.pub/2017/feature-visualization/
 
 * Differentiable Image Parameterizations: https://distill.pub/2018/differentiable-parameterizations/
