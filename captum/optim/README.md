@@ -110,6 +110,10 @@ This means that Torchvision's ``torchvision.models.feature_extraction`` [package
 References
 -----------------
 
+* Going Deeper with Convolutions: https://arxiv.org/abs/1409.4842
+
+* Places: An Image Database for Deep Scene Understanding: https://arxiv.org/abs/1610.02055
+
 * Inceptionism: Going Deeper into Neural Networks: https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html
 
 * Feature Visualization: https://distill.pub/2017/feature-visualization/
