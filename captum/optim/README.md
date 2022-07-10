@@ -175,4 +175,6 @@ References
 
   * High-Low Frequency Detectors: https://distill.pub/2020/circuits/frequency-edges/
 
+  * Curve Detectors: https://distill.pub/2020/circuits/curve-detectors/
+
 * Multimodal Neurons in Artificial Neural Networks: https://distill.pub/2021/multimodal-neurons/
