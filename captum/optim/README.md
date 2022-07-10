@@ -147,13 +147,17 @@ This means that Torchvision's ``torchvision.models.feature_extraction`` [package
 References
 -----------------
 
+* Color information for region segmentation: https://www.sciencedirect.com/science/article/pii/0146664X80900477
+
 * Going Deeper with Convolutions: https://arxiv.org/abs/1409.4842
 
-* Places: An Image Database for Deep Scene Understanding: https://arxiv.org/abs/1610.02055
+* Understanding Deep Image Representations by Inverting Them: https://arxiv.org/abs/1412.0035
 
 * Inceptionism: Going Deeper into Neural Networks: https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html
 
 * Visualizing Representations: Deep Learning and Human Beings: https://colah.github.io/posts/2015-01-Visualizing-Representations/
+
+* Places: An Image Database for Deep Scene Understanding: https://arxiv.org/abs/1610.02055
 
 * Using Artificial Intelligence to Augment Human Intelligence: https://distill.pub/2017/aia/
 
@@ -166,10 +170,6 @@ References
 * The Building Blocks of Interpretability: https://distill.pub/2018/building-blocks/
 
 * Exploring Neural Networks with Activation Atlases: https://distill.pub/2019/activation-atlas/
-
-* Understanding Deep Image Representations by Inverting Them: https://arxiv.org/abs/1412.0035
-
-* Color information for region segmentation: https://www.sciencedirect.com/science/article/pii/0146664X80900477
 
 * Thread: Circuits: https://distill.pub/2020/circuits/
 
