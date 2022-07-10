@@ -81,7 +81,7 @@ We can now render the visualization.
 def visualize(model, loss_fn, image, transforms):
     obj = opt.InputOptimization(model, loss_fn, image, transforms)
     history = obj.optimize()
-    image().show(figsize=(10, 10))
+    image().show()
 
 visualize(model, loss_fn, image, transforms)
 ```
