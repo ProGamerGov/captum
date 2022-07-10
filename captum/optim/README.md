@@ -64,7 +64,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 We load the pretrained InceptionV1 model instance.
 
 ```
-model = opt.googlenet(pretrained=True).eval().to(device)
+model = opt.models.googlenet(pretrained=True).eval().to(device)
 ```
 
 Next we define our optimization objective, image parameterization, & transforms.
