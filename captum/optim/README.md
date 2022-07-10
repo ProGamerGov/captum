@@ -118,7 +118,7 @@ ReLU layers will block the flow of gradients during the backward pass, if their 
 
 **Does the Optim module support JIT?**
 
-For the most part, yes. Image parameterizations, transforms, and many of the helper classes & functions support JIT. The provided models also support JIT, but rendering JIT models with ``InputOptimizatization`` is not supported. The ``InputOptimizatization`` class itself does not support JIT either, but it does work with scripted image parameterizations and transforms. The loss objective system also does not support JIT. These limitations are due to the limitations with JIT supporting PyTorch hooks.
+For the most part, yes. Image parameterizations, transforms, and many of the helper classes & functions support [JIT / TorchScript](https://pytorch.org/docs/stable/jit.html). The provided models also support JIT, but rendering JIT models with ``InputOptimizatization`` is not supported. The ``InputOptimizatization`` class itself does not support JIT either, but it does work with scripted image parameterizations and transforms. The loss objective system also does not support JIT. These limitations are due to the limitations with JIT supporting PyTorch hooks.
 
 **What dtypes does the Optim module support?**
 
