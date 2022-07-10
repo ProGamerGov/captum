@@ -96,7 +96,7 @@ The docs for the optim module can be found [here](https://captum.ai/api/).
 Tutorials
 -----------------
 
-We also provide multiple tutorials covering a wide array of research for the optim module on the Captum website [here](https://captum.ai/tutorials/), or in the code reposity [here](https://github.com/pytorch/captum/tree/master/tutorials).
+We also provide multiple tutorials covering a wide array of research for the optim module on the Captum website [here](https://captum.ai/tutorials/), or in the code repository [here](https://github.com/pytorch/captum/tree/master/tutorials).
 
 
 FAQ
