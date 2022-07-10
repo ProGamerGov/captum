@@ -153,6 +153,10 @@ References
 
 * Inceptionism: Going Deeper into Neural Networks: https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html
 
+* Visualizing Representations: Deep Learning and Human Beings: https://colah.github.io/posts/2015-01-Visualizing-Representations/
+
+* Using Artificial Intelligence to Augment Human Intelligence: https://distill.pub/2017/aia/
+
 * Lucid: https://github.com/tensorflow/lucid
 
 * Feature Visualization: https://distill.pub/2017/feature-visualization/
