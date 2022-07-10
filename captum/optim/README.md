@@ -70,7 +70,7 @@ model = opt.googlenet(pretrained=True).eval().to(device)
 Next we define our optimization objective, image parameterization, & transforms.
 
 ```
-loss_fn = opt.loss.ChannelActivation(model.mixed5a, 9)
+loss_fn = opt.loss.ChannelActivation(model.mixed4a, 465)
 image = opt.images.NaturalImage((224, 224)).to(device)
 transform = opt.transforms.TransformationRobustness()
 ```
@@ -78,9 +78,9 @@ transform = opt.transforms.TransformationRobustness()
 We can now render the visualization.
 
 ```
-def visualize(model, loss_fn, image, transform, n_iter=512, lr=0.02):
+def visualize(model, loss_fn, image, transform, num_iter=512, lr=0.02):
     obj = opt.InputOptimization(model, loss_fn, image, transform)
-    history = obj.optimize(opt.optimization.n_steps(n_iter), lr=lr)
+    history = obj.optimize(opt.optimization.n_steps(num_iter), lr=lr)
     image().show(figsize=(10, 10))
 
 visualize(model, loss_fn, image, transform)
