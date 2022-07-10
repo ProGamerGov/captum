@@ -4,7 +4,7 @@ Overview
 About Optim
 -----------------
 
-The Optim module is a set tools for optimization based interpretability for neural networks. It is a continuation of the research work performed by the team behind the [tensorflow/lucid](https://github.com/tensorflow/lucid) library.
+The Optim module is a set of tools for optimization based interpretability for neural networks. It is a continuation of the research work performed by the team behind the [tensorflow/lucid](https://github.com/tensorflow/lucid) library.
 
 
 The Optim module is designed to be extremely customizable, as to avoid limitations in its research potential.
@@ -28,7 +28,7 @@ The standard rendering process works like this for the forward pass, with loss o
 Parameterizations
 -----------------
 
-The default settings store image parameters in a fully decorrelated format where the spatial information and channel information is decorrelated. By preconditioning our optimizer with decorrelated data, we alter the loss landscape to make optimization significantly easier and decrease the presence of high frequency patterns. Parameterizations like these are also known as a differentiable image parameterizations.
+The default settings store image parameters in a fully decorrelated format where the spatial information and channel information is decorrelated. By preconditioning our optimizer with decorrelated data, we alter the loss landscape to make optimization significantly easier and decrease the presence of high frequency patterns. Parameterizations like these are also known as differentiable image parameterizations.
 
 ![](https://user-images.githubusercontent.com/10626398/176753493-b90f4e18-0133-4dca-afd4-26e811aa965e.svg?sanitize=true)
 
@@ -94,7 +94,7 @@ There are currently multiple limitations for ``torch.float16`` & ``torch.bfloat1
 * The ``RandomRotation`` and ``RandomScaleAffine`` transforms currently only support ``torch.float16`` with CUDA.
 * The ``ToRGB`` transform's inverse parameter does not currently support ``torch.float16`` or ``torch.bfloat16``.
 
-These limitations can be partially overcome by utilizing PyTorch's [Automatic Mixed Precision package](https://pytorch.org/docs/stable/amp.html) (AMP)'s ``torch.autocast`` context manager. However, rendering may not work correctly unless using you are using ``torch.float32`` / ``torch.float`` or ``torch.float64`` / ``torch.double``.
+These limitations can be partially overcome by utilizing PyTorch's [Automatic Mixed Precision package](https://pytorch.org/docs/stable/amp.html) (AMP)'s ``torch.autocast`` context manager. However, rendering may not work correctly unless you are using ``torch.float32`` / ``torch.float`` or ``torch.float64`` / ``torch.double``.
 
 **How can I avoid out of memory errors when rendering?**
 
