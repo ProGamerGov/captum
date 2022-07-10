@@ -104,7 +104,7 @@ FAQ
 
 **How do I know if my model is compatible with the Optim module?**
 
-In general model layers need to be [nn.Module](https://pytorch.org/docs/stable/generated/torch.nn.Module.html)s as functional layers don't support hooks and also cannot be replaced.
+In general model layers need to be [nn.Module](https://pytorch.org/docs/stable/generated/torch.nn.Module.html)s as functional layers don't support hooks.
 Please check out the 'Getting Started Model Preparation' tutorial notebook for more information.
 
 **Are only 3 RGB images and 4 channel RGBA images supported or can I use a different color space?**
