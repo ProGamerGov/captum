@@ -16,10 +16,10 @@ import torch
 
 class ChannelReducer:
     """
-    Dimensionality reduction for the channel dimension of an input tensor.
-    Olah, et al., "The Building Blocks of Interpretability", Distill, 2018.
-
-    See here for more information: https://distill.pub/2018/building-blocks/
+    The ChannelReducer class is a wrapper for PyTorch and NumPy based dimensonality
+    reduction algorithms, like those from ``sklearn.decomposition``,
+    ``sklearn.manifold``, UMAP, and other libraries. This class handles things like
+    reshaping and PyTorch tensor conversions to and from NumPy arrays.
 
     Example::
 
@@ -28,6 +28,16 @@ class ChannelReducer:
         >>> output = reducer.fit_transform(x)
         >>> print(output.shape)
         torch.Size([1, 2, 128, 128])
+
+        >>> # reduction_alg attributes are easily accessible
+        >>> print(reducer.components.shape)
+        torch.Size([2, 8])
+
+    Dimensionality reduction for the channel dimension of an input tensor.
+    Olah, et al., "The Building Blocks of Interpretability", Distill, 2018.
+
+    See here for more information: https://distill.pub/2018/building-blocks/
+
 
     Args:
 
