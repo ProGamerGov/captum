@@ -75,6 +75,19 @@ class ChannelReducer:
 
     @classmethod
     def _apply_flat(cls, func: Callable, x: torch.Tensor) -> torch.Tensor:
+        """
+        Flatten inputs, run them through the reduction_alg, and then reshape them back
+        to their original size using the resized dimension.
+
+        Args:
+
+            cls (ChannelReducer): The ChannelReducer class being used.
+            func (callable): The reduction_alg transform function being used.
+            x (torch.Tensor): The tensor being transformed.
+
+        Returns:
+            x (torch.Tensor): A transformed tensor.
+        """
         orig_shape = x.shape
         try:
             return func(x.reshape([-1, x.shape[-1]])).reshape(
