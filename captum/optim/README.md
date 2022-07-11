@@ -61,21 +61,26 @@ import captum.optim as opt
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 ```
 
-We load the pretrained InceptionV1 model instance.
+We load the pre-trained InceptionV1 model instance.
 
 ```
 model = opt.models.googlenet(pretrained=True).to(device)
 ```
 
-Next we define our optimization objective, image parameterization, & transforms.
+Next we define our optimization objective as a layer channel target.
 
 ```
 loss_fn = opt.loss.ChannelActivation(model.mixed4a, 465)
+```
+
+We also define a decorrelated image parameterization & a set of transforms.
+
+```
 image = opt.images.NaturalImage((224, 224)).to(device)
 transforms = opt.transforms.TransformationRobustness()
 ```
 
-We can now render the visualization.
+We can now render the visualization using a simple helper function.
 
 ```
 def visualize(model, loss_fn, image, transforms):
