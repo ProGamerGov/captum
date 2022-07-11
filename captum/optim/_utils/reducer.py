@@ -128,7 +128,9 @@ class ChannelReducer:
             tensor (torch.Tensor): A tensor to perform dimensionality reduction on.
             swap_2nd_and_last_dims (bool, optional): If ``True``, input channels are
                 expected to be in the second dimension unless the input tensor has a
-                shape of CHW.
+                shape of CHW. When reducing the channel dimension, this parameter
+                should be set to ``True`` unless you are already using the channels
+                last format.
                 Default: ``True``.
 
         Returns:
