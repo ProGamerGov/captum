@@ -67,6 +67,18 @@ class ChannelReducer:
         self._reducer = reduction_alg(n_components=n_components, **kwargs)
 
     def _get_reduction_algo_instance(self, name: str) -> Union[None, Callable]:
+        """
+        Search through a library for a ``reduction_alg`` matching the provided str
+        name.
+
+        Args:
+
+            name (str): The name of the reduction_alg to search for.
+
+        Returns:
+            reduction_alg (callable or None): The ``reduction_alg`` if it was found,
+                otherwise None.
+        """
         if hasattr(sklearn.decomposition, name):
             obj = sklearn.decomposition.__getattribute__(name)
             if issubclass(obj, BaseEstimator):
@@ -81,8 +93,8 @@ class ChannelReducer:
 
         Args:
 
-            cls (ChannelReducer): The ChannelReducer class being used.
-            func (callable): The reduction_alg transform function being used.
+            cls (ChannelReducer): The ``ChannelReducer`` class being used.
+            func (callable): The ``reduction_alg`` transform function being used.
             x (torch.Tensor): The tensor being transformed.
 
         Returns:
