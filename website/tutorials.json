@@ -91,7 +91,7 @@
       "id": "Multimodal_VQA_Captum_Insights",
       "title": "Using Captum Insights with multimodal models (VQA)"
     }
-  ]
+  ],
   "Captum Optim": [
     {
       "id": "GettingStarted_OptimViz",
@@ -100,35 +100,35 @@
     {
       "id": "BasicLosses_OptimViz",
       "title": "Basic Losses"
-    }
+    },
     {
       "id": "AdvancedLosses_OptimViz",
       "title": "Advanced Losses"
-    }
+    },
     {
       "id": "OptimizationWithTransparency_OptimViz",
       "title": "Optimizing with Transparency"
-    }
+    },
     {
       "id": "ReproduceLucid_OptimViz",
       "title": "Reproducing Lucid"
-    }
+    },
     {
       "id": "GettingStarted_ModelPreparation_OptimViz",
       "title": "Preparing Models For Captum's Optim Module"
-    }
+    },
     {
       "id": "WeightVisualization_OptimViz",
       "title": "Visualizing weights with Optim"
-    }
+    },
     {
       "id": "CustomModules_OptimViz",
       "title": "Creating Custom Optim Modules"
-    }
+    },
     {
       "id": "ChannelAttribution_OptimViz",
       "title": "Channel Attribution"
-    }
+    },
     {
       "title": "Activation Atlases",
       "children": [
@@ -139,13 +139,13 @@
         {
           "id": "ActivationAtlas_OptimViz",
           "title": "Creating Activation Atlases with Optim"
-        }
+        },
         {
           "id": "ClassActivationAtlas_OptimViz",
           "title": "Creating Class Activation Atlases with Optim"
         }
       ]
-    }
+    },
     {
       "title": "CLIP",
       "children": [
@@ -156,7 +156,7 @@
         {
           "id": "FacetedFeatureVisualization_Optimviz",
           "title": "Faceted Feature Visualization"
-        }
+        },
         {
           "id": "CLIP_Feeling_Wheel_Atlas_OptimViz",
           "title": "Feeling Wheel Atlas"
