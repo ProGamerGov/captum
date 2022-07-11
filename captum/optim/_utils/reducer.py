@@ -100,7 +100,7 @@ class ChannelReducer:
 
             cls (ChannelReducer): The ``ChannelReducer`` class being used.
             func (callable): The ``reduction_alg`` transform function being used.
-            x (torch.Tensor): The tensor being transformed.
+            x (torch.Tensor): The tensor being transformed and reduced.
 
         Returns:
             x (torch.Tensor): A transformed tensor.
