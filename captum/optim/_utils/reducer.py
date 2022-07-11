@@ -17,10 +17,10 @@ import torch
 class ChannelReducer:
     """
     The ChannelReducer class is a wrapper for PyTorch and NumPy based dimensonality
-    reduction algorithms, like those from ``sklearn.decomposition``,
-    ``sklearn.manifold``, UMAP, and other libraries. This class handles things like
-    reshaping, algorithm search by name (for scikit-learn only), and PyTorch tensor
-    conversions to and from NumPy arrays.
+    reduction algorithms, like those from ``sklearn.decomposition`` (ex: NMF, PCA),
+    ``sklearn.manifold`` (ex: TSNE), UMAP, and other libraries. This class handles
+    things like reshaping, algorithm search by name (for scikit-learn only), and
+    PyTorch tensor conversions to and from NumPy arrays.
 
     Example::
 
