@@ -84,6 +84,10 @@ class ChannelReducer:
             obj = sklearn.decomposition.__getattribute__(name)
             if issubclass(obj, BaseEstimator):
                 return obj
+        elif hasattr(sklearn.manifold, name):
+            obj = sklearn.manifold.__getattribute__(name)
+            if issubclass(obj, BaseEstimator):
+                return obj
         return None
 
     @classmethod
