@@ -37,16 +37,16 @@ The default settings store image parameters in a fully decorrelated format where
 By default, recorrelation occurs entirely within the ``NaturalImage`` class.
 
 
-Rendering Submodules
+Rendering Modules
 -----------------
 
-**Images**:
+**Images**: A torch.Tensor subclass for image tensors, and mutiple image parameterizations.
 
-**Transforms**:
+**Transforms**: The transforms module contains various transforms that are useful for performing transform robustness when rendering.
 
-**Loss**:
+**Loss**: The loss module contains numerous loss objectives that are all fully composable with mathematical ops.
 
-**InputOptimization**:
+**Optimization**: The optimization module contains the optimization class and a stop criteria function.
 
 
 Submodules
