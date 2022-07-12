@@ -37,6 +37,16 @@ The default settings store image parameters in a fully decorrelated format where
 By default, recorrelation occurs entirely within the ``NaturalImage`` class.
 
 
+Rendering Submodules
+-----------------
+
+**Images**:
+
+**Transforms**:
+
+**Loss**:
+
+
 Submodules
 -----------------
 
