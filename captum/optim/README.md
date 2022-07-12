@@ -120,7 +120,7 @@ We also provide multiple tutorials covering a wide array of research for the opt
 FAQ
 -----------------
 
-**How do I know if my model is compatible with the Optim module?**
+**How do I know if my model is compatible with the Optim?**
 
 In general model layers need to be [nn.Module](https://pytorch.org/docs/stable/generated/torch.nn.Module.html)s as functional layers don't support hooks. Please check out the 'Getting Started Model Preparation' tutorial notebook for more information.
 
