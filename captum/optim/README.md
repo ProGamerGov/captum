@@ -37,8 +37,11 @@ The default settings store image parameters in a fully decorrelated format where
 By default, recorrelation occurs entirely within the ``NaturalImage`` class.
 
 
-Rendering Modules
+Optim Modules
 -----------------
+
+Rendering Modules
+^^^^^^^^^^^^^^^^^
 
 **Images**: A torch.Tensor subclass for image tensors, and mutiple image parameterizations.
 
@@ -50,7 +53,7 @@ Rendering Modules
 
 
 Submodules
------------------
+^^^^^^^^^^^^^^^^^
 
 **Reducer**: The reducer module makes it easy to perform dimensionality reduction with a wide array of algorithms like [t-SNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html), [UMAP](https://umap-learn.readthedocs.io/en/latest/), [PCA](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html), & [NMF](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.NMF.html).
 
