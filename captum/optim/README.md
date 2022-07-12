@@ -111,9 +111,9 @@ FAQ
 
 In general model layers need to be [nn.Module](https://pytorch.org/docs/stable/generated/torch.nn.Module.html)s as functional layers don't support hooks. Please check out the 'Getting Started Model Preparation' tutorial notebook for more information.
 
-**Are only 3 RGB images and 4 channel RGBA images supported or can I use a different color space?**
+**Are only 3 channel RGB images and 4 channel RGBA images supported or can I use a different color space?**
 
-By default the rendering modules in Optim are setup for rendering RGB images, but they can easily support other [color spaces](https://en.wikipedia.org/wiki/Color_space) with a simple settings change. In the case of ``ToRGB``, you may have to provide a new 3x3 transform matrix for 3 channel color spaces. For color spaces using less than or greater than 3 channels, you will need to create a custom color recorrelation module to replace ``ToRGB``. New color correlation matrices can be created using the dataset module, or with your own custom algorithms.
+By default the rendering modules in Optim are setup for rendering [RGB](https://en.wikipedia.org/wiki/RGB_color_spaces) / [RGBA](https://en.wikipedia.org/wiki/RGBA_color_model) images, but they can easily support other [color spaces](https://en.wikipedia.org/wiki/Color_space) with a simple settings change. In the case of ``ToRGB``, you may have to provide a new 3x3 transform matrix for 3 channel (with optional 4th channel) color spaces. For color spaces using less than or greater than 3 channels, you will need to create a custom color recorrelation module to replace ``ToRGB``. New color correlation matrices can be created using the dataset module, or with your own custom algorithms.
 
 **Why are my rendered visualizations poor quality or non-existent in outputs?**
 
