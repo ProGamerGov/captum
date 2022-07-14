@@ -1,7 +1,7 @@
 Overview
 =================
 
-About Optim
+About
 -----------------
 
 The Optim module is a set of tools for optimization based interpretability for neural networks. It is a continuation of the research work performed by the team behind the [tensorflow/lucid](https://github.com/tensorflow/lucid) library.
@@ -11,7 +11,7 @@ The Optim module is designed to be extremely customizable, as to avoid limitatio
 The initial concept for the Optim module was devised by Ludwig Shubert, and then developed by Ben Egan and Swee Kiat Lim with help from Chris Olah & Narine Kokhlikyan.
 
 
-Optim Structure
+Structure
 -----------------
 
 ![](https://user-images.githubusercontent.com/10626398/177629584-33e7ff7c-a504-404e-a7ab-d8d786b7e25a.svg?sanitize=true)
@@ -33,7 +33,7 @@ The default settings store image parameters in a fully decorrelated format where
 By default, recorrelation occurs entirely within the ``NaturalImage`` class.
 
 
-Optim Modules
+Modules
 -----------------
 
 ### Rendering Modules
