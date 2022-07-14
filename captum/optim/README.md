@@ -6,11 +6,7 @@ About Optim
 
 The Optim module is a set of tools for optimization based interpretability for neural networks. It is a continuation of the research work performed by the team behind the [tensorflow/lucid](https://github.com/tensorflow/lucid) library.
 
-
 The Optim module is designed to be extremely customizable, as to avoid limitations in its research potential.
-
-History
------------------
 
 The initial concept for the Optim module was devised by Ludwig Shubert, and then developed by Ben Egan and Swee Kiat Lim with help from Chris Olah & Narine Kokhlikyan.
 
