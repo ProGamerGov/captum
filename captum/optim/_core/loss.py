@@ -1227,7 +1227,7 @@ def default_loss_summarize(loss_value: torch.Tensor) -> torch.Tensor:
     """
     Helper function to summarize tensor outputs from loss objectives.
 
-    default_loss_summarize applies `mean` to the loss tensor
+    default_loss_summarize applies :func:`torch.mean` to the loss tensor
     and negates it so that optimizing it maximizes the activations we
     are interested in.
 
