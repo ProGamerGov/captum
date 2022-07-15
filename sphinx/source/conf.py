@@ -215,7 +215,6 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         if not (lines[i].startswith(":type") or lines[i].startswith(":rtype")):
             continue
         lines[i] = lines[i].replace("nn.Module", "torch.nn.Module")
-        lines[i] = lines[i].replace(" or ", "/")
 
 
 def setup(app):
