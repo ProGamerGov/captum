@@ -206,3 +206,22 @@ epub_exclude_files = ["search.html"]
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+
+# -- Type Ref Improvements ----------------------------------------------
+
+def autodoc_process_docstring(app, what, name, obj, options, lines):
+    for i in range(len(lines)):
+        if not (lines[i].startswith(":type") or lines[i].startswith(":rtype")):
+            continue
+        lines[i] = lines[i].replace("nn.Module", "torch.nn.Module")
+        lines[i] = lines[i].replace("F.", "torch.nn.functional.")
+        lines[i] = lines[i].replace("List", "~typing.List")
+        lines[i] = lines[i].replace("Tuple", "~typing.Tuple")
+        lines[i] = lines[i].replace("callable", "~typing.Callable")
+        lines[i] = lines[i].replace("Callable", "~typing.Callable")
+        lines[i] = lines[i].replace("np.", "numpy.")
+
+
+def setup(app):
+    app.connect("autodoc-process-docstring", autodoc_process_docstring)
