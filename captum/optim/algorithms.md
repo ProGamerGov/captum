@@ -33,7 +33,7 @@ To learn more about NeuronActivation visit the following resources:
 * [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
 
 ### DeepDream
-This loss returns the squared layer activations. When combined with a negative mean loss summarization, this loss will create hallucinogenic visuals commonly referred to as ‘Deep Dream’. 
+This loss returns the squared layer activations. When combined with a negative mean loss summarization, this loss will create hallucinogenic visuals commonly referred to as ‘Deep Dream’ or ’DeepDream’. 
 
 * Pros: Can create visually interesting images.
 * Cons: Not specific enough for most research tasks.
@@ -44,7 +44,6 @@ To learn more about DeepDream visit the following resources:
 * https://github.com/google/deepdream
 * https://en.wikipedia.org/wiki/DeepDream
 * [Lucid Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
-* https://www.tensorflow.org/tutorials/generative/deepdream
 
 ### TotalVariation
 This loss attempts to smooth / denoise the target by performing total variance denoising. The target is most often the image that’s being optimized. This loss is often used to remove unwanted visual artifacts.
