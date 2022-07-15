@@ -209,7 +209,7 @@ class BaseLoss(Loss):
         """
         Args:
 
-            target (nn.Module or list of nn.module): A target nn.Module or list of
+            target (nn.Module or list of nn.Module): A target nn.Module or list of
                 nn.Module.
             batch_index (int or list of int, optional): The index or index range of
                 activations to optimize if optimizing a batch of activations. If set to
@@ -339,7 +339,7 @@ class CompositeLoss(BaseLoss):
             name (str, optional): The name of all composable operations in the
                 instance.
                 Default: ``""``
-            target (nn.Module or list of nn.module): A target nn.Module or list of
+            target (nn.Module or list of nn.Module): A target nn.Module or list of
                 nn.Module.
         """
         super().__init__(target)
