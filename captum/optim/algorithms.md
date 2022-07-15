@@ -30,6 +30,7 @@ This loss maximizes the activations of a target neuron in the specified channel 
 To learn more about NeuronActivation visit the following resources:
 
 * [Research: Neuron Mechanics](https://github.com/tensorflow/lucid/issues/110)
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
 
 ### DeepDream
 This loss returns the squared layer activations. When combined with a negative mean loss summarization, this loss will create hallucinogenic visuals commonly referred to as ‘Deep Dream’. 
@@ -42,6 +43,8 @@ To learn more about DeepDream visit the following resources:
 * [Inceptionism: Going Deeper into Neural Networks](https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html)
 * https://github.com/google/deepdream
 * https://en.wikipedia.org/wiki/DeepDream
+* [Lucid Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
+* https://www.tensorflow.org/tutorials/generative/deepdream
 
 ### TotalVariation
 This loss attempts to smooth / denoise the target by performing total variance denoising. The target is most often the image that’s being optimized. This loss is often used to remove unwanted visual artifacts.
@@ -60,14 +63,22 @@ Penalizes the l1 of the target layer activations.
 * Pros: Can be used as a penalty, similar to L1 regularization.
 * Cons:
 
+To learn more about L1 visit the following resources:
+
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
+
 ### L2
 Penalizes the l2 of the target layer activations.
 
 * Pros: Can be used as a penalty, similar to L2 regularization.
 * Cons:
 
+To learn more about L2 visit the following resources:
+
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
+
 ### Diversity
-This loss helps break up polysemantic layers, channels, and neurons by encouraging diversity across the different batches. This loss is to be used along with a main loss.
+This loss helps break up polysemantic layers, channels, and neurons by encouraging diversity across the different batches. This loss is to be used along with a main loss. Diversity is very similar to [neural style transfer](https://en.wikipedia.org/wiki/Neural_style_transfer), but style similarity is penalized instead of being encouraged.
 
 * Pros: Helps separate polysemantic features into different images.
 * Cons: Requires a batch size greater than 1, and can be extremely slow with large batch sizes. This loss really only works on targets that are polysemantic. There is also no control over how features are separated out into groups.
@@ -76,6 +87,7 @@ To learn more about Diversity visit the following resources:
 
 * [Feature Visualization: Diversity](https://distill.pub/2017/feature-visualization/#diversity)
 * [Research: Poly-Semantic Neurons](https://github.com/tensorflow/lucid/issues/122)
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
 
 ### ActivationInterpolation
 This loss helps to interpolate or mix visualizations from two activations (layer or channel) by interpolating a linear sum between the two activations.
@@ -86,6 +98,7 @@ This loss helps to interpolate or mix visualizations from two activations (layer
 To learn more about ActivationInterpolation visit the following resources:
 
 * [Feature Visualization: Interaction between Neurons](https://distill.pub/2017/feature-visualization/#Interaction-between-Neurons)
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
 
 ### Alignment
 When interpolating between activations, it may be desirable to keep image landmarks in the same position for visual comparison. This loss helps to minimize L2 distance between neighbouring images. 
@@ -97,6 +110,7 @@ To learn more about Alignment visit the following resources:
 
 * [Feature Visualization: Interaction between Neurons](https://distill.pub/2017/feature-visualization/#Interaction-between-Neurons)
 * [Research: "The Art of Dimensionality Reduction"](https://github.com/tensorflow/lucid/issues/111)
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
 
 ### Direction
 This loss helps to visualize a specific vector direction in a layer, by maximizing the alignment between the input vector and the layer’s activation vector. The dimensionality of the vector should correspond to the number of channels in the layer.
@@ -109,6 +123,7 @@ To learn more about Direction visit the following resources:
 * [Intriguing properties of neural networks](https://arxiv.org/abs/1312.6199)
 * [Network Dissection: Quantifying Interpretability of Deep Visual Representations](https://arxiv.org/abs/1704.05796)
 * [Research: Feature Visualization Objectives](https://github.com/tensorflow/lucid/issues/116)
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
 
 ### NeuronDirection
 Extends Direction loss by focusing on visualizing a single neuron within the kernel.
@@ -120,6 +135,7 @@ To learn more about NeuronDirection visit the following resources:
 
 * [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
 * [Research: Feature Visualization Objectives](https://github.com/tensorflow/lucid/issues/116)
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
 
 ### AngledNeuronDirection
 This objective is similar to NeuronDirection, but it places more emphasis on the angle by optionally multiplying the dot product by the cosine similarity.
@@ -136,6 +152,10 @@ Extends Direction loss by allowing batch-wise direction visualization.
 
 * Pros: See Direction loss.
 * Cons: See Direction loss.
+
+To learn more about TensorDirection visit the following resources:
+
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
 
 ### ActivationWeights
 This loss weighs specific channels or neurons in a given layer, via a weight vector. 
