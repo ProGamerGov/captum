@@ -15,7 +15,7 @@ This is the most basic loss available and it simply returns the activations in t
 This loss maximizes the activations of a target channel in a specified target layer, and can be useful to determine what features the channel is excited by.
 
 * Pros: A good balance between neuron and layer activation.
-* Cons: Can be very polysemantic in many cases.
+* Cons: Can be very polysemantic in many cases. Channels with high degrees of polysemanticity can be difficult to interpet.
 
 ### NeuronActivation:
 This loss maximizes the activations of a target neuron in the specified channel from the specified layer. This loss is useful for determining the type of features that excite a neuron, and thus is often used for circuits and neuron related research.
@@ -51,7 +51,7 @@ Penalizes the l2 of the target layer activations.
 This loss helps break up polysemantic layers, channels, and neurons by encouraging diversity across the different batches. This loss is to be used along with a main loss.
 
 * Pros: Helps separate polysemantic features into different images.
-* Cons: Can be extremely slow with large batch sizes. This loss really only works on targets that are polysemantic. 
+* Cons: Requires a batch size greater than 1, and can be extremely slow with large batch sizes. This loss really only works on targets that are polysemantic. There is also no control over what features are separated out.
 
 ### ActivationInterpolation
 This loss helps to interpolate or mix visualizations from two activations (layer or channel) by interpolating a linear sum between the two activations.
@@ -111,5 +111,5 @@ This loss objective is similar to the Direction objective, except it computes th
 
 The FacetLoss objective allows us to steer feature visualization towards a particular theme / concept. This is done by using the weights from linear probes trained on the lower layers of a model to discriminate between a certain theme or concept and generic natural images.
 
-* Pros: Works on highly polysemantic / highly faceted targets where the Diversity objective fails due to lack of specificity.
+* Pros: Works on highly polysemantic / highly faceted targets where the Diversity objective fails due to lack of specificity. Doesn't require a batch size greater than 1 to work.
 * Cons: Requires training linear probes on the target layers using training images from the desired facet.
