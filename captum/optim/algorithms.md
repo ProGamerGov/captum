@@ -35,7 +35,7 @@ To learn more about NeuronActivation visit the following resources:
 ### DeepDream
 This loss returns the squared layer activations. When combined with a negative mean loss summarization, this loss will create hallucinogenic visuals commonly referred to as ‘Deep Dream’ or ’DeepDream’. 
 
-DeepDream tries to increase the values of neurons proportional to the amount they are presently active. This is equivalent to maximizing the sum of the squares. If you remove the square, you'd be doing a direciton visualization of: ``[1,1,1,....]``.
+DeepDream tries to increase the values of neurons proportional to the amount they are presently active. This is equivalent to maximizing the sum of the squares. If you remove the square, you'd be visualizing a direction of: ``[1,1,1,....]``.
 
 * Pros: Can create visually interesting images.
 * Cons: Not specific enough for most research tasks.
