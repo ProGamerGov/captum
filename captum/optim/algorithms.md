@@ -3,6 +3,10 @@ id: algorithms
 title: Algorithm Descriptions
 ---
 
+Below is a quick summary of the loss objectives currently provided by Optim. Loss objectives are used to steer the optimization process towards desired directions, layers, channels, and neurons.
+
+Loss objectives can be made to target specific batch indices, and they are fully composable with mathematical operations.
+
 ## Loss Objectives
 
 ### LayerActivation
