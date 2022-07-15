@@ -138,7 +138,6 @@ A simple L2 penalty where the mean is used instead of the square root of the sum
 To learn more about L2Mean visit the following resources:
 
 * [Multimodal Neurons in Artificial Neural Networks](https://distill.pub/2021/multimodal-neurons/)
-* https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py
 
 ### VectorLoss
 
@@ -150,7 +149,6 @@ This loss objective is similar to the Direction objective, except it computes th
 To learn more about VectorLoss visit the following resources:
 
 * [Multimodal Neurons in Artificial Neural Networks](https://distill.pub/2021/multimodal-neurons/)
-* https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py
 
 ### FacetLoss
 
@@ -162,4 +160,3 @@ The FacetLoss objective allows us to steer feature visualization towards a parti
 To learn more about FacetLoss visit the following resources:
 
 * [Multimodal Neurons in Artificial Neural Networks](https://distill.pub/2021/multimodal-neurons/)
-* https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py
