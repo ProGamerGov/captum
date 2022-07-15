@@ -33,10 +33,11 @@ This loss returns the squared layer activations. When combined with a negative m
 * Pros: Can create visually interesting images.
 * Cons: Not specific enough for most research tasks.
 
-References
+To learn more about DeepDream visit the following resources:
 
 * [Inceptionism: Going Deeper into Neural Networks](https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html)
 * https://github.com/google/deepdream
+* https://en.wikipedia.org/wiki/DeepDream
 
 ### TotalVariation
 This loss attempts to smooth / denoise the target by performing total variance denoising. The target is most often the image that’s being optimized. This loss is often used to remove unwanted visual artifacts.
@@ -44,9 +45,10 @@ This loss attempts to smooth / denoise the target by performing total variance d
 * Pros: Can remove unwanted visual artifacts.
 * Cons: Can result in less sharp / more blurry visualization images.
 
-References
+To learn more about TotalVariation visit the following resources:
 
 * [Understanding Deep Image Representations by Inverting Them](https://arxiv.org/abs/1412.0035)
+* https://en.wikipedia.org/wiki/Total_variation
 
 ### L1
 Penalizes the l1 of the target layer activations.
@@ -66,7 +68,7 @@ This loss helps break up polysemantic layers, channels, and neurons by encouragi
 * Pros: Helps separate polysemantic features into different images.
 * Cons: Requires a batch size greater than 1, and can be extremely slow with large batch sizes. This loss really only works on targets that are polysemantic. There is also no control over how features are separated out into groups.
 
-References
+To learn more about Diversity visit the following resources:
 
 * [Feature Visualization: Diversity](https://distill.pub/2017/feature-visualization/#diversity)
 
@@ -76,7 +78,7 @@ This loss helps to interpolate or mix visualizations from two activations (layer
 * Pros: Can create visually interesting images, especially when used with Alignment.
 * Cons: Interpolations may not be semantically useful beyond visual interest.
 
-References
+To learn more about ActivationInterpolation visit the following resources:
 
 * [Feature Visualization: Interaction between Neurons](https://distill.pub/2017/feature-visualization/#Interaction-between-Neurons)
 
@@ -86,7 +88,7 @@ When interpolating between activations, it may be desirable to keep image landma
 * Pros: Helps to make interpolated images more comparable.
 * Cons: Resulting images may be less semantically representative of the channel/layer/neuron, since we are forcing images to also be visually aligned.
 
-References
+To learn more about Alignment visit the following resources:
 
 * [Feature Visualization: Interaction between Neurons](https://distill.pub/2017/feature-visualization/#Interaction-between-Neurons)
 
@@ -102,7 +104,7 @@ Extends Direction loss by focusing on visualizing a single neuron within the ker
 * Pros: See Direction loss.
 * Cons: See Direction loss.
 
-References
+To learn more about NeuronDirection visit the following resources:
 
 * [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
 
@@ -111,7 +113,7 @@ This objective is similar to NeuronDirection, but it places more emphasis on the
 
 * Pros: More useful for visualizing activation atlas images.
 
-References
+To learn more about AngledNeuronDirection visit the following resources:
 
 * [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
 
@@ -133,9 +135,10 @@ A simple L2 penalty where the mean is used instead of the square root of the sum
 * Pros: It was found to work better for CLIP visualizations than the traditional L2 objective.
 * Cons:
 
-References
+To learn more about L2Mean visit the following resources:
 
 * [Multimodal Neurons in Artificial Neural Networks](https://distill.pub/2021/multimodal-neurons/)
+* https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py
 
 ### VectorLoss
 
@@ -144,9 +147,10 @@ This loss objective is similar to the Direction objective, except it computes th
 * Pros:
 * Cons:
 
-References
+To learn more about VectorLoss visit the following resources:
 
 * [Multimodal Neurons in Artificial Neural Networks](https://distill.pub/2021/multimodal-neurons/)
+* https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py
 
 ### FacetLoss
 
@@ -155,6 +159,7 @@ The FacetLoss objective allows us to steer feature visualization towards a parti
 * Pros: Works on highly polysemantic / highly faceted targets where the Diversity objective fails due to lack of specificity. Doesn't require a batch size greater than 1 to work.
 * Cons: Requires training linear probes on the target layers using training images from the desired facet.
 
-References
+To learn more about FacetLoss visit the following resources:
 
 * [Multimodal Neurons in Artificial Neural Networks](https://distill.pub/2021/multimodal-neurons/)
+* https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py
