@@ -33,6 +33,8 @@ This loss returns the squared layer activations. When combined with a negative m
 * Pros: Can create visually interesting images.
 * Cons: Not specific enough for most research tasks.
 
+References
+
 * [Inceptionism: Going Deeper into Neural Networks](https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html)
 * https://github.com/google/deepdream
 
@@ -41,6 +43,10 @@ This loss attempts to smooth / denoise the target by performing total variance d
 
 * Pros: Can remove unwanted visual artifacts.
 * Cons: Can result in less sharp / more blurry visualization images.
+
+References
+
+* [Understanding Deep Image Representations by Inverting Them](https://arxiv.org/abs/1412.0035)
 
 ### L1
 Penalizes the l1 of the target layer activations.
