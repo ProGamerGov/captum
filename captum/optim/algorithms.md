@@ -51,7 +51,7 @@ Penalizes the l2 of the target layer activations.
 This loss helps break up polysemantic layers, channels, and neurons by encouraging diversity across the different batches. This loss is to be used along with a main loss.
 
 * Pros: Helps separate polysemantic features into different images.
-* Cons: Requires a batch size greater than 1, and can be extremely slow with large batch sizes. This loss really only works on targets that are polysemantic. There is also no control over what features are separated out.
+* Cons: Requires a batch size greater than 1, and can be extremely slow with large batch sizes. This loss really only works on targets that are polysemantic. There is also no control over how features are separated out into groups.
 
 ### ActivationInterpolation
 This loss helps to interpolate or mix visualizations from two activations (layer or channel) by interpolating a linear sum between the two activations.
