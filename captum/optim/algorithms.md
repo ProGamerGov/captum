@@ -134,8 +134,8 @@ To learn more about AngledNeuronDirection visit the following resources:
 ### TensorDirection
 Extends Direction loss by allowing batch-wise direction visualization.
 
-Pros: See Direction loss.
-Cons: See Direction loss.
+* Pros: See Direction loss.
+* Cons: See Direction loss.
 
 ### ActivationWeights
 This loss weighs specific channels or neurons in a given layer, via a weight vector. 
