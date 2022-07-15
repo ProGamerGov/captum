@@ -33,6 +33,9 @@ This loss returns the squared layer activations. When combined with a negative m
 * Pros: Can create visually interesting images.
 * Cons: Not specific enough for most research tasks.
 
+* [Inceptionism: Going Deeper into Neural Networks](https://ai.googleblog.com/2015/06/inceptionism-going-deeper-into-neural.html)
+* https://github.com/google/deepdream
+
 ### TotalVariation
 This loss attempts to smooth / denoise the target by performing total variance denoising. The target is most often the image that’s being optimized. This loss is often used to remove unwanted visual artifacts.
 
