@@ -66,17 +66,29 @@ This loss helps break up polysemantic layers, channels, and neurons by encouragi
 * Pros: Helps separate polysemantic features into different images.
 * Cons: Requires a batch size greater than 1, and can be extremely slow with large batch sizes. This loss really only works on targets that are polysemantic. There is also no control over how features are separated out into groups.
 
+References
+
+* [Feature Visualization: Diversity](https://distill.pub/2017/feature-visualization/#diversity)
+
 ### ActivationInterpolation
 This loss helps to interpolate or mix visualizations from two activations (layer or channel) by interpolating a linear sum between the two activations.
 
 * Pros: Can create visually interesting images, especially when used with Alignment.
 * Cons: Interpolations may not be semantically useful beyond visual interest.
 
+References
+
+* [Feature Visualization: Interaction between Neurons](https://distill.pub/2017/feature-visualization/#Interaction-between-Neurons)
+
 ### Alignment
 When interpolating between activations, it may be desirable to keep image landmarks in the same position for visual comparison. This loss helps to minimize L2 distance between neighbouring images. 
 
 * Pros: Helps to make interpolated images more comparable.
 * Cons: Resulting images may be less semantically representative of the channel/layer/neuron, since we are forcing images to also be visually aligned.
+
+References
+
+* [Feature Visualization: Interaction between Neurons](https://distill.pub/2017/feature-visualization/#Interaction-between-Neurons)
 
 ### Direction
 This loss helps to visualize a specific vector direction in a layer, by maximizing the alignment between the input vector and the layer’s activation vector. The dimensionality of the vector should correspond to the number of channels in the layer.
@@ -90,10 +102,18 @@ Extends Direction loss by focusing on visualizing a single neuron within the ker
 * Pros: See Direction loss.
 * Cons: See Direction loss.
 
+References
+
+* [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
+
 ### AngledNeuronDirection
 This objective is similar to NeuronDirection, but it places more emphasis on the angle by optionally multiplying the dot product by the cosine similarity.
 
 * Pros: More useful for visualizing activation atlas images.
+
+References
+
+* [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
 
 ### TensorDirection
 Extends Direction loss by allowing batch-wise direction visualization.
@@ -113,6 +133,10 @@ A simple L2 penalty where the mean is used instead of the square root of the sum
 * Pros: It was found to work better for CLIP visualizations than the traditional L2 objective.
 * Cons:
 
+References
+
+* [Multimodal Neurons in Artificial Neural Networks](https://distill.pub/2021/multimodal-neurons/)
+
 ### VectorLoss
 
 This loss objective is similar to the Direction objective, except it computes the matrix product of the activations and vector, rather than the cosine similarity. In addition to optimizing towards channel directions, this objective can also perform a similar role to the ChannelActivation objective by using one-hot 1D vectors.
@@ -120,9 +144,17 @@ This loss objective is similar to the Direction objective, except it computes th
 * Pros:
 * Cons:
 
+References
+
+* [Multimodal Neurons in Artificial Neural Networks](https://distill.pub/2021/multimodal-neurons/)
+
 ### FacetLoss
 
 The FacetLoss objective allows us to steer feature visualization towards a particular theme / concept. This is done by using the weights from linear probes trained on the lower layers of a model to discriminate between a certain theme or concept and generic natural images.
 
 * Pros: Works on highly polysemantic / highly faceted targets where the Diversity objective fails due to lack of specificity. Doesn't require a batch size greater than 1 to work.
 * Cons: Requires training linear probes on the target layers using training images from the desired facet.
+
+References
+
+* [Multimodal Neurons in Artificial Neural Networks](https://distill.pub/2021/multimodal-neurons/)
