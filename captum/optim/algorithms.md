@@ -163,6 +163,10 @@ This loss weighs specific channels or neurons in a given layer, via a weight vec
 * Pros: Allows for region and dimension specific weighting.
 * Cons: Requires knowledge beforehand of the target region.
 
+To learn more about ActivationWeights visit the following resources:
+
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
+
 ### L2Mean
 A simple L2 penalty where the mean is used instead of the square root of the sum.
 
