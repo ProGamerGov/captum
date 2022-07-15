@@ -102,7 +102,7 @@ To learn more about Direction visit the following resources:
 
 * [Intriguing properties of neural networks](https://arxiv.org/abs/1312.6199)
 * [Network Dissection: Quantifying Interpretability of Deep Visual Representations](https://arxiv.org/abs/1704.05796)
-* https://github.com/tensorflow/lucid/issues/116
+* [Research: Feature Visualization Objectives](https://github.com/tensorflow/lucid/issues/116)
 
 ### NeuronDirection
 Extends Direction loss by focusing on visualizing a single neuron within the kernel.
@@ -113,7 +113,7 @@ Extends Direction loss by focusing on visualizing a single neuron within the ker
 To learn more about NeuronDirection visit the following resources:
 
 * [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
-* https://github.com/tensorflow/lucid/issues/116
+* [Research: Feature Visualization Objectives](https://github.com/tensorflow/lucid/issues/116)
 
 ### AngledNeuronDirection
 This objective is similar to NeuronDirection, but it places more emphasis on the angle by optionally multiplying the dot product by the cosine similarity.
@@ -123,7 +123,7 @@ This objective is similar to NeuronDirection, but it places more emphasis on the
 To learn more about AngledNeuronDirection visit the following resources:
 
 * [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
-* https://github.com/tensorflow/lucid/issues/116
+* [Research: Feature Visualization Objectives](https://github.com/tensorflow/lucid/issues/116)
 
 ### TensorDirection
 Extends Direction loss by allowing batch-wise direction visualization.
