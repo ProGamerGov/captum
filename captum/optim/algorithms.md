@@ -91,6 +91,7 @@ When interpolating between activations, it may be desirable to keep image landma
 To learn more about Alignment visit the following resources:
 
 * [Feature Visualization: Interaction between Neurons](https://distill.pub/2017/feature-visualization/#Interaction-between-Neurons)
+* [Research: "The Art of Dimensionality Reduction"](https://github.com/tensorflow/lucid/issues/111)
 
 ### Direction
 This loss helps to visualize a specific vector direction in a layer, by maximizing the alignment between the input vector and the layer’s activation vector. The dimensionality of the vector should correspond to the number of channels in the layer.
