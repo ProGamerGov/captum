@@ -146,6 +146,7 @@ To learn more about AngledNeuronDirection visit the following resources:
 
 * [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
 * [Research: Feature Visualization Objectives](https://github.com/tensorflow/lucid/issues/116)
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/notebooks/activation-atlas/activation-atlas-simple.ipynb)
 
 ### TensorDirection
 Extends Direction loss by allowing batch-wise direction visualization.
