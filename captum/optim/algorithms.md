@@ -27,6 +27,10 @@ This loss maximizes the activations of a target neuron in the specified channel 
 * Pros: Extremely specific in what it targets, and thus the information obtained can be extremely useful.
 * Cons: Sometimes you don’t want something overly specific. Neurons don’t scale well to larger image sizes when rendering.
 
+To learn more about NeuronActivation visit the following resources:
+
+* [Research: Neuron Mechanics](https://github.com/tensorflow/lucid/issues/110)
+
 ### DeepDream
 This loss returns the squared layer activations. When combined with a negative mean loss summarization, this loss will create hallucinogenic visuals commonly referred to as ‘Deep Dream’. 
 
@@ -71,6 +75,7 @@ This loss helps break up polysemantic layers, channels, and neurons by encouragi
 To learn more about Diversity visit the following resources:
 
 * [Feature Visualization: Diversity](https://distill.pub/2017/feature-visualization/#diversity)
+* [Research: Poly-Semantic Neurons](https://github.com/tensorflow/lucid/issues/122)
 
 ### ActivationInterpolation
 This loss helps to interpolate or mix visualizations from two activations (layer or channel) by interpolating a linear sum between the two activations.
