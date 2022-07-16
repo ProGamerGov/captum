@@ -264,7 +264,7 @@ class FFTImage(ImageParameterization):
             batch (int, optional): The number of images to stack along the batch
                 dimension.
                 Default: ``1``
-            init (torch.tensor, optional): Optionally specify a tensor to
+            init (torch.Tensor, optional): Optionally specify a tensor to
                 use instead of creating one.
                 Default: ``None``
         """
@@ -316,7 +316,7 @@ class FFTImage(ImageParameterization):
             width (int): The w dimension of the 2d frequency scale.
 
         Returns:
-            **tensor** (tensor): A 2d frequency scale tensor.
+            tensor (torch.Tensor): A 2d frequency scale tensor.
         """
 
         fy = self.torch_fftfreq(height)[:, None]
@@ -376,7 +376,7 @@ class FFTImage(ImageParameterization):
     def forward(self) -> torch.Tensor:
         """
         Returns:
-            **output** (torch.tensor): A spatially recorrelated tensor.
+            output (torch.Tensor): A spatially recorrelated NCHW tensor.
         """
 
         scaled_spectrum = self.fourier_coeffs * self.spectrum_scale
@@ -427,7 +427,7 @@ class PixelImage(ImageParameterization):
             batch (int, optional): The number of images to stack along the batch
                 dimension.
                 Default: ``1``
-            init (torch.tensor, optional): Optionally specify a tensor to
+            init (torch.Tensor, optional): Optionally specify a tensor to
                 use instead of creating one.
                 Default: ``None``
         """
@@ -444,7 +444,7 @@ class PixelImage(ImageParameterization):
     def forward(self) -> torch.Tensor:
         """
         Returns:
-            output (torch.tensor): An NCHW tensor requiring grad.
+            output (torch.Tensor): An NCHW tensor.
         """
         if torch.jit.is_scripting():
             return self.image
@@ -495,7 +495,7 @@ class LaplacianImage(ImageParameterization):
             batch (int, optional): The number of images to stack along the batch
                 dimension.
                 Default: ``1``
-            init (torch.tensor, optional): Optionally specify a tensor to
+            init (torch.Tensor, optional): Optionally specify a tensor to
                 use instead of creating one.
                 Default: ``None``
             power (float, optional): The desired power value to use.
@@ -538,7 +538,7 @@ class LaplacianImage(ImageParameterization):
     def forward(self) -> torch.Tensor:
         """
         Returns:
-            **output** (torch.tensor): A tensor created from a laplacian pyramid.
+            output (torch.Tensor): An NCHW tensor created from a laplacian pyramid.
         """
         A = []
         for xi, upsamplei in zip(self.tensor_params, self.scaler):
@@ -568,7 +568,7 @@ class SimpleTensorParameterization(ImageParameterization):
         """
         Args:
 
-            tensor (torch.tensor): The tensor to return everytime this module is called.
+            tensor (torch.Tensor): The tensor to return everytime this module is called.
         """
         super().__init__()
         assert isinstance(tensor, torch.Tensor)
@@ -647,12 +647,12 @@ class SharedImage(ImageParameterization):
 
         Args:
 
-            offset (int or list of int or list of list of ints , optional): The offsets
+            offset (int or list of int or list of list of ints, optional): The offsets
                 to use for the shared tensors.
             n (int): The number of tensors needing offset values.
 
         Returns:
-            **offset** (list of list of int): A list of offset values.
+            offset (list of list of int): A list of offset values.
         """
         if type(offset) is tuple or type(offset) is list:
             if type(offset[0]) is tuple or type(offset[0]) is list:
@@ -676,7 +676,7 @@ class SharedImage(ImageParameterization):
             x_list (list of torch.Tensor): list of tensors to offset.
 
         Returns:
-            **A** (list of torch.Tensor): list of offset tensors.
+            A (list of torch.Tensor): list of offset tensors.
         """
 
         A: List[torch.Tensor] = []
@@ -773,7 +773,7 @@ class SharedImage(ImageParameterization):
             width (int): The width to resize the tensor to.
 
         Returns:
-            **tensor** (torch.Tensor): A resized tensor.
+            tensor (torch.Tensor): A resized tensor.
         """
 
         if x.size(1) == channels:
@@ -976,7 +976,7 @@ class NaturalImage(ImageParameterization):
                 nn.Parameter tensor. This parameter is not used if ``parameterization``
                 is an instance.
                 Default: ``1``
-            init (torch.tensor, optional): Optionally specify a tensor to use instead
+            init (torch.Tensor, optional): Optionally specify a tensor to use instead
                 of creating one from random noise. This parameter is not used if
                 ``parameterization`` is an instance. Set to ``None`` for random init.
                 Default: ``None``
@@ -1032,7 +1032,7 @@ class NaturalImage(ImageParameterization):
 
         Args:
 
-            x (torch.tensor): An input tensor.
+            x (torch.Tensor): An input tensor.
 
         Returns:
             x (ImageTensor): An instance of ``ImageTensor`` with the input tensor.
