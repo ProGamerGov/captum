@@ -319,7 +319,7 @@ class CenterCrop(torch.nn.Module):
                 This parameter is only valid when ``pixels_from_edges`` is
                 ``False``.
                 Default: ``False``
-            padding_mode (optional, str): One of ``"constant"``, ``"reflect"``,
+            padding_mode (str, optional): One of ``"constant"``, ``"reflect"``,
                 ``"replicate"``, or ``"circular"``. This parameter is only used if the
                 crop size is larger than the image size.
                 Default: ``"constant"``
@@ -397,7 +397,7 @@ def center_crop(
             This parameter is only valid when ``pixels_from_edges`` is
             ``False``.
             Default: ``False``
-        padding_mode (optional, str): One of ``"constant"``, ``"reflect"``,
+        padding_mode (str, optional): One of ``"constant"``, ``"reflect"``,
             ``"replicate"``, or ``"circular"``. This parameter is only used if the crop
             size is larger than the image size.
             Default: ``"constant"``
@@ -1091,6 +1091,7 @@ class GaussianSmoothing(nn.Module):
         )
 
 
+
 class SymmetricPadding(torch.autograd.Function):
     """
     Autograd compatible symmetric padding that uses NumPy's pad function.
@@ -1255,6 +1256,7 @@ class RandomCrop(nn.Module):
         return self._center_crop(x)
 
 
+# Define TransformationRobustness defaults externally for easier Sphinx docs formatting
 _TR_TRANSLATE: List[int] = [4] * 10
 _TR_SCALE: List[float] = [0.995**n for n in range(-5, 80)] + [
     0.998**n for n in 2 * list(range(20, 40))
@@ -1294,7 +1296,7 @@ class TransformationRobustness(nn.Module):
             padding_transform (nn.Module, optional): A padding module instance. No
                 padding will be applied before transforms if set to ``None``.
                 Default: ``nn.ConstantPad2d(2, value=0.5)``
-            translate (int or list of int, optional): The max horizontal and vertical
+            translate (int or List[int], optional): The max horizontal and vertical
                  translation to use for each :class:`.RandomSpatialJitter` transform.
                  Default: ``[4] * 10``
             scale (float, sequence, or torch.distribution, optional): Sequence of
