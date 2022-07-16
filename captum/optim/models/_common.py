@@ -1,6 +1,6 @@
 import math
 from inspect import signature
-from typing import Any, Dict, List, Optional, Tuple, Type, Union, cast
+from typing import Dict, List, Optional, Tuple, Type, Union, cast
 
 import torch
 import torch.nn as nn
@@ -286,7 +286,7 @@ class SkipLayer(torch.nn.Module):
     https://pytorch.org/docs/stable/generated/torch.nn.Identity.html
     """
 
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         """
         Args:
 
@@ -296,7 +296,7 @@ class SkipLayer(torch.nn.Module):
         """
         super().__init__()
 
-    def forward(self, x: torch.Tensor, *args: Any, **kwargs: Any) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, *args, **kwargs) -> torch.Tensor:
         """
         Args:
 
