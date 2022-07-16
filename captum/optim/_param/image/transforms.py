@@ -1019,7 +1019,7 @@ class GaussianSmoothing(nn.Module):
             sigma (float, sequence): Standard deviation of the gaussian kernel.
             dim (int, optional): The number of dimensions of the data.
                 Default value is ``2`` for (spatial)
-            padding (str, int or list of tuple, optional): The desired padding amount
+            padding (str, int or List[Tuple], optional): The desired padding amount
                 or mode to use. One of; ``"valid"``, ``"same"``, a single number, or a
                 tuple in the format of: (padH, padW).
                 Default: ``"same"``
@@ -1610,7 +1610,7 @@ class CLIPTokenizer(torch.nn.Module):
         """
         Args:
 
-            x (str or list of str): Text values to be converted to tokenized tensors.
+            x (str or List[str]): Text values to be converted to tokenized tensors.
 
         Returns:
             tokens (torch.Tensor): A tensor containing each set of tokens stacked
