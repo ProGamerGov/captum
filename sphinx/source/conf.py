@@ -228,6 +228,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines[i] = lines[i].replace("Tuple", "~typing.Tuple")
         lines[i] = lines[i].replace("Union", "~typing.Union")
         lines[i] = lines[i].replace("Any", "~typing.Any")
+        lines[i] = lines[i].replace("Type", "~typing.Type")
 
         # Formatting fixes
         # lines[i] = lines[i].replace("tensor", "torch.Tensor")
