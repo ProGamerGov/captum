@@ -83,15 +83,41 @@ class Loss(ABC):
         return rmodule_op(self, other, operator.pow)
 
 
+
 def module_op(
     self: Loss, other: Union[None, int, float, Loss], math_op: Callable
 ) -> "CompositeLoss":
     """
     This is a general function for applying math operations to Losses
+
+    Args:
+
+        self (Loss): A Loss objective instance.
+        other (int, float, Loss, or None): The Loss objective instance or number to
+            use on the self Loss objective as part of a math operation. If math_op
+            is a unary operation, then other should be set to None.
+        math_op (Callable): A math operator to use on the Loss instance.
+
+    Returns:
+        loss (CompositeLoss): A CompositeLoss instance with the math operations
+            created by the specified arguments.
     """
     if other is None and math_op == operator.neg:
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+            """
+            Pass collected activations through loss objective, and then apply a unary
+            math op.
+
+            Args:
+
+                module (ModuleOutputMapping): A dict of captured activations with
+                    nn.Modules as keys.
+
+                Returns:
+                    loss (torch.Tensor): The target activations after being run
+                        through the loss objective, and the unary math_op.
+            """
             return math_op(self(module))
 
         name = self.__name__
@@ -99,6 +125,19 @@ def module_op(
     elif isinstance(other, (int, float)):
 
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+            """
+            Pass collected activations through the loss objective and then apply the
+            math operations with numbers.
+
+            Args:
+
+                module (ModuleOutputMapping): A dict of captured activations with
+                    nn.Modules as keys.
+
+                Returns:
+                    loss (torch.Tensor): The target activations after being run
+                        through the loss objective, and then the math_op with a number.
+            """
             return math_op(self(module), other)
 
         name = self.__name__
@@ -106,6 +145,19 @@ def module_op(
     elif isinstance(other, Loss):
         # We take the mean of the output tensor to resolve shape mismatches
         def loss_fn(module: ModuleOutputMapping) -> torch.Tensor:
+            """
+            Pass collected activations through the loss objectives and then combine the
+            outputs with a math operation.
+
+            Args:
+
+                module (ModuleOutputMapping): A dict of captured activations with
+                    nn.Modules as keys.
+
+                Returns:
+                    loss (torch.Tensor): The target activations after being run
+                        through the loss objectives, and then merged with the math_op.
+            """
             return math_op(torch.mean(self(module)), torch.mean(other(module)))
 
         name = f"Compose({', '.join([self.__name__, other.__name__])})"
