@@ -220,6 +220,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines[i] = lines[i].replace("Callable", "~typing.Callable")
         lines[i] = lines[i].replace("List", "~typing.List")
         lines[i] = lines[i].replace("Tuple", "~typing.Tuple")
+        lines[i] = lines[i].replace("Union", "~typing.Union")
         lines[i] = lines[i].replace("Any", "~typing.Any")
 
 
