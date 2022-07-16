@@ -210,7 +210,8 @@ todo_include_todos = True
 
 # -- Type Ref Improvements ----------------------------------------------
 
-autodoc_typehints_format = "short" # New default in v5.0
+autodoc_typehints_format = "short"  # New default in v5.0
+
 
 def autodoc_process_docstring(app, what, name, obj, options, lines):
     for i in range(len(lines)):
@@ -229,8 +230,8 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines[i] = lines[i].replace("Any", "~typing.Any")
 
         # Formatting fixes
-        #lines[i] = lines[i].replace("tensor", "torch.Tensor")
-        #lines[i] = lines[i].replace("tuple of tensors", "~typing.Tuple[torch.Tensor]")
+        # lines[i] = lines[i].replace("tensor", "torch.Tensor")
+        # lines[i] = lines[i].replace("tuple of tensors", "~typing.Tuple[torch.Tensor]")
 
         # Case fixes
         lines[i] = lines[i].replace("callable", "~typing.Callable")
