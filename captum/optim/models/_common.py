@@ -254,7 +254,7 @@ def collect_activations(
     Args:
 
         model (nn.Module): A PyTorch model instance.
-        targets (nn.Module or list of nn.Module): One or more layer targets for the
+        targets (nn.Module or List[nn.Module]): One or more layer targets for the
             given model.
         model_input (torch.Tensor or tuple of torch.Tensor, optional): Optionally
             provide an input tensor to use when collecting the target activations.
@@ -284,14 +284,16 @@ class SkipLayer(torch.nn.Module):
 
     See nn.Identity for more details:
     https://pytorch.org/docs/stable/generated/torch.nn.Identity.html
-
-    Args:
-
-        args (Any): Any argument. Arguments will be safely ignored.
-        kwargs (Any) Any keyword argument. Arguments will be safely ignored.
     """
 
     def __init__(self, *args, **kwargs) -> None:
+        """
+        Args:
+
+            args (Any, optional): Any argument. Arguments will be safely ignored.
+            kwargs (Any, optional) Any keyword argument. Arguments will be safely
+                ignored.
+        """
         super().__init__()
 
     def forward(
