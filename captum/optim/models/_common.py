@@ -316,16 +316,15 @@ def skip_layers(
     model: nn.Module, layers: Union[List[Type[nn.Module]], Type[nn.Module]]
 ) -> None:
     """
-    This function is a wrapper function for
-    replace_layers and replaces the target layer
-    with layers that do nothing.
-    This is useful for removing the nonlinear ReLU
-    layers when creating expanded weights.
+    This function is a wrapper function for :func:`.replace_layers` and replaces the
+    target layer with layers that do nothing. This is useful for removing the nonlinear
+    ReLU layers when creating expanded weights.
 
     Args:
 
         model (nn.Module): A PyTorch model instance.
-        layers (nn.Module or List[nn.Module]): The layer class type to replace in the model.
+        layers (nn.Module or List[nn.Module]): The layer class type to replace in the
+            model.
     """
     if not hasattr(layers, "__iter__"):
         layers = cast(Type[nn.Module], layers)
