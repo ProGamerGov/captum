@@ -234,7 +234,6 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
 
         # Case fixes
         lines[i] = lines[i].replace("callable", "~typing.Callable")
-        lines[i] = lines[i].replace("any", "~typing.Any")
 
 
 def setup(app):
