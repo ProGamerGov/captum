@@ -77,7 +77,7 @@ autodoc_default_options = {}
 # proper names
 autodoc_preserve_defaults = True
 
-# Inlcude init docstrings into body of autoclass directives
+# Include init docstrings into body of autoclass directives
 autoclass_content = "both"
 
 # Configuration for intersphinx: refer to the Python standard library and PyTorch
