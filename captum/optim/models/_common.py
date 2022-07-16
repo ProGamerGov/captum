@@ -1,6 +1,6 @@
 import math
 from inspect import signature
-from typing import Dict, List, Optional, Tuple, Type, Union, cast
+from typing import Any, Dict, List, Optional, Tuple, Type, Union, cast
 
 import torch
 import torch.nn as nn
@@ -286,7 +286,7 @@ class SkipLayer(torch.nn.Module):
     https://pytorch.org/docs/stable/generated/torch.nn.Identity.html
     """
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         """
         Args:
 
@@ -296,9 +296,7 @@ class SkipLayer(torch.nn.Module):
         """
         super().__init__()
 
-    def forward(
-        self, x: Union[torch.Tensor, Tuple[torch.Tensor]], *args, **kwargs
-    ) -> Union[torch.Tensor, Tuple[torch.Tensor]]:
+    def forward(self, x: torch.Tensor, *args: Any, **kwargs: Any) -> torch.Tensor:
         """
         Args:
 
@@ -327,8 +325,7 @@ def skip_layers(
     Args:
 
         model (nn.Module): A PyTorch model instance.
-        layers (nn.Module or List[nn.Module]): The layer
-            class type to replace in the model.
+        layers (nn.Module or List[nn.Module]): The layer class type to replace in the model.
     """
     if not hasattr(layers, "__iter__"):
         layers = cast(Type[nn.Module], layers)
