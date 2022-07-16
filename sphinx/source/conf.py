@@ -217,7 +217,6 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         # Change "nn.Module" to "torch.nn.Module" in doc type hints for intersphinx
         lines[i] = lines[i].replace("nn.Module", "torch.nn.Module")
         # Give doc type hints intersphinx hyperlinks
-        lines[i] = lines[i].replace("callable", "~typing.Callable")
         lines[i] = lines[i].replace("Callable", "~typing.Callable")
         lines[i] = lines[i].replace("List", "~typing.List")
         lines[i] = lines[i].replace("Tuple", "~typing.Tuple")
