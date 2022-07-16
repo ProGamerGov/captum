@@ -214,6 +214,7 @@ autodoc_typehints_format = "short" # New default in v5.0
 
 def autodoc_process_docstring(app, what, name, obj, options, lines):
     for i in range(len(lines)):
+        # Skip unless line is an parameter doc or a return doc
         if not (lines[i].startswith(":type") or lines[i].startswith(":rtype")):
             continue
         # Change "nn.Module" to "torch.nn.Module" in doc type hints for intersphinx
@@ -226,6 +227,14 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines[i] = lines[i].replace("Tuple", "~typing.Tuple")
         lines[i] = lines[i].replace("Union", "~typing.Union")
         lines[i] = lines[i].replace("Any", "~typing.Any")
+
+        # Formatting fixes
+        lines[i] = lines[i].replace("tensor", "torch.Tensor")
+        lines[i] = lines[i].replace("tuple of tensors", "~typing.Tuple[torch.Tensor]")
+
+        # Case fixes
+        lines[i] = lines[i].replace("callable", "~typing.Callable")
+        lines[i] = lines[i].replace("any", "~typing.Any")
 
 
 def setup(app):
