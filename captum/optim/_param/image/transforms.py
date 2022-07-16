@@ -1091,7 +1091,6 @@ class GaussianSmoothing(nn.Module):
         )
 
 
-
 class SymmetricPadding(torch.autograd.Function):
     """
     Autograd compatible symmetric padding that uses NumPy's pad function.
