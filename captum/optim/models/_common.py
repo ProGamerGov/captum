@@ -18,7 +18,7 @@ def get_model_layers(model: nn.Module) -> List[str]:
         model (nn.Module): A PyTorch model or module instance to collect layers from.
 
     Returns:
-        model_layers (list of str): A list of hookable layers in the model.
+        model_layers (List[str]): A list of hookable layers in the model.
     """
     layers = []
 
@@ -301,8 +301,9 @@ class SkipLayer(torch.nn.Module):
         Args:
 
             x (torch.Tensor or tuple of torch.Tensor): The input tensor or tensors.
-            args (Any): Any argument. Arguments will be safely ignored.
-            kwargs (Any) Any keyword argument. Arguments will be safely ignored.
+            args (Any, optional): Any argument. Arguments will be safely ignored.
+            kwargs (Any, optional) Any keyword argument. Arguments will be safely
+                ignored.
 
         Returns:
             x (torch.Tensor or tuple of torch.Tensor): The unmodified input tensor or
@@ -324,7 +325,7 @@ def skip_layers(
     Args:
 
         model (nn.Module): A PyTorch model instance.
-        layers (nn.Module or list of nn.Module): The layer
+        layers (nn.Module or List[nn.Module]): The layer
             class type to replace in the model.
     """
     if not hasattr(layers, "__iter__"):
