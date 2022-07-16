@@ -686,6 +686,8 @@ class Diversity(BaseLoss):
                 Index ranges should be in the format of: [start, end].
                 Default: ``None``
         """
+        if batch_index:
+            assert len(batch_index) == 2
         BaseLoss.__init__(self, target, batch_index)
 
     def __call__(self, targets_to_values: ModuleOutputMapping) -> torch.Tensor:
