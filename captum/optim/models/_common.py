@@ -300,14 +300,13 @@ class SkipLayer(torch.nn.Module):
         """
         Args:
 
-            x (torch.Tensor or tuple of torch.Tensor): The input tensor or tensors.
+            x (torch.Tensor): The input tensor.
             args (Any, optional): Any argument. Arguments will be safely ignored.
             kwargs (Any, optional) Any keyword argument. Arguments will be safely
                 ignored.
 
         Returns:
-            x (torch.Tensor or tuple of torch.Tensor): The unmodified input tensor or
-                tensors.
+            x (torch.Tensor): The unmodified input tensor.
         """
         return x
 
