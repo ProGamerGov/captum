@@ -214,6 +214,7 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
     for i in range(len(lines)):
         if not (lines[i].startswith(":type") or lines[i].startswith(":rtype")):
             continue
+        # Change "nn.Module" to "torch.nn.Module" in doc type hints for intersphinx
         lines[i] = lines[i].replace("nn.Module", "torch.nn.Module")
 
 
