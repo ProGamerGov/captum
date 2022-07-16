@@ -210,6 +210,8 @@ todo_include_todos = True
 
 # -- Type Ref Improvements ----------------------------------------------
 
+autodoc_typehints_format = "short" # New default in v5.0
+
 def autodoc_process_docstring(app, what, name, obj, options, lines):
     for i in range(len(lines)):
         if not (lines[i].startswith(":type") or lines[i].startswith(":rtype")):
