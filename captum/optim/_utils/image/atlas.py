@@ -84,11 +84,14 @@ def calc_grid_indices(
 
         xy_grid (torch.Tensor): The xy coordinate grid activation samples, with a shape
             of: [n_points, 2].
-        grid_size (Tuple[int, int]): The grid_size of grid cells to use. The
-            ``grid_size`` variable should be in the format of: [width, height].
-        x_extent (Tuple[float, float], optional): The x axis range to use.
+        grid_size (tuple of int): The number of grid cells to use across the height
+            and width dimensions. The ``grid_size`` variable should be in the format
+            of: [width, height].
+        x_extent (tuple of float, optional): The x axis range to use, in the format
+            of: (min, max).
             Default: ``(0.0, 1.0)``
-        y_extent (Tuple[float, float], optional): The y axis range to use.
+        y_extent (tuple of float, optional): The y axis range to use, in the format
+            of: (min, max).
             Default: ``(0.0, 1.0)``
 
     Returns:
