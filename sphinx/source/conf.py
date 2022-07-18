@@ -8,7 +8,7 @@
 
 
 # -- Path setup --------------------------------------------------------------
-
+from typing import List
 import os
 import sys
 
@@ -213,7 +213,15 @@ todo_include_todos = True
 autodoc_typehints_format = "short"  # New default in v5.0
 
 
-def autodoc_process_docstring(app, what, name, obj, options, lines):
+def autodoc_process_docstring(
+    app, what: str, name: str, obj, options, lines: List[str]
+) -> None:
+    """
+    Modify docstrings before creating html files.
+
+    See here for more information:
+    https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
+    """
     for i in range(len(lines)):
         # Skip unless line is an parameter doc or a return doc
         if not (lines[i].startswith(":type") or lines[i].startswith(":rtype")):
@@ -222,22 +230,19 @@ def autodoc_process_docstring(app, what, name, obj, options, lines):
         lines[i] = lines[i].replace("nn.Module", "torch.nn.Module")
         lines[i] = lines[i].replace("torch.torch.", "torch.")
 
-        # Give doc type hints intersphinx hyperlinks
-        lines[i] = lines[i].replace("Callable", "~typing.Callable")
-        lines[i] = lines[i].replace("List", "~typing.List")
-        lines[i] = lines[i].replace("Tuple", "~typing.Tuple")
-        lines[i] = lines[i].replace("Union", "~typing.Union")
+        # Handle basic types
         lines[i] = lines[i].replace("Any", "~typing.Any")
-        lines[i] = lines[i].replace("Type", "~typing.Type")
-
-        # Formatting fixes
-        # lines[i] = lines[i].replace("tensor", "torch.Tensor")
-        # lines[i] = lines[i].replace("tuple of tensors", "~typing.Tuple[torch.Tensor]")
-
-        # Case fixes
-        lines[i] = lines[i].replace("callable", "~typing.Callable")
         lines[i] = lines[i].replace("any", "~typing.Any")
+        lines[i] = lines[i].replace("callable", ":obj:`callable`")
+
+        # Handle 'list of' / 'tuple of' cases
+        lines[i] = lines[i].replace("list of", ":obj:`list` of")
+        lines[i] = lines[i].replace("tuple of", ":obj:`tuple` of")
+        lines[i] = lines[i].replace("of floats", "of :obj:`float`")
+        lines[i] = lines[i].replace("of float", "of :obj:`float`")
+        lines[i] = lines[i].replace("of ints", "of :obj:`int`")
+        lines[i] = lines[i].replace("of int", "of :obj:`int`")
 
 
-def setup(app):
+def setup(app) -> None:
     app.connect("autodoc-process-docstring", autodoc_process_docstring)
