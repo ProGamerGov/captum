@@ -912,11 +912,6 @@ class NaturalImage(ImageParameterization):
         True
         >>> print(image_tensor.shape)
         torch.Size([1, 3, 224, 224])
-
-    :ivar parameterization: initial value (ImageParameterization): The given image
-        parameterization instance given when initializing ``NaturalImage``.
-    :ivar decorrelation_module: initial value (nn.Module): The given decorrelation
-        module instance given when initializing ``NaturalImage``.
     """
 
     def __init__(
@@ -926,7 +921,7 @@ class NaturalImage(ImageParameterization):
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
         parameterization: ImageParameterization = FFTImage,
-        squash_func: Optional[Callable[[torch.Tensor], torch.Tensor]] = None,
+        squash_func: Optional[Callable[[torch.Tensor], torch.Tensor]] = torch.sigmoid,
         decorrelation_module: Optional[nn.Module] = ToRGB(transform="klt"),
         decorrelate_init: bool = True,
     ) -> None:
@@ -934,20 +929,22 @@ class NaturalImage(ImageParameterization):
         Args:
 
             size (tuple of int, optional): The height and width to use for the
-                nn.Parameter image tensor, in the format of: (height, width). This
-                parameter is not used if ``parameterization`` is an instance.
+                nn.Parameter image tensor, in the format of: (height, width).
+                This parameter is not used if the given ``parameterization`` is an
+                instance.
                 Default: ``(224, 224)`
             channels (int, optional): The number of channels to use when creating the
-                nn.Parameter tensor. This parameter is not used if parameterization is
-                an instance.
+                nn.Parameter tensor. This parameter is not used if the given
+                ``parameterization`` is an instance.
                 Default: ``3``
             batch (int, optional): The number of channels to use when creating the
-                nn.Parameter tensor. This parameter is not used if ``parameterization``
-                is an instance.
+                nn.Parameter tensor. This parameter is not used if the given
+                ``parameterization`` is an instance.
                 Default: ``1``
             init (torch.Tensor, optional): Optionally specify a tensor to use instead
-                of creating one from random noise. This parameter is not used if
-                ``parameterization`` is an instance. Set to ``None`` for random init.
+                of creating one from random noise. This parameter is not used if the
+                given ``parameterization`` is an instance. Set to ``None`` for random
+                init.
                 Default: ``None``
             parameterization (ImageParameterization, optional): An image
                 parameterization class, or instance of an image parameterization class.
@@ -956,8 +953,8 @@ class NaturalImage(ImageParameterization):
                 recorrelation. A function, lambda function, or callable class instance.
                 Any provided squash function should take a single input tensor and
                 return a single output tensor. If set to ``None``, then
-                :func:`torch.sigmoid` will be used.
-                Default: ``None```
+                :class:`torch.nn.Identity` will be used to make it a non op.
+                Default: :func:`torch.sigmoid`
             decorrelation_module (nn.Module, optional): A module instance that
                 recorrelates the colors of an input image. Custom modules can make use
                 of the ``decorrelate_init`` parameter by having a second ``inverse``
@@ -967,8 +964,17 @@ class NaturalImage(ImageParameterization):
                 Default: :class:`.ToRGB`
             decorrelate_init (bool, optional): Whether or not to apply color
                 decorrelation to the init tensor input. This parameter is not used if
-                ``parameterization`` is an instance or if init is ``None``.
+                the given ``parameterization`` is an instance or if init is ``None``.
                 Default: ``True``
+
+        Attributes:
+
+            parameterization (ImageParameterization): The given image parameterization
+                instance given when initializing ``NaturalImage``.
+                Default: :class:`.FFTImage`
+            decorrelation_module (torch.nn.Module): The given decorrelation module
+                instance given when initializing ``NaturalImage``.
+                Default: :class:`.ToRGB`
         """
         super().__init__()
         if not isinstance(parameterization, ImageParameterization):
