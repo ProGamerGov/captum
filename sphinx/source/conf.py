@@ -231,9 +231,8 @@ def autodoc_process_docstring(
         lines[i] = lines[i].replace("torch.torch.", "torch.")
 
         # Handle basic types
-        lines[i] = lines[i].replace("Any", "~typing.Any")
         lines[i] = lines[i].replace("any", "~typing.Any")
-        lines[i] = lines[i].replace("callable", ":obj:`callable`")
+        lines[i] = lines[i].replace("callable", "~typing.Callable")
 
         # Handle 'list of' / 'tuple of' cases
         lines[i] = lines[i].replace("list of", ":obj:`list` of")
