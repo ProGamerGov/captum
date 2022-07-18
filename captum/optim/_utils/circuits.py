@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Tuple, Union
+from typing import Callable, Optional
 
 import torch
 import torch.nn as nn
@@ -11,7 +11,7 @@ def extract_expanded_weights(
     model: nn.Module,
     target1: nn.Module,
     target2: nn.Module,
-    crop_shape: Optional[Union[Tuple[int, int], IntSeqOrIntType]] = None,
+    crop_shape: Optional[IntSeqOrIntType] = None,
     model_input: TupleOfTensorsOrTensorType = torch.zeros(1, 3, 224, 224),
     crop_func: Optional[Callable] = center_crop,
 ) -> torch.Tensor:
@@ -48,18 +48,18 @@ def extract_expanded_weights(
             specified for ``target2``.
         target2 (nn.Module): The end target layer. Must be above the layer
             specified for ``target1``.
-        crop_shape (int or Tuple[int], optional): Specify the exact output size
-            to crop out. Set to ``None`` for no cropping.
+        crop_shape (int, list of int, or tuple of int, optional): Specify the exact
+            output size to crop out. Set to ``None`` for no cropping.
             Default: ``None``
-        model_input (torch.Tensor or Tuple[torch.Tensor], optional): The input to use
+        model_input (torch.Tensor or tuple of torch.Tensor, optional): The input to use
             with the specified model.
             Default: ``torch.zeros(1, 3, 224, 224)``
-        crop_func (Callable, optional): Specify a function to crop away the padding
+        crop_func (callable, optional): Specify a function to crop away the padding
             from the output weights.
             Default: ``center_crop``
 
     Returns:
-        *tensor* (torch.Tensor): A tensor containing the expanded weights in the form
+        tensor (torch.Tensor): A tensor containing the expanded weights in the form
             of: (target2 output channels, target1 output channels, height, width)
     """
     if isinstance(model_input, torch.Tensor):
