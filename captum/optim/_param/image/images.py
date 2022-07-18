@@ -947,10 +947,14 @@ class NaturalImage(ImageParameterization):
         >>> print(image_tensor.shape)
         torch.Size([1, 3, 224, 224])
 
-    :ivar parameterization: initial value (ImageParameterization): The given image
-        parameterization instance given when initializing ``NaturalImage``.
-    :ivar decorrelation_module: initial value (nn.Module): The given decorrelation
-        module instance given when initializing ``NaturalImage``.
+    Attributes:
+
+        parameterization (ImageParameterization): The given image parameterization
+            instance given when initializing ``NaturalImage``.
+            Default: :class:`.FFTImage`
+        decorrelation_module (nn.Module): The given decorrelation module instance given
+            when initializing ``NaturalImage``.
+            Default: :class:`.ToRGB`
     """
 
     def __init__(
@@ -985,7 +989,7 @@ class NaturalImage(ImageParameterization):
                 Default: ``None``
             parameterization (ImageParameterization, optional): An image
                 parameterization class, or instance of an image parameterization class.
-                Default: FFTImage
+                Default: :class:`.FFTImage`
             squash_func (Callable[[torch.Tensor], torch.Tensor]], optional): The squash
                 function to use after color recorrelation. A function, lambda function,
                 or callable class instance.
@@ -997,7 +1001,7 @@ class NaturalImage(ImageParameterization):
                 operation when it is set to ``True`` (see
                 :class:`captum.optim.transforms.ToRGB` for an example).
                 Set to ``None`` for no recorrelation.
-                Default: ``ToRGB``
+                Default: :class:`.ToRGB`
             decorrelate_init (bool, optional): Whether or not to apply color
                 decorrelation to the init tensor input. This parameter is not used if
                 ``parameterization`` is an instance or if init is ``None``.
