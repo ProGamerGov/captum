@@ -933,10 +933,10 @@ class NaturalImage(ImageParameterization):
         """
         Args:
 
-            size (Tuple[int, int], optional): The height and width to use for the
-                nn.Parameter image tensor. This parameter is not used if
-                parameterization is an instance.
-                Default: ``(224, 224)``
+            size (tuple of int, optional): The height and width to use for the
+                nn.Parameter image tensor, in the format of: (height, width). This
+                parameter is not used if ``parameterization`` is an instance.
+                Default: ``(224, 224)`
             channels (int, optional): The number of channels to use when creating the
                 nn.Parameter tensor. This parameter is not used if parameterization is
                 an instance.
@@ -952,11 +952,12 @@ class NaturalImage(ImageParameterization):
             parameterization (ImageParameterization, optional): An image
                 parameterization class, or instance of an image parameterization class.
                 Default: :class:`.FFTImage`
-            squash_func (Callable[[torch.Tensor], torch.Tensor]], optional): The squash
-                function to use after color recorrelation. A function, lambda function,
-                or callable class instance. If set to ``None``, then
+            squash_func (callable, optional): The squash function to use after color
+                recorrelation. A function, lambda function, or callable class instance.
+                Any provided squash function should take a single input tensor and
+                return a single output tensor. If set to ``None``, then
                 :func:`torch.sigmoid` will be used.
-                Default: ``None``
+                Default: ``None```
             decorrelation_module (nn.Module, optional): A module instance that
                 recorrelates the colors of an input image. Custom modules can make use
                 of the ``decorrelate_init`` parameter by having a second ``inverse``
