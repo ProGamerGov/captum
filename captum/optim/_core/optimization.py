@@ -60,8 +60,8 @@ class InputOptimization(Objective, Parameterized):
         Args:
 
             model (nn.Module, optional): The reference to PyTorch model instance.
-            loss_function (callable): The loss function to minimize during
-                optimization.
+            loss_function (callable): The :mod:`.loss` objective instance to minimize
+                during optimization.
             input_param (nn.Module, optional): A module that generates an input,
                 consumed by the model.
             transform (nn.Module, optional): A module that transforms or preprocesses
