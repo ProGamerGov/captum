@@ -818,8 +818,8 @@ class StackImage(ImageParameterization):
         """
         Args:
 
-            parameterizations (List[Union[ImageParameterization, torch.Tensor]]): A
-                list of image parameterizations and tensors to concatenate across a
+            parameterizations (list of ImageParameterization and torch.Tensor): A list
+                of image parameterizations and tensors to concatenate across a
                 specified dimension.
             dim (int, optional): Optionally specify the dim to concatinate
                 parameterization outputs on. Default is set to the batch dimension.
