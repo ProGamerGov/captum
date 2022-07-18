@@ -988,7 +988,7 @@ class NaturalImage(ImageParameterization):
                 )
                 init = self.decorrelate(init, inverse=True).rename(None)
 
-        self.squash_func = torch.sigmoid if squash_func is None else squash_func
+        self.squash_func = squash_func or torch.nn.Identity()
         if not isinstance(parameterization, ImageParameterization):
             parameterization = parameterization(
                 size=size, channels=channels, batch=batch, init=init
