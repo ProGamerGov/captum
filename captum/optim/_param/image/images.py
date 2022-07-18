@@ -951,19 +951,19 @@ class NaturalImage(ImageParameterization):
                 Default: ``None``
             parameterization (ImageParameterization, optional): An image
                 parameterization class, or instance of an image parameterization class.
-                Default: FFTImage
+                Default: :class:`.FFTImage`
             squash_func (Callable[[torch.Tensor], torch.Tensor]], optional): The squash
                 function to use after color recorrelation. A function, lambda function,
-                or callable class instance.
+                or callable class instance. If set to ``None``, then
+                :func:`torch.sigmoid` will be used.
                 Default: ``None``
             decorrelation_module (nn.Module, optional): A module instance that
                 recorrelates the colors of an input image. Custom modules can make use
                 of the ``decorrelate_init`` parameter by having a second ``inverse``
                 parameter in their forward functions that performs the inverse
-                operation when it is set to ``True`` (see
-                :class:`captum.optim.transforms.ToRGB` for an example).
-                Set to ``None`` for no recorrelation.
-                Default: ``ToRGB``
+                operation when it is set to ``True`` (see :class:`.ToRGB` for an
+                example). Set to ``None`` for no recorrelation.
+                Default: :class:`.ToRGB`
             decorrelate_init (bool, optional): Whether or not to apply color
                 decorrelation to the init tensor input. This parameter is not used if
                 ``parameterization`` is an instance or if init is ``None``.
