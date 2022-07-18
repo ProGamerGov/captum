@@ -259,14 +259,14 @@ class FFTImage(ImageParameterization):
         """
         Args:
 
-            size (Tuple[int, int]): The height & width dimensions to use for the
-                parameterized output image tensor.
+            size (tuple of int): The height & width dimensions to use for the
+                parameterized output image tensor, in the format of: (height, width).
             channels (int, optional): The number of channels to use for each image.
                 Default: ``3``
             batch (int, optional): The number of images to stack along the batch
                 dimension.
                 Default: ``1``
-            init (torch.Tensor, optional): Optionally specify a tensor to
+            init (torch.Tensor, optional): Optionally specify a CHW or NCHW tensor to
                 use instead of creating one.
                 Default: ``None``
         """
@@ -338,8 +338,8 @@ class FFTImage(ImageParameterization):
         torch.fft update.
 
         Returns:
-            fft functions (Tuple[Callable]): A list of FFT functions
-                to use for irfft, rfft, and fftfreq operations.
+            fft_functions (tuple of callable): A list of FFT functions to use for
+                irfft, rfft, and fftfreq operations.
         """
 
         if version.parse(TORCH_VERSION) > version.parse("1.7.0"):
@@ -422,14 +422,14 @@ class PixelImage(ImageParameterization):
         """
         Args:
 
-            size (Tuple[int, int]): The height & width dimensions to use for the
-                parameterized output image tensor.
+            size (tuple of int): The height & width dimensions to use for the
+                parameterized output image tensor, in the format of: (height, width).
             channels (int, optional): The number of channels to use for each image.
                 Default: ``3``
             batch (int, optional): The number of images to stack along the batch
                 dimension.
                 Default: ``1``
-            init (torch.Tensor, optional): Optionally specify a tensor to
+            init (torch.Tensor, optional): Optionally specify a CHW or NCHW tensor to
                 use instead of creating one.
                 Default: ``None``
         """
@@ -479,7 +479,7 @@ class LaplacianImage(ImageParameterization):
 
     def __init__(
         self,
-        size: Tuple[int, int] = (224, 225),
+        size: Tuple[int, int] = (224, 224),
         channels: int = 3,
         batch: int = 1,
         init: Optional[torch.Tensor] = None,
@@ -489,15 +489,14 @@ class LaplacianImage(ImageParameterization):
         """
         Args:
 
-            size (Tuple[int, int], optional): The height & width dimensions to use for
-                the parameterized output image tensor.
-                Default: ``(224, 224)``
+            size (tuple of int): The height & width dimensions to use for the
+                parameterized output image tensor, in the format of: (height, width).
             channels (int, optional): The number of channels to use for each image.
                 Default: ``3``
             batch (int, optional): The number of images to stack along the batch
                 dimension.
                 Default: ``1``
-            init (torch.Tensor, optional): Optionally specify a tensor to
+            init (torch.Tensor, optional): Optionally specify a CHW or NCHW tensor to
                 use instead of creating one.
                 Default: ``None``
             power (float, optional): The desired power value to use.
@@ -619,11 +618,11 @@ class SharedImage(ImageParameterization):
         """
         Args:
 
-            shapes (List[int] or List[List[int]]): The shapes of the shared
+            shapes (list of int or list of list of int): The shapes of the shared
                 tensors to use for creating the nn.Parameter tensors.
             parameterization (ImageParameterization): An image parameterization
                 instance.
-            offset (int or List[int] or List[List[int]] , optional): The offsets
+            offset (int or list of int or list of list of int, optional): The offsets
                 to use for the shared tensors.
                 Default: ``None``
         """
@@ -649,7 +648,7 @@ class SharedImage(ImageParameterization):
 
         Args:
 
-            offset (int or List[int] or List[List[int]], optional): The offsets
+            offset (int or list of int or list of list of int, optional): The offsets
                 to use for the shared tensors.
             n (int): The number of tensors needing offset values.
 
@@ -675,10 +674,10 @@ class SharedImage(ImageParameterization):
 
         Args:
 
-            x_list (List[torch.Tensor]): list of tensors to offset.
+            x_list (list of torch.Tensor): list of tensors to offset.
 
         Returns:
-            A (List[torch.Tensor]): list of offset tensors.
+            A (list of torch.Tensor): list of offset tensors.
         """
 
         A: List[torch.Tensor] = []
@@ -713,8 +712,8 @@ class SharedImage(ImageParameterization):
         Args:
 
             x (torch.Tensor): The NCHW tensor to resize.
-            size (Tuple[int]): The desired output size to resize the input
-                to, with a format of: [height, width].
+            size (tuple of int): The desired output size to resize the input to, with
+                a format of: [height, width].
 
         Returns:
             x (torch.Tensor): A resized NCHW tensor.
@@ -742,8 +741,8 @@ class SharedImage(ImageParameterization):
         Args:
 
             x (torch.Tensor): The NCHW tensor to resize.
-            size (Tuple[int]): The desired output size to resize the input
-                to, with a format of: [channels, height, width].
+            size (tuple of int): The desired output size to resize the input to, with
+                a format of: [channels, height, width].
 
         Returns:
             x (torch.Tensor): A resized NCHW tensor.
@@ -853,8 +852,8 @@ class StackImage(ImageParameterization):
         """
         Args:
 
-            parameterizations (List[Union[ImageParameterization, torch.Tensor]]): A
-                list of image parameterizations and tensors to concatenate across a
+            parameterizations (list of ImageParameterization and torch.Tensor): A list
+                of image parameterizations and tensors to concatenate across a
                 specified dimension.
             dim (int, optional): Optionally specify the dim to concatinate
                 parameterization outputs on. Default is set to the batch dimension.
