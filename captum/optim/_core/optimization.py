@@ -67,8 +67,8 @@ class InputOptimization(Objective, Parameterized):
             transform (nn.Module, optional): A module that transforms or preprocesses
                 the input before being passed to the model.
 
-        Instance variables that be used in the optimize function and StopCriteria
-        functions:
+        Instance variables that be used in the :func:`.optimize` function and
+        StopCriteria functions:
 
         Attributes:
 
