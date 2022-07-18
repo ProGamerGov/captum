@@ -1,5 +1,3 @@
-"""captum.optim.optimization."""
-
 import warnings
 from typing import Callable, Iterable, Optional
 
