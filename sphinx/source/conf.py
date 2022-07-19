@@ -244,6 +244,8 @@ def autodoc_process_docstring(
 
         lines[i] = lines[i].replace("int, ", ":obj:`int`, ")
         lines[i] = lines[i].replace("float, ", ":obj:`float`, ")
+        lines[i] = lines[i].replace("list, ", ":obj:`list`, ")
+        lines[i] = lines[i].replace("tuple, ", ":obj:`tuple`, ")
         lines[i] = lines[i].replace("int or ", ":obj:`int` or ")
         lines[i] = lines[i].replace("float or ", ":obj:`float` or ")
 
