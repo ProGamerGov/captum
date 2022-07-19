@@ -1432,8 +1432,8 @@ class CLIPTokenizer(torch.nn.Module):
 
             merges_path (str, optional): Path to file containing the merges, or where
                 to save the merges file if pretrained_merges is set to ``True``. The
-                ``torch.hub.get_dir()`` function will be used to get the directory if
-                set to ``None``, resulting in a path of: <PATH_TO_HUB_DIR>/vocab.
+                :func:`torch.hub.get_dir()` function will be used to get the directory
+                if set to ``None``, resulting in a path of: <PATH_TO_HUB_DIR>/vocab.
                 Default: ``None``
             context_length (int, optional): The required context length for the model.
                 Inputs with lengths less than ``context_length`` will be padded with
@@ -1457,7 +1457,7 @@ class CLIPTokenizer(torch.nn.Module):
             truncate (bool, optional): Whether or not to truncate outputs larger than
                 ``context_length``.
                 Default: ``False``
-            preprocessing_module (Callable, optional): An optional function that takes
+            preprocessing_module (callable, optional): An optional function that takes
                 a list of str and returns a list of str. This can be used to implement
                 whitespace cleaning, HTML to unicode conversions, or heuristic unicode
                 correction. Set to ``None`` for no text str preprocessing.
@@ -1495,7 +1495,7 @@ class CLIPTokenizer(torch.nn.Module):
         Args:
 
             file_dir (str, optional): Optionally provide a location to save the
-                file to. The ``torch.hub.get_dir()`` function will be used to get
+                file to. The :func:`torch.hub.get_dir()` function will be used to get
                 the directory if set to None, resulting in a path
                 of: <PATH_TO_HUB_DIR>/vocab.
                 Default: ``None``
@@ -1544,7 +1544,7 @@ class CLIPTokenizer(torch.nn.Module):
 
         Args:
 
-            x (torch.Tensor or List[int] or List[List[int]]): A set of tokens
+            x (torch.Tensor, list of int, or list of list of int): A set of tokens
                 stacked across the batch dimension, a list of tokens, or a list of
                 lists of tokens.
             include_special_tokens (bool, optional): Whether or not to included added
@@ -1552,7 +1552,7 @@ class CLIPTokenizer(torch.nn.Module):
                 Default: ``False``
 
         Returns:
-            token_str (List[List[str]]): A set of strings that correspond to the
+            token_str (list of list of str): A set of strings that correspond to the
                 token values in the input.
         """
         if isinstance(x, torch.Tensor):
@@ -1610,7 +1610,7 @@ class CLIPTokenizer(torch.nn.Module):
         """
         Args:
 
-            x (str or List[str]): Text values to be converted to tokenized tensors.
+            x (str or list of str): Text values to be converted to tokenized tensors.
 
         Returns:
             tokens (torch.Tensor): A tensor containing each set of tokens stacked
