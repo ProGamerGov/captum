@@ -242,6 +242,11 @@ def autodoc_process_docstring(
         lines[i] = lines[i].replace("of ints", "of :obj:`int`")
         lines[i] = lines[i].replace("of int", "of :obj:`int`")
 
+        lines[i] = lines[i].replace("int, ", ":obj:`int`, ")
+        lines[i] = lines[i].replace("float, ", ":obj:`float`, ")
+        lines[i] = lines[i].replace("int or ", ":obj:`int` or ")
+        lines[i] = lines[i].replace("float or ", ":obj:`float` or ")
+
 
 def setup(app) -> None:
     app.connect("autodoc-process-docstring", autodoc_process_docstring)
