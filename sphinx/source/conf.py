@@ -230,6 +230,10 @@ def autodoc_process_docstring(
         lines[i] = lines[i].replace("nn.Module", "torch.nn.Module")
         lines[i] = lines[i].replace("torch.torch.", "torch.")
 
+        # Ensure nn.Module and torch.Tensor are hyperlinked
+        lines[i] = lines[i].replace("torch.nn.Module", ":obj:`torch.nn.Module`")
+        lines[i] = lines[i].replace("torch.Tensor", ":obj:`torch.Tensor`")
+
         # Handle basic types
         lines[i] = lines[i].replace("any", "~typing.Any")
         lines[i] = lines[i].replace("callable", "~typing.Callable")
