@@ -223,9 +223,6 @@ def autodoc_process_docstring(
     https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
     """
     for i in range(len(lines)):
-        # Skip unless line is an parameter doc or a return doc
-        if not (lines[i].startswith(":type") or lines[i].startswith(":rtype")):
-            continue
         # Change "nn.Module" to "torch.nn.Module" in doc type hints for intersphinx
         lines[i] = lines[i].replace("nn.Module", "torch.nn.Module")
         lines[i] = lines[i].replace("torch.torch.", "torch.")
@@ -235,23 +232,31 @@ def autodoc_process_docstring(
         lines[i] = lines[i].replace("torch.Tensor", ":obj:`torch.Tensor`")
 
         # Handle basic types
+        lines[i] = lines[i].replace("Any", "~typing.Any")
         lines[i] = lines[i].replace("any", "~typing.Any")
         lines[i] = lines[i].replace("callable", "~typing.Callable")
 
-        # Handle 'list of' / 'tuple of' cases
-        lines[i] = lines[i].replace("list of", ":obj:`list` of")
-        lines[i] = lines[i].replace("tuple of", ":obj:`tuple` of")
-        lines[i] = lines[i].replace("of floats", "of :obj:`float`")
-        lines[i] = lines[i].replace("of float", "of :obj:`float`")
-        lines[i] = lines[i].replace("of ints", "of :obj:`int`")
-        lines[i] = lines[i].replace("of int", "of :obj:`int`")
-
-        lines[i] = lines[i].replace("int, ", ":obj:`int`, ")
+        # Handle float cases
+        lines[i] = lines[i].replace(" of floats", " of :obj:`float`")
+        lines[i] = lines[i].replace(" of float", " of :obj:`float`")
         lines[i] = lines[i].replace("float, ", ":obj:`float`, ")
-        lines[i] = lines[i].replace("list, ", ":obj:`list`, ")
-        lines[i] = lines[i].replace("tuple, ", ":obj:`tuple`, ")
-        lines[i] = lines[i].replace("int or ", ":obj:`int` or ")
         lines[i] = lines[i].replace("float or ", ":obj:`float` or ")
+
+        # Handle int cases
+        lines[i] = lines[i].replace(" of ints", " of :obj:`int`")
+        lines[i] = lines[i].replace(" of int", " of :obj:`int`")
+        lines[i] = lines[i].replace("int, ", ":obj:`int`, ")
+        lines[i] = lines[i].replace("int or ", ":obj:`int` or ")
+
+        # Handle list cases
+        lines[i] = lines[i].replace("list of ", ":obj:`list` of ")
+        lines[i] = lines[i].replace("list, ", ":obj:`list`, ")
+        lines[i] = lines[i].replace("list or ", ":obj:`list` or ")
+
+        # Handle tuple cases
+        lines[i] = lines[i].replace("tuple of ", ":obj:`tuple` of ")
+        lines[i] = lines[i].replace("tuple, ", ":obj:`tuple`, ")
+        lines[i] = lines[i].replace("tuple or ", ":obj:`tuple` or ")
 
 
 def setup(app) -> None:
