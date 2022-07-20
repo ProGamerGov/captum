@@ -224,6 +224,10 @@ def autodoc_process_docstring(
     https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
     """
     for i in range(len(lines)):
+        # Skip unless line is an parameter doc or a return doc
+        if not (lines[i].startswith(":type") or lines[i].startswith(":rtype")):
+            continue
+
         # Change "nn.Module" to "torch.nn.Module" in doc type hints for intersphinx
         lines[i] = re.sub(r"\bnn.Module\b", "torch.nn.Module", lines[i])
 
