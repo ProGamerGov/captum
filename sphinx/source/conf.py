@@ -240,8 +240,11 @@ def autodoc_process_docstring(
         lines[i] = re.sub(r"\blist\b", ":obj:`list`", lines[i])
         lines[i] = re.sub(r"\btuple\b", ":obj:`tuple`", lines[i])
 
-        # Handle int & float types
+        # Handle str & slice types
         lines[i] = re.sub(r"\bstr\b", ":obj:`str`", lines[i])
+        lines[i] = re.sub(r"\bslices\b", ":obj:`slices <slice>`", lines[i])
+
+        # Handle int & float types
         lines[i] = re.sub(r"\bint\b", ":obj:`int`", lines[i])
         lines[i] = re.sub(r"\bfloat\b", ":obj:`float`", lines[i])
         lines[i] = re.sub(r"\bints\b", ":obj:`ints <int>`", lines[i])
