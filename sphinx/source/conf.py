@@ -236,8 +236,6 @@ def autodoc_process_docstring(
         lines[i] = re.sub(r"\btorch.Tensor\b", ":obj:`torch.Tensor`", lines[i])
 
         # Handle Any & Callable types
-        #lines[i] = lines[i].replace("any", "~typing.Any")
-        #lines[i] = lines[i].replace("callable", "~typing.Callable")
         lines[i] = re.sub(r"\bAny\b", ":obj:`Any <typing.Any>`", lines[i])
         lines[i] = re.sub(r"\bany\b", ":obj:`Any <typing.Any>`", lines[i])
         lines[i] = re.sub(r"\bCallable\b", ":obj:`Callable <typing.Callable>`", lines[i])
