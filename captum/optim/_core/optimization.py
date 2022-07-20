@@ -67,8 +67,8 @@ class InputOptimization(Objective, Parameterized):
             transform (nn.Module, optional): A module that transforms or preprocesses
                 the input before being passed to the model.
 
-        Instance variables that be used in the :func:`.optimize` function and
-        StopCriteria functions:
+        Instance variables that be used in the :func:`InputOptimization.optimize`
+        function and StopCriteria functions:
 
         Attributes:
 
@@ -81,7 +81,8 @@ class InputOptimization(Objective, Parameterized):
             loss_function (Loss): The composable :mod:`.loss` instance given when
                 initializing ``InputOptimization``.
             transform (torch.nn.Module): The given transform instance given when
-                initializing ``InputOptimization``.
+                initializing ``InputOptimization``. Set to :class:`torch.nn.Identity`
+                for no transforms.
         """
         self.model = model or nn.Identity()
         # Grab targets from loss_function
