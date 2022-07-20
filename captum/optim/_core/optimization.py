@@ -63,9 +63,9 @@ class InputOptimization(Objective, Parameterized):
                 to ``None`` for no model instance.
             loss_function (callable): The :mod:`Loss <.loss>` objective instance to
                 minimize during optimization.
-            input_param (nn.Module, optional): A module that generates an input,
-                consumed by the model. Example: An
-                :mod:`ImageParameterization <captum.optim.images>`.
+            input_param (InputParameterization, optional): A module that generates an
+                input, consumed by the model. Example: An
+                :mod:`ImageParameterization <captum.optim.images>` instance.
             transform (nn.Module, optional): A module that transforms or preprocesses
                 the input before being passed to the model. Set to
                 :class:`torch.nn.Identity` for no transforms.
