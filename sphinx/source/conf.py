@@ -256,6 +256,8 @@ def autodoc_process_docstring(
         lines[i] = re.sub(r"\bfloats\b", ":obj:`floats <float>`", lines[i])
 
         # Handle tensor types that are using lowercase
+        lines[i] = lines[i].replace("*tensors*", "tensors")
+        lines[i] = lines[i].replace("*tensor*", "tensor")
         lines[i] = re.sub(r"\btensor\b", ":class:`tensor <torch.Tensor>`", lines[i])
         lines[i] = re.sub(r"\btensors\b", ":class:`tensors <torch.Tensor>`", lines[i])
 
