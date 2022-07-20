@@ -8,7 +8,7 @@
 
 
 # -- Path setup --------------------------------------------------------------
-
+from typing import List
 import os
 import sys
 
@@ -72,7 +72,12 @@ pygments_style = "sphinx"
 # Default options for autodoc directives. Applied to all autodoc directives
 autodoc_default_options = {}
 
-# Inlcude init docstrings into body of autoclass directives
+# Preserve signature defaults
+# Prevents entire tensors from being printed, and gives callable functions
+# proper names
+autodoc_preserve_defaults = True
+
+# Include init docstrings into body of autoclass directives
 autoclass_content = "both"
 
 # Configuration for intersphinx: refer to the Python standard library and PyTorch
@@ -201,3 +206,58 @@ epub_exclude_files = ["search.html"]
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+
+# -- Type Ref Improvements ----------------------------------------------
+
+autodoc_typehints_format = "short"  # New default in v5.0
+
+
+def autodoc_process_docstring(
+    app, what: str, name: str, obj, options, lines: List[str]
+) -> None:
+    """
+    Modify docstrings before creating html files.
+
+    See here for more information:
+    https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
+    """
+    for i in range(len(lines)):
+        # Change "nn.Module" to "torch.nn.Module" in doc type hints for intersphinx
+        lines[i] = lines[i].replace("nn.Module", "torch.nn.Module")
+        lines[i] = lines[i].replace("torch.torch.", "torch.")
+
+        # Ensure nn.Module and torch.Tensor are hyperlinked
+        lines[i] = lines[i].replace("torch.nn.Module", ":obj:`torch.nn.Module`")
+        lines[i] = lines[i].replace("torch.Tensor", ":obj:`torch.Tensor`")
+
+        # Handle basic types
+        lines[i] = lines[i].replace("Any", "~typing.Any")
+        lines[i] = lines[i].replace("any", "~typing.Any")
+        lines[i] = lines[i].replace("callable", "~typing.Callable")
+
+        # Handle float cases
+        lines[i] = lines[i].replace(" of floats", " of :obj:`float`")
+        lines[i] = lines[i].replace(" of float", " of :obj:`float`")
+        lines[i] = lines[i].replace("float, ", ":obj:`float`, ")
+        lines[i] = lines[i].replace("float or ", ":obj:`float` or ")
+
+        # Handle int cases
+        lines[i] = lines[i].replace(" of ints", " of :obj:`int`")
+        lines[i] = lines[i].replace(" of int", " of :obj:`int`")
+        lines[i] = lines[i].replace("int, ", ":obj:`int`, ")
+        lines[i] = lines[i].replace("int or ", ":obj:`int` or ")
+
+        # Handle list cases
+        lines[i] = lines[i].replace("list of ", ":obj:`list` of ")
+        lines[i] = lines[i].replace("list, ", ":obj:`list`, ")
+        lines[i] = lines[i].replace("list or ", ":obj:`list` or ")
+
+        # Handle tuple cases
+        lines[i] = lines[i].replace("tuple of ", ":obj:`tuple` of ")
+        lines[i] = lines[i].replace("tuple, ", ":obj:`tuple`, ")
+        lines[i] = lines[i].replace("tuple or ", ":obj:`tuple` or ")
+
+
+def setup(app) -> None:
+    app.connect("autodoc-process-docstring", autodoc_process_docstring)

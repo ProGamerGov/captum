@@ -91,5 +91,81 @@
       "id": "Multimodal_VQA_Captum_Insights",
       "title": "Using Captum Insights with multimodal models (VQA)"
     }
+  ],
+  "Captum Optim": [
+    {
+      "id": "optimviz/GettingStarted_OptimViz",
+      "title": "Getting Started with Optim"
+    },
+    {
+      "id": "optimviz/BasicLosses_OptimViz",
+      "title": "Basic Losses"
+    },
+    {
+      "id": "optimviz/AdvancedLosses_OptimViz",
+      "title": "Advanced Losses"
+    },
+    {
+      "id": "optimviz/GettingStarted_ModelPreparation_OptimViz",
+      "title": "Preparing Models For Captum's Optim Module"
+    },
+    {
+      "id": "optimviz/OptimizationWithTransparency_OptimViz",
+      "title": "Optimizing with Transparency"
+    },
+    {
+      "id": "optimviz/ReproduceLucid_OptimViz",
+      "title": "Reproducing Lucid"
+    },
+    {
+      "id": "optimviz/WeightVisualization_OptimViz",
+      "title": "Visualizing weights with Optim"
+    },
+    {
+      "id": "optimviz/CustomModules_OptimViz",
+      "title": "Creating Custom Optim Modules"
+    },
+    {
+      "id": "optimviz/ChannelAttribution_OptimViz",
+      "title": "Channel Attribution"
+    },
+    {
+      "title": "Activation Atlases",
+      "children": [
+        {
+          "id": "optimviz/atlas/ActivationAtlasSampleCollection_OptimViz",
+          "title": "Collecting Samples for Activation Atlases with Optim"
+        },
+        {
+          "id": "optimviz/atlas/ActivationAtlas_OptimViz",
+          "title": "Creating Activation Atlases with Optim"
+        },
+        {
+          "id": "optimviz/atlas/ClassActivationAtlas_OptimViz",
+          "title": "Creating Class Activation Atlases with Optim"
+        }
+      ]
+    },
+    {
+      "title": "CLIP",
+      "children": [
+        {
+          "id": "optimviz/clip/LinearProbeFacetTraining_OptimViz",
+          "title": "Training Linear Probes For Faceted Feature Visualization"
+        },
+        {
+          "id": "optimviz/clip/FacetedFeatureVisualization_Optimviz",
+          "title": "Faceted Feature Visualization"
+        },
+        {
+          "id": "optimviz/clip/CLIP_Feeling_Wheel_Atlas_OptimViz",
+          "title": "Feeling Wheel Atlas"
+        },
+        {
+          "id": "optimviz/clip/CLIP_TextFeatureVisAndSearch_OptimViz",
+          "title": "Text Feature Visualization & Text Search"
+        }
+      ]
+    }
   ]
 }

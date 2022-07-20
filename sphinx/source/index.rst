@@ -28,6 +28,24 @@ Captum API Reference
 
    insights
 
+.. toctree::
+   :maxdepth: 3
+   :caption: Optim API Reference
+
+   optim_images
+   optim_transforms
+
+   optim_loss
+   optim_optimization
+
+   optim_common
+   optim_model_zoo
+
+   optim_reducer
+   optim_circuits
+   optim_atlas
+   optim_dataset
+
 
 Indices and Tables
 ==================
