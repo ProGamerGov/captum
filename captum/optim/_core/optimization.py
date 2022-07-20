@@ -163,7 +163,7 @@ class InputOptimization(Objective, Parameterized):
             stop_criteria (StopCriteria, optional): A function that is called
                 every iteration and returns a bool that determines whether to stop the
                 optimization.
-                Default: :func:`.n_steps(512)`
+                Default: :func:`n_steps(512) <.n_steps>`
             optimizer (torch.optim.Optimizer, optional): A ``torch.optim.Optimizer``
                 instance to use for optimizing the input based on the loss function.
                 Default: :class:`torch.optim.Adam`
