@@ -9,6 +9,7 @@
 
 # -- Path setup --------------------------------------------------------------
 from typing import List
+import re
 import os
 import sys
 
@@ -224,39 +225,31 @@ def autodoc_process_docstring(
     """
     for i in range(len(lines)):
         # Change "nn.Module" to "torch.nn.Module" in doc type hints for intersphinx
-        lines[i] = lines[i].replace("nn.Module", "torch.nn.Module")
-        lines[i] = lines[i].replace("torch.torch.", "torch.")
+        lines[i] = re.sub(r"\bnn.Module\b", "torch.nn.Module", lines[i])
 
         # Ensure nn.Module and torch.Tensor are hyperlinked
-        lines[i] = lines[i].replace("torch.nn.Module", ":obj:`torch.nn.Module`")
-        lines[i] = lines[i].replace("torch.Tensor", ":obj:`torch.Tensor`")
+        lines[i] = re.sub(r"\btorch.nn.Module\b", ":obj:`torch.nn.Module`", lines[i])
+        lines[i] = re.sub(r"\btorch.Tensor\b", ":obj:`torch.Tensor`", lines[i])
 
-        # Handle basic types
-        lines[i] = lines[i].replace("Any", "~typing.Any")
-        lines[i] = lines[i].replace("any", "~typing.Any")
-        lines[i] = lines[i].replace("callable", "~typing.Callable")
+        # Handle Any & Callable types
+        lines[i] = re.sub(r"\bAny\b", "~typing.Any", lines[i])
+        lines[i] = re.sub(r"\bany\b", "~typing.Any", lines[i])
+        lines[i] = re.sub(r"\bcallable\b", "~typing.Callable", lines[i])
 
-        # Handle float cases
-        lines[i] = lines[i].replace(" of floats", " of :obj:`float`")
-        lines[i] = lines[i].replace(" of float", " of :obj:`float`")
-        lines[i] = lines[i].replace("float, ", ":obj:`float`, ")
-        lines[i] = lines[i].replace("float or ", ":obj:`float` or ")
+        # Handle list & tuple types
+        lines[i] = re.sub(r"\blist\b", ":obj:`list`", lines[i])
+        lines[i] = re.sub(r"\btuple\b", ":obj:`tuple`", lines[i])
 
-        # Handle int cases
-        lines[i] = lines[i].replace(" of ints", " of :obj:`int`")
-        lines[i] = lines[i].replace(" of int", " of :obj:`int`")
-        lines[i] = lines[i].replace("int, ", ":obj:`int`, ")
-        lines[i] = lines[i].replace("int or ", ":obj:`int` or ")
+        # Handle int & float types
+        lines[i] = re.sub(r"\bstr\b", ":obj:`str`", lines[i])
+        lines[i] = re.sub(r"\bint\b", ":obj:`int`", lines[i])
+        lines[i] = re.sub(r"\bfloat\b", ":obj:`float`", lines[i])
+        lines[i] = re.sub(r"\bints\b", ":obj:`ints <int>`", lines[i])
+        lines[i] = re.sub(r"\bfloats\b", ":obj:`floats <float>`", lines[i])
 
-        # Handle list cases
-        lines[i] = lines[i].replace("list of ", ":obj:`list` of ")
-        lines[i] = lines[i].replace("list, ", ":obj:`list`, ")
-        lines[i] = lines[i].replace("list or ", ":obj:`list` or ")
-
-        # Handle tuple cases
-        lines[i] = lines[i].replace("tuple of ", ":obj:`tuple` of ")
-        lines[i] = lines[i].replace("tuple, ", ":obj:`tuple`, ")
-        lines[i] = lines[i].replace("tuple or ", ":obj:`tuple` or ")
+        # Handle tensor types that are using lowercase
+        lines[i] = re.sub(r"\btensor\b", ":class:`tensor <torch.Tensor>`", lines[i])
+        lines[i] = re.sub(r"\btensors\b", ":class:`tensors <torch.Tensor>`", lines[i])
 
 
 def setup(app) -> None:
