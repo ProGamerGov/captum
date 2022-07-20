@@ -236,9 +236,10 @@ def autodoc_process_docstring(
         lines[i] = re.sub(r"\btorch.Tensor\b", ":obj:`torch.Tensor`", lines[i])
 
         # Handle Any & Callable types
-        lines[i] = re.sub(r"\bAny\b", "~typing.Any", lines[i])
-        lines[i] = re.sub(r"\bany\b", "~typing.Any", lines[i])
-        lines[i] = re.sub(r"\bcallable\b", "~typing.Callable", lines[i])
+        lines[i] = re.sub(r"\bAny\b", ":obj:`Any <typing.Any>`", lines[i])
+        lines[i] = re.sub(r"\bany\b", ":obj:`Any <typing.Any>`", lines[i])
+        lines[i] = re.sub(r"\bcallable\b", ":obj:`Callable <typing.Callable>`", lines[i])
+        lines[i] = re.sub(r"\bCallable\b", ":obj:`Callable <typing.Callable>`", lines[i])
 
         # Handle list & tuple types
         lines[i] = re.sub(r"\blist\b", ":obj:`list`", lines[i])
