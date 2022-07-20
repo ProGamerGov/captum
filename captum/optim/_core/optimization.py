@@ -59,16 +59,19 @@ class InputOptimization(Objective, Parameterized):
         r"""
         Args:
 
-            model (nn.Module, optional): The reference to PyTorch model instance.
-            loss_function (callable): The :mod:`.loss` objective instance to minimize
-                during optimization.
+            model (nn.Module, optional): The reference to PyTorch model instance. Set
+                to ``None`` for no model instance.
+            loss_function (callable): The :mod:`Loss <.loss>` objective instance to
+                minimize during optimization.
             input_param (nn.Module, optional): A module that generates an input,
-                consumed by the model.
+                consumed by the model. Example: An
+                :mod:`ImageParameterization <captum.optim.images>`.
             transform (nn.Module, optional): A module that transforms or preprocesses
-                the input before being passed to the model.
+                the input before being passed to the model. Set to
+                :class:`torch.nn.Identity` for no transforms.
 
         Instance variables that be used in the :func:`InputOptimization.optimize`
-        function and StopCriteria functions:
+        function, custom optimization functions, and StopCriteria functions:
 
         Attributes:
 
@@ -78,11 +81,10 @@ class InputOptimization(Objective, Parameterized):
                 returned.
             input_param (InputParameterization): The given input parameterization
                 instance given when initializing ``InputOptimization``.
-            loss_function (Loss): The composable :mod:`.loss` instance given when
-                initializing ``InputOptimization``.
+            loss_function (Loss): The composable :mod:`Loss <.loss>` instance given
+                when initializing ``InputOptimization``.
             transform (torch.nn.Module): The given transform instance given when
-                initializing ``InputOptimization``. Set to :class:`torch.nn.Identity`
-                for no transforms.
+                initializing ``InputOptimization``.
         """
         self.model = model or nn.Identity()
         # Grab targets from loss_function
