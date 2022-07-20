@@ -67,7 +67,7 @@ class MinParamPerturbation:
                 of pytorch model or any modification of a model's forward
                 function.
 
-            attack (Perturbation or Callable): This can either be an instance
+            attack (Perturbation or callable): This can either be an instance
                 of a Captum Perturbation / Attack
                 or any other perturbation or attack function such
                 as a torchvision transform.
@@ -103,7 +103,7 @@ class MinParamPerturbation:
                 applied before or after preproc function.
                 Default: False
 
-            correct_fn (Callable, optional): This determines whether the perturbed input
+            correct_fn (callable, optional): This determines whether the perturbed input
                 leads to a correct or incorrect prediction. By default, this function
                 is set to the standard classification test for correctness
                 (comparing argmax of output with target), which requires model output to
@@ -355,7 +355,7 @@ class MinParamPerturbation:
 
         Args:
 
-            inputs (Any): Input for which minimal perturbation
+            inputs (any): Input for which minimal perturbation
                     is computed. It can be provided as a tensor, tuple of tensors,
                     or any raw input type (e.g. PIL image or text string).
                     This input is provided directly as input to preproc function
@@ -392,9 +392,9 @@ class MinParamPerturbation:
                     (or inputs itself if no preproc_fn is provided) must be a tensor
                     or tuple of tensors.
                     Default: 1
-            attack_kwargs (dictionary, optional): Optional dictionary of keyword
+            attack_kwargs (dict, optional): Optional dictionary of keyword
                     arguments provided to attack function
-            correct_fn_kwargs (dictionary, optional): Optional dictionary of keyword
+            correct_fn_kwargs (dict, optional): Optional dictionary of keyword
                     arguments provided to correct function
 
         Returns:
@@ -402,7 +402,7 @@ class MinParamPerturbation:
             Tuple of (perturbed_inputs, param_val) if successful
             else Tuple of (None, None)
 
-            - **perturbed inputs** (Any):
+            - **perturbed inputs** (any):
                    Perturbed input (output of attack) which results in incorrect
                    prediction.
             - param_val (int, float)

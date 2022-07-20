@@ -102,7 +102,7 @@ class NoiseTunnel(Attribution):
                         that for all given input tensors, dimension 0 corresponds
                         to the number of examples, and if multiple input tensors
                         are provided, the examples must be aligned appropriately.
-            nt_type (string, optional): Smoothing type of the attributions.
+            nt_type (str, optional): Smoothing type of the attributions.
                         `smoothgrad`, `smoothgrad_sq` or `vargrad`
                         Default: `smoothgrad` if `type` is not provided.
             nt_samples (int, optional):  The number of randomly generated examples
@@ -129,7 +129,7 @@ class NoiseTunnel(Attribution):
                         randomly draw baseline samples from the `baselines`
                         distribution provided as an input tensor.
                         Default: False
-            **kwargs (Any, optional): Contains a list of arguments that are passed
+            **kwargs (any, optional): Contains a list of arguments that are passed
                         to `attribution_method` attribution algorithm.
                         Any additional arguments that should be used for the
                         chosen attribution method should be included here.

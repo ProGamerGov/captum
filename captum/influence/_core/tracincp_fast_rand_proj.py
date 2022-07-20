@@ -115,12 +115,12 @@ class TracInCPFast(TracInCPBase):
                     path to store and retrieve model checkpoints, a list of
                     filepaths with checkpoints from which to load, or an iterator which
                     returns objects from which to load checkpoints.
-            checkpoints_load_func (Callable, optional): The function to load a saved
+            checkpoints_load_func (callable, optional): The function to load a saved
                     checkpoint into a model to update its parameters, and get the
                     learning rate if it is saved. By default uses a utility to load a
                     model saved as a state dict.
                     Default: _load_flexible_state_dict
-            loss_fn (Callable, optional): The loss function applied to model. `loss_fn`
+            loss_fn (callable, optional): The loss function applied to model. `loss_fn`
                     must be a "reduction" loss function that reduces the per-example
                     losses in a batch, and returns a single scalar Tensor. Furthermore,
                     the reduction must be the *sum* or the *mean* of the per-example
@@ -224,7 +224,7 @@ class TracInCPFast(TracInCPBase):
           opponent) on the test example.
 
         Args:
-            inputs (Any, optional): If not provided or `None`, the self influence mode
+            inputs (any, optional): If not provided or `None`, the self influence mode
                     will be run. Otherwise, `inputs` is the test batch that will be
                     used when running in either influence score or k-most influential
                     mode. If the argument `unpack_inputs` is False, the
@@ -255,7 +255,7 @@ class TracInCPFast(TracInCPBase):
             show_progress (bool, optional): For all modes, computation of results
                     requires "training dataset computations": computations for each
                     batch in the training dataset `influence_src_dataset`, which may
-                    take a long time. If `show_progress`is true, the progress of
+                    take a long time. If `show_progress` is true, the progress of
                     "training dataset computations" will be displayed. In particular,
                     the number of batches for which computations have been performed
                     will be displayed. It will try to use tqdm if available for
@@ -271,7 +271,7 @@ class TracInCPFast(TracInCPBase):
               `influence_src_dataset`. The length of this tensor is the number of
               examples in `influence_src_dataset`, regardless of whether it is a
               Dataset or DataLoader.
-            - influence score mode: if this mode is run (`inputs is not None, `k` is
+            - influence score mode: if this mode is run (`inputs` is not None, `k` is
               None), returns a 2D tensor `influence_scores` of shape
               `(input_size, influence_src_dataset_size)`, where `input_size` is
               the number of examples in the test batch, and
@@ -669,12 +669,12 @@ class TracInCPFastRandProj(TracInCPFast):
                     path to store and retrieve model checkpoints, a list of
                     filepaths with checkpoints from which to load, or an iterator which
                     returns objects from which to load checkpoints.
-            checkpoints_load_func (Callable, optional): The function to load a saved
+            checkpoints_load_func (callable, optional): The function to load a saved
                     checkpoint into a model to update its parameters, and get the
                     learning rate if it is saved. By default uses a utility to load a
                     model saved as a state dict.
                     Default: _load_flexible_state_dict
-            loss_fn (Callable, optional): The loss function applied to model. `loss_fn`
+            loss_fn (callable, optional): The loss function applied to model. `loss_fn`
                     must be a "reduction" loss function that reduces the per-example
                     losses in a batch, and returns a single scalar Tensor. Furthermore,
                     the reduction must be the *sum* of the per-example losses. For
@@ -923,7 +923,7 @@ class TracInCPFastRandProj(TracInCPFast):
         gradients in the last fully-connected layer, please use `TracInCPFast` instead.
 
         Args:
-            inputs (Any, optional): If not provided or `None`, the self influence mode
+            inputs (any, optional): If not provided or `None`, the self influence mode
                     will be run. Otherwise, `inputs` is the test batch that will be
                     used when running in either influence score or k-most influential
                     mode. If the argument `unpack_inputs` is False, the
@@ -955,7 +955,7 @@ class TracInCPFastRandProj(TracInCPFast):
 
             The return value of this method depends on which mode is run.
 
-            - influence score mode: if this mode is run (`inputs is not None, `k` is
+            - influence score mode: if this mode is run (`inputs` is not None, `k` is
               None), returns a 2D tensor `influence_scores` of shape
               `(input_size, influence_src_dataset_size)`, where `input_size` is
               the number of examples in the test batch, and
