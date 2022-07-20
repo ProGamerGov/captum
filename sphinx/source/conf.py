@@ -8,10 +8,10 @@
 
 
 # -- Path setup --------------------------------------------------------------
-from typing import List
-import re
 import os
+import re
 import sys
+from typing import List
 
 base_path = os.path.abspath(os.path.join(__file__, "..", "..", ".."))
 # read module from src instead of installation
