@@ -264,6 +264,9 @@ def autodoc_process_docstring(
         lines[i] = re.sub(r"\btensor\b", ":class:`tensor <torch.Tensor>`", lines[i])
         lines[i] = re.sub(r"\btensors\b", ":class:`tensors <torch.Tensor>`", lines[i])
 
+        # Handle None type
+        lines[i] = re.sub(r"\bNone\b", ":obj:`None`", lines[i])
+
 
 def setup(app) -> None:
     app.connect("autodoc-process-docstring", autodoc_process_docstring)
