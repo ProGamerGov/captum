@@ -229,7 +229,7 @@ def autodoc_process_docstring(
             continue
 
         # Change "nn.Module" to "torch.nn.Module" in doc type hints for intersphinx
-        lines[i] = re.sub(r"\bnn.Module\b", "torch.nn.Module", lines[i])
+        lines[i] = re.sub(r"\bnn\.Module\b", "torch.nn.Module", lines[i])
         lines[i] = lines[i].replace("torch.torch.", "torch.")
 
         # Ensure nn.Module and torch.Tensor are hyperlinked
