@@ -213,6 +213,7 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
 
                         - a tuple of tensors or scalars, the baseline corresponding
                           to each tensor in the inputs' tuple can be:
+
                             - either a tensor with matching dimensions to
                               corresponding tensor in the inputs' tuple
                               or the first dimension is one and the remaining
