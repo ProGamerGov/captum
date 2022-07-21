@@ -637,7 +637,7 @@ class TracInCPFastRandProj(TracInCPFast):
         to obtain proponents / opponents or influence scores will be made in an
         "interactive" manner, and there is sufficient memory to store vectors for the
         entire `influence_src_dataset`. This is because in order to enable interactive
-        analysis, this implementation incures overhead in ``__init__` to setup the
+        analysis, this implementation incures overhead in `__init__` to setup the
         nearest-neighbors data structure, which is both time and memory intensive, as
         vectors corresponding to all training examples needed to be stored. To reduce
         memory usage, this implementation enables random projections of those vectors.
