@@ -53,6 +53,7 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
     ) -> None:
         r"""
         Args:
+
             forward_func (callable):  The forward function of the model or any
                         modification of it
             layer (ModuleOrModuleList): Layer or list of layers for which attributions
