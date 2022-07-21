@@ -76,7 +76,7 @@ class InterpretableEmbeddingBase(Module):
 
         Args:
 
-            *input (any, Optional): This can be a tensor(s) of input indices or any
+            *input (Any, optional): This can be a tensor(s) of input indices or any
                     other variable necessary to comput the embeddings. A typical
                     example of input indices are word or token indices.
             **kwargs (Any, optional): Similar to `input` this can be any sequence

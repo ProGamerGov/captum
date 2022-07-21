@@ -92,7 +92,7 @@ class PGD(Perturbation):
             step_size (float): Step size of each gradient step.
             step_num (int): Step numbers. It usually guarantees that the perturbation
                         can reach the border.
-            target (any): True labels of inputs if non-targeted attack is
+            target (Any): True labels of inputs if non-targeted attack is
                         desired. Target class of inputs if targeted attack
                         is desired. Target will be passed to the loss function
                         to compute loss, so the type needs to match the

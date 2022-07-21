@@ -113,12 +113,12 @@ class AttackComparator(Generic[MetricResultType]):
         Adds attack to be evaluated when calling evaluate.
 
         Args:
-            attack (perturbation or callable): This can either be an instance
+            attack (perturbation or Callable): This can either be an instance
                 of a Captum Perturbation / Attack
                 or any other perturbation or attack function such
                 as a torchvision transform.
 
-            name (optional, str): Name or identifier for attack, used as key for
+            name (str, optional): Name or identifier for attack, used as key for
                 attack results. This defaults to attack.__class__.__name__
                 if not provided and must be unique for all added attacks.
 
@@ -239,7 +239,7 @@ class AttackComparator(Generic[MetricResultType]):
 
         Args:
 
-        inputs (any): Input for which attack metrics
+        inputs (Any): Input for which attack metrics
                 are computed. It can be provided as a tensor, tuple of tensors,
                 or any raw input type (e.g. PIL image or text string).
                 This input is provided directly as input to preproc function as well

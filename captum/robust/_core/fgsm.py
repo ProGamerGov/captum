@@ -86,7 +86,7 @@ class FGSM(Perturbation):
                         input tensors are provided, the batch sizes must be
                         aligned accross all tensors.
             epsilon (float): Step size of perturbation.
-            target (any): True labels of inputs if non-targeted attack is
+            target (Any): True labels of inputs if non-targeted attack is
                         desired. Target class of inputs if targeted attack
                         is desired. Target will be passed to the loss function
                         to compute loss, so the type needs to match the

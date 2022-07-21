@@ -67,7 +67,7 @@ class MinParamPerturbation:
                 of pytorch model or any modification of a model's forward
                 function.
 
-            attack (Perturbation or callable): This can either be an instance
+            attack (Perturbation or Callable): This can either be an instance
                 of a Captum Perturbation / Attack
                 or any other perturbation or attack function such
                 as a torchvision transform.
@@ -355,7 +355,7 @@ class MinParamPerturbation:
 
         Args:
 
-            inputs (any): Input for which minimal perturbation
+            inputs (Any): Input for which minimal perturbation
                     is computed. It can be provided as a tensor, tuple of tensors,
                     or any raw input type (e.g. PIL image or text string).
                     This input is provided directly as input to preproc function
@@ -402,7 +402,7 @@ class MinParamPerturbation:
             Tuple of (perturbed_inputs, param_val) if successful
             else Tuple of (None, None)
 
-            - **perturbed inputs** (any):
+            - **perturbed inputs** (Any):
                    Perturbed input (output of attack) which results in incorrect
                    prediction.
             - param_val (int, float)
