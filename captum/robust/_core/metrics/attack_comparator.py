@@ -113,7 +113,7 @@ class AttackComparator(Generic[MetricResultType]):
         Adds attack to be evaluated when calling evaluate.
 
         Args:
-            attack (perturbation or Callable): This can either be an instance
+            attack (Perturbation or Callable): This can either be an instance
                 of a Captum Perturbation / Attack
                 or any other perturbation or attack function such
                 as a torchvision transform.
