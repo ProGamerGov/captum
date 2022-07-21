@@ -83,7 +83,6 @@ class Loss(ABC):
         return rmodule_op(self, other, operator.pow)
 
 
-
 def module_op(
     self: Loss, other: Union[None, int, float, Loss], math_op: Callable
 ) -> "CompositeLoss":
