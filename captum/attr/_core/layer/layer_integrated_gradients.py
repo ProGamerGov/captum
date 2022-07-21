@@ -41,7 +41,6 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
     More details regarding the integrated gradients method can be found in the
     original paper:
     https://arxiv.org/abs/1703.01365
-
     """
 
     def __init__(
