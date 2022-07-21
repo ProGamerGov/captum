@@ -64,11 +64,11 @@ class AttackComparator(Generic[MetricResultType]):
     ) -> None:
         r"""
         Args:
-            forward_func (callable or torch.nn.Module): This can either be an instance
+            forward_func (Callable or torch.nn.Module): This can either be an instance
                 of pytorch model or any modification of a model's forward
                 function.
 
-            metric (callable): This function is applied to the model output in
+            metric (Callable): This function is applied to the model output in
                 order to compute the desired performance metric or metrics.
                 This function should have the following signature::
 
@@ -85,7 +85,7 @@ class AttackComparator(Generic[MetricResultType]):
                 If tensor metrics represent results for the full batch, the size of the
                 first dimension should be 1.
 
-            preproc_fn (callable, optional): Optional method applied to inputs. Output
+            preproc_fn (Callable, optional): Optional method applied to inputs. Output
                 of preproc_fn is then provided as input to model, in addition to
                 additional_forward_args provided to evaluate.
         """
@@ -247,7 +247,7 @@ class AttackComparator(Generic[MetricResultType]):
                 function is provided, this input is provided directly to the main
                 model and all attacks.
 
-        additional_forward_args (any, optional): If the forward function
+        additional_forward_args (Any, optional): If the forward function
                 requires additional arguments other than the preprocessing
                 outputs (or inputs if preproc_fn is None), this argument
                 can be provided. It must be either a single additional
@@ -273,7 +273,7 @@ class AttackComparator(Generic[MetricResultType]):
                 (or inputs itself if no preproc_fn is provided) must be a tensor
                 or tuple of tensors.
                 Default: 1
-        kwargs (any, optional): Additional keyword arguments provided to metric function
+        kwargs (Any, optional): Additional keyword arguments provided to metric function
                 as well as selected attacks based on chosen additional_args
 
         Returns:

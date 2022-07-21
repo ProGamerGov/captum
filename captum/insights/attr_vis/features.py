@@ -52,7 +52,7 @@ class BaseFeature:
             input_transforms (list, callable, optional): Optional list of callables
                         (e.g. functions) called on the input tensor sequentially to
                         convert it into the format expected by the model.
-            visualization_transform (callable, optional): Optional callable (e.g.
+            visualization_transform (Callable, optional): Optional callable (e.g.
                         function) applied as a postprocessing step of the original
                         input data (before ``input_transforms``) to convert it to a
                         format to be understood by the frontend visualizer as
@@ -98,7 +98,7 @@ class ImageFeature(BaseFeature):
             input_transforms (list, callable, optional): A list of transforms
                         or transform to be applied to the input. For images,
                         normalization is often applied here.
-            visualization_transform (callable, optional): Optional callable (e.g.
+            visualization_transform (Callable, optional): Optional callable (e.g.
                         function) applied as a postprocessing step of the original
                         input data (before input_transforms) to convert it to a
                         format to be visualized.
@@ -182,7 +182,7 @@ class TextFeature(BaseFeature):
                         and
                         :py:func:`~.configure_interpretable_embedding_layer`
                         for more information.
-            visualization_transform (callable, optional): Optional callable (e.g.
+            visualization_transform (Callable, optional): Optional callable (e.g.
                         function) applied as a postprocessing step of the original
                         input data (before ``input_transforms``) to convert it to a
                         suitable format for visualization. For text features,

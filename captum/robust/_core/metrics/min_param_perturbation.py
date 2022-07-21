@@ -63,7 +63,7 @@ class MinParamPerturbation:
         corresponding perturbed input.
 
         Args:
-            forward_func (callable or torch.nn.Module): This can either be an instance
+            forward_func (Callable or torch.nn.Module): This can either be an instance
                 of pytorch model or any modification of a model's forward
                 function.
 
@@ -94,7 +94,7 @@ class MinParamPerturbation:
                 perturbation / attack functions
                 Default: 1
 
-            preproc_fn (callable, optional): Optional method applied to inputs. Output
+            preproc_fn (Callable, optional): Optional method applied to inputs. Output
                 of preproc_fn is then provided as input to model, in addition to
                 additional_forward_args provided to evaluate.
                 Default: None
@@ -103,7 +103,7 @@ class MinParamPerturbation:
                 applied before or after preproc function.
                 Default: False
 
-            correct_fn (callable, optional): This determines whether the perturbed input
+            correct_fn (Callable, optional): This determines whether the perturbed input
                 leads to a correct or incorrect prediction. By default, this function
                 is set to the standard classification test for correctness
                 (comparing argmax of output with target), which requires model output to
@@ -363,7 +363,7 @@ class MinParamPerturbation:
                     pre-processing function is provided,
                     this input is provided directly to the main model and all attacks.
 
-            additional_forward_args (any, optional): If the forward function
+            additional_forward_args (Any, optional): If the forward function
                     requires additional arguments other than the preprocessing
                     outputs (or inputs if preproc_fn is None), this argument
                     can be provided. It must be either a single additional
