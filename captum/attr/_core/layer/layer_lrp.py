@@ -110,8 +110,8 @@ class LayerLRP(LRP, LayerAttribution):
         ],
     ]:
         r"""
-
         Args:
+
             inputs (tensor or tuple of tensors): Input for which relevance is
                         propagated.
                         If forward_func takes a single
