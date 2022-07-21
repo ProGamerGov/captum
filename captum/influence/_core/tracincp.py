@@ -267,6 +267,7 @@ class TracInCPBase(DataInfluence):
     ) -> Tensor:
         r"""
         Args:
+
             inputs (tuple of Any): A batch of examples. Does not represent labels,
                     which are passed as `targets`. The assumption is that
                     `self.model(*inputs)` produces the predictions for the batch.
