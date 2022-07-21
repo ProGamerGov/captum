@@ -50,7 +50,6 @@ class LayerLRP(LRP, LayerAttribution):
                         these are not supported by the register_full_backward_hook
                         PyTorch API starting from PyTorch v1.9.
 
-
             layer (torch.nn.Module or list of torch.nn.Module): Layer or layers
                           for which attributions are computed.
                           The size and dimensionality of the attributions
@@ -121,12 +120,13 @@ class LayerLRP(LRP, LayerAttribution):
                         that for all given input tensors, dimension 0 corresponds
                         to the number of examples, and if multiple input tensors
                         are provided, the examples must be aligned appropriately.
+
             target (int, tuple, tensor or list, optional): Output indices for
-                        which gradients are computed (for classification cases,
-                        this is usually the target class).
-                        If the network returns a scalar value per example,
-                        no target index is necessary.
-                        For general 2D outputs, targets can be either:
+                    which gradients are computed (for classification cases,
+                    this is usually the target class).
+                    If the network returns a scalar value per example,
+                    no target index is necessary.
+                    For general 2D outputs, targets can be either:
 
                     - a single integer or a tensor containing a single
                         integer, which is applied to all input examples
@@ -146,6 +146,7 @@ class LayerLRP(LRP, LayerAttribution):
                         target for the corresponding example.
 
                     Default: None
+
             additional_forward_args (tuple, optional): If the forward function
                     requires additional arguments other than the inputs for
                     which attributions should not be computed, this argument
