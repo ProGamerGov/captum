@@ -242,8 +242,7 @@ def autodoc_process_docstring(
         lines[i] = re.sub(r"\bCallable\b", ":obj:`Callable <typing.Callable>`", lines[i])
         lines[i] = re.sub(r"\bcallable\b", ":obj:`Callable <typing.Callable>`", lines[i])
 
-        # Handle dict, list, & tuple types
-        lines[i] = re.sub(r"\bdict\b", ":obj:`dict`", lines[i])
+        # Handle list & tuple types
         lines[i] = re.sub(r"\blist\b", ":obj:`list`", lines[i])
         lines[i] = re.sub(r"\btuple\b", ":obj:`tuple`", lines[i])
 
@@ -259,10 +258,9 @@ def autodoc_process_docstring(
         lines[i] = re.sub(r"\bfloats\b", ":obj:`floats <float>`", lines[i])
 
         # Handle tensor types that are using lowercase
-        if lines[i].startswith(":rtype"):
-            # Bolding return types doesn't work with Sphinx hyperlinks
-            lines[i] = lines[i].replace("*tensors*", "tensors")
-            lines[i] = lines[i].replace("*tensor*", "tensor")
+        # Bolding return types doesn't work with Sphinx hyperlinks
+        lines[i] = lines[i].replace("*tensors*", "tensors")
+        lines[i] = lines[i].replace("*tensor*", "tensor")
         lines[i] = re.sub(r"\btensor\b", ":class:`tensor <torch.Tensor>`", lines[i])
         lines[i] = re.sub(r"\btensors\b", ":class:`tensors <torch.Tensor>`", lines[i])
 
