@@ -840,7 +840,7 @@ class TracInCP(TracInCPBase):
 
             inputs (tuple of Any): A tuple that represents a batch of examples. It does
                     not represent labels, which are passed as `targets`.
-            targets (Tensor, optional): If computing influence scores on a loss
+            targets (tensor, optional): If computing influence scores on a loss
                     function, these are the labels corresponding to the batch `inputs`.
                     Default: None
             k (int, optional): The number of proponents or opponents to return per test
