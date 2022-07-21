@@ -241,7 +241,8 @@ def autodoc_process_docstring(
         lines[i] = re.sub(r"\bCallable\b", ":obj:`Callable <typing.Callable>`", lines[i])
         lines[i] = re.sub(r"\bcallable\b", ":obj:`Callable <typing.Callable>`", lines[i])
 
-        # Handle list & tuple types
+        # Handle dict, list, & tuple types
+        lines[i] = re.sub(r"\bdict\b", ":obj:`dict`", lines[i])
         lines[i] = re.sub(r"\blist\b", ":obj:`list`", lines[i])
         lines[i] = re.sub(r"\btuple\b", ":obj:`tuple`", lines[i])
 
