@@ -124,7 +124,7 @@ class TracInCPBase(DataInfluence):
                     `influence_src_dataset` is a Dataset, `batch_size` should be large.
                     If `influence_src_dataset` was already a DataLoader to begin with,
                     it should have been constructed to have a large batch size.
-            checkpoints (str or List of str or Iterator): Either the directory of the
+            checkpoints (str or list of str or Iterator): Either the directory of the
                     path to store and retrieve model checkpoints, a list of
                     filepaths with checkpoints from which to load, or an iterator which
                     returns objects from which to load checkpoints.
@@ -133,7 +133,7 @@ class TracInCPBase(DataInfluence):
                     learning rate if it is saved. By default uses a utility to load a
                     model saved as a state dict.
                     Default: _load_flexible_state_dict
-            layers (List of str or None, optional): A list of layer names for which
+            layers (list of str or None, optional): A list of layer names for which
                     gradients should be computed. If `layers` is None, gradients will
                     be computed for all layers. Otherwise, they will only be computed
                     for the layers specified in `layers`.
@@ -219,7 +219,7 @@ class TracInCPBase(DataInfluence):
         r"""
         Args:
 
-            inputs (Tuple of Any): A tuple that represents a batch of examples. It does
+            inputs (tuple of Any): A tuple that represents a batch of examples. It does
                     not represent labels, which are passed as `targets`.
             targets (tensor, optional): If computing influence scores on a loss
                     function, these are the labels corresponding to the batch `inputs`.
@@ -267,7 +267,7 @@ class TracInCPBase(DataInfluence):
     ) -> Tensor:
         r"""
         Args:
-            inputs (Tuple of Any): A batch of examples. Does not represent labels,
+            inputs (tuple of Any): A batch of examples. Does not represent labels,
                     which are passed as `targets`. The assumption is that
                     `self.model(*inputs)` produces the predictions for the batch.
             targets (tensor, optional): If computing influence scores on a loss
