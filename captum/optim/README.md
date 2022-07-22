@@ -100,6 +100,55 @@ def visualize(model, loss_fn, image, transforms):
 visualize(model, loss_fn, image, transforms)
 ```
 
+**Circuits**
+
+We start off by loading a linear version of the InceptionV1 along with the normal version for rendering.
+
+```
+import captum.optim as opt
+import torch
+import torch.nn.functional as F
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
+# Load InceptionV1 model with nonlinear layers replaced by their linear equivalents
+linear_model = (
+    opt.models.googlenet(pretrained=True, use_linear_modules_only=True)
+    .to(device)
+    .eval()
+)
+model = opt.models.googlenet(pretrained=True).to(device).eval()
+
+
+def visualize(model, loss_fn, image):
+    transforms = opt.transforms.TransformationRobustness()
+    obj = opt.InputOptimization(model, loss_fn, image, transforms)
+    history = obj.optimize(opt.optimization.n_steps(256, True), lr=0.024)
+    return image().detach()
+```
+
+```
+# Extract expanded weights
+W_4a_4b = opt.circuits.extract_expanded_weights(
+    linear_model, linear_model.mixed4a_relu, linear_model.mixed4b_relu, 5
+)
+
+# Create heatmap image
+W_4a_4b_hm = opt.weights_to_heatmap_2d(W_4a_4b[443, 308, ...] / W_4a_4b[443, ...].max())
+hm_img = F.interpolate(W_4a_4b_hm[None, :], size=(224, 224), mode="nearest-exact")
+```
+
+```
+image = opt.images.NaturalImage((224, 224), batch=2).to(device)
+loss_fn = opt.loss.NeuronActivation(
+    model.mixed4a, 308, batch_index=0
+) + opt.loss.NeuronActivation(model.mixed4b_relu, 443, batch_index=1)
+img = visualize(model, loss_fn, image)
+img_set = torch.cat([img[0:1], hm_img, img[1:2]])
+
+opt.show(img_set, images_per_row=3, figsize=(15, 10))
+```
 
 Docs
 -----------------
