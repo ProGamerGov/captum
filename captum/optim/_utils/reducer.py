@@ -192,6 +192,9 @@ def posneg(x: torch.Tensor, dim: int = 0) -> torch.Tensor:
     Hack that makes a matrix positive by concatination in order to simulate one-sided
     NMF with regular NMF.
 
+    Voss, et al., "Visualizing Weights", Distill, 2021.
+    See: https://distill.pub/2020/circuits/visualizing-weights/
+
     Args:
 
         x (torch.Tensor): A tensor to make positive.
