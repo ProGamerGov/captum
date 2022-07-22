@@ -116,25 +116,25 @@ We also provide multiple tutorials covering a wide array of research for the opt
 FAQ
 -----------------
 
-**How do I know if my model is compatible with the Optim?**
+### **How do I know if my model is compatible with the Optim?**
 
 In general model layers need to be [nn.Module](https://pytorch.org/docs/stable/generated/torch.nn.Module.html)s as functional layers don't support hooks. Please check out the 'Getting Started Model Preparation' tutorial notebook for more information.
 
-**Are only 3 channel RGB images and 4 channel RGBA images supported or can I use a different color space?**
+### **Are only 3 channel RGB images and 4 channel RGBA images supported or can I use a different color space?**
 
 By default the rendering modules in Optim are setup for rendering [RGB](https://en.wikipedia.org/wiki/RGB_color_spaces) / [RGBA](https://en.wikipedia.org/wiki/RGBA_color_model) images, but they can easily support other [color spaces](https://en.wikipedia.org/wiki/Color_space) with a simple settings change. In the case of ``ToRGB``, you may have to provide a new 3x3 transform matrix for 3 channel (with an optional 4th alpha channel) color spaces. For color spaces using less than or greater than 3 channels, you will need to create a custom color recorrelation module to replace ``ToRGB``. New color correlation matrices can be created using the dataset module, or with your own custom algorithms.
 
-**Why are my rendered visualizations poor quality or non-existent in outputs?**
+### **Why are my rendered visualizations poor quality or non-existent in outputs?**
 
 There are a wide array of factors that dictate how well a model performs for rendering visualizations. Aspects like the model architecture, the training data used to train the model, the optimizer being used, and your Optim module settings like parameterizations & transforms all play an important role in creating visualizations.
 
 ReLU layers will block the flow of gradients during the backward pass, if their inputs are less than 0. This can result in no visualizations being produced for the target, even if the model already performs well with other targets. To avoid this issue, you can ensure that all applicable ReLU layers have been replaced with Optim's ``RedirectedReLU`` layer (the ``replace_layers`` function makes this extremely easy to do!).
 
-**Does the Optim module support JIT?**
+### **Does the Optim module support JIT?**
 
 For the most part, yes. Image parameterizations, transforms, and many of the helper classes & functions support [JIT / TorchScript](https://pytorch.org/docs/stable/jit.html). The provided models also support JIT, but rendering JIT models with ``InputOptimizatization`` is not supported. The ``InputOptimizatization`` class itself does not support JIT either, but it does work with scripted image parameterizations and transforms. The loss objective system also does not support JIT. These limitations are due to the limitations with JIT supporting PyTorch hooks.
 
-**What dtypes does the Optim module support?**
+### **What dtypes does the Optim module support?**
 
 By default, the ``torch.float32`` / ``torch.float`` dtype is used for all rendering modules. Varying levels of support exist for the other non default [float dtypes](https://pytorch.org/docs/stable/tensor_attributes.html#torch.dtype) (``torch.float64`` / ``torch.double``, ``torch.float16`` / ``torch.half``, & ``torch.bfloat16``). For example, the Optim module easily supports ``torch.float64``, while FP16 support is sporadic. 
 
@@ -147,17 +147,17 @@ There are currently multiple limitations for ``torch.float16`` & ``torch.bfloat1
 
 These limitations can be partially overcome by utilizing PyTorch's [Automatic Mixed Precision package](https://pytorch.org/docs/stable/amp.html) (AMP)'s ``torch.autocast`` context manager. However, rendering may not work correctly unless you are using ``torch.float32`` / ``torch.float`` or ``torch.float64`` / ``torch.double``.
 
-**How can I avoid out of memory errors when rendering?**
+### **How can I avoid out of memory errors when rendering?**
 
 If you are getting out of memory (OOM) errors when trying to render visualizations, you may have to reduce the batch size and or size of the image parameterization being used. If you are using a custom module, then you should make sure that there are no memory leaks present in it.
 
-**Does Optim work with torch.fx?**
+### **Does Optim work with torch.fx?**
 
 No, the Optim module's dynamic control flow is not supported by [torch.fx](https://pytorch.org/docs/stable/fx.html). Custom modules though may be able to have some level of support for ``torch.fx``.
 
 This means that Torchvision's ``torchvision.models.feature_extraction`` [package](https://pytorch.org/vision/stable/feature_extraction.html) won't work as it requires ``torch.fx`` support. The Optim module's ``collect_activations`` function should be used instead.
 
-**Does Optim support TensorBoard?**
+### **Does Optim support TensorBoard?**
 
 Yes, Optim supports [TensorBoard](https://www.tensorflow.org/tensorboard) via PyTorch's ``torch.utils.tensorboard`` [module](https://pytorch.org/docs/stable/tensorboard.html). You will have to add PyTorch's TensorBoard related functions to your code first before using TensorBoard.
 
