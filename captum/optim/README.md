@@ -150,6 +150,8 @@ img_set = torch.cat([img[0:1], hm_img, img[1:2]])
 opt.show(img_set, images_per_row=3, figsize=(15, 10))
 ```
 
+![circuits_showcase](https://user-images.githubusercontent.com/10626398/180571535-811fb987-d8c9-496f-9903-db52797930f6.png)
+
 Docs
 -----------------
 
