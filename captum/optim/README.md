@@ -143,9 +143,8 @@ From analysing the neurons in our model, we know that the mixed4a_relu channel 3
 
 ```
 image = opt.images.NaturalImage((224, 224), batch=2).to(device)
-loss_fn = opt.loss.NeuronActivation(
-    model.mixed4a, 308, batch_index=0
-) + opt.loss.NeuronActivation(model.mixed4b_relu, 443, batch_index=1)
+loss_fn = opt.loss.NeuronActivation(model.mixed4a, 308, batch_index=0)
+loss_fn += opt.loss.NeuronActivation(model.mixed4b_relu, 443, batch_index=1)
 img = visualize(model, loss_fn, image)
 img_set = torch.cat([img[0:1], hm_img, img[1:2]])
 
