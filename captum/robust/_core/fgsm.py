@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from typing import Any, Callable, Tuple
+from typing import Any, Callable, Optional, Tuple
 
 import torch
 from captum._utils.common import (
