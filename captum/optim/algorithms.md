@@ -57,6 +57,7 @@ To learn more about TotalVariation visit the following resources:
 
 * [Understanding Deep Image Representations by Inverting Them](https://arxiv.org/abs/1412.0035)
 * https://en.wikipedia.org/wiki/Total_variation
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/lucid/optvis/objectives.py)
 
 ### L1
 Penalizes the l1 of the target layer activations.
