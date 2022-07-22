@@ -139,6 +139,8 @@ W_4a_4b_hm = opt.weights_to_heatmap_2d(W_4a_4b[443, 308, ...] / W_4a_4b[443, ...
 hm_img = F.interpolate(W_4a_4b_hm[None, :], size=(224, 224), mode="nearest-exact")
 ```
 
+From analysing the neurons in our model, we know that the mixed4a_relu channel 308 neuron is a dog head detector, and the mixed4b_relu channel 443 neuron is a full dog body. Viewing the weights connecting both neurons allows us to see the nessecary contextual information for how the head is placed on the body.
+
 ```
 image = opt.images.NaturalImage((224, 224), batch=2).to(device)
 loss_fn = opt.loss.NeuronActivation(
