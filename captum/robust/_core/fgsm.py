@@ -42,7 +42,7 @@ class FGSM(Perturbation):
     def __init__(
         self,
         forward_func: Callable,
-        loss_func: Callable = None,
+        loss_func: Optional[Callable] = None,
         lower_bound: float = float("-inf"),
         upper_bound: float = float("inf"),
     ) -> None:
@@ -78,7 +78,7 @@ class FGSM(Perturbation):
         inputs: TensorOrTupleOfTensorsGeneric,
         epsilon: float,
         target: Any,
-        additional_forward_args: Optional[Any] = None,
+        additional_forward_args: Any = None,
         targeted: bool = False,
     ) -> TensorOrTupleOfTensorsGeneric:
         r"""
