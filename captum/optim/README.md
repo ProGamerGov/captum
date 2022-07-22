@@ -102,7 +102,7 @@ visualize(model, loss_fn, image, transforms)
 
 **Circuits**
 
-We start off by loading a linear version of the InceptionV1 along with the normal version for rendering.
+We start off by loading a linear version of the InceptionV1 model along with the normal version for rendering.
 
 ```
 import captum.optim as opt
@@ -152,6 +152,7 @@ opt.show(img_set, images_per_row=3, figsize=(15, 10))
 ```
 
 ![circuits_showcase](https://user-images.githubusercontent.com/10626398/180571535-811fb987-d8c9-496f-9903-db52797930f6.png)
+
 
 Docs
 -----------------
