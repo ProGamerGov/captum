@@ -32,6 +32,7 @@ class Loss(ABC):
 
     def __init__(self) -> None:
         super().__init__()
+        self.__name__ = self.__class__.__name__
 
     @abstractproperty
     def target(self) -> Union[nn.Module, List[nn.Module]]:
@@ -377,7 +378,6 @@ def loss_wrapper(cls: Any) -> Callable:
     return wrapper
 
 
-@loss_wrapper
 class LayerActivation(BaseLoss):
     """
     Maximize activations at the target layer.
@@ -409,7 +409,6 @@ class LayerActivation(BaseLoss):
         return activations
 
 
-@loss_wrapper
 class ChannelActivation(BaseLoss):
     """
     Maximize activations at the target layer and target channel.
@@ -451,7 +450,6 @@ class ChannelActivation(BaseLoss):
         ]
 
 
-@loss_wrapper
 class NeuronActivation(BaseLoss):
     """
     This loss maximizes the activations of a target neuron in the specified channel
@@ -509,7 +507,6 @@ class NeuronActivation(BaseLoss):
         ]
 
 
-@loss_wrapper
 class DeepDream(BaseLoss):
     """
     Maximize 'interestingness' at the target layer.
@@ -550,7 +547,6 @@ class DeepDream(BaseLoss):
         return activations**2
 
 
-@loss_wrapper
 class TotalVariation(BaseLoss):
     """
     Total variation denoising penalty for activations.
@@ -587,7 +583,6 @@ class TotalVariation(BaseLoss):
         return torch.sum(torch.abs(x_diff)) + torch.sum(torch.abs(y_diff))
 
 
-@loss_wrapper
 class L1(BaseLoss):
     """
     L1 norm of the target layer, generally used as a penalty.
@@ -620,7 +615,6 @@ class L1(BaseLoss):
         return torch.abs(activations - self.constant).sum()
 
 
-@loss_wrapper
 class L2(BaseLoss):
     """
     L2 norm of the target layer, generally used as a penalty.
@@ -660,7 +654,6 @@ class L2(BaseLoss):
         return torch.sqrt(self.eps + activations)
 
 
-@loss_wrapper
 class Diversity(BaseLoss):
     """
     Use a cosine similarity penalty to extract features from a polysemantic neuron.
@@ -709,7 +702,6 @@ class Diversity(BaseLoss):
         )
 
 
-@loss_wrapper
 class ActivationInterpolation(BaseLoss):
     """
     Interpolate between two different layers & channels.
@@ -776,7 +768,6 @@ class ActivationInterpolation(BaseLoss):
         return sum_tensor
 
 
-@loss_wrapper
 class Alignment(BaseLoss):
     """
     Penalize the L2 distance between tensors in the batch to encourage visual
@@ -830,7 +821,6 @@ class Alignment(BaseLoss):
         return -sum_tensor
 
 
-@loss_wrapper
 class Direction(BaseLoss):
     """
     Visualize a general direction vector.
@@ -873,7 +863,6 @@ class Direction(BaseLoss):
         return _dot_cossim(self.vec, activations, cossim_pow=self.cossim_pow)
 
 
-@loss_wrapper
 class NeuronDirection(BaseLoss):
     """
     Visualize a single (x, y) position for a direction vector.
@@ -940,7 +929,6 @@ class NeuronDirection(BaseLoss):
         return _dot_cossim(self.vec, activations, cossim_pow=self.cossim_pow)
 
 
-@loss_wrapper
 class AngledNeuronDirection(BaseLoss):
     """
     Visualize a direction vector with an optional whitened activation vector to
@@ -1039,7 +1027,6 @@ class AngledNeuronDirection(BaseLoss):
         return dot * torch.clamp(cossims, min=0.1) ** self.cossim_pow
 
 
-@loss_wrapper
 class TensorDirection(BaseLoss):
     """
     Visualize a tensor direction vector.
@@ -1093,7 +1080,6 @@ class TensorDirection(BaseLoss):
         return _dot_cossim(self.vec, activations, cossim_pow=self.cossim_pow)
 
 
-@loss_wrapper
 class ActivationWeights(BaseLoss):
     """
     Apply weights to channels, neurons, or spots in the target.
