@@ -3,18 +3,25 @@ id: faq
 title: FAQ
 ---
 
-## Attribution
 
-* [How do I set the target parameter to an attribution method?](#how-do-i-set-the-target-parameter-to-an-attribution-method)
-* [I am facing Out-Of-Memory (OOM) errors when using Captum. How do I resolve this?](#i-am-facing-out-of-memory-oom-errors-when-using-captum-how-do-i-resolve-this)
-* [I am using a perturbation based method, and attributions are taking too long to compute. How can I speed it up?](#i-am-using-a-perturbation-based-method-and-attributions-are-taking-too-long-to-compute-how-can-i-speed-it-up)
-* [Are SmoothGrad or VarGrad supported in Captum?](#are-smoothgrad-or-vargrad-supported-in-captum)
-* [How do I use Captum with BERT models?](#how-do-i-use-captum-with-bert-models)
-* [My model inputs or outputs token indices, and when using Captum I see errors relating to gradients, how do I resolve this?](#my-model-inputs-or-outputs-token-indices-and-when-using-captum-i-see-errors-relating-to-gradients-how-do-i-resolve-this)
-* [Can my model using functional non-linearities (E.g. nn.functional.ReLU) or reused modules be used with Captum?](#can-my-model-using-functional-non-linearities-eg-nnfunctionalrelu-or-reused-modules-be-used-with-captum)
-* [Do JIT models, DataParallel models, or DistributedDataParallel models work with Captum?](#do-jit-models-dataparallel-models-or-distributeddataparallel-models-work-with-captum)
-* [I am working on a new interpretability or attribution method and would like to add it to Captum. How do I proceed?](#i-am-working-on-a-new-interpretability-or-attribution-method-and-would-like-to-add-it-to-captum-how-do-i-proceed)
-* [I am using a gradient-based attribution algorithm such as integrated gradients for a RNN or LSTM network and I see 'cudnn RNN backward can only be called in training mode'. How can I resolve this issue ?](#how-can-I-resolve-cudnn-RNN-backward-error-for-RNN-or-LSTM-network)
+
+
+
+* Attribution
+
+  * [How do I set the target parameter to an attribution method?](#how-do-i-set-the-target-parameter-to-an-attribution-method)
+  * [I am facing Out-Of-Memory (OOM) errors when using Captum. How do I resolve this?](#i-am-facing-out-of-memory-oom-errors-when-using-captum-how-do-i-resolve-this)
+  * [I am using a perturbation based method, and attributions are taking too long to compute. How can I speed it up?](#i-am-using-a-perturbation-based-method-and-attributions-are-taking-too-long-to-compute-how-can-i-speed-it-up)
+  * [Are SmoothGrad or VarGrad supported in Captum?](#are-smoothgrad-or-vargrad-supported-in-captum)
+  * [How do I use Captum with BERT models?](#how-do-i-use-captum-with-bert-models)
+  * [My model inputs or outputs token indices, and when using Captum I see errors relating to gradients, how do I resolve this?](#my-model-inputs-or-outputs-token-indices-and-when-using-captum-i-see-errors-relating-to-gradients-how-do-i-resolve-this)
+  * [Can my model using functional non-linearities (E.g. nn.functional.ReLU) or reused modules be used with Captum?](#can-my-model-using-functional-non-linearities-eg-nnfunctionalrelu-or-reused-modules-be-used-with-captum)
+  * [Do JIT models, DataParallel models, or DistributedDataParallel models work with Captum?](#do-jit-models-dataparallel-models-or-distributeddataparallel-models-work-with-captum)
+  * [I am working on a new interpretability or attribution method and would like to add it to Captum. How do I proceed?](#i-am-working-on-a-new-interpretability-or-attribution-method-and-would-like-to-add-it-to-captum-how-do-i-proceed)
+  * [I am using a gradient-based attribution algorithm such as integrated gradients for a RNN or LSTM network and I see 'cudnn RNN backward can only be called in training mode'. How can I resolve this issue ?](#how-can-I-resolve-cudnn-RNN-backward-error-for-RNN-or-LSTM-network)
+
+
+## Attribution
 
 
 ### **How do I set the target parameter to an attribution method?**
