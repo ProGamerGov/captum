@@ -9,20 +9,6 @@ from captum.optim._utils.image.common import _dot_cossim, get_neuron_pos
 from captum.optim._utils.typing import ModuleOutputMapping
 
 
-def _make_arg_str(arg: Any) -> str:
-    """
-    Args:
-
-        args (Any): A set of arguments to covert to a string.
-
-    Returns:
-        args (str): The args in str form.
-    """
-    arg = str(arg)
-    too_big = len(arg) > 15 or "\n" in arg
-    return arg[:15] + "..." if too_big else arg
-
-
 class Loss(ABC):
     """
     Abstract Class to describe loss.
@@ -361,21 +347,6 @@ class CompositeLoss(BaseLoss):
                 loss function.
         """
         return self.loss_fn(targets_to_values)
-
-
-def loss_wrapper(cls: Any) -> Callable:
-    """
-    Primarily for naming purposes.
-    """
-
-    @functools.wraps(cls)
-    def wrapper(*args, **kwargs) -> object:
-        obj = cls(*args, **kwargs)
-        args_str = " [" + ", ".join([_make_arg_str(arg) for arg in args]) + "]"
-        obj.__name__ = cls.__name__ + args_str
-        return obj
-
-    return wrapper
 
 
 class LayerActivation(BaseLoss):
