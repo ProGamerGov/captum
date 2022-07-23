@@ -19,7 +19,16 @@ title: FAQ
   * [I am working on a new interpretability or attribution method and would like to add it to Captum. How do I proceed?](#i-am-working-on-a-new-interpretability-or-attribution-method-and-would-like-to-add-it-to-captum-how-do-i-proceed)
   * [I am using a gradient-based attribution algorithm such as integrated gradients for a RNN or LSTM network and I see 'cudnn RNN backward can only be called in training mode'. How can I resolve this issue ?](#how-can-I-resolve-cudnn-RNN-backward-error-for-RNN-or-LSTM-network)
 
-* [Optim](#optim)
+* **[Optim](#optim)**
+
+  * [How do I know if my model is compatible with the Optim?](#how-do-i-know-if-my-model-is-compatible-with-the-optim)
+  * [Are only 3 channel RGB images and 4 channel RGBA images supported and can I use a different color space?](#are-only-3-channel-rgb-images-and-4-channel-rgba-images-supported-and-can-i-use-a-different-color-space)
+  * [Why are my rendered visualizations poor quality or non-existent in outputs?](#why-are-my-rendered-visualizations-poor-quality-or-non-existent-in-outputs)
+  * [Does the Optim module support JIT?](#does-the-optim-module-support-jit)
+  * [What dtypes does the Optim module support?](#what-dtypes-does-the-optim-module-support)
+  * [How can I avoid out of memory errors when rendering?](#how-can-i-avoid-out-of-memory-errors-when-rendering)
+  * [Does Optim work with torch.fx?](#does-optim-work-with-torchfx)
+  * [Does Optim support TensorBoard?](#does-optim-support-tensorboard)
 
 
 ## Attribution
