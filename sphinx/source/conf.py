@@ -215,7 +215,7 @@ def autodoc_process_docstring(
     Modify docstrings before creating html files.
 
     Sphinx converts the 'Args:' and 'Returns:' sections of docstrings into
-	reStructuredText (rST) syntax, which can then be found via ':type' & ':rtype'.
+    reStructuredText (rST) syntax, which can then be found via ':type' & ':rtype'.
 
     See here for more information:
     https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
