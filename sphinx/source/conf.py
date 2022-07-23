@@ -204,7 +204,8 @@ epub_exclude_files = ["search.html"]
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
-# -- Docstring Improvements ----------------------------------------------
+
+# -- Docstring Improvements --------------------------------------------------
 
 def autodoc_process_docstring(
     app, what: str, name: str, obj, options, lines: List[str]
