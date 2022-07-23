@@ -207,11 +207,15 @@ todo_include_todos = True
 
 # -- Docstring Improvements --------------------------------------------------
 
+
 def autodoc_process_docstring(
     app, what: str, name: str, obj, options, lines: List[str]
 ) -> None:
     """
     Modify docstrings before creating html files.
+
+    Sphinx converts the 'Args:' and 'Returns:' sections of docstrings into
+	reStructuredText (rST) syntax, which can then be found via ':type' & ':rtype'.
 
     See here for more information:
     https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html
