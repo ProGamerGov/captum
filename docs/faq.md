@@ -28,6 +28,7 @@ title: FAQ
   * [What dtypes does the Optim module support?](#what-dtypes-does-the-optim-module-support)
   * [How can I avoid out of memory errors when rendering?](#how-can-i-avoid-out-of-memory-errors-when-rendering)
   * [Can I use Optim with a CPU or do I have to use a GPU?](#can-i-use-optim-with-a-cpu-or-do-i-have-to-use-a-gpu)
+  * [Do I have to use the provided transforms or can I use transforms from other libraries?]()
   * [Does Optim work with torch.fx?](#does-optim-work-with-torchfx)
   * [Does Optim support TensorBoard?](#does-optim-support-tensorboard)
 
@@ -138,6 +139,10 @@ If you are getting out of memory (OOM) errors when trying to render visualizatio
 ### **Can I use Optim with a CPU or do I have to use a GPU?**
 
 Yes, Optim will work with a CPU though it will be slower than when using a GPU.
+
+### **Do I have to use the provided transforms or can I use transforms from other libraries?**
+
+No, you can use transforms from other libraries like [Torchvision](https://pytorch.org/vision/stable/index.html), [Kornia](https://kornia.github.io/), and even your own custom transforms! The only restriction on transforms is that they must be autograd compatible.
 
 ### **Does Optim work with torch.fx?**
 
