@@ -134,6 +134,10 @@ These limitations can be partially overcome by utilizing PyTorch's [Automatic Mi
 
 If you are getting out of memory (OOM) errors when trying to render visualizations, you may have to reduce the batch size and or size of the image parameterization being used. If you are using a custom module, then you should make sure that there are no memory leaks present in it.
 
+### **Can I use Optim with a CPU or do I have to use a GPU?**
+
+Yes, Optim will work with a CPU though it will be slower than when using a GPU.
+
 ### **Does Optim work with torch.fx?**
 
 No, the Optim module's dynamic control flow is not supported by [torch.fx](https://pytorch.org/docs/stable/fx.html). Custom modules though may be able to have some level of support for ``torch.fx``.
