@@ -482,6 +482,26 @@ To learn more about FacetLoss visit the following resources:
   * [Supplementary Implementation](https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py)
 
 
+## Images
+
+### FFTImage
+
+The FFTImage image parameterization allows for the preconditioning of optimizers with spatially decorrelated data.
+
+To learn more about FFTImage visit the following resources:
+* [Preconditioning and Parameterization](https://distill.pub/2017/feature-visualization/#preconditioning)
+
+
+## Transforms
+
+The ToRGB transform allows for the preconditioning of optimizers with decorrelated image channels.
+
+### ToRGB
+
+To learn more about ToRGB visit the following resources:
+* [https://www.sciencedirect.com/science/article/pii/0146664X80900477](https://www.sciencedirect.com/science/article/pii/0146664X80900477)
+
+
 ## Submodules
 
 ### Circuits
