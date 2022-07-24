@@ -6,6 +6,9 @@ title: Algorithm Descriptions
 Captum is a library within which different interpretability methods can be implemented.  The Captum team welcomes any contributions in the form of algorithms, methods or library extensions!
 
 
+* [#attribution]
+* [#optim]
+
 # Attribution
 
 The attribution algorithms in Captum are separated into three groups, primary attribution, layer attribution and neuron attribution, which are defined as follows:
