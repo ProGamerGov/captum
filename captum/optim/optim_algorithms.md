@@ -3,11 +3,11 @@ id: algorithms
 title: Algorithm Descriptions
 ---
 
+## Loss Objectives
+
 Below is a quick summary of the loss objectives currently provided by Optim. Loss objectives are used to steer the optimization process towards desired directions, layers, channels, and neurons.
 
 Loss objectives can be made to target specific batch indices, and they are fully composable with mathematical operations.
-
-## Loss Objectives
 
 ### LayerActivation
 This is the most basic loss available and it simply returns the activations in their original form.
@@ -204,3 +204,45 @@ To learn more about FacetLoss visit the following resources:
 
 * [Multimodal Neurons in Artificial Neural Networks: Faceted Feature Visualization](https://distill.pub/2021/multimodal-neurons/#faceted-feature-visualization)
   * [Supplementary Implementation](https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py)
+
+
+## Images
+
+### FFTImage
+
+The FFTImage image parameterization allows for the preconditioning of optimizers with spatially decorrelated data.
+
+To learn more about FFTImage visit the following resources:
+* [Preconditioning and Parameterization](https://distill.pub/2017/feature-visualization/#preconditioning)
+
+
+## Transforms
+
+The ToRGB transform allows for the preconditioning of optimizers with decorrelated image channels.
+
+### ToRGB
+
+To learn more about ToRGB visit the following resources:
+* [Preconditioning and Parameterization](https://distill.pub/2017/feature-visualization/#preconditioning)
+* [Color information for region segmentation](https://www.sciencedirect.com/science/article/pii/0146664X80900477)
+
+
+## Submodules
+
+### Circuits
+
+The circuits submodule allows for the extraction of meaningful weight interactions from between neurons which aren’t literally adjacent in a neural network. This can yield important contextual information that would otherwise be missed.
+
+
+To learn more about circuits visit the following resources:
+* [Visualizing Weights](https://distill.pub/2020/circuits/visualizing-weights/)
+* [Thread: Circuits](https://distill.pub/2020/circuits/)
+
+
+### Atlas
+
+The atlas submodule provides the tools necessary for creating activations atlases.
+
+To learn more about Activation Atlases visit the following resources:
+* [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/notebooks/activation-atlas/activation-atlas-simple.ipynb)
