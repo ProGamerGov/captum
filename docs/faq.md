@@ -133,7 +133,7 @@ These limitations can be partially overcome by utilizing PyTorch's [Automatic Mi
 
 ### **How can I avoid out of memory errors when rendering?**
 
-If you are getting out of memory (OOM) errors when trying to render visualizations, you may have to reduce the batch size and or size of the image parameterization being used. If you are using a custom module, then you should make sure that there are no memory leaks present in it.
+If you are getting out of memory (OOM) errors when trying to render visualizations, you may have to reduce the batch size and / or size of the image parameterization being used. If you are using a custom module, then you should make sure that there are no memory leaks present in it.
 
 ### **Can I use Optim with a CPU or do I have to use a GPU?**
 
