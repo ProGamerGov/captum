@@ -491,6 +491,7 @@ The circuits submodule allows for the extraction of meaningful weight interactio
 
 To learn more about circuits visit the following resources:
 * [Visualizing Weights](https://distill.pub/2020/circuits/visualizing-weights/)
+* [Thread: Circuits](https://distill.pub/2020/circuits/)
 
 
 ### Atlas
