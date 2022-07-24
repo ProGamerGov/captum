@@ -499,7 +499,7 @@ The ToRGB transform allows for the preconditioning of optimizers with decorrelat
 ### ToRGB
 
 To learn more about ToRGB visit the following resources:
-* [https://www.sciencedirect.com/science/article/pii/0146664X80900477](https://www.sciencedirect.com/science/article/pii/0146664X80900477)
+* [Color information for region segmentation](https://www.sciencedirect.com/science/article/pii/0146664X80900477)
 
 
 ## Submodules
