@@ -499,4 +499,5 @@ To learn more about circuits visit the following resources:
 The atlas submodule provides the tools necessary for creating activations atlases.
 
 To learn more about Activation Atlases visit the following resources:
-* [Exploring Neural Networks with Activation Atlases]([https://distill.pub/2020/circuits/visualizing-weights/](https://distill.pub/2019/activation-atlas/))
+* [Exploring Neural Networks with Activation Atlases](https://distill.pub/2019/activation-atlas/)
+* [Original Implementation](https://github.com/tensorflow/lucid/blob/master/notebooks/activation-atlas/activation-atlas-simple.ipynb)
