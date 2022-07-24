@@ -480,3 +480,14 @@ To learn more about FacetLoss visit the following resources:
 
 * [Multimodal Neurons in Artificial Neural Networks: Faceted Feature Visualization](https://distill.pub/2021/multimodal-neurons/#faceted-feature-visualization)
   * [Supplementary Implementation](https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py)
+
+
+## Submodules
+
+### Circuits
+
+The circuits module allows for the extraction of meaningful weight interactions from between neurons which aren’t literally adjacent in a neural network. This can yield important contextual information that would otherwise be missed.
+
+
+To learn more about circuits visit the following resources:
+* [Visualizing Weights](https://distill.pub/2020/circuits/visualizing-weights/)
