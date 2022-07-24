@@ -6,7 +6,7 @@ title: Algorithm Descriptions
 Captum is a library within which different interpretability methods can be implemented.  The Captum team welcomes any contributions in the form of algorithms, methods or library extensions!
 
 
-## Attribution
+# Attribution
 
 The attribution algorithms in Captum are separated into three groups, primary attribution, layer attribution and neuron attribution, which are defined as follows:
 * Primary Attribution: Evaluates contribution of each input feature to the output of a model.
@@ -18,8 +18,8 @@ Below is a short summary of the various methods currently implemented for primar
 Beside attribution algorithms Captum also offers metrics to estimate the trustworthiness of model explanations.
 Currently we offer infidelity and sensitivity metrics that help us to estimate the goodness of explanations.
 
-### Primary Attribution
-#### Integrated Gradients
+## Primary Attribution
+### Integrated Gradients
 Integrated gradients represents the integral of gradients with respect to inputs along the path from a given baseline to input. The integral can be approximated using a Riemann Sum or Gauss Legendre quadrature rule. Formally, it can be described as follows:
 
 ![IG_eq1](/img/IG_eq1.png)
@@ -30,7 +30,7 @@ The cornerstones of this approach are two fundamental axioms, namely sensitivity
 To learn more about Integrated Gradients, visit the following resources:
 - [Original paper](https://arxiv.org/abs/1703.01365)
 
-#### Gradient SHAP
+### Gradient SHAP
 Gradient SHAP is a gradient method to compute SHAP values, which are based on Shapley values proposed in cooperative game theory. Gradient SHAP adds Gaussian noise to each input sample multiple times, selects a random point along the path between baseline and input, and computes the gradient of outputs with respect to those selected random points. The final SHAP values represent the expected value of gradients * (inputs - baselines).
 
 The computed attributions approximate SHAP values under the assumptions that the input features are independent and that the explanation model is linear between the inputs and given baselines.
