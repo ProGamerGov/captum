@@ -486,8 +486,16 @@ To learn more about FacetLoss visit the following resources:
 
 ### Circuits
 
-The circuits module allows for the extraction of meaningful weight interactions from between neurons which aren’t literally adjacent in a neural network. This can yield important contextual information that would otherwise be missed.
+The circuits submodule allows for the extraction of meaningful weight interactions from between neurons which aren’t literally adjacent in a neural network. This can yield important contextual information that would otherwise be missed.
 
 
 To learn more about circuits visit the following resources:
 * [Visualizing Weights](https://distill.pub/2020/circuits/visualizing-weights/)
+
+
+### Atlas
+
+The atlas submodule provides the tools necessary for creating activations atlases.
+
+To learn more about Activation Atlases visit the following resources:
+* [Exploring Neural Networks with Activation Atlases]([https://distill.pub/2020/circuits/visualizing-weights/](https://distill.pub/2019/activation-atlas/))
