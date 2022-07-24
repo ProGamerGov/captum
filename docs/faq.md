@@ -142,7 +142,7 @@ Yes, Optim will work with a CPU though it will be slower than when using a GPU.
 
 ### **Do I have to use the provided transforms or can I use transforms from other libraries?**
 
-No, you can use transforms from other libraries like [Torchvision](https://pytorch.org/vision/stable/index.html), [Kornia](https://kornia.github.io/), and even your own custom transforms! The only restriction on transforms is that they must be autograd compatible.
+No, you can use transforms from other libraries like [Torchvision](https://pytorch.org/vision/stable/index.html) and [Kornia](https://kornia.github.io/). You can also create your own custom transforms! The only restriction on transforms is that they must be autograd compatible.
 
 ### **Does Optim work with torch.fx?**
 
