@@ -28,7 +28,7 @@ title: FAQ
   * [What dtypes does the Optim module support?](#what-dtypes-does-the-optim-module-support)
   * [How can I avoid out of memory errors when rendering?](#how-can-i-avoid-out-of-memory-errors-when-rendering)
   * [Can I use Optim with a CPU or do I have to use a GPU?](#can-i-use-optim-with-a-cpu-or-do-i-have-to-use-a-gpu)
-  * [Do I have to use the provided transforms or can I use transforms from other libraries?]()
+  * [Do I have to use the provided transforms or can I use transforms from other libraries?](#do-i-have-to-use-the-provided-transforms-or-can-i-use-transforms-from-other-libraries)
   * [Does Optim work with torch.fx?](#does-optim-work-with-torchfx)
   * [Does Optim support TensorBoard?](#does-optim-support-tensorboard)
 
