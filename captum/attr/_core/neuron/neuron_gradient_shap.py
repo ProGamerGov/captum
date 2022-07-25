@@ -66,11 +66,12 @@ class NeuronGradientShap(NeuronAttribution, GradientAttribution):
                         Currently, it is assumed that the inputs or the outputs
                         of the neurons in this layer, depending on which one is
                         used for attribution, can only be a single tensor.
-            device_ids (list of int): Device ID list, necessary only if forward_func
-                        applies a DataParallel model. This allows reconstruction of
-                        intermediate outputs from batched results across devices.
-                        If forward_func is given as the DataParallel model itself,
-                        then it is not necessary to provide this argument.
+            device_ids (list of int): Device ID list, necessary only if
+                        ``forward_func`` applies a DataParallel model. This allows
+                        reconstruction of intermediate outputs from batched results
+                        across devices. If ``forward_func`` is given as the
+                        DataParallel model itself, then it is not necessary to provide
+                        this argument.
             multiply_by_inputs (bool, optional): Indicates whether to factor
                         model inputs' multiplier in the final attribution scores.
                         In the literature this is also known as local vs global

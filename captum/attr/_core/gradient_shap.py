@@ -308,7 +308,7 @@ class InputBaselineXGradient(GradientAttribution):
 
                         In case of gradient shap, if ``multiply_by_inputs``
                         is set to True, the sensitivity scores of scaled inputs
-                        are being multiplied by (inputs - baselines).
+                        are being multiplied by (``inputs`` - ``baselines``).
 
         """
         GradientAttribution.__init__(self, forward_func)

@@ -33,13 +33,13 @@ class NoiseTunnel(Attribution):
     Adds gaussian noise to each input in the batch ``nt_samples`` times
     and applies the given attribution algorithm to each of the samples.
     The attributions of the samples are combined based on the given noise
-    tunnel type (nt_type):
-    If nt_type is ``smoothgrad``, the mean of the sampled attributions is
+    tunnel type (``nt_type``):
+    If ``nt_type`` is ``smoothgrad``, the mean of the sampled attributions is
     returned. This approximates smoothing the given attribution method
     with a Gaussian Kernel.
-    If nt_type is ``smoothgrad_sq``, the mean of the squared sample attributions
+    If ``nt_type`` is ``smoothgrad_sq``, the mean of the squared sample attributions
     is returned.
-    If nt_type is ``vargrad``, the variance of the sample attributions is
+    If ``nt_type`` is ``vargrad``, the variance of the sample attributions is
     returned.
 
     More details about adding noise can be found in the following papers:
@@ -95,9 +95,9 @@ class NoiseTunnel(Attribution):
         Args:
 
             inputs (tensor or tuple of tensors): Input for which integrated
-                        gradients are computed. If forward_func takes a single
+                        gradients are computed. If ``forward_func`` takes a single
                         tensor as input, a single input tensor should be provided.
-                        If forward_func takes multiple tensors as input, a tuple
+                        If ``forward_func`` takes multiple tensors as input, a tuple
                         of the input tensors should be provided. It is assumed
                         that for all given input tensors, dimension 0 corresponds
                         to the number of examples, and if multiple input tensors

@@ -101,10 +101,12 @@ class FeaturePermutation(FeatureAblation):
         **kwargs: Any,
     ) -> TensorOrTupleOfTensorsGeneric:
         r"""
-        This function is almost equivalent to :func:`.FeatureAblation.attribute`. The
-        main difference is the way ablated examples are generated. Specifically
-        they are generated through the ``perm_func``, as we set the baselines for
-        :func:`.FeatureAblation.attribute` to None.
+        This function is almost equivalent to
+        :func:`captum.attr.FeatureAblation.attribute`. The main difference is the way
+        ablated examples are generated. Specifically they are generated through the
+        ``perm_func``, as we set the baselines for
+        :func:`FeatureAblation.attribute <captum..attr.FeatureAblation.attribute>` to
+        ``None``.
 
 
         Args:
