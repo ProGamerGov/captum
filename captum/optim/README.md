@@ -63,7 +63,7 @@ Modules
 Getting Started
 -----------------
 
-Below we demonstrate the usage of the Optim library for rendering a simple loss objective.
+Below we demonstrate the usage of the Optim library for rendering a simple channel loss objective.
 
 ```
 import torch
@@ -104,6 +104,7 @@ visualize(model, loss_fn, image, transforms)
 
 **Circuits**
 
+
 We start off by loading a linear version of the InceptionV1 model along with the normal version for rendering.
 
 ```
@@ -121,13 +122,6 @@ linear_model = (
     .eval()
 )
 model = opt.models.googlenet(pretrained=True).to(device).eval()
-
-
-def visualize(model, loss_fn, image):
-    transforms = opt.transforms.TransformationRobustness()
-    obj = opt.InputOptimization(model, loss_fn, image, transforms)
-    history = obj.optimize(opt.optimization.n_steps(256, True), lr=0.024)
-    return image().detach()
 ```
 
 ```
@@ -144,6 +138,12 @@ hm_img = F.interpolate(W_4a_4b_hm[None, :], size=(224, 224), mode="nearest-exact
 From analysing the neurons in our model, we know that the mixed4a_relu channel 308 neuron is a dog head detector, and the mixed4b_relu channel 443 neuron is a full dog body. Viewing the weights connecting both neurons allows us to see the nessecary contextual information for how the head is placed on the body.
 
 ```
+def visualize(model, loss_fn, image):
+    transforms = opt.transforms.TransformationRobustness()
+    obj = opt.InputOptimization(model, loss_fn, image, transforms)
+    history = obj.optimize(opt.optimization.n_steps(256, True), lr=0.024)
+    return image().detach()
+
 image = opt.images.NaturalImage((224, 224), batch=2).to(device)
 loss_fn = opt.loss.NeuronActivation(model.mixed4a, 308, batch_index=0)
 loss_fn += opt.loss.NeuronActivation(model.mixed4b_relu, 443, batch_index=1)
