@@ -59,7 +59,7 @@ def _check_valid_module(inputs_grad_fn, outputs) -> bool:
     curr_fn = outputs.grad_fn
     first_next = curr_fn.next_functions[0]
     try:
-        # if `inputs` in the input to the network then the grad_fn is None and
+        # if ``inputs`` in the input to the network then the grad_fn is None and
         # for that input backward_hook isn't computed. That's the reason why we
         # need to check on `inputs_grad_fns[first_next[1]]` being None.
         return (
@@ -126,10 +126,10 @@ class DeepLift(GradientAttribution):
                         More detailed can be found here:
                         https://arxiv.org/abs/1711.06104
 
-                        In case of DeepLift, if `multiply_by_inputs`
+                        In case of DeepLift, if ``multiply_by_inputs``
                         is set to True, final sensitivity scores
                         are being multiplied by (inputs - baselines).
-                        This flag applies only if `custom_attribution_func` is
+                        This flag applies only if ``custom_attribution_func`` is
                         set to None.
 
             eps (float, optional): A value at which to consider output/input change
@@ -222,7 +222,7 @@ class DeepLift(GradientAttribution):
                             inputs' tuple. This scalar value is broadcasted
                             for corresponding input tensor.
 
-                        In the cases when `baselines` is not provided, we internally
+                        In the cases when ``baselines`` is not provided, we internally
                         use zero scalar corresponding to each input tensor.
 
                         Default: None
@@ -278,11 +278,11 @@ class DeepLift(GradientAttribution):
 
                         In case this function is not provided, we use the default
                         logic defined as: multipliers * (inputs - baselines)
-                        It is assumed that all input arguments, `multipliers`,
-                        `inputs` and `baselines` are provided in tuples of same
-                        length. `custom_attribution_func` returns a tuple of
+                        It is assumed that all input arguments, ``multipliers``,
+                        ``inputs`` and ``baselines`` are provided in tuples of same
+                        length. ``custom_attribution_func`` returns a tuple of
                         attribution tensors that have the same length as the
-                        `inputs`.
+                        ``inputs``.
 
                         Default: None
 
@@ -306,8 +306,8 @@ class DeepLift(GradientAttribution):
                 of examples in input.
                 Note that the logic described for deltas is guaranteed when the
                 default logic for attribution computations is used, meaning that the
-                `custom_attribution_func=None`, otherwise it is not guaranteed and
-                depends on the specifics of the `custom_attribution_func`.
+                ``custom_attribution_func=None``, otherwise it is not guaranteed and
+                depends on the specifics of the ``custom_attribution_func``.
 
         Examples::
 
@@ -640,10 +640,10 @@ class DeepLiftShap(DeepLift):
                         More detailed can be found here:
                         https://arxiv.org/abs/1711.06104
 
-                        In case of DeepLiftShap, if `multiply_by_inputs`
+                        In case of DeepLiftShap, if ``multiply_by_inputs``
                         is set to True, final sensitivity scores
                         are being multiplied by (inputs - baselines).
-                        This flag applies only if `custom_attribution_func` is
+                        This flag applies only if ``custom_attribution_func`` is
                         set to None.
         """
         DeepLift.__init__(self, model, multiply_by_inputs=multiply_by_inputs)
@@ -724,7 +724,7 @@ class DeepLiftShap(DeepLift):
                           the dimensions of the corresponding input tensor
                           starting from the second dimension.
 
-                        - callable function, optionally takes `inputs` as an
+                        - callable function, optionally takes ``inputs`` as an
                           argument and either returns a single tensor
                           or a tuple of those.
 
@@ -782,11 +782,11 @@ class DeepLiftShap(DeepLift):
 
                         In case this function is not provided we use the default
                         logic defined as: multipliers * (inputs - baselines)
-                        It is assumed that all input arguments, `multipliers`,
-                        `inputs` and `baselines` are provided in tuples of same
-                        length. `custom_attribution_func` returns a tuple of
+                        It is assumed that all input arguments, ``multipliers``,
+                        ``inputs`` and ``baselines`` are provided in tuples of same
+                        length. ``custom_attribution_func`` returns a tuple of
                         attribution tensors that have the same length as the
-                        `inputs`.
+                        ``inputs``.
                         Default: None
 
         Returns:
@@ -813,9 +813,9 @@ class DeepLiftShap(DeepLift):
                         input example, followed by the baseline.
                         Note that the logic described for deltas is guaranteed
                         when the default logic for attribution computations is used,
-                        meaning that the `custom_attribution_func=None`, otherwise
+                        meaning that the ``custom_attribution_func=None``, otherwise
                         it is not guaranteed and depends on the specifics of the
-                        `custom_attribution_func`.
+                        ``custom_attribution_func``.
 
         Examples::
 

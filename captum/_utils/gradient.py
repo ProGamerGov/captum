@@ -722,7 +722,7 @@ def _compute_jacobian_wrt_params(
         model (torch.nn.Module): The trainable model providing the forward pass
         inputs (tuple of Any): The minibatch for which the forward pass is computed.
                 It is unpacked before passing to `model`, so it must be a tuple.  The
-                individual elements of `inputs` can be anything.
+                individual elements of ``inputs`` can be anything.
         labels (Tensor or None): Labels for input if computing a loss function.
         loss_fn (torch.nn.Module or Callable or None): The loss function. If a library
                 defined loss function is provided, it would be expected to be a
@@ -734,7 +734,7 @@ def _compute_jacobian_wrt_params(
                 tuple of gradients corresponding to the tuple of trainable parameters
                 returned by `model.parameters()`. Each object grads[i] references to the
                 gradients for the parameters in the i-th trainable layer of the model.
-                Each grads[i] object is a tensor with the gradients for the `inputs`
+                Each grads[i] object is a tensor with the gradients for the ``inputs``
                 batch. For example, grads[i][j] would reference the gradients for the
                 parameters of the i-th layer, for the j-th member of the minibatch.
     """
@@ -791,7 +791,7 @@ def _compute_jacobian_wrt_params_with_sample_wise_trick(
         model (torch.nn.Module): The trainable model providing the forward pass
         inputs (tuple of Any): The minibatch for which the forward pass is computed.
                 It is unpacked before passing to `model`, so it must be a tuple.  The
-                individual elements of `inputs` can be anything.
+                individual elements of ``inputs`` can be anything.
         labels (Tensor or None): Labels for input if computing a loss function.
         loss_fn (torch.nn.Module or Callable or None): The loss function. If a library
                 defined loss function is provided, it would be expected to be a
@@ -808,7 +808,7 @@ def _compute_jacobian_wrt_params_with_sample_wise_trick(
                 tuple of gradients corresponding to the tuple of trainable parameters
                 returned by `model.parameters()`. Each object grads[i] references to the
                 gradients for the parameters in the i-th trainable layer of the model.
-                Each grads[i] object is a tensor with the gradients for the `inputs`
+                Each grads[i] object is a tensor with the gradients for the ``inputs``
                 batch. For example, grads[i][j] would reference the gradients for the
                 parameters of the i-th layer, for the j-th member of the minibatch.
     """

@@ -105,7 +105,7 @@ class SimilarityInfluence(DataInfluence):
                     pairwise combination from the two batches.
 
                     For example, suppose we use `batch_size_1 = 16` for iterating
-                    through `influence_src_dataset`, and for the `inputs` argument
+                    through `influence_src_dataset`, and for the ``inputs`` argument
                     we pass in a Tensor with 3 examples, i.e. batch_size_2 = 3. Also,
                     suppose that our inputs and intermediate activations throughout the
                     model will have dimension (N, C, H, W). Then, the feature dimensions
@@ -168,7 +168,7 @@ class SimilarityInfluence(DataInfluence):
         Args:
             inputs (tensor or tuple of tensors): Batch of examples for which influential
                     instances are computed. They are passed to the forward_func. The
-                    first dimension in `inputs` tensor or tuple of tensors corresponds
+                    first dimension in ``inputs`` tensor or tuple of tensors corresponds
                     to the batch size. A tuple of tensors is only passed in if this
                     is the input form that `module` accepts.
             top_k (int): The number of top-matching activations to return
@@ -178,11 +178,11 @@ class SimilarityInfluence(DataInfluence):
                     where possible. Setting to False would force regeneration of
                     activations.
             load_input_from_disk (bool): Regenerates activations for inputs by default
-                    and removes previous `inputs` activations that are flagged with
+                    and removes previous ``inputs`` activations that are flagged with
                     `inputs_id`. Setting to True will load prior matching inputs
                     activations. Note that this could lead to unexpected behavior if
                     `inputs_id` is not configured properly and activations are loaded
-                    for a different, prior `inputs`.
+                    for a different, prior ``inputs``.
             inputs_id (str): Used to identify inputs for loading activations.
 
             **kwargs: Additional key-value arguments that are necessary for specific
@@ -192,14 +192,14 @@ class SimilarityInfluence(DataInfluence):
 
             influences (dict): Returns the influential instances retrieved from
             `influence_src_dataset` for each test example represented through a
-            tensor or a tuple of tensor in `inputs`. Returned influential
+            tensor or a tuple of tensor in ``inputs``. Returned influential
             examples are represented as dict, with keys corresponding to
             the layer names passed in `layers`. Each value in the dict is a
             tuple containing the indices and values for the top k similarities
             from `influence_src_dataset` by the chosen metric. The first value
             in the tuple corresponds to the indices corresponding to the top k
             most similar examples, and the second value is the similarity score.
-            The batch dimension corresponds to the batch dimension of `inputs`.
+            The batch dimension corresponds to the batch dimension of ``inputs``.
             If inputs.shape[0] == 5, then dict[`layer_name`][0].shape[0] == 5.
             These tensors will be of shape (inputs.shape[0], top_k).
         """

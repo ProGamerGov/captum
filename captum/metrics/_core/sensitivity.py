@@ -21,7 +21,7 @@ from torch import Tensor
 def default_perturb_func(
     inputs: TensorOrTupleOfTensorsGeneric, perturb_radius: float = 0.02
 ) -> Tuple[Tensor, ...]:
-    r"""A default function for generating perturbations of `inputs`
+    r"""A default function for generating perturbations of ``inputs``
     within perturbation radius of `perturb_radius`.
     This function samples uniformly random from the L_Infinity ball
     with `perturb_radius` radius.
@@ -172,7 +172,7 @@ def sensitivity_max(
                 Any additional arguments that need be passed to the explanation
                 function should be included here.
                 For instance, such arguments include:
-                `additional_forward_args`, `baselines` and `target`.
+                ``additional_forward_args``, ``baselines`` and ``target``.
 
     Returns:
 

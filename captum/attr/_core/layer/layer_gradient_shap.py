@@ -90,7 +90,7 @@ class LayerGradientShap(LayerAttribution, GradientAttribution):
                         More detailed can be found here:
                         https://arxiv.org/abs/1711.06104
 
-                        In case of layer gradient shap, if `multiply_by_inputs`
+                        In case of layer gradient shap, if ``multiply_by_inputs``
                         is set to True, the sensitivity scores for scaled inputs
                         are being multiplied by
                         layer activations for inputs - layer activations for baselines.
@@ -172,7 +172,7 @@ class LayerGradientShap(LayerAttribution, GradientAttribution):
                           the dimensions of the corresponding input tensor
                           starting from the second dimension.
 
-                        - callable function, optionally takes `inputs` as an
+                        - callable function, optionally takes ``inputs`` as an
                           argument and either returns a single tensor
                           or a tuple of those.
 
@@ -283,7 +283,7 @@ class LayerGradientShap(LayerAttribution, GradientAttribution):
                                                             target=5)
 
         """
-        # since `baselines` is a distribution, we can generate it using a function
+        # since ``baselines`` is a distribution, we can generate it using a function
         # rather than passing it as an input argument
         baselines = _format_callable_baseline(baselines, inputs)
         assert isinstance(baselines[0], torch.Tensor), (
@@ -359,7 +359,7 @@ class LayerInputBaselineXGradient(LayerAttribution, GradientAttribution):
                         https://arxiv.org/abs/1711.06104
 
                         In case of layer input minus baseline x gradient,
-                        if `multiply_by_inputs` is set to True, the sensitivity scores
+                        if ``multiply_by_inputs`` is set to True, the sensitivity scores
                         for scaled inputs are being multiplied by
                         layer activations for inputs - layer activations for baselines.
 

@@ -285,7 +285,7 @@ class FeaturePermutation(FeatureAblation):
         - `input_mask` is a tensor of the same shape as one input, which
           describes the locations of each feature via their "index"
 
-        Since `baselines` is set to None for `FeatureAblation.attribute, this
+        Since ``baselines`` is set to None for `FeatureAblation.attribute, this
         will be the zero tensor, however, it is not used.
         """
         assert input_mask.shape[0] == 1, (

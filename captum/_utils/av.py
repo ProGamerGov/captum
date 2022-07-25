@@ -361,7 +361,7 @@ class AV:
                     are computed.
             inputs (tensor or tuple of tensors): Batch of examples for
                     which influential instances are computed. They are passed to the
-                    input `model`. The first dimension in `inputs` tensor or tuple of
+                    input `model`. The first dimension in ``inputs`` tensor or tuple of
                     tensors corresponds to the batch size.
             identifier (str or None): An optional identifier for the layer
                     activations. Can be used to distinguish between activations for

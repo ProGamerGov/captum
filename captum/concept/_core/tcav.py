@@ -613,7 +613,7 @@ class TCAV(ConceptInterpreter):
                         target for the corresponding example.
 
             additional_forward_args (Any, optional): Extra arguments that are passed to
-                     model when computing the attributions for `inputs`
+                     model when computing the attributions for ``inputs``
                      w.r.t. layer output.
                      Default: None
             processes (int, optional): The number of processes to be created. if

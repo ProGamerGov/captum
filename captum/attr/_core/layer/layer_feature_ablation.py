@@ -91,7 +91,7 @@ class LayerFeatureAblation(LayerAttribution, PerturbationAttribution):
                         broadcastable to match it), based
                         on whether we are attributing to the input or output
                         of the target layer.
-                        In the cases when `baselines` is not provided, we internally
+                        In the cases when ``baselines`` is not provided, we internally
                         use zero as the baseline for each neuron.
                         Default: None
             target (int, tuple, tensor or list, optional): Output indices for

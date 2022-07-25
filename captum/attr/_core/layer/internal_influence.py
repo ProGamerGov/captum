@@ -111,7 +111,7 @@ class InternalInfluence(LayerAttribution, GradientAttribution):
                             inputs' tuple. This scalar value is broadcasted
                             for corresponding input tensor.
 
-                        In the cases when `baselines` is not provided, we internally
+                        In the cases when ``baselines`` is not provided, we internally
                         use zero scalar corresponding to each input tensor.
 
                         Default: None
@@ -160,9 +160,9 @@ class InternalInfluence(LayerAttribution, GradientAttribution):
             n_steps (int, optional): The number of steps used by the approximation
                         method. Default: 50.
             method (str, optional): Method for approximating the integral,
-                        one of `riemann_right`, `riemann_left`, `riemann_middle`,
-                        `riemann_trapezoid` or `gausslegendre`.
-                        Default: `gausslegendre` if no method is provided.
+                        one of ``riemann_right``, ``riemann_left``, ``riemann_middle``,
+                        ``riemann_trapezoid`` or ``gausslegendre``.
+                        Default: ``gausslegendre`` if no method is provided.
             internal_batch_size (int, optional): Divides total #steps * #examples
                         data points into chunks of size at most internal_batch_size,
                         which are computed (forward / backward passes)

@@ -276,7 +276,7 @@ def infidelity(
 
                 If we want to compute the infidelity of global attributions we
                 can use a binary perturbation matrix that will allow us to select
-                a subset of features from `inputs` or `inputs - baselines` space.
+                a subset of features from ``inputs`` or `inputs - baselines` space.
                 This will allow us to approximate sensitivity-n for a global
                 attribution algorithm.
 

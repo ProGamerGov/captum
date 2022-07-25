@@ -111,7 +111,7 @@ def _validate_input(
 def _zeros(inputs: Tuple[Tensor, ...]) -> Tuple[int, ...]:
     r"""
     Takes a tuple of tensors as input and returns a tuple that has the same
-    length as `inputs` with each element as the integer 0.
+    length as ``inputs`` with each element as the integer 0.
     """
     return tuple(0 if input.dtype is not torch.bool else False for input in inputs)
 
@@ -156,7 +156,7 @@ def _format_tensor_into_tuples(
     if not isinstance(inputs, tuple):
         assert isinstance(
             inputs, torch.Tensor
-        ), "`inputs` must have type " "torch.Tensor but {} found: ".format(type(inputs))
+        ), "``inputs`` must have type " "torch.Tensor but {} found: ".format(type(inputs))
         inputs = (inputs,)
     return inputs
 
@@ -175,7 +175,7 @@ def _format_float_or_tensor_into_tuples(
     if not isinstance(inputs, tuple):
         assert isinstance(
             inputs, (torch.Tensor, float)
-        ), "`inputs` must have type float or torch.Tensor but {} found: ".format(
+        ), "``inputs`` must have type float or torch.Tensor but {} found: ".format(
             type(inputs)
         )
         inputs = (inputs,)

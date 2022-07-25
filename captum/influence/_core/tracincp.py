@@ -222,7 +222,7 @@ class TracInCPBase(DataInfluence):
             inputs (tuple of Any): A tuple that represents a batch of examples. It does
                     not represent labels, which are passed as `targets`.
             targets (tensor, optional): If computing influence scores on a loss
-                    function, these are the labels corresponding to the batch `inputs`.
+                    function, these are the labels corresponding to the batch ``inputs``.
                     Default: None
             k (int, optional): The number of proponents or opponents to return per test
                     example.
@@ -244,16 +244,16 @@ class TracInCPBase(DataInfluence):
             (indices, influence_scores) (namedtuple): `indices` is a torch.long Tensor
                     that contains the indices of the proponents (or opponents) for each
                     test example. Its dimension is `(inputs_batch_size, k)`, where
-                    `inputs_batch_size` is the number of examples in `inputs`. For
+                    `inputs_batch_size` is the number of examples in ``inputs``. For
                     example, if `proponents==True`, `indices[i][j]` is the index of the
                     example in training dataset `influence_src_dataset` with the
-                    k-th highest influence score for the j-th example in `inputs`.
+                    k-th highest influence score for the j-th example in ``inputs``.
                     `indices` is a `torch.long` tensor so that it can directly be used
                     to index other tensors. Each row of `influence_scores` contains the
                     influence scores for a different test example, in sorted order. In
                     particular, `influence_scores[i][j]` is the influence score of
                     example `indices[i][j]` in training dataset `influence_src_dataset`
-                    on example `i` in the test batch represented by `inputs` and
+                    on example `i` in the test batch represented by ``inputs`` and
                     `targets`.
         """
         pass
@@ -273,7 +273,7 @@ class TracInCPBase(DataInfluence):
                     `self.model(*inputs)` produces the predictions for the batch.
             targets (tensor, optional): If computing influence scores on a loss
                     function, these are the labels corresponding to the batch
-                    `inputs`.
+                    ``inputs``.
                     Default: None
 
         Returns:
@@ -308,16 +308,16 @@ class TracInCPBase(DataInfluence):
         This is the key method of this class, and can be run in 3 different modes,
         where the mode that is run depends on the arguments passed to this method:
 
-        - self influence mode: This mode is used if `inputs` is None. This mode
+        - self influence mode: This mode is used if ``inputs`` is None. This mode
           computes the self influence scores for every example in
           the training dataset `influence_src_dataset`.
-        - influence score mode: This mode is used if `inputs` is not None, and `k` is
+        - influence score mode: This mode is used if ``inputs`` is not None, and `k` is
           None. This mode computes the influence score of every example in
           training dataset `influence_src_dataset` on every example in the test
-          batch represented by `inputs` and `targets`.
-        - k-most influential mode: This mode is used if `inputs` is not None, and
+          batch represented by ``inputs`` and `targets`.
+        - k-most influential mode: This mode is used if ``inputs`` is not None, and
           `k` is not None, and an int. This mode computes the proponents or
-          opponents of every example in the test batch represented by `inputs`
+          opponents of every example in the test batch represented by ``inputs``
           and `targets`. In particular, for each test example in the test batch,
           this mode computes its proponents (resp. opponents), which are the
           indices in the training dataset `influence_src_dataset` of the training
@@ -330,18 +330,18 @@ class TracInCPBase(DataInfluence):
         Args:
 
             inputs (Any, optional): If not provided or `None`, the self influence mode
-                    will be run. Otherwise, `inputs` is the test batch that will be
+                    will be run. Otherwise, ``inputs`` is the test batch that will be
                     used when running in either influence score or k-most influential
                     mode. If the argument `unpack_inputs` is False, the
                     assumption is that `self.model(inputs)` produces the predictions
-                    for a batch, and `inputs` can be of any type. Otherwise if the
+                    for a batch, and ``inputs`` can be of any type. Otherwise if the
                     argument `unpack_inputs` is True, the assumption is that
                     `self.model(*inputs)` produces the predictions for a batch, and
-                    `inputs` will need to be a tuple. In other words, `inputs` will be
+                    ``inputs`` will need to be a tuple. In other words, ``inputs`` will be
                     unpacked as an argument when passing to `self.model`.
                     Default: None
             targets (tensor, optional): If computing influence scores on a loss
-                    function, these are the labels corresponding to the batch `inputs`.
+                    function, these are the labels corresponding to the batch ``inputs``.
                     Default: None
             k (int, optional): If not provided or `None`, the influence score mode will
                     be run. Otherwise, the k-most influential mode will be run,
@@ -352,8 +352,8 @@ class TracInCPBase(DataInfluence):
                     or opponents (`proponents=False`), if running in k-most influential
                     mode.
                     Default: True
-            unpack_inputs (bool, optional): Whether to unpack the `inputs` argument to
-                    when passing it to `model`, if `inputs` is a tuple (no unpacking
+            unpack_inputs (bool, optional): Whether to unpack the ``inputs`` argument to
+                    when passing it to `model`, if ``inputs`` is a tuple (no unpacking
                     done otherwise).
                     Default: True
             show_progress (bool, optional): For all modes, computation of results
@@ -370,7 +370,7 @@ class TracInCPBase(DataInfluence):
         Returns:
             The return value of this method depends on which mode is run.
 
-            - self influence mode: if this mode is run (`inputs` is None), returns a 1D
+            - self influence mode: if this mode is run (``inputs`` is None), returns a 1D
               tensor of self influence scores over training dataset
               `influence_src_dataset`. The length of this tensor is the number of
               examples in `influence_src_dataset`, regardless of whether it is a
@@ -384,7 +384,7 @@ class TracInCPBase(DataInfluence):
               `influence_scores[i][j]` is the influence score of the `j`-th
               example in `influence_src_dataset` on the `i`-th example in the
               test batch.
-            - k-most influential mode: if this mode is run (`inputs` is not None,
+            - k-most influential mode: if this mode is run (``inputs`` is not None,
               `k` is an int), returns a namedtuple `(indices, influence_scores)`.
               `indices` is a 2D tensor of shape `(input_size, k)`, where
               `input_size` is the number of examples in the test batch. If
@@ -395,7 +395,7 @@ class TracInCPBase(DataInfluence):
               test batch. `influence_scores` contains the corresponding influence
               scores. In particular, `influence_scores[i][j]` is the influence
               score of example `indices[i][j]` in `influence_src_dataset` on
-              example `i` in the test batch represented by `inputs` and
+              example `i` in the test batch represented by ``inputs`` and
               `targets`.
         """
         pass
@@ -630,16 +630,16 @@ class TracInCP(TracInCPBase):
         This is the key method of this class, and can be run in 3 different modes,
         where the mode that is run depends on the arguments passed to this method:
 
-        - self influence mode: This mode is used if `inputs` is None. This mode
+        - self influence mode: This mode is used if ``inputs`` is None. This mode
           computes the self influence scores for every example in
           the training dataset `influence_src_dataset`.
-        - influence score mode: This mode is used if `inputs` is not None, and `k` is
+        - influence score mode: This mode is used if ``inputs`` is not None, and `k` is
           None. This mode computes the influence score of every example in
           training dataset `influence_src_dataset` on every example in the test
-          batch represented by `inputs` and `targets`.
-        - k-most influential mode: This mode is used if `inputs` is not None, and
+          batch represented by ``inputs`` and `targets`.
+        - k-most influential mode: This mode is used if ``inputs`` is not None, and
           `k` is not None, and an int. This mode computes the proponents or
-          opponents of every example in the test batch represented by `inputs`
+          opponents of every example in the test batch represented by ``inputs``
           and `targets`. In particular, for each test example in the test batch,
           this mode computes its proponents (resp. opponents), which are the
           indices in the training dataset `influence_src_dataset` of the training
@@ -652,18 +652,18 @@ class TracInCP(TracInCPBase):
         Args:
 
             inputs (Any, optional): If not provided or `None`, the self influence mode
-                    will be run. Otherwise, `inputs` is the test batch that will be
+                    will be run. Otherwise, ``inputs`` is the test batch that will be
                     used when running in either influence score or k-most influential
                     mode. If the argument `unpack_inputs` is False, the
                     assumption is that `self.model(inputs)` produces the predictions
-                    for a batch, and `inputs` can be of any type. Otherwise if the
+                    for a batch, and ``inputs`` can be of any type. Otherwise if the
                     argument `unpack_inputs` is True, the assumption is that
                     `self.model(*inputs)` produces the predictions for a batch, and
-                    `inputs` will need to be a tuple. In other words, `inputs` will be
+                    ``inputs`` will need to be a tuple. In other words, ``inputs`` will be
                     unpacked as an argument when passing to `self.model`.
                     Default: None
             targets (tensor, optional): If computing influence scores on a loss
-                    function, these are the labels corresponding to the batch `inputs`.
+                    function, these are the labels corresponding to the batch ``inputs``.
                     Default: None
             k (int, optional): If not provided or `None`, the influence score mode will
                     be run. Otherwise, the k-most influential mode will be run,
@@ -674,8 +674,8 @@ class TracInCP(TracInCPBase):
                     or opponents (`proponents=False`), if running in k-most influential
                     mode.
                     Default: True
-            unpack_inputs (bool, optional): Whether to unpack the `inputs` argument to
-                    when passing it to `model`, if `inputs` is a tuple (no unpacking
+            unpack_inputs (bool, optional): Whether to unpack the ``inputs`` argument to
+                    when passing it to `model`, if ``inputs`` is a tuple (no unpacking
                     done otherwise).
                     Default: True
             show_progress (bool, optional): For all modes, computation of results
@@ -692,7 +692,7 @@ class TracInCP(TracInCPBase):
         Returns:
             The return value of this method depends on which mode is run.
 
-            - self influence mode: if this mode is run (`inputs` is None), returns a 1D
+            - self influence mode: if this mode is run (``inputs`` is None), returns a 1D
               tensor of self influence scores over training dataset
               `influence_src_dataset`. The length of this tensor is the number of
               examples in `influence_src_dataset`, regardless of whether it is a
@@ -706,7 +706,7 @@ class TracInCP(TracInCPBase):
               `influence_scores[i][j]` is the influence score of the `j`-th
               example in `influence_src_dataset` on the `i`-th example in the
               test batch.
-            - k-most influential mode: if this mode is run (`inputs` is not None,
+            - k-most influential mode: if this mode is run (``inputs`` is not None,
               `k` is an int), returns a namedtuple `(indices, influence_scores)`.
               `indices` is a 2D tensor of shape `(input_size, k)`, where
               `input_size` is the number of examples in the test batch. If
@@ -717,7 +717,7 @@ class TracInCP(TracInCPBase):
               test batch. `influence_scores` contains the corresponding influence
               scores. In particular, `influence_scores[i][j]` is the influence
               score of example `indices[i][j]` in `influence_src_dataset` on
-              example `i` in the test batch represented by `inputs` and
+              example `i` in the test batch represented by ``inputs`` and
               `targets`.
         """
         return _influence_route_to_helpers(
@@ -776,7 +776,7 @@ class TracInCP(TracInCPBase):
     ) -> Tensor:
         r"""
         Computes the influence of examples in training dataset `influence_src_dataset`
-        on the examples in the test batch represented by `inputs` and `targets`.
+        on the examples in the test batch represented by ``inputs`` and `targets`.
         This implementation does not require knowing the number of training examples
         in advance. Instead, the number of training examples is inferred from the
         output of `self._basic_computation_tracincp`.
@@ -787,7 +787,7 @@ class TracInCP(TracInCPBase):
                     which are passed as `targets`. The assumption is that
                     `self.model(*inputs)` produces the predictions for the batch.
             targets (tensor, optional): If computing influence scores on a loss
-                    function, these are the labels corresponding to the batch `inputs`.
+                    function, these are the labels corresponding to the batch ``inputs``.
                     Default: None
             show_progress (bool, optional): To compute the influence of examples in
                     training dataset `influence_src_dataset`, we compute the influence
@@ -842,7 +842,7 @@ class TracInCP(TracInCPBase):
             inputs (tuple of Any): A tuple that represents a batch of examples. It does
                     not represent labels, which are passed as `targets`.
             targets (tensor, optional): If computing influence scores on a loss
-                    function, these are the labels corresponding to the batch `inputs`.
+                    function, these are the labels corresponding to the batch ``inputs``.
                     Default: None
             k (int, optional): The number of proponents or opponents to return per test
                     example.
@@ -864,16 +864,16 @@ class TracInCP(TracInCPBase):
             (indices, influence_scores) (namedtuple): `indices` is a torch.long Tensor
                     that contains the indices of the proponents (or opponents) for each
                     test example. Its dimension is `(inputs_batch_size, k)`, where
-                    `inputs_batch_size` is the number of examples in `inputs`. For
+                    `inputs_batch_size` is the number of examples in ``inputs``. For
                     example, if `proponents==True`, `indices[i][j]` is the index of the
                     example in training dataset `influence_src_dataset` with the
-                    k-th highest influence score for the j-th example in `inputs`.
+                    k-th highest influence score for the j-th example in ``inputs``.
                     `indices` is a `torch.long` tensor so that it can directly be used
                     to index other tensors. Each row of `influence_scores` contains the
                     influence scores for a different test example, in sorted order. In
                     particular, `influence_scores[i][j]` is the influence score of
                     example `indices[i][j]` in training dataset `influence_src_dataset`
-                    on example `i` in the test batch represented by `inputs` and
+                    on example `i` in the test batch represented by ``inputs`` and
                     `targets`.
         """
         desc = (
@@ -998,7 +998,7 @@ class TracInCP(TracInCPBase):
                     represent labels, which are passed as `targets`. The assumption is
                     that `self.model(*inputs)` produces the predictions for the batch.
             targets (tensor or None): If computing influence scores on a loss function,
-                    these are the labels corresponding to the batch `inputs`.
+                    these are the labels corresponding to the batch ``inputs``.
         """
         if self.sample_wise_grads_per_batch:
             return _compute_jacobian_wrt_params_with_sample_wise_trick(

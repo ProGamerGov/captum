@@ -126,7 +126,7 @@ class NoiseTunnel(Attribution):
                         tuple.
                         Default: `1.0` if `stdevs` is not provided.
             draw_baseline_from_distrib (bool, optional): Indicates whether to
-                        randomly draw baseline samples from the `baselines`
+                        randomly draw baseline samples from the ``baselines``
                         distribution provided as an input tensor.
                         Default: False
             **kwargs (Any, optional): Contains a list of arguments that are passed
@@ -134,7 +134,7 @@ class NoiseTunnel(Attribution):
                         Any additional arguments that should be used for the
                         chosen attribution method should be included here.
                         For instance, such arguments include
-                        `additional_forward_args` and `baselines`.
+                        ``additional_forward_args`` and ``baselines``.
 
         Returns:
             **attributions** or 2-element tuple of **attributions**, **delta**:

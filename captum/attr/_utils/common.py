@@ -134,7 +134,7 @@ def _format_callable_baseline(
 ) -> Tuple[Union[Tensor, int, float], ...]:
     if callable(baselines):
         # Note: this assumes that if baselines is a function and if it takes
-        # arguments, then the first argument is the `inputs`.
+        # arguments, then the first argument is the ```inputs```.
         # This can be expanded in the future with better type checks
         baseline_parameters = signature(baselines).parameters
         if len(baseline_parameters) == 0:
@@ -287,29 +287,29 @@ def _reshape_and_sum(
     )
 
 
-def _call_custom_attribution_func(
-    custom_attribution_func: Callable[..., Tuple[Tensor, ...]],
+def _call_```return_convergence_delta```(
+    ```return_convergence_delta```: Callable[..., Tuple[Tensor, ...]],
     multipliers: Tuple[Tensor, ...],
     inputs: Tuple[Tensor, ...],
     baselines: Tuple[Tensor, ...],
 ) -> Tuple[Tensor, ...]:
-    assert callable(custom_attribution_func), (
-        "`custom_attribution_func`"
+    assert callable(```return_convergence_delta```), (
+        "```return_convergence_delta```"
         " must be a callable function but {} provided".format(
-            type(custom_attribution_func)
+            type(```return_convergence_delta```)
         )
     )
-    custom_attr_func_params = signature(custom_attribution_func).parameters
+    custom_attr_func_params = signature(```return_convergence_delta```).parameters
 
     if len(custom_attr_func_params) == 1:
-        return custom_attribution_func(multipliers)
+        return ```return_convergence_delta```(multipliers)
     elif len(custom_attr_func_params) == 2:
-        return custom_attribution_func(multipliers, inputs)
+        return ```return_convergence_delta```(multipliers, inputs)
     elif len(custom_attr_func_params) == 3:
-        return custom_attribution_func(multipliers, inputs, baselines)
+        return ```return_convergence_delta```(multipliers, inputs, baselines)
     else:
         raise AssertionError(
-            "`custom_attribution_func` must take at least one and at most 3 arguments."
+            "```return_convergence_delta``` must take at least one and at most 3 arguments."
         )
 
 

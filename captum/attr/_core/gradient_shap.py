@@ -71,7 +71,7 @@ class GradientShap(GradientAttribution):
                     More detailed can be found here:
                     https://arxiv.org/abs/1711.06104
 
-                    In case of gradient shap, if `multiply_by_inputs`
+                    In case of gradient shap, if ``multiply_by_inputs``
                     is set to True, the sensitivity scores of scaled inputs
                     are being multiplied by (inputs - baselines).
         """
@@ -152,7 +152,7 @@ class GradientShap(GradientAttribution):
                           the dimensions of the corresponding input tensor
                           starting from the second dimension.
 
-                        - callable function, optionally takes `inputs` as an
+                        - callable function, optionally takes ``inputs`` as an
                           argument and either returns a single tensor
                           or a tuple of those.
 
@@ -250,7 +250,7 @@ class GradientShap(GradientAttribution):
                                                                 target=5)
 
         """
-        # since `baselines` is a distribution, we can generate it using a function
+        # since ``baselines`` is a distribution, we can generate it using a function
         # rather than passing it as an input argument
         baselines = _format_callable_baseline(baselines, inputs)
         assert isinstance(baselines[0], torch.Tensor), (
@@ -306,7 +306,7 @@ class InputBaselineXGradient(GradientAttribution):
                         More detailed can be found here:
                         https://arxiv.org/abs/1711.06104
 
-                        In case of gradient shap, if `multiply_by_inputs`
+                        In case of gradient shap, if ``multiply_by_inputs``
                         is set to True, the sensitivity scores of scaled inputs
                         are being multiplied by (inputs - baselines).
 

@@ -239,7 +239,7 @@ class GradientAttribution(Attribution):
                             arguments in inputs.
                             For a tensor, the first dimension of the tensor must
                             correspond to the number of examples.
-                            `additional_forward_args` is used both for `start_point`
+                            ``additional_forward_args`` is used both for `start_point`
                             and `end_point` when computing the forward pass.
                             Default: None
 

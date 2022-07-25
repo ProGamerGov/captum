@@ -34,7 +34,7 @@ class DataInfluence(ABC):
         Args:
             inputs (Any): Batch of examples for which influential
                     instances are computed. They are passed to the forward_func. If
-                    `inputs` if a tensor or tuple of tensors, the first dimension
+                    ``inputs`` if a tensor or tuple of tensors, the first dimension
                     of a tensor corresponds to the batch dimension.
             **kwargs: Additional key-value arguments that are necessary for specific
                     implementation of `DataInfluence` abstract class.

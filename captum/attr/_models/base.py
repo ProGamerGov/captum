@@ -42,10 +42,10 @@ class InterpretableEmbeddingBase(Module):
                    Note that if inputs are specified, it is assumed that the first
                    argument is the embedding tensor generated using the
                    `self.embedding` layer using all input arguments provided in
-                   `inputs` and `kwargs`.
-           **kwargs (Any, optional): Similar to `inputs` we want to make sure
+                   ``inputs`` and `kwargs`.
+           **kwargs (Any, optional): Similar to ``inputs`` we want to make sure
                    that our forward pass supports arbitrary number and type of
-                   key-value arguments. If `inputs` is not provided, `kwargs` must
+                   key-value arguments. If ``inputs`` is not provided, `kwargs` must
                    be provided and the first argument corresponds to the embedding
                    tensor generated using the `self.embedding`. Note that we make
                    here an assumption here that `kwargs` is an ordered dict which

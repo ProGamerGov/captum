@@ -212,7 +212,7 @@ def _get_k_most_influential_helper(
         inputs (tuple of Any): A batch of examples. Does not represent labels,
                 which are passed as `targets`.
         targets (tensor, optional): If computing TracIn scores on a loss function,
-                these are the labels corresponding to the batch `inputs`.
+                these are the labels corresponding to the batch ``inputs``.
                 Default: None
         k (int, optional): The number of proponents or opponents to return per test
                 instance.
@@ -238,16 +238,16 @@ def _get_k_most_influential_helper(
         (indices, influence_scores): `indices` is a torch.long Tensor that contains the
                 indices of the proponents (or opponents) for each test example. Its
                 dimension is `(inputs_batch_size, k)`, where `inputs_batch_size` is the
-                number of examples in `inputs`. For example, if `proponents==True`,
+                number of examples in ``inputs``. For example, if `proponents==True`,
                 `indices[i][j]` is the index of the example in training dataset
                 `influence_src_dataloader` with the k-th highest influence score for
-                the j-th example in `inputs`. `indices` is a `torch.long` tensor so that
+                the j-th example in ``inputs``. `indices` is a `torch.long` tensor so that
                 it can directly be used to index other tensors. Each row of
                 `influence_scores` contains the influence scores for a different test
                 example, in sorted order. In particular, `influence_scores[i][j]` is
                 the influence score of example `indices[i][j]` in training dataset
                 `influence_src_dataloader` on example `i` in the test batch represented
-                by `inputs` and `targets`.
+                by ``inputs`` and `targets`.
     """
     # For each test instance, maintain the best indices and corresponding distances
     # initially, these will be empty

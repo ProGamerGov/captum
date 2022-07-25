@@ -82,7 +82,7 @@ class NeuronGradientShap(NeuronAttribution, GradientAttribution):
                         https://arxiv.org/abs/1711.06104
 
                         In case of Neuron Gradient SHAP,
-                        if `multiply_by_inputs` is set to True, the
+                        if ``multiply_by_inputs`` is set to True, the
                         sensitivity scores for scaled inputs are
                         being multiplied by (inputs - baselines).
         """
@@ -164,7 +164,7 @@ class NeuronGradientShap(NeuronAttribution, GradientAttribution):
                           the dimensions of the corresponding input tensor
                           starting from the second dimension.
 
-                        - callable function, optionally takes `inputs` as an
+                        - callable function, optionally takes ``inputs`` as an
                           argument and either returns a single tensor
                           or a tuple of those.
 
