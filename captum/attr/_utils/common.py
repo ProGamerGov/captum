@@ -296,7 +296,7 @@ def _call_custom_attribution_func(
     assert callable(custom_attribution_func), (
         "`custom_attribution_func`"
         " must be a callable function but {} provided".format(
-            type(return_convergence_delta)
+            type(custom_attribution_func)
         )
     )
     custom_attr_func_params = signature(custom_attribution_func).parameters
