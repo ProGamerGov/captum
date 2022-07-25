@@ -95,8 +95,8 @@ class TracInCPFast(TracInCPBase):
                     fully qualified name of the layer if it is a defined attribute of
                     the passed ``model``.
             influence_src_dataset (torch.utils.data.Dataset or torch.utils.DataLoader):
-                    In the ``influence`` method, we either compute the influence score of
-                    training examples on examples in a test batch, or self influence
+                    In the ``influence`` method, we either compute the influence score
+                    of training examples on examples in a test batch, or self influence
                     scores for those training examples, depending on which mode is used.
                     This argument represents the training dataset containing those
                     training examples. In order to compute those influence scores, we
@@ -109,9 +109,10 @@ class TracInCPFast(TracInCPBase):
                     DataLoader used for processing should be as large as possible, but
                     not too large, so that certain intermediate quantities created
                     from a batch still fit in memory. Therefore, if
-                    ``influence_src_dataset`` is a Dataset, ``batch_size`` should be large.
-                    If ``influence_src_dataset`` was already a DataLoader to begin with,
-                    it should have been constructed to have a large batch size.
+                    ``influence_src_dataset`` is a Dataset, ``batch_size`` should be
+                    large. If ``influence_src_dataset`` was already a DataLoader to
+                    begin with, it should have been constructed to have a large batch
+                    size.
             checkpoints (str or list of str or Iterator): Either the directory of the
                     path to store and retrieve model checkpoints, a list of
                     filepaths with checkpoints from which to load, or an iterator which
@@ -175,19 +176,19 @@ class TracInCPFast(TracInCPBase):
             assert loss_fn.reduction in [
                 "sum",
                 "mean",
-            ], 'reduction for ``loss_fn`` must be "sum" or "mean"'
+            ], 'reduction for `loss_fn` must be "sum" or "mean"'
             self.reduction_type = str(loss_fn.reduction)
         else:
             # if we are unable to access the reduction used by ``loss_fn``, we warn
             # the user about the assumptions we are making regarding the reduction
             # used by ``loss_fn``
             warnings.warn(
-                'Since ``loss_fn`` has no "reduction" attribute, the implementation '
-                'assumes that ``loss_fn`` is a "reduction" loss function that '
+                'Since `loss_fn` has no "reduction" attribute, the implementation '
+                'assumes that `loss_fn` is a "reduction" loss function that '
                 "reduces the per-example losses by taking their *sum*. If "
-                "``loss_fn`` instead reduces the per-example losses by taking their "
-                'mean, please set the reduction attribute of ``loss_fn`` to "mean", '
-                'i.e. ``loss_fn.reduction = "mean"``.'
+                "`loss_fn` instead reduces the per-example losses by taking their "
+                'mean, please set the reduction attribute of `loss_fn` to "mean", '
+                'i.e. `loss_fn.reduction = "mean"`.'
             )
             self.reduction_type = "sum"
 
@@ -208,8 +209,8 @@ class TracInCPFast(TracInCPBase):
         - self influence mode: This mode is used if ``inputs`` is None. This mode
           computes the self influence scores for every example in
           the training dataset ``influence_src_dataset``.
-        - influence score mode: This mode is used if ``inputs`` is not None, and ``k`` is
-          None. This mode computes the influence score of every example in
+        - influence score mode: This mode is used if ``inputs`` is not None, and ``k``
+          is None. This mode computes the influence score of every example in
           training dataset ``influence_src_dataset`` on every example in the test
           batch represented by ``inputs`` and ``targets``.
         - k-most influential mode: This mode is used if ``inputs`` is not None, and
@@ -234,12 +235,13 @@ class TracInCPFast(TracInCPBase):
                     for a batch, and ``inputs`` can be of any type. Otherwise if the
                     argument ``unpack_inputs`` is True, the assumption is that
                     ``self.model(*inputs)`` produces the predictions for a batch, and
-                    ``inputs`` will need to be a tuple. In other words, ``inputs`` will be
-                    unpacked as an argument when passing to ``self.model``.
+                    ``inputs`` will need to be a tuple. In other words, ``inputs`` will
+                    be unpacked as an argument when passing to ``self.model``.
                     Default: None
-            targets (tensor, optional): The labels corresponding to the batch ``inputs``.
-                    This method is designed to be applied for a loss function, so
-                    ``targets`` is required, unless running in "self influence" mode.
+            targets (tensor, optional): The labels corresponding to the batch
+                    ``inputs``. This method is designed to be applied for a loss
+                    function, so ``targets`` is required, unless running in
+                    "self influence" mode.
                     Default: None
             k (int, optional): If not provided or ``None``, the influence score mode will
                     be run. Otherwise, the k-most influential mode will be run,
