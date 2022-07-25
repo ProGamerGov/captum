@@ -132,8 +132,9 @@ class ShapleyValueSampling(PerturbationAttribution):
                                 inputs' tuple. This scalar value is broadcasted
                                 for corresponding input tensor.
 
-                            In the cases when ``baselines`` is not provided, we internally
-                            use zero scalar corresponding to each input tensor.
+                            In the cases when ``baselines`` is not provided, we
+                            internally use zero scalar corresponding to each input
+                            tensor.
                             Default: None
                 target (int, tuple, tensor or list, optional): Output indices for
                             which difference is computed (for classification cases,
@@ -585,8 +586,9 @@ class ShapleyValues(ShapleyValueSampling):
                                 inputs' tuple. This scalar value is broadcasted
                                 for corresponding input tensor.
 
-                            In the cases when ``baselines`` is not provided, we internally
-                            use zero scalar corresponding to each input tensor.
+                            In the cases when ``baselines`` is not provided, we
+                            internally use zero scalar corresponding to each input
+                            tensor.
                             Default: None
                 target (int, tuple, tensor or list, optional): Output indices for
                             which difference is computed (for classification cases,
