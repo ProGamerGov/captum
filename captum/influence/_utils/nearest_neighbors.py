@@ -25,13 +25,13 @@ class NearestNeighbors(ABC):
         self, query: torch.Tensor, k: int
     ) -> Tuple[Tensor, Tensor]:
         r"""
-        Given a ``query``, a tensor of shape (N, *), returns the nearest neighbors in the
-        "stored tensors" (see above). ``query`` represents a batch of N tensors, each
-        of common but arbitrary shape *. We always assume the 0-th dimension indexes
-        the batch. In use cases of this class for computing proponents / opponents,
-        the nearest neighbors of a tensor should be the stored tensors with the largest
-        dot-product with the tensor, and the tensors in ``query`` will all be 1D,
-        so that ``query`` is 2D.
+        Given a ``query``, a tensor of shape (N, *), returns the nearest neighbors in
+		the "stored tensors" (see above). ``query`` represents a batch of N tensors,
+		each of common but arbitrary shape *. We always assume the 0-th dimension
+		indexes the batch. In use cases of this class for computing proponents /
+		opponents, the nearest neighbors of a tensor should be the stored tensors with
+		the largest dot-product with the tensor, and the tensors in ``query`` will all
+		be 1D, so that ``query`` is 2D.
 
         Args:
             query (tensor): tensor representing the batch of tensors for which k-nearest
@@ -42,13 +42,13 @@ class NearestNeighbors(ABC):
             k (int): The number of nearest neighbors to return.
 
         Returns:
-            results (tuple): A tuple of ``(indices, distances)`` is returned. ``indices``
-                    is a 2D tensor where ``indices[i,j]`` is the index (within the
-                    "stored tensors" passed to the ``setup`` method) of the ``j``-th
-                    nearest neighbor of the ``i``-th instance in query, and
-                    ``distances[i,j]`` is the corresponding distance. ``indices`` should
-                    be of dtype ``torch.long`` so that it can be used to index torch
-                    tensors.
+            results (tuple): A tuple of ``(indices, distances)`` is returned.
+			    ``indices`` is a 2D tensor where ``indices[i,j]`` is the index (within
+				the "stored tensors" passed to the ``setup`` method) of the ``j``-th
+                nearest neighbor of the ``i``-th instance in query, and
+                ``distances[i,j]`` is the corresponding distance. ``indices`` should
+                be of dtype ``torch.long`` so that it can be used to index torch
+                tensors.
         """
         pass
 
@@ -147,13 +147,13 @@ class AnnoyNearestNeighbors(NearestNeighbors):
         self, query: torch.Tensor, k: int
     ) -> Tuple[Tensor, Tensor]:
         r"""
-        Given a ``query``, a tensor of shape (N, *), returns the nearest neighbors in the
-        "stored tensors" (see above). ``query`` represents a batch of N tensors, each
-        of common but arbitrary shape *. We always assume the 0-th dimension indexes
-        the batch. In use cases of this class for computing proponents / opponents,
-        the nearest neighbors of a tensor should be the stored tensors with the largest
-        dot-product with the tensor, and the tensors in ``query`` will all be 1D,
-        so that ``query`` is 2D. This implementation returns the stored tensors
+        Given a ``query``, a tensor of shape (N, *), returns the nearest neighbors in
+		the "stored tensors" (see above). ``query`` represents a batch of N tensors,
+		each of common but arbitrary shape *. We always assume the 0-th dimension
+		indexes the batch. In use cases of this class for computing proponents /
+		opponents, the nearest neighbors of a tensor should be the stored tensors with
+		the largest dot-product with the tensor, and the tensors in ``query`` will all
+		be 1D, so that ``query`` is 2D. This implementation returns the stored tensors
         that have the largest dot-product with the query tensor, and does not constrain
         the tensors in ``query`` or in the stored tensors to be 1D. If tensors are of
         dimension greater than 1D, their dot-product will be defined to be the
@@ -168,13 +168,13 @@ class AnnoyNearestNeighbors(NearestNeighbors):
             k (int): The number of nearest neighbors to return.
 
         Returns:
-            results (tuple): A tuple of ``(indices, distances)`` is returned. ``indices``
-                    is a 2D tensor where ``indices[i,j]`` is the index (within the
-                    "stored tensors" passed to the ``setup`` method) of the ``j``-th
-                    nearest neighbor of the ``i``-th instance in query, and
-                    ``distances[i,j]`` is the corresponding distance. ``indices`` should
-                    be of dtype ``torch.long`` so that it can be used to index torch
-                    tensors.
+            results (tuple): A tuple of ``(indices, distances)`` is returned.
+			    ``indices`` is a 2D tensor where ``indices[i,j]`` is the index (within
+				the "stored tensors" passed to the ``setup`` method) of the ``j``-th
+                nearest neighbor of the ``i``-th instance in query, and
+                ``distances[i,j]`` is the corresponding distance. ``indices`` should
+                be of dtype ``torch.long`` so that it can be used to index torch
+                tensors.
         """
         query = query.view((len(query), -1))
         indices_and_distances = [
