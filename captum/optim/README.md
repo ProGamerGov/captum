@@ -124,12 +124,18 @@ linear_model = (
 model = opt.models.googlenet(pretrained=True).to(device).eval()
 ```
 
+We then extract the expanded weights between the InceptionV1 model's ``mixed4a_relu`` and ``mixed4b_relu`` layers, for all channels.
+
 ```
 # Extract expanded weights
 W_4a_4b = opt.circuits.extract_expanded_weights(
     linear_model, linear_model.mixed4a_relu, linear_model.mixed4b_relu, 5
 )
+```
 
+We can then create a heatmap for the connections between channel 308 of ``mixed4a_relu`` and channel 443 of ``mixed4b_relu``. This heatmap shows us how the features between both channels interact.
+
+```
 # Create heatmap image
 W_4a_4b_hm = opt.weights_to_heatmap_2d(W_4a_4b[443, 308, ...] / W_4a_4b[443, ...].max())
 hm_img = F.interpolate(W_4a_4b_hm[None, :], size=(224, 224), mode="nearest-exact")
@@ -149,7 +155,11 @@ loss_fn = opt.loss.NeuronActivation(model.mixed4a, 308, batch_index=0)
 loss_fn += opt.loss.NeuronActivation(model.mixed4b_relu, 443, batch_index=1)
 img = visualize(model, loss_fn, image)
 img_set = torch.cat([img[0:1], hm_img, img[1:2]])
+```
 
+We can then see the results:
+
+```
 opt.show(img_set, images_per_row=3, figsize=(15, 10))
 ```
 
