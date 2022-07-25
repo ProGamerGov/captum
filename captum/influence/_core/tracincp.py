@@ -74,10 +74,10 @@ class KMostInfluentialResults(NamedTuple):
     proponents / opponents for each example in the test batch. For example, if finding
     opponents, ``indices[i][j]`` stores the index in the training data of the example
     with the ``j``-th highest influence score on the ``i``-th example in the test batch.
-    Similarly, the ``influence_scores`` field stores the actual influence scores, so that
-    ``influence_scores[i][j]`` is the influence score of example ``indices[i][j]`` in the
-    training data on example ``i`` of the test batch. Please see ``TracInCPBase.influence``
-    for more details.
+    Similarly, the ``influence_scores`` field stores the actual influence scores, so
+	that ``influence_scores[i][j]`` is the influence score of example ``indices[i][j]``
+	in the training data on example ``i`` of the test batch. Please see
+	``TracInCPBase.influence`` for more details.
     """
 
     indices: Tensor
@@ -107,8 +107,8 @@ class TracInCPBase(DataInfluence):
             model (torch.nn.Module): An instance of pytorch model. This model should
                     define all of its layers as attributes of the model.
             influence_src_dataset (torch.utils.data.Dataset or torch.utils.DataLoader):
-                    In the ``influence`` method, we either compute the influence score of
-                    training examples on examples in a test batch, or self influence
+                    In the ``influence`` method, we either compute the influence score
+                    of training examples on examples in a test batch, or self influence
                     scores for those training examples, depending on which mode is used.
                     This argument represents the training dataset containing those
                     training examples. In order to compute those influence scores, we
@@ -121,9 +121,10 @@ class TracInCPBase(DataInfluence):
                     DataLoader used for processing should be as large as possible, but
                     not too large, so that certain intermediate quantities created
                     from a batch still fit in memory. Therefore, if
-                    ``influence_src_dataset`` is a Dataset, ``batch_size`` should be large.
-                    If ``influence_src_dataset`` was already a DataLoader to begin with,
-                    it should have been constructed to have a large batch size.
+                    ``influence_src_dataset`` is a Dataset, ``batch_size`` should be
+                    large. If ``influence_src_dataset`` was already a DataLoader to
+                    begin with, it should have been constructed to have a large batch
+                    size.
             checkpoints (str or list of str or Iterator): Either the directory of the
                     path to store and retrieve model checkpoints, a list of
                     filepaths with checkpoints from which to load, or an iterator which
