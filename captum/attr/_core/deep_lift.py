@@ -833,7 +833,7 @@ class DeepLiftShap(DeepLift):
             "Baselines distribution has to be provided in form of a torch.Tensor"
             " with more than one example but found: {}."
             " If baselines are provided in shape of scalars or with a single"
-            " baseline example, ``DeepLift``"
+            " baseline example, `DeepLift`"
             " approach can be used instead.".format(baselines[0])
         )
 
