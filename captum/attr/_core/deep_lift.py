@@ -59,9 +59,9 @@ def _check_valid_module(inputs_grad_fn, outputs) -> bool:
     curr_fn = outputs.grad_fn
     first_next = curr_fn.next_functions[0]
     try:
-        # if ``inputs`` in the input to the network then the grad_fn is None and
+        # if `inputs` in the input to the network then the grad_fn is None and
         # for that input backward_hook isn't computed. That's the reason why we
-        # need to check on ``inputs_grad_fns[first_next[1]]`` being None.
+        # need to check on `inputs_grad_fns[first_next[1]]` being None.
         return (
             inputs_grad_fn is None
             or first_next[0] == inputs_grad_fn
@@ -952,7 +952,7 @@ def nonlinear(
     new_grad_inp = list(grad_input)
 
     # supported non-linear modules take only single tensor as input hence accessing
-    # only the first element in ``grad_input`` and ``grad_output``
+    # only the first element in `grad_input` and `grad_output`
     new_grad_inp[0] = torch.where(
         abs(delta_in) < eps, new_grad_inp[0], grad_output[0] * delta_out / delta_in
     )

@@ -168,7 +168,7 @@ class TracInCPBase(DataInfluence):
 
         if not isinstance(influence_src_dataset, DataLoader):
             assert isinstance(batch_size, int), (
-                "since the ``influence_src_dataset`` argument was a ``Dataset``, "
+                "since the `influence_src_dataset` argument was a `Dataset`, "
                 "`batch_size` must be an int."
             )
             self.influence_src_dataloader = DataLoader(
@@ -553,15 +553,15 @@ class TracInCP(TracInCPBase):
 
         self.sample_wise_grads_per_batch = sample_wise_grads_per_batch
 
-        # If we are able to access the reduction used by ``loss_fn``, we check whether
-        # the reduction is compatible with ``sample_wise_grads_per_batch``
+        # If we are able to access the reduction used by `loss_fn`, we check whether
+        # the reduction is compatible with `sample_wise_grads_per_batch`
         if isinstance(loss_fn, Module) and hasattr(
             loss_fn, "reduction"
         ):  # TODO: allow loss_fn to be Callable
             if self.sample_wise_grads_per_batch:
                 assert loss_fn.reduction in ["sum", "mean"], (
-                    'reduction for ``loss_fn`` must be "sum" or "mean" when '
-                    "``sample_wise_grads_per_batch`` is True"
+                    'reduction for `loss_fn` must be "sum" or "mean" when '
+                    "`sample_wise_grads_per_batch` is True"
                 )
                 self.reduction_type = str(loss_fn.reduction)
             else:
@@ -575,23 +575,23 @@ class TracInCP(TracInCPBase):
             # used by ``loss_fn``
             if self.sample_wise_grads_per_batch:
                 warnings.warn(
-                    'Since ``loss_fn`` has no "reduction" attribute, and '
-                    "``sample_wise_grads_per_batch`` is True, the implementation assumes "
-                    'that ``loss_fn`` is a "reduction" loss function that reduces the '
-                    "per-example losses by taking their *sum*. If ``loss_fn`` "
+                    'Since `loss_fn` has no "reduction" attribute, and '
+                    "`sample_wise_grads_per_batch` is True, the implementation assumes "
+                    'that `loss_fn` is a "reduction" loss function that reduces the '
+                    "per-example losses by taking their *sum*. If `loss_fn` "
                     "instead reduces the per-example losses by taking their mean, "
-                    'please set the reduction attribute of ``loss_fn`` to "mean", i.e. '
-                    '``loss_fn.reduction = "mean"``. Note that if '
-                    "``sample_wise_grads_per_batch`` is True, the implementation "
+                    'please set the reduction attribute of `loss_fn` to "mean", i.e. '
+                    '`loss_fn.reduction = "mean"`. Note that if '
+                    "`sample_wise_grads_per_batch` is True, the implementation "
                     "assumes the reduction is either a sum or mean reduction."
                 )
                 self.reduction_type = "sum"
             else:
                 warnings.warn(
-                    'Since ``loss_fn`` has no "reduction" attribute, and '
-                    "``sample_wise_grads_per_batch`` is False, the implementation "
-                    'assumes that ``loss_fn`` is a "per-example" loss function (see '
-                    "documentation for ``loss_fn`` for details).  Please ensure that "
+                    'Since `loss_fn` has no "reduction" attribute, and '
+                    "`sample_wise_grads_per_batch` is False, the implementation "
+                    'assumes that `loss_fn` is a "per-example" loss function (see '
+                    "documentation for `loss_fn` for details).  Please ensure that "
                     "this is the case."
                 )
 
@@ -744,7 +744,7 @@ class TracInCP(TracInCPBase):
 
             assert (
                 checkpoint is not None
-            ), "None returned from ``checkpoints``, cannot load."
+            ), "None returned from `checkpoints`, cannot load."
 
             learning_rate = self.checkpoints_load_func(self.model, checkpoint)
 
@@ -909,17 +909,17 @@ class TracInCP(TracInCPBase):
 
             assert (
                 checkpoint is not None
-            ), "None returned from ``checkpoints``, cannot load."
+            ), "None returned from `checkpoints`, cannot load."
 
             learning_rate = self.checkpoints_load_func(self.model, checkpoint)
 
             layer_jacobians = self._basic_computation_tracincp(batch[0:-1], batch[-1])
 
             # note that all variables in this function are for an entire batch.
-            # each ``layer_jacobian`` in ``layer_jacobians`` corresponds to a different
-            # layer. ``layer_jacobian`` is the jacobian w.r.t to a given layer's
+            # each `layer_jacobian` in `layer_jacobians` corresponds to a different
+            # layer. `layer_jacobian` is the jacobian w.r.t to a given layer's
             # parameters. if the given layer's parameters are of shape *, then
-            # ``layer_jacobian`` is of shape (batch_size, *). for each layer, we need
+            # `layer_jacobian` is of shape (batch_size, *). for each layer, we need
             # the squared jacobian for each example. so we square the jacobian and
             # sum over all dimensions except the 0-th (the batch dimension). We then
             # sum the contribution over all layers.

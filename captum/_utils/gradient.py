@@ -262,9 +262,9 @@ def _forward_layer_distributed_eval(
                 apply_gradient_requirements(eval_tsrs, warn=False)
             with lock:
                 nonlocal saved_layer
-                # Note that cloning behaviour of ``eval_tsr`` is different
-                # when ``forward_hook_with_return`` is set to True. This is because
-                # otherwise ``backward()`` on the last output layer won't execute.
+                # Note that cloning behaviour of `eval_tsr` is different
+                # when `forward_hook_with_return` is set to True. This is because
+                # otherwise `backward()` on the last output layer won't execute.
                 if forward_hook_with_return:
                     saved_layer[original_module][eval_tsrs[0].device] = eval_tsrs
                     eval_tsrs_to_return = tuple(
@@ -745,7 +745,7 @@ def _compute_jacobian_wrt_params(
         if labels is not None and loss_fn is not None:
             loss = loss_fn(out, labels)
             if hasattr(loss_fn, "reduction"):
-                msg0 = "Please ensure loss_fn.reduction is set to ``none``"
+                msg0 = "Please ensure loss_fn.reduction is set to `none`"
                 assert loss_fn.reduction == "none", msg0  # type: ignore
             else:
                 msg1 = (

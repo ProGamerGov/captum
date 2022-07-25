@@ -320,7 +320,7 @@ class TracInCPFast(TracInCPBase):
 
             assert (
                 checkpoint is not None
-            ), "None returned from ``checkpoints``, cannot load."
+            ), "None returned from `checkpoints`, cannot load."
 
             learning_rate = self.checkpoints_load_func(self.model, checkpoint)
 
@@ -489,7 +489,7 @@ class TracInCPFast(TracInCPBase):
 
             assert (
                 checkpoint is not None
-            ), "None returned from ``checkpoints``, cannot load."
+            ), "None returned from `checkpoints`, cannot load."
 
             learning_rate = self.checkpoints_load_func(self.model, checkpoint)
 
@@ -1166,7 +1166,7 @@ class TracInCPFastRandProj(TracInCPFast):
         for (j, checkpoint) in enumerate(self.checkpoints):
             assert (
                 checkpoint is not None
-            ), "None returned from ``checkpoints``, cannot load."
+            ), "None returned from `checkpoints`, cannot load."
 
             learning_rate = self.checkpoints_load_func(self.model, checkpoint)
             learning_rate_root = learning_rate**0.5

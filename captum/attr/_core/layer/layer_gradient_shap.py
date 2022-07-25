@@ -283,7 +283,7 @@ class LayerGradientShap(LayerAttribution, GradientAttribution):
                                                             target=5)
 
         """
-        # since ``baselines`` is a distribution, we can generate it using a function
+        # since `baselines` is a distribution, we can generate it using a function
         # rather than passing it as an input argument
         baselines = _format_callable_baseline(baselines, inputs)
         assert isinstance(baselines[0], torch.Tensor), (

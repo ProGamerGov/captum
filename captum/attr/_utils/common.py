@@ -90,7 +90,7 @@ def _format_input_baseline(
     return inputs, baselines
 
 
-# This function can potentially be merged with the ``format_baseline`` function
+# This function can potentially be merged with the `format_baseline` function
 # however, since currently not all algorithms support baselines of type
 # callable this will be kept in a separate function.
 @typing.overload

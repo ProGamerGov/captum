@@ -104,9 +104,9 @@ class AnnoyNearestNeighbors(NearestNeighbors):
         except ImportError:
             raise ValueError(
                 (
-                    "Using ``AnnoyNearestNeighbors`` requires installing the annoy "
+                    "Using `AnnoyNearestNeighbors` requires installing the annoy "
                     "module. If pip is installed, this can be done with "
-                    "``pip install --user annoy``."
+                    "`pip install --user annoy`."
                 )
             )
 

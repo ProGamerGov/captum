@@ -175,7 +175,7 @@ def _format_float_or_tensor_into_tuples(
     if not isinstance(inputs, tuple):
         assert isinstance(
             inputs, (torch.Tensor, float)
-        ), "``inputs`` must have type float or torch.Tensor but {} found: ".format(
+        ), "`inputs` must have type float or torch.Tensor but {} found: ".format(
             type(inputs)
         )
         inputs = (inputs,)
@@ -225,7 +225,7 @@ def _expand_additional_forward_args(
             return additional_forward_arg.repeat_interleave(n_steps, dim=0)
         else:
             raise NotImplementedError(
-                "Currently only ``repeat`` and ``repeat_interleave``"
+                "Currently only `repeat` and `repeat_interleave`"
                 " expansion_types are supported"
             )
 
@@ -255,7 +255,7 @@ def _expand_target(
             return cast(Union[List[Tuple[int, ...]], List[int]], expanded_target)
         else:
             raise NotImplementedError(
-                "Currently only ``repeat`` and ``repeat_interleave``"
+                "Currently only `repeat` and `repeat_interleave`"
                 " expansion_types are supported"
             )
 
@@ -266,7 +266,7 @@ def _expand_target(
             return target.repeat_interleave(n_steps, dim=0)
         else:
             raise NotImplementedError(
-                "Currently only ``repeat`` and ``repeat_interleave``"
+                "Currently only `repeat` and `repeat_interleave`"
                 " expansion_types are supported"
             )
 
@@ -556,7 +556,7 @@ def _extract_device(
         raise RuntimeError(
             """Unable to extract device information for the module
             {}. Both inputs and outputs to the forward hook and
-            ``module.parameters()`` are empty.
+            `module.parameters()` are empty.
             The reason that the inputs to the forward hook are empty
             could be due to the fact that the arguments to that
             module {} are all named and are passed as named

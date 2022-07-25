@@ -207,7 +207,7 @@ class NoiseTunnel(Attribution):
                 input_expanded_size
             )
 
-            # draws ``np.prod(input_expanded_size)`` samples from normal distribution
+            # draws `np.prod(input_expanded_size)` samples from normal distribution
             # with given input parametrization
             # FIXME it look like it is very difficult to make torch.normal
             # deterministic this needs an investigation
