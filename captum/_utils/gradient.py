@@ -727,16 +727,18 @@ def _compute_jacobian_wrt_params(
         loss_fn (torch.nn.Module or Callable or None): The loss function. If a library
                 defined loss function is provided, it would be expected to be a
                 torch.nn.Module. If a custom loss is provided, it can be either type,
-                but must behave as a library loss function would if ``reduction='none'``.
+                but must behave as a library loss function would if
+                ``reduction='none'``.
 
     Returns:
         grads (tuple of tensor): Returns the Jacobian for the minibatch as a
                 tuple of gradients corresponding to the tuple of trainable parameters
-                returned by ``model.parameters()``. Each object grads[i] references to the
-                gradients for the parameters in the i-th trainable layer of the model.
-                Each grads[i] object is a tensor with the gradients for the ``inputs``
-                batch. For example, grads[i][j] would reference the gradients for the
-                parameters of the i-th layer, for the j-th member of the minibatch.
+                returned by ``model.parameters()``. Each object grads[i] references to
+                the gradients for the parameters in the i-th trainable layer of the
+                model. Each grads[i] object is a tensor with the gradients for the
+                ``inputs`` batch. For example, grads[i][j] would reference the
+                gradients for the parameters of the i-th layer, for the j-th member of
+                the minibatch.
     """
     with torch.autograd.set_grad_enabled(True):
         out = model(*inputs)
@@ -790,14 +792,14 @@ def _compute_jacobian_wrt_params_with_sample_wise_trick(
     Args:
         model (torch.nn.Module): The trainable model providing the forward pass
         inputs (tuple of Any): The minibatch for which the forward pass is computed.
-                It is unpacked before passing to ``model``, so it must be a tuple.  The
+                It is unpacked before passing to ``model``, so it must be a tuple. The
                 individual elements of ``inputs`` can be anything.
         labels (Tensor or None): Labels for input if computing a loss function.
         loss_fn (torch.nn.Module or Callable or None): The loss function. If a library
                 defined loss function is provided, it would be expected to be a
                 torch.nn.Module. If a custom loss is provided, it can be either type,
-                but must behave as a library loss function would if ``reduction='sum'`` or
-                ``reduction='mean'``.
+                but must behave as a library loss function would if ``reduction='sum'``
+                or ``reduction='mean'``.
         reduction_type (str): The type of reduction applied. If a loss_fn is passed,
                 this should match ``loss_fn.reduction``. Else if gradients are being
                 computed on direct model outputs (scores), then 'sum' should be used.
@@ -806,11 +808,12 @@ def _compute_jacobian_wrt_params_with_sample_wise_trick(
     Returns:
         grads (tuple of tensor): Returns the Jacobian for the minibatch as a
                 tuple of gradients corresponding to the tuple of trainable parameters
-                returned by ``model.parameters()``. Each object grads[i] references to the
-                gradients for the parameters in the i-th trainable layer of the model.
-                Each grads[i] object is a tensor with the gradients for the ``inputs``
-                batch. For example, grads[i][j] would reference the gradients for the
-                parameters of the i-th layer, for the j-th member of the minibatch.
+                returned by ``model.parameters()``. Each object grads[i] references to
+                the gradients for the parameters in the i-th trainable layer of the
+				model. Each grads[i] object is a tensor with the gradients for the
+				``inputs`` batch. For example, grads[i][j] would reference the
+				gradients for the parameters of the i-th layer, for the j-th member of
+				the minibatch.
     """
     with torch.autograd.set_grad_enabled(True):
         sample_grad_wrapper = SampleGradientWrapper(model)
