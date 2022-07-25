@@ -124,7 +124,8 @@ class SimilarityInfluence(DataInfluence):
                     For example, ``similarity_metric(av_test, av_src)`` should return a
                     tensor of shape (3, 16).
 
-            batch_size (int): Batch size for iterating through ``influence_src_dataset``.
+            batch_size (int): Batch size for iterating through
+                    ``influence_src_dataset``.
             **kwargs: Additional key-value arguments that are necessary for specific
                     implementation of ``DataInfluence`` abstract class.
         """
