@@ -224,7 +224,7 @@ class AV:
             act_tensors = [act_tensors]
 
         if len(layers) != len(act_tensors):
-            raise ValueError("The dimension of ``layers`` and ``act_tensors`` must match!")
+            raise ValueError("The dimension of `layers` and `act_tensors` must match!")
 
         av_dir = AV._assemble_model_dir(path, model_id)
 
