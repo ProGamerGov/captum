@@ -5,7 +5,7 @@ from typing import Callable
 class Perturbation:
     r"""
     All perturbation and attack algorithms extend this class. It enforces
-    its child classes to extend and override core `perturb` method.
+    its child classes to extend and override core ``perturb`` method.
     """
 
     perturb: Callable

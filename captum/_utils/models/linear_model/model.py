@@ -13,22 +13,22 @@ class LinearModel(nn.Module, Model):
         r"""
         Constructs a linear model with a training function and additional
         construction arguments that will be sent to
-        `self._construct_model_params` after a `self.fit` is called. Please note
-        that this assumes the `self.train_fn` will call
-        `self._construct_model_params`.
+        ``self._construct_model_params`` after a ``self.fit`` is called. Please note
+        that this assumes the ``self.train_fn`` will call
+        ``self._construct_model_params``.
 
         Please note that this is an experimental feature.
 
         Args:
             train_fn (Callable)
                 The function to train with. See
-                `captum._utils.models.linear_model.train.sgd_train_linear_model`
+                ``captum._utils.models.linear_model.train.sgd_train_linear_model``
                 and
-                `captum._utils.models.linear_model.train.sklearn_train_linear_model`
+                ``captum._utils.models.linear_model.train.sklearn_train_linear_model``
                 for examples
             kwargs
                 Any additional keyword arguments to send to
-                `self._construct_model_params` once a `self.fit` is called.
+                ``self._construct_model_params`` once a ``self.fit`` is called.
         """
         super().__init__()
 
@@ -59,7 +59,7 @@ class LinearModel(nn.Module, Model):
                 The number of output features.
             norm_type (str, optional):
                 The type of normalization that can occur. Please assign this
-                to one of `PyTorchLinearModel.SUPPORTED_NORMS`.
+                to one of ``PyTorchLinearModel.SUPPORTED_NORMS``.
             affine_norm (bool):
                 Whether or not to learn an affine transformation of the
                 normalization parameters used.
@@ -67,9 +67,9 @@ class LinearModel(nn.Module, Model):
                 Whether to add a bias term. Not needed if normalized input.
             weight_values (tensor, optional):
                 The values to initialize the linear model with. This must be a
-                1D or 2D tensor, and of the form `(num_outputs, num_features)` or
-                `(num_features,)`. Additionally, if this is provided you need not
-                to provide `in_features` or `out_features`.
+                1D or 2D tensor, and of the form ``(num_outputs, num_features)`` or
+                ``(num_features,)``. Additionally, if this is provided you need not
+                to provide ``in_features`` or ``out_features``.
             bias_value (tensor, optional):
                 The bias value to initialize the model with.
             classes (tensor, optional):
@@ -118,7 +118,7 @@ class LinearModel(nn.Module, Model):
 
     def fit(self, train_data: DataLoader, **kwargs):
         r"""
-        Calls `self.train_fn`
+        Calls ``self.train_fn``
         """
         return self.train_fn(
             self,
@@ -136,7 +136,7 @@ class LinearModel(nn.Module, Model):
     def representation(self) -> Tensor:
         r"""
         Returns a tensor which describes the hyper-plane input space. This does
-        not include the bias. For bias/intercept, please use `self.bias`
+        not include the bias. For bias/intercept, please use ``self.bias``
         """
         assert self.linear is not None
         return self.linear.weight.detach()
@@ -158,13 +158,13 @@ class LinearModel(nn.Module, Model):
 class SGDLinearModel(LinearModel):
     def __init__(self, **kwargs) -> None:
         r"""
-        Factory class. Construct a a `LinearModel` with the
-        `sgd_train_linear_model` as the train method
+        Factory class. Construct a a ``LinearModel`` with the
+        ``sgd_train_linear_model`` as the train method
 
         Args:
             kwargs
-                Arguments send to `self._construct_model_params` after
-                `self.fit` is called. Please refer to that method for parameter
+                Arguments send to ``self._construct_model_params`` after
+                ``self.fit`` is called. Please refer to that method for parameter
                 documentation.
         """
         # avoid cycles
@@ -176,8 +176,8 @@ class SGDLinearModel(LinearModel):
 class SGDLasso(SGDLinearModel):
     def __init__(self, **kwargs) -> None:
         r"""
-        Factory class to train a `LinearModel` with SGD
-        (`sgd_train_linear_model`) whilst setting appropriate parameters to
+        Factory class to train a ``LinearModel`` with SGD
+        (``sgd_train_linear_model``) whilst setting appropriate parameters to
         optimize for ridge regression loss. This optimizes L2 loss + alpha * L1
         regularization.
 
@@ -196,8 +196,8 @@ class SGDLasso(SGDLinearModel):
 class SGDRidge(SGDLinearModel):
     def __init__(self, **kwargs) -> None:
         r"""
-        Factory class to train a `LinearModel` with SGD
-        (`sgd_train_linear_model`) whilst setting appropriate parameters to
+        Factory class to train a ``LinearModel`` with SGD
+        (``sgd_train_linear_model``) whilst setting appropriate parameters to
         optimize for ridge regression loss. This optimizes L2 loss + alpha *
         L2 regularization.
         """
@@ -213,8 +213,8 @@ class SGDRidge(SGDLinearModel):
 class SGDLinearRegression(SGDLinearModel):
     def __init__(self, **kwargs) -> None:
         r"""
-        Factory class to train a `LinearModel` with SGD
-        (`sgd_train_linear_model`). For linear regression this assigns the loss
+        Factory class to train a ``LinearModel`` with SGD
+        (``sgd_train_linear_model``). For linear regression this assigns the loss
         to L2 and no regularization.
         """
         super().__init__(**kwargs)
@@ -231,7 +231,7 @@ class SGDLinearRegression(SGDLinearModel):
 class SkLearnLinearModel(LinearModel):
     def __init__(self, sklearn_module: str, **kwargs) -> None:
         r"""
-        Factory class to construct a `LinearModel` with sklearn training method.
+        Factory class to construct a ``LinearModel`` with sklearn training method.
 
         Please note that this assumes:
 
@@ -240,7 +240,7 @@ class SkLearnLinearModel(LinearModel):
 
         SkLearn support does introduce some slight overhead as we convert the
         tensors to numpy and then convert the resulting trained model to a
-        `LinearModel` object. However, this conversion should be negligible.
+        ``LinearModel`` object. However, this conversion should be negligible.
 
         Args:
             sklearn_module
@@ -248,7 +248,7 @@ class SkLearnLinearModel(LinearModel):
                 use "svm.LinearSVC" for an SVM or "linear_model.Lasso" for Lasso.
 
                 There are factory classes defined for you for common use cases,
-                such as `SkLearnLasso`.
+                such as ``SkLearnLasso``.
             kwargs
                 The kwargs to pass to the construction of the sklearn model
         """
@@ -265,7 +265,7 @@ class SkLearnLinearModel(LinearModel):
             train_data
                 Train data to use
             kwargs
-                Arguments to feed to `.fit` method for sklearn
+                Arguments to feed to ``.fit`` method for sklearn
         """
         return super().fit(
             train_data=train_data, sklearn_trainer=self.sklearn_module, **kwargs
@@ -275,8 +275,8 @@ class SkLearnLinearModel(LinearModel):
 class SkLearnLasso(SkLearnLinearModel):
     def __init__(self, **kwargs) -> None:
         r"""
-        Factory class. Trains a `LinearModel` model with
-        `sklearn.linear_model.Lasso`. You will need sklearn version >= 0.23 to
+        Factory class. Trains a ``LinearModel`` model with
+        ``sklearn.linear_model.Lasso``. You will need sklearn version >= 0.23 to
         support sample weights.
         """
         super().__init__(sklearn_module="linear_model.Lasso", **kwargs)
@@ -288,7 +288,7 @@ class SkLearnLasso(SkLearnLinearModel):
 class SkLearnRidge(SkLearnLinearModel):
     def __init__(self, **kwargs) -> None:
         r"""
-        Factory class. Trains a model with `sklearn.linear_model.Ridge`.
+        Factory class. Trains a model with ``sklearn.linear_model.Ridge``.
 
         Any arguments provided to the sklearn constructor can be provided
         as kwargs here.
@@ -302,7 +302,7 @@ class SkLearnRidge(SkLearnLinearModel):
 class SkLearnLinearRegression(SkLearnLinearModel):
     def __init__(self, **kwargs) -> None:
         r"""
-        Factory class. Trains a model with `sklearn.linear_model.LinearRegression`.
+        Factory class. Trains a model with ``sklearn.linear_model.LinearRegression``.
 
         Any arguments provided to the sklearn constructor can be provided
         as kwargs here.
@@ -316,7 +316,7 @@ class SkLearnLinearRegression(SkLearnLinearModel):
 class SkLearnLogisticRegression(SkLearnLinearModel):
     def __init__(self, **kwargs) -> None:
         r"""
-        Factory class. Trains a model with `sklearn.linear_model.LogisticRegression`.
+        Factory class. Trains a model with ``sklearn.linear_model.LogisticRegression``.
 
         Any arguments provided to the sklearn constructor can be provided
         as kwargs here.
@@ -330,7 +330,7 @@ class SkLearnLogisticRegression(SkLearnLinearModel):
 class SkLearnSGDClassifier(SkLearnLinearModel):
     def __init__(self, **kwargs) -> None:
         r"""
-        Factory class. Trains a model with `sklearn.linear_model.SGDClassifier(`.
+        Factory class. Trains a model with ``sklearn.linear_model.SGDClassifier(``.
 
         Any arguments provided to the sklearn constructor can be provided
         as kwargs here.

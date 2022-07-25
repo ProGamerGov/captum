@@ -234,14 +234,14 @@ def _forward_layer_distributed_eval(
     Dict[Module, Dict[device, Tuple[Tensor, ...]]],
 ]:
     r"""
-    A helper function that allows to set a hook on model's `layer`, run the forward
+    A helper function that allows to set a hook on model's ``layer``, run the forward
     pass and returns intermediate layer results, stored in a dictionary,
     and optionally also the output of the forward function. The keys in the
     dictionary are the device ids and the values are corresponding intermediate layer
     results, either the inputs or the outputs of the layer depending on whether we set
-    `attribute_to_layer_input` to True or False.
+    ``attribute_to_layer_input`` to True or False.
     This is especially useful when we execute forward pass in a distributed setting,
-    using `DataParallel`s for example.
+    using ``DataParallel``s for example.
     """
     saved_layer: Dict[Module, Dict[device, Tuple[Tensor, ...]]] = defaultdict(dict)
     lock = threading.Lock()
@@ -262,9 +262,9 @@ def _forward_layer_distributed_eval(
                 apply_gradient_requirements(eval_tsrs, warn=False)
             with lock:
                 nonlocal saved_layer
-                # Note that cloning behaviour of `eval_tsr` is different
-                # when `forward_hook_with_return` is set to True. This is because
-                # otherwise `backward()` on the last output layer won't execute.
+                # Note that cloning behaviour of ``eval_tsr`` is different
+                # when ``forward_hook_with_return`` is set to True. This is because
+                # otherwise ``backward()`` on the last output layer won't execute.
                 if forward_hook_with_return:
                     saved_layer[original_module][eval_tsrs[0].device] = eval_tsrs
                     eval_tsrs_to_return = tuple(
@@ -316,11 +316,11 @@ def _gather_distributed_tensors(
 ) -> Tuple[Tensor, ...]:
     r"""
     A helper function to concatenate intermediate layer results stored on
-    different devices in `saved_layer`. `saved_layer` is a dictionary that
-    contains `device_id` as a key and intermediate layer results (either
+    different devices in ``saved_layer``. ``saved_layer`` is a dictionary that
+    contains ``device_id`` as a key and intermediate layer results (either
     the input or the output of the layer) stored on the device corresponding to
     the key.
-    `key_list` is a list of devices in appropriate ordering for concatenation
+    ``key_list`` is a list of devices in appropriate ordering for concatenation
     and if not provided, keys are sorted based on device ids.
 
     If only one key exists (standard model), key list simply has one element.
@@ -336,9 +336,9 @@ def _extract_device_ids(
     device_ids: Union[None, List[int]],
 ) -> Union[None, List[int]]:
     r"""
-    A helper function to extract device_ids from `forward_function` in case it is
-    provided as part of a `DataParallel` model or if is accessible from
-    `forward_fn`.
+    A helper function to extract device_ids from ``forward_function`` in case it is
+    provided as part of a ``DataParallel`` model or if is accessible from
+    ``forward_fn``.
     In case input device_ids is not None, this function returns that value.
     """
     # Multiple devices / keys implies a DataParallel model, so we look for
@@ -572,8 +572,8 @@ def compute_layer_gradients_and_eval(
         target_ind: Index of the target class for which gradients
                     must be computed (classification only).
         output_fn:  An optional function that is applied to the layer inputs or
-                    outputs depending whether the `attribute_to_layer_input` is
-                    set to `True` or `False`
+                    outputs depending whether the ``attribute_to_layer_input`` is
+                    set to ``True`` or ``False``
         args:       Additional input arguments that forward function requires.
                     It takes an empty tuple (no additional arguments) if no
                     additional arguments are required
@@ -721,18 +721,18 @@ def _compute_jacobian_wrt_params(
     Args:
         model (torch.nn.Module): The trainable model providing the forward pass
         inputs (tuple of Any): The minibatch for which the forward pass is computed.
-                It is unpacked before passing to `model`, so it must be a tuple.  The
+                It is unpacked before passing to ``model``, so it must be a tuple.  The
                 individual elements of ``inputs`` can be anything.
         labels (Tensor or None): Labels for input if computing a loss function.
         loss_fn (torch.nn.Module or Callable or None): The loss function. If a library
                 defined loss function is provided, it would be expected to be a
                 torch.nn.Module. If a custom loss is provided, it can be either type,
-                but must behave as a library loss function would if `reduction='none'`.
+                but must behave as a library loss function would if ``reduction='none'``.
 
     Returns:
         grads (tuple of tensor): Returns the Jacobian for the minibatch as a
                 tuple of gradients corresponding to the tuple of trainable parameters
-                returned by `model.parameters()`. Each object grads[i] references to the
+                returned by ``model.parameters()``. Each object grads[i] references to the
                 gradients for the parameters in the i-th trainable layer of the model.
                 Each grads[i] object is a tensor with the gradients for the ``inputs``
                 batch. For example, grads[i][j] would reference the gradients for the
@@ -745,7 +745,7 @@ def _compute_jacobian_wrt_params(
         if labels is not None and loss_fn is not None:
             loss = loss_fn(out, labels)
             if hasattr(loss_fn, "reduction"):
-                msg0 = "Please ensure loss_fn.reduction is set to `none`"
+                msg0 = "Please ensure loss_fn.reduction is set to ``none``"
                 assert loss_fn.reduction == "none", msg0  # type: ignore
             else:
                 msg1 = (
@@ -785,28 +785,28 @@ def _compute_jacobian_wrt_params_with_sample_wise_trick(
     batch trick to fully vectorize the Jacobian calculation. Currently, only
     linear and conv2d layers are supported.
 
-    User must `add_hooks(model)` before calling this function.
+    User must ``add_hooks(model)`` before calling this function.
 
     Args:
         model (torch.nn.Module): The trainable model providing the forward pass
         inputs (tuple of Any): The minibatch for which the forward pass is computed.
-                It is unpacked before passing to `model`, so it must be a tuple.  The
+                It is unpacked before passing to ``model``, so it must be a tuple.  The
                 individual elements of ``inputs`` can be anything.
         labels (Tensor or None): Labels for input if computing a loss function.
         loss_fn (torch.nn.Module or Callable or None): The loss function. If a library
                 defined loss function is provided, it would be expected to be a
                 torch.nn.Module. If a custom loss is provided, it can be either type,
-                but must behave as a library loss function would if `reduction='sum'` or
-                `reduction='mean'`.
+                but must behave as a library loss function would if ``reduction='sum'`` or
+                ``reduction='mean'``.
         reduction_type (str): The type of reduction applied. If a loss_fn is passed,
-                this should match `loss_fn.reduction`. Else if gradients are being
+                this should match ``loss_fn.reduction``. Else if gradients are being
                 computed on direct model outputs (scores), then 'sum' should be used.
                 Defaults to 'sum'.
 
     Returns:
         grads (tuple of tensor): Returns the Jacobian for the minibatch as a
                 tuple of gradients corresponding to the tuple of trainable parameters
-                returned by `model.parameters()`. Each object grads[i] references to the
+                returned by ``model.parameters()``. Each object grads[i] references to the
                 gradients for the parameters in the i-th trainable layer of the model.
                 Each grads[i] object is a tensor with the gradients for the ``inputs``
                 batch. For example, grads[i][j] would reference the gradients for the

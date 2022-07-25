@@ -29,7 +29,7 @@ class Concept:
             name (str): A unique name of the concept.
             data_iter (DataLoader): A pytorch DataLoader object that combines a dataset
                         and a sampler, and provides an iterable over a given
-                        dataset. Only the input batches are provided by `data_iter`.
+                        dataset. Only the input batches are provided by ``data_iter``.
                         Concept ids can be used as labels if necessary.
                         For more information, please check:
                         https://pytorch.org/docs/stable/data.html

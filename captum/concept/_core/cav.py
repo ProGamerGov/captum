@@ -64,10 +64,10 @@ class CAV:
             path (str): A path to be concatenated with the concepts key and
                     layer name.
             model_id (str): A unique model identifier associated with input
-                    `layer` and `concepts`
+                    ``layer`` and ``concepts``
             concepts (list of Concept): A list of concepts that are concatenated
                     together and used as a concept key using their ids. These
-                    concept ids are retrieved from TCAV s`Concept` objects.
+                    concept ids are retrieved from TCAV's ``Concept`` objects.
             layer (str): The name of the layer for which the activations are
                     computed.
 
@@ -121,13 +121,13 @@ class CAV:
     def create_cav_dir_if_missing(save_path: str, model_id: str) -> None:
         r"""
         A utility function for creating the directories where the CAVs will
-        be stored. CAVs are saved in a folder under named by `model_id`
-        under `save_path`.
+        be stored. CAVs are saved in a folder under named by ``model_id``
+        under ``save_path``.
         Args:
             save_path (str): A root path where the CAVs will be stored
             model_id (str): A unique model identifier associated with the
-                    CAVs. A folder named `model_id` is created under
-                    `save_path`. The CAVs are later stored there.
+                    CAVs. A folder named ``model_id`` is created under
+                    ``save_path``. The CAVs are later stored there.
         """
         cav_model_id_path = os.path.join(save_path, model_id)
         if not os.path.exists(cav_model_id_path):
@@ -137,15 +137,15 @@ class CAV:
     def load(cavs_path: str, model_id: str, concepts: List[Concept], layer: str):
         r"""
         Loads CAV dictionary from a pickle file for given input
-        `layer` and `concepts`.
+        ``layer`` and ``concepts``.
 
         Args:
             cavs_path (str): The root path where the cavs are stored
                     in the storage (on the disk).
                     Ex.: "/cavs"
             model_id (str): A unique model identifier associated with the
-                    CAVs. There exist a folder named `model_id` under
-                    `cavs_path` path. The CAVs are loaded from this folder.
+                    CAVs. There exist a folder named ``model_id`` under
+                    ``cavs_path`` path. The CAVs are loaded from this folder.
             concepts (list of Concept): A List of concepts for which
                     we would like to load the cavs.
             layer (str): The layer name. Ex.: "inception4c". In case of nested

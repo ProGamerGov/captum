@@ -28,14 +28,14 @@ class ModelInputWrapper(nn.Module):
         r"""
         This is a convenience class. This wraps a model via first feeding the
         model's inputs to separate layers (one for each input) and then feeding
-        the (unmodified) inputs to the underlying model (`module_to_wrap`). Each
-        input is fed through an `InputIdentity` layer/module. This class does
+        the (unmodified) inputs to the underlying model (``module_to_wrap``). Each
+        input is fed through an ``InputIdentity`` layer/module. This class does
         not change how you feed inputs to your model, so feel free to use your
         model as you normally would.
 
-        To access a wrapped input layer, simply access it via the `input_maps`
+        To access a wrapped input layer, simply access it via the ``input_maps``
         ModuleDict, e.g. to get the corresponding module for input "x", simply
-        provide/write `my_wrapped_module.input_maps["x"]`
+        provide/write ``my_wrapped_module.input_maps["x"]``
 
         This is done such that one can use layer attribution methods on inputs.
         Which should allow you to use mix layers with inputs with these

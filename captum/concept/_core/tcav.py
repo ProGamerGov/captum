@@ -122,7 +122,7 @@ def train_cav(
                 model in order to compute CAVs.
         concepts (list of Concept): A list of Concept objects that are used
                 to train a classifier and learn decision boundaries between
-                those concepts for each layer defined in the `layers`
+                those concepts for each layer defined in the ``layers``
                 argument.
         layers (str, list of str): A list of layer names or a single layer
                 name that is used to compute the activations of all concept
@@ -136,7 +136,7 @@ def train_cav(
         save_path (str): The path for storing Concept Activation
                 Vectors (CAVs) and Activation Vectors (AVs).
         classifier_kwargs (dict): Additional named arguments that are passed to
-                concept classifier's `train_and_eval` method.
+                concept classifier's ``train_and_eval`` method.
 
     Returns:
         cavs (dict): A dictionary of CAV objects indexed by concept ids and
@@ -261,10 +261,10 @@ class TCAV(ConceptInterpreter):
             layers (str, list of str): A list of layer name(s) that are
                     used for computing concept activations (cavs) and layer
                     attributions.
-            model_id (str, optional): A unique identifier for the PyTorch `model`
+            model_id (str, optional): A unique identifier for the PyTorch ``model``
                     passed as first argument to the constructor of TCAV class. It
-                    is used to store and load activations for given input `model`
-                    and associated `layers`.
+                    is used to store and load activations for given input ``model``
+                    and associated ``layers``.
             classifier (Classifier, optional): A custom classifier class, such as the
                     Sklearn "linear_model" that allows us to train a model
                     using the activation vectors extracted for a layer per concept.
@@ -275,13 +275,13 @@ class TCAV(ConceptInterpreter):
                     sensitivity scores.
 
                     Default: None
-                    If `layer_attr_method` is None, we default it to gradients
-                    for the layers using `LayerGradientXActivation` layer
+                    If ``layer_attr_method`` is None, we default it to gradients
+                    for the layers using ``LayerGradientXActivation`` layer
                     attribution algorithm.
             save_path (str, optional): The path for storing CAVs and
                     Activation Vectors (AVs).
             classifier_kwargs (Any, optional): Additional arguments such as
-                    `test_split_ratio` that are passed to concept `classifier`.
+                    ``test_split_ratio`` that are passed to concept ``classifier``.
 
         Examples::
             >>>
@@ -336,20 +336,20 @@ class TCAV(ConceptInterpreter):
     def generate_all_activations(self) -> None:
         r"""
         Computes layer activations for all concepts and layers that are
-        defined in `self.layers` and `self.concepts` instance variables.
+        defined in ``self.layers`` and ``self.concepts`` instance variables.
         """
         for concept in self.concepts:
             self.generate_activation(self.layers, concept)
 
     def generate_activation(self, layers: Union[str, List], concept: Concept) -> None:
         r"""
-        Computes layer activations for the specified `concept` and
-        the list of layer(s) `layers`.
+        Computes layer activations for the specified ``concept`` and
+        the list of layer(s) ``layers``.
 
         Args:
             layers (str, list of str): A list of layer names or a layer name
                     that is used to compute layer activations for the
-                    specific `concept`.
+                    specific ``concept``.
             concept (Concept): A single Concept object that provides access
                     to concept examples using a data iterator.
         """
@@ -381,7 +381,7 @@ class TCAV(ConceptInterpreter):
     def generate_activations(self, concept_layers: Dict[Concept, List[str]]) -> None:
         r"""
         Computes layer activations for the concepts and layers specified in
-        `concept_layers` dictionary.
+        ``concept_layers`` dictionary.
 
         Args:
             concept_layers (dict[Concept, list of str]): Dictionay that maps
@@ -398,7 +398,7 @@ class TCAV(ConceptInterpreter):
         r"""
         This function load CAVs as a dictionary of concept ids and
         layers. CAVs are stored in a directory located under
-        `self.save_path` path, in .pkl files with the format:
+        ``self.save_path`` path, in .pkl files with the format:
         <self.save_path>/<concept_ids>-<layer_name>.pkl. Ex.:
         "/cavs/0-1-2-inception4c.pkl", where 0, 1 and 2 are concept ids.
 
@@ -454,8 +454,8 @@ class TCAV(ConceptInterpreter):
         processes: int = None,
     ):
         r"""
-        This method computes CAVs for given `experiments_sets` and layers
-        specified in `self.layers` instance variable. Internally, it
+        This method computes CAVs for given ``experiments_sets`` and layers
+        specified in ``self.layers`` instance variable. Internally, it
         trains a classifier and creates an instance of CAV class using the
         weights of the trained classifier for each experimental set.
 
@@ -482,7 +482,7 @@ class TCAV(ConceptInterpreter):
                     If CAVs for the concept_ids-layer pairs are present in the
                     data storage they will be loaded into the memory, otherwise
                     they will be computed using a training process and stored
-                    in the data storage that can be configured using `save_path`
+                    in the data storage that can be configured using ``save_path``
                     input argument.
         """
 
@@ -572,7 +572,7 @@ class TCAV(ConceptInterpreter):
     ) -> Dict[str, Dict[str, Dict[str, Tensor]]]:
         r"""
         This method computes magnitude and sign-based TCAV scores for each
-        experimental sets in `experimental_sets` list.
+        experimental sets in ``experimental_sets`` list.
         TCAV scores are computed using a dot product between layer attribution
         scores for specific predictions and CAV vectors.
 
@@ -619,12 +619,12 @@ class TCAV(ConceptInterpreter):
             processes (int, optional): The number of processes to be created. if
                     processes is larger than one then CAV computations will be
                     performed in parallel using the number of processes equal to
-                    `processes`. Otherwise, CAV computations will be performed
+                    ``processes``. Otherwise, CAV computations will be performed
                     sequential.
                     Default:None
             **kwargs (Any, optional): A list of arguments that are passed to layer
                     attribution algorithm's attribute method. This could be for
-                    example `n_steps` in case of integrated gradients.
+                    example ``n_steps`` in case of integrated gradients.
                     Default: None
 
         Returns:
@@ -632,7 +632,7 @@ class TCAV(ConceptInterpreter):
                     for each concept set per layer.
                     The order of TCAV scores in the resulting tensor for each
                     experimental set follows the order in which concepts
-                    are passed in `experimental_sets` input argument.
+                    are passed in ``experimental_sets`` input argument.
 
         results example::
             >>> #

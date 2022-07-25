@@ -21,7 +21,7 @@ class AV:
     It also provides functionality to check if activation vectors already
     exist in the manifold and other auxiliary functions.
 
-    This class also defines a torch `Dataset`, representing Activation Vectors,
+    This class also defines a torch ``Dataset``, representing Activation Vectors,
     which enables lazy access to activation vectors and layer stored in the manifold.
 
     """
@@ -33,7 +33,7 @@ class AV:
 
     class AVDataset(Dataset):
         r"""
-        This dataset enables access to activation vectors for a given `model` stored
+        This dataset enables access to activation vectors for a given ``model`` stored
         under a pre-defined path.
         The iterator of this dataset returns a batch of data tensors.
         Additionally, subsets of the model activations can be loaded based on layer
@@ -50,11 +50,11 @@ class AV:
         ) -> None:
             r"""
             Loads into memory the list of all activation file paths associated
-            with the input `model_id`.
+            with the input ``model_id``.
 
             Args:
                 path (str): The path where the activation vectors
-                        for the `layer` are stored.
+                        for the ``layer`` are stored.
                 model_id (str): The name/version of the model for which layer
                         activations are being computed and stored.
                 identifier (str or None): An optional identifier for the layer
@@ -91,7 +91,7 @@ class AV:
     @staticmethod
     def _assemble_model_dir(path: str, model_id: str) -> str:
         r"""
-        Returns a directory path for the given source path `path` and `model_id.`
+        Returns a directory path for the given source path ``path`` and ``model_id.``
         This path is suffixed with the '/' delimiter.
         """
         return "/".join([path, AV.AV_DIR_NAME, model_id, ""])
@@ -120,9 +120,9 @@ class AV:
         num_id: Optional[str] = None,
     ) -> str:
         r"""
-        Returns a search string that can be used by glob to search `source_dir/model_id`
-        for the desired layer/identifier pair. Leaving `layer` as None will search ids
-        over all layers, and leaving `identifier` as none will search layers over all
+        Returns a search string that can be used by glob to search ``source_dir/model_id``
+        for the desired layer/identifier pair. Leaving ``layer`` as None will search ids
+        over all layers, and leaving ``identifier`` as none will search layers over all
         ids.  Leaving both as none will return a path to glob for every activation.
         Assumes identifier is always specified when saving activations, so that
         activations live at source_dir/model_id/identifier/layer
@@ -157,7 +157,7 @@ class AV:
 
         Args:
             path (str): The path where the activation vectors
-                    for the `model_id` are stored.
+                    for the ``model_id`` are stored.
             model_id (str): The name/version of the model for which layer activations
                     are being computed and stored.
             identifier (str or None): An optional identifier for the layer activations.
@@ -171,9 +171,9 @@ class AV:
                     the activation vectors are computed
 
         Returns:
-            exists (bool): Indicating whether the activation vectors for the `layer`
-                    and `identifier` (if provided) and num_id (if provided) were stored
-                    in the manifold. If no `identifier` is provided, will return `True`
+            exists (bool): Indicating whether the activation vectors for the ``layer``
+                    and ``identifier`` (if provided) and num_id (if provided) were stored
+                    in the manifold. If no ``identifier`` is provided, will return ``True``
                     if any layer activation exists, whether it has an identifier or
                     not, and vice-versa.
         """
@@ -193,12 +193,12 @@ class AV:
         num_id: str,
     ) -> None:
         r"""
-        Saves the activation vectors `act_tensor` for the
-        `layer` under the manifold `path`.
+        Saves the activation vectors ``act_tensor`` for the
+        ``layer`` under the manifold ``path``.
 
         Args:
             path (str): The path where the activation vectors
-                    for the `layer` are stored.
+                    for the ``layer`` are stored.
             model_id (str): The name/version of the model for which layer activations
                     are being computed and stored.
             identifier (str or None): An optional identifier for the layer
@@ -210,11 +210,11 @@ class AV:
                     example, it is automatically created in
                     AV.generate_dataset_activations from batch index.
                     It assumes identifier is same for all layers if a list of
-                    `layers` is provided.
+                    ``layers`` is provided.
             layers (str or list of str): The layer(s) for which the activation vectors
                     are computed.
             act_tensors (tensor or list of tensor): A batch of activation vectors.
-                    This must match the dimension of `layers`.
+                    This must match the dimension of ``layers``.
             num_id (str): string representing the batch number for which the activation
                     vectors are computed
         """
@@ -224,7 +224,7 @@ class AV:
             act_tensors = [act_tensors]
 
         if len(layers) != len(act_tensors):
-            raise ValueError("The dimension of `layers` and `act_tensors` must match!")
+            raise ValueError("The dimension of ``layers`` and ``act_tensors`` must match!")
 
         av_dir = AV._assemble_model_dir(path, model_id)
 
@@ -247,12 +247,12 @@ class AV:
         num_id: Optional[str] = None,
     ) -> AVDataset:
         r"""
-        Loads lazily the activation vectors for given `model_id` and
-        `layer` saved under the `path`.
+        Loads lazily the activation vectors for given ``model_id`` and
+        ``layer`` saved under the ``path``.
 
         Args:
             path (str): The path where the activation vectors
-                    for the `layer` are stored.
+                    for the ``layer`` are stored.
             model_id (str): The name/version of the model for which layer activations
                     are being computed and stored.
             identifier (str or None): An optional identifier for the layer
@@ -296,7 +296,7 @@ class AV:
 
         Args:
             path (str): The path where the activation vectors
-                    for the `layer` are stored.
+                    for the ``layer`` are stored.
             model_id (str): The name/version of the model for which layer activations
                     are being computed and stored.
             layers (str or list of str): The layer(s) for which the activation vectors
@@ -348,11 +348,11 @@ class AV:
         load_from_disk: bool = True,
     ) -> None:
         r"""
-        Computes layer activations for the given inputs and specified `layers`
+        Computes layer activations for the given inputs and specified ``layers``
 
         Args:
             path (str): The path where the activation vectors
-                    for the `layer` are stored.
+                    for the ``layer`` are stored.
             model (torch.nn.Module): An instance of pytorch model. This model should
                     define all of its layers as attributes of the model.
             model_id (str): The name/version of the model for which layer activations
@@ -361,7 +361,7 @@ class AV:
                     are computed.
             inputs (tensor or tuple of tensors): Batch of examples for
                     which influential instances are computed. They are passed to the
-                    input `model`. The first dimension in ``inputs`` tensor or tuple of
+                    input ``model``. The first dimension in ``inputs`` tensor or tuple of
                     tensors corresponds to the batch size.
             identifier (str or None): An optional identifier for the layer
                     activations. Can be used to distinguish between activations for
@@ -369,7 +369,7 @@ class AV:
             num_id (str): An required string representing the batch number for which the
                     activation vectors are computed
             additional_forward_args (optional): Additional arguments that will be
-                    passed to `model` after inputs.
+                    passed to ``model`` after inputs.
                     Default: None
             load_from_disk (bool): Forces function to regenerate activations if False.
                     Default: True
@@ -422,13 +422,13 @@ class AV:
         return_activations: bool = False,
     ) -> Optional[Union[AVDataset, List[AVDataset]]]:
         r"""
-        Computes layer activations for a source dataset and specified `layers`. Assumes
+        Computes layer activations for a source dataset and specified ``layers``. Assumes
         that the dataset returns a single value, or a tuple containing two elements
         (see AV._unpack_data).
 
         Args:
             path (str): The path where the activation vectors
-                    for the `layer` are stored.
+                    for the ``layer`` are stored.
             module (torch.nn.Module): An instance of pytorch model. This model should
                     define all of its layers as attributes of the model.
             model_id (str): The name/version of the model for which layer activations
@@ -437,7 +437,7 @@ class AV:
                     are computed.
             dataloader (torch.utils.data.DataLoader): DataLoader that yields Dataset
                     for which influential instances are computed. They are passed to
-                    input `model`.
+                    input ``model``.
             identifier (str or None): An identifier for the layer
                     activations. Can be used to distinguish between activations for
                     different training batches.
@@ -446,11 +446,11 @@ class AV:
                     Default: True
             return_activations (bool, optional): Whether to return the activations.
                     Default: False
-        Returns: If `return_activations == True`, returns a single `AVDataset` if
-                    `layers` is a str, otherwise, a list of `AVDataset`s of the length
-                    of `layers`, where each element corresponds to a layer.  In either
-                    case, `AVDataset`'s represent the activations for a single layer,
-                    over the entire `dataloader`.  If `return_activations == False`,
+        Returns: If ``return_activations == True``, returns a single ``AVDataset`` if
+                    ``layers`` is a str, otherwise, a list of ``AVDataset``s of the length
+                    of ``layers``, where each element corresponds to a layer.  In either
+                    case, ``AVDataset``'s represent the activations for a single layer,
+                    over the entire ``dataloader``.  If ``return_activations == False``,
                     does not return anything.
 
         """

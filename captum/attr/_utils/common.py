@@ -90,7 +90,7 @@ def _format_input_baseline(
     return inputs, baselines
 
 
-# This function can potentially be merged with the `format_baseline` function
+# This function can potentially be merged with the ``format_baseline`` function
 # however, since currently not all algorithms support baselines of type
 # callable this will be kept in a separate function.
 @typing.overload
@@ -134,7 +134,7 @@ def _format_callable_baseline(
 ) -> Tuple[Union[Tensor, int, float], ...]:
     if callable(baselines):
         # Note: this assumes that if baselines is a function and if it takes
-        # arguments, then the first argument is the ```inputs```.
+        # arguments, then the first argument is the `inputs`.
         # This can be expanded in the future with better type checks
         baseline_parameters = signature(baselines).parameters
         if len(baseline_parameters) == 0:
@@ -287,29 +287,29 @@ def _reshape_and_sum(
     )
 
 
-def _call_```return_convergence_delta```(
-    ```return_convergence_delta```: Callable[..., Tuple[Tensor, ...]],
+def _call_ return_convergence_delta(
+    ``return_convergence_delta``: Callable[..., Tuple[Tensor, ...]],
     multipliers: Tuple[Tensor, ...],
     inputs: Tuple[Tensor, ...],
     baselines: Tuple[Tensor, ...],
 ) -> Tuple[Tensor, ...]:
-    assert callable(```return_convergence_delta```), (
-        "```return_convergence_delta```"
+    assert callable(return_convergence_delta), (
+        "``return_convergence_delta``"
         " must be a callable function but {} provided".format(
-            type(```return_convergence_delta```)
+            type(return_convergence_delta)
         )
     )
-    custom_attr_func_params = signature(```return_convergence_delta```).parameters
+    custom_attr_func_params = signature(return_convergence_delta).parameters
 
     if len(custom_attr_func_params) == 1:
-        return ```return_convergence_delta```(multipliers)
+        return return_convergence_delta(multipliers)
     elif len(custom_attr_func_params) == 2:
-        return ```return_convergence_delta```(multipliers, inputs)
+        return return_convergence_delta(multipliers, inputs)
     elif len(custom_attr_func_params) == 3:
-        return ```return_convergence_delta```(multipliers, inputs, baselines)
+        return return_convergence_delta(multipliers, inputs, baselines)
     else:
         raise AssertionError(
-            "```return_convergence_delta``` must take at least one and at most 3 arguments."
+            "`return_convergence_delta` must take at least one and at most 3 arguments."
         )
 
 

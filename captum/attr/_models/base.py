@@ -15,7 +15,7 @@ class InterpretableEmbeddingBase(Module):
     To do so, we separate embedding layers from the model, compute the
     embeddings separately and do all operations needed outside of the model.
     The original embedding layer is being replaced by
-    `InterpretableEmbeddingBase` layer which passes already
+    ``InterpretableEmbeddingBase`` layer which passes already
     precomputed embedding vectors to the layers below.
     """
 
@@ -41,18 +41,18 @@ class InterpretableEmbeddingBase(Module):
                    execute the forward pass using interpretable embedding layer.
                    Note that if inputs are specified, it is assumed that the first
                    argument is the embedding tensor generated using the
-                   `self.embedding` layer using all input arguments provided in
-                   ``inputs`` and `kwargs`.
+                   ``self.embedding`` layer using all input arguments provided in
+                   ``inputs`` and ``kwargs``.
            **kwargs (Any, optional): Similar to ``inputs`` we want to make sure
                    that our forward pass supports arbitrary number and type of
-                   key-value arguments. If ``inputs`` is not provided, `kwargs` must
+                   key-value arguments. If ``inputs`` is not provided, ``kwargs`` must
                    be provided and the first argument corresponds to the embedding
-                   tensor generated using the `self.embedding`. Note that we make
-                   here an assumption here that `kwargs` is an ordered dict which
+                   tensor generated using the ``self.embedding``. Note that we make
+                   here an assumption here that ``kwargs`` is an ordered dict which
                    is new in python 3.6 and is not guaranteed that it will
                    consistently remain that way in the newer versions. In case
                    current implementation doesn't work for special use cases,
-                   it is encouraged to override `InterpretableEmbeddingBase` and
+                   it is encouraged to override ``InterpretableEmbeddingBase`` and
                    address those specifics in descendant classes.
 
         Returns:
@@ -64,7 +64,7 @@ class InterpretableEmbeddingBase(Module):
                    without any modifications.
         """
         assert len(inputs) > 0 or len(kwargs) > 0, (
-            "No input arguments are provided to `InterpretableEmbeddingBase`."
+            "No input arguments are provided to ``InterpretableEmbeddingBase``."
             "Input embedding tensor has to be provided as first argument to forward "
             "function either through inputs argument or kwargs."
         )
@@ -79,7 +79,7 @@ class InterpretableEmbeddingBase(Module):
             *input (Any, optional): This can be a tensor(s) of input indices or any
                     other variable necessary to comput the embeddings. A typical
                     example of input indices are word or token indices.
-            **kwargs (Any, optional): Similar to `input` this can be any sequence
+            **kwargs (Any, optional): Similar to ``input`` this can be any sequence
                     of key-value arguments necessary to compute final embedding
                     tensor.
         Returns:
@@ -94,9 +94,9 @@ class InterpretableEmbeddingBase(Module):
 class TokenReferenceBase:
     r"""
     A base class for creating reference (aka baseline) tensor for a sequence of
-    tokens. A typical example of such token is `PAD`. Users need to provide the
+    tokens. A typical example of such token is ``PAD``. Users need to provide the
     index of the reference token in the vocabulary as an argument to
-    `TokenReferenceBase` class.
+    ``TokenReferenceBase`` class.
     """
 
     def __init__(self, reference_token_idx=0) -> None:
@@ -104,8 +104,8 @@ class TokenReferenceBase:
 
     def generate_reference(self, sequence_length, device):
         r"""
-        Generated reference tensor of given `sequence_length` using
-        `reference_token_idx`.
+        Generated reference tensor of given ``sequence_length`` using
+        ``reference_token_idx``.
 
         Args:
             sequence_length (int): The length of the reference sequence
@@ -146,13 +146,13 @@ def configure_interpretable_embedding_layer(model, embedding_layer_name="embeddi
 
         model (torch.nn.Model): An instance of PyTorch model that contains embeddings.
         embedding_layer_name (str, optional): The name of the embedding layer
-                    in the `model` that we would like to make interpretable.
+                    in the ``model`` that we would like to make interpretable.
 
     Returns:
 
-        interpretable_emb (tensor): An instance of `InterpretableEmbeddingBase`
+        interpretable_emb (tensor): An instance of ``InterpretableEmbeddingBase``
                     embedding layer that wraps model's embedding layer that is being
-                    accessed through `embedding_layer_name`.
+                    accessed through ``embedding_layer_name``.
 
     Examples::
 
@@ -210,9 +210,9 @@ def remove_interpretable_embedding_layer(model, interpretable_emb):
     Args:
 
         model (torch.nn.Module): An instance of PyTorch model that contains embeddings
-        interpretable_emb (tensor): An instance of `InterpretableEmbeddingBase`
+        interpretable_emb (tensor): An instance of ``InterpretableEmbeddingBase``
                     that was originally created in
-                    `configure_interpretable_embedding_layer` function and has
+                    ``configure_interpretable_embedding_layer`` function and has
                     to be removed after interpretation is finished.
 
     Examples::

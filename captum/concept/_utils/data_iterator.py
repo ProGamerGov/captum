@@ -44,7 +44,7 @@ class CustomIterableDataset(IterableDataset):
 def dataset_to_dataloader(dataset: Dataset, batch_size: int = 64) -> DataLoader:
     r"""
     An auxiliary function that creates torch DataLoader from torch Dataset
-    using input `batch_size`.
+    using input ``batch_size``.
 
     Args:
         dataset (Dataset): A torch dataset that allows to iterate over

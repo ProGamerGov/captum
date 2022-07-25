@@ -124,7 +124,7 @@ class IntegratedGradients(GradientAttribution):
         (in case it is provided, otherwise it assumes that output is a
         scalar) to the inputs of the model using the approach described above.
 
-        In addition to that it also returns, if `return_convergence_delta` is
+        In addition to that it also returns, if ``return_convergence_delta`` is
         set to True, integral approximation delta based on the completeness
         property of integrated gradients.
 
@@ -203,7 +203,7 @@ class IntegratedGradients(GradientAttribution):
                         arguments in inputs.
                         For a tensor, the first dimension of the tensor must
                         correspond to the number of examples. It will be
-                        repeated for each of `n_steps` along the integrated
+                        repeated for each of ``n_steps`` along the integrated
                         path. For all other types, the given argument is used
                         for all forward evaluations.
                         Note that attributions are not computed with respect
@@ -227,7 +227,7 @@ class IntegratedGradients(GradientAttribution):
                         processed in one batch.
                         Default: None
             return_convergence_delta (bool, optional): Indicates whether to return
-                    convergence delta or not. If `return_convergence_delta`
+                    convergence delta or not. If ``return_convergence_delta``
                     is set to True convergence delta will be returned in
                     a tuple following attributions.
                     Default: False

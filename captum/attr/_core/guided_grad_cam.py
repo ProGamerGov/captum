@@ -139,8 +139,8 @@ class GuidedGradCam(GradientAttribution):
                         Default: "nearest"
             attribute_to_layer_input (bool, optional): Indicates whether to
                         compute the attribution with respect to the layer input
-                        or output in `LayerGradCam`.
-                        If `attribute_to_layer_input` is set to True
+                        or output in ``LayerGradCam``.
+                        If ``attribute_to_layer_input`` is set to True
                         then the attributions will be computed with respect to
                         layer inputs, otherwise it will be computed with respect
                         to layer outputs.

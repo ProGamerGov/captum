@@ -193,7 +193,7 @@ class LayerConductance(LayerAttribution, GradientAttribution):
                         arguments in inputs.
                         For a tensor, the first dimension of the tensor must
                         correspond to the number of examples. It will be repeated
-                        for each of `n_steps` along the integrated path.
+                        for each of ``n_steps`` along the integrated path.
                         For all other types, the given argument is used for
                         all forward evaluations.
                         Note that attributions are not computed with respect
@@ -217,13 +217,13 @@ class LayerConductance(LayerAttribution, GradientAttribution):
                         processed in one batch.
                         Default: None
             return_convergence_delta (bool, optional): Indicates whether to return
-                        convergence delta or not. If `return_convergence_delta`
+                        convergence delta or not. If ``return_convergence_delta``
                         is set to True convergence delta will be returned in
                         a tuple following attributions.
                         Default: False
             attribute_to_layer_input (bool, optional): Indicates whether to
                         compute the attribution with respect to the layer input
-                        or output. If `attribute_to_layer_input` is set to True
+                        or output. If ``attribute_to_layer_input`` is set to True
                         then the attributions will be computed with respect to
                         layer inputs, otherwise it will be computed with respect
                         to layer outputs.
@@ -241,7 +241,7 @@ class LayerConductance(LayerAttribution, GradientAttribution):
                         the input or output of the given layer, depending on
                         whether we attribute to the inputs or outputs
                         of the layer which is decided by the input flag
-                        `attribute_to_layer_input`.
+                        ``attribute_to_layer_input``.
                         Attributions are returned in a tuple if
                         the layer inputs / outputs contain multiple tensors,
                         otherwise a single tensor is returned.

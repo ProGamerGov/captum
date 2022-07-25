@@ -178,7 +178,7 @@ class NeuronDeepLift(NeuronAttribution, GradientAttribution):
                         Default: None
             attribute_to_neuron_input (bool, optional): Indicates whether to
                         compute the attributions with respect to the neuron input
-                        or output. If `attribute_to_neuron_input` is set to True
+                        or output. If ``attribute_to_neuron_input`` is set to True
                         then the attributions will be computed with respect to
                         neuron's inputs, otherwise it will be computed with respect
                         to neuron's outputs.
@@ -265,12 +265,12 @@ class NeuronDeepLift(NeuronAttribution, GradientAttribution):
 class NeuronDeepLiftShap(NeuronAttribution, GradientAttribution):
     r"""
     Extends NeuronAttribution and uses LayerDeepLiftShap algorithms and
-    approximates SHAP values for given input `layer` and `neuron_selector`.
+    approximates SHAP values for given input ``layer`` and ``neuron_selector``.
     For each input sample - baseline pair it computes DeepLift attributions
-    with respect to inputs or outputs of given `layer` and `neuron_selector`
+    with respect to inputs or outputs of given ``layer`` and ``neuron_selector``
     averages resulting attributions across baselines. Whether to compute the
     attributions with respect to the inputs or outputs of the layer is defined
-    by the input flag `attribute_to_layer_input`.
+    by the input flag ``attribute_to_layer_input``.
     More details about the algorithm can be found here:
 
     https://papers.nips.cc/paper/7062-a-unified-approach-to-interpreting-model-predictions.pdf
@@ -416,7 +416,7 @@ class NeuronDeepLiftShap(NeuronAttribution, GradientAttribution):
                         Default: None
             attribute_to_neuron_input (bool, optional): Indicates whether to
                         compute the attributions with respect to the neuron input
-                        or output. If `attribute_to_neuron_input` is set to True
+                        or output. If ``attribute_to_neuron_input`` is set to True
                         then the attributions will be computed with respect to
                         neuron's inputs, otherwise it will be computed with respect
                         to neuron's outputs.

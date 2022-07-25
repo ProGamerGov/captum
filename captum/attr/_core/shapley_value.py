@@ -70,7 +70,7 @@ class ShapleyValueSampling(PerturbationAttribution):
                         any modification of it. The forward function can either
                         return a scalar per example, or a single scalar for the
                         full batch. If a single scalar is returned for the batch,
-                        `perturbations_per_eval` must be 1, and the returned
+                        ``perturbations_per_eval`` must be 1, and the returned
                         attributions will have first dimension 1, corresponding to
                         feature importance across all examples in the batch.
         """
@@ -199,7 +199,7 @@ class ShapleyValueSampling(PerturbationAttribution):
                             Default: None
                 n_samples (int, optional): The number of feature permutations
                             tested.
-                            Default: `25` if `n_samples` is not provided.
+                            Default: ``25`` if ``n_samples`` is not provided.
                 perturbations_per_eval (int, optional): Allows multiple ablations
                             to be processed simultaneously in one call to forward_fn.
                             Each forward pass will contain a maximum of
@@ -524,7 +524,7 @@ class ShapleyValues(ShapleyValueSampling):
                         any modification of it. The forward function can either
                         return a scalar per example, or a single scalar for the
                         full batch. If a single scalar is returned for the batch,
-                        `perturbations_per_eval` must be 1, and the returned
+                        ``perturbations_per_eval`` must be 1, and the returned
                         attributions will have first dimension 1, corresponding to
                         feature importance across all examples in the batch.
         """

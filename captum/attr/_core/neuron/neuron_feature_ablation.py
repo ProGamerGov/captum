@@ -167,7 +167,7 @@ class NeuronFeatureAblation(NeuronAttribution, PerturbationAttribution):
                         Default: None
             attribute_to_neuron_input (bool, optional): Indicates whether to
                         compute the attributions with respect to the neuron input
-                        or output. If `attribute_to_neuron_input` is set to True
+                        or output. If ``attribute_to_neuron_input`` is set to True
                         then the attributions will be computed with respect to
                         neuron's inputs, otherwise it will be computed with respect
                         to neuron's outputs.

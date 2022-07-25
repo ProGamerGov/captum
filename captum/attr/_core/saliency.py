@@ -16,7 +16,7 @@ from captum.log import log_usage
 class Saliency(GradientAttribution):
     r"""
     A baseline approach for computing input attribution. It returns
-    the gradients with respect to inputs. If `abs` is set to True, which is
+    the gradients with respect to inputs. If ``abs`` is set to True, which is
     the default, the absolute value of the gradients is returned.
 
     More details about the approach can be found in the following paper:

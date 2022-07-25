@@ -61,7 +61,7 @@ def _check_valid_module(inputs_grad_fn, outputs) -> bool:
     try:
         # if ``inputs`` in the input to the network then the grad_fn is None and
         # for that input backward_hook isn't computed. That's the reason why we
-        # need to check on `inputs_grad_fns[first_next[1]]` being None.
+        # need to check on ``inputs_grad_fns[first_next[1]]`` being None.
         return (
             inputs_grad_fn is None
             or first_next[0] == inputs_grad_fn
@@ -263,7 +263,7 @@ class DeepLift(GradientAttribution):
                         to these arguments.
                         Default: None
             return_convergence_delta (bool, optional): Indicates whether to return
-                        convergence delta or not. If `return_convergence_delta`
+                        convergence delta or not. If ``return_convergence_delta``
                         is set to True convergence delta will be returned in
                         a tuple following attributions.
                         Default: False
@@ -487,10 +487,10 @@ class DeepLift(GradientAttribution):
         grad_output: Union[Tensor, Tuple[Tensor, ...]],
     ):
         r"""
-        `grad_input` is the gradient of the neuron with respect to its input
-        `grad_output` is the gradient of the neuron with respect to its output
-         we can override `grad_input` according to chain rule with.
-        `grad_output` * delta_out / delta_in.
+        ``grad_input`` is the gradient of the neuron with respect to its input
+        ``grad_output`` is the gradient of the neuron with respect to its output
+         we can override ``grad_input`` according to chain rule with.
+        ``grad_output`` * delta_out / delta_in.
 
         """
         # before accessing the attributes from the module we want
@@ -767,7 +767,7 @@ class DeepLiftShap(DeepLift):
                         to these arguments.
                         Default: None
             return_convergence_delta (bool, optional): Indicates whether to return
-                        convergence delta or not. If `return_convergence_delta`
+                        convergence delta or not. If ``return_convergence_delta``
                         is set to True convergence delta will be returned in
                         a tuple following attributions.
                         Default: False
@@ -808,8 +808,8 @@ class DeepLiftShap(DeepLift):
                         Delta is calculated for each example input and baseline pair,
                         meaning that the number of elements in returned delta tensor
                         is equal to the
-                        `number of examples in input` * `number of examples
-                        in baseline`. The deltas are ordered in the first place by
+                        ``number of examples in input`` * ``number of examples
+                        in baseline``. The deltas are ordered in the first place by
                         input example, followed by the baseline.
                         Note that the logic described for deltas is guaranteed
                         when the default logic for attribution computations is used,
@@ -833,7 +833,7 @@ class DeepLiftShap(DeepLift):
             "Baselines distribution has to be provided in form of a torch.Tensor"
             " with more than one example but found: {}."
             " If baselines are provided in shape of scalars or with a single"
-            " baseline example, `DeepLift`"
+            " baseline example, ``DeepLift``"
             " approach can be used instead.".format(baselines[0])
         )
 
@@ -952,7 +952,7 @@ def nonlinear(
     new_grad_inp = list(grad_input)
 
     # supported non-linear modules take only single tensor as input hence accessing
-    # only the first element in `grad_input` and `grad_output`
+    # only the first element in ``grad_input`` and ``grad_output``
     new_grad_inp[0] = torch.where(
         abs(delta_in) < eps, new_grad_inp[0], grad_output[0] * delta_out / delta_in
     )

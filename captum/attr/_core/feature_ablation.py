@@ -38,8 +38,8 @@ class FeatureAblation(PerturbationAttribution):
     of a fixed sized tensor (or scalar value) for the full batch, i.e. the
     output does not grow as the batch size increase. If the output is fixed
     we consider this model to be an "aggregation" of the inputs. In the fixed
-    sized output mode we require `perturbations_per_eval == 1` and the
-    `feature_mask` to be either `None` or for all of them to have 1 as their
+    sized output mode we require ``perturbations_per_eval == 1`` and the
+    ``feature_mask`` to be either ``None`` or for all of them to have 1 as their
     first dimension (i.e. a feature mask requires to be applied to all inputs).
     """
 
@@ -302,8 +302,8 @@ class FeatureAblation(PerturbationAttribution):
                     isinstance(initial_eval, torch.Tensor)
                     and num_outputs == num_examples
                 ), (
-                    "expected output of `forward_func` to have "
-                    + "`batch_size` elements for perturbations_per_eval > 1 "
+                    "expected output of ``forward_func`` to have "
+                    + "``batch_size`` elements for perturbations_per_eval > 1 "
                     + "and all feature_mask.shape[0] > 1"
                 )
 
@@ -521,17 +521,17 @@ class FeatureAblation(PerturbationAttribution):
     ):
         r"""
         Ablates given expanded_input tensor with given feature mask, feature range,
-        and baselines. expanded_input shape is (`num_features`, `num_examples`, ...)
+        and baselines. expanded_input shape is (``num_features``, ``num_examples``, ...)
         with remaining dimensions corresponding to remaining original tensor
-        dimensions and `num_features` = `end_feature` - `start_feature`.
+        dimensions and ``num_features`` = ``end_feature`` - ``start_feature``.
         input_mask has same number of dimensions as original input tensor (one less
-        than `expanded_input`), and can have first dimension either 1, applying same
-        feature mask to all examples, or `num_examples`. baseline is expected to
-        be broadcastable to match `expanded_input`.
+        than ``expanded_input``), and can have first dimension either 1, applying same
+        feature mask to all examples, or ``num_examples``. baseline is expected to
+        be broadcastable to match ``expanded_input``.
 
         This method returns the ablated input tensor, which has the same
-        dimensionality as `expanded_input` as well as the corresponding mask with
-        either the same dimensionality as `expanded_input` or second dimension
+        dimensionality as ``expanded_input`` as well as the corresponding mask with
+        either the same dimensionality as ``expanded_input`` or second dimension
         being 1. This mask contains 1s in locations which have been ablated (and
         thus counted towards ablations for that feature) and 0s otherwise.
         """
@@ -578,11 +578,11 @@ class FeatureAblation(PerturbationAttribution):
         Returns True if the output mode is "aggregation output mode"
 
         Aggregation output mode is defined as: when there is no 1:1 correspondence
-        with the `num_examples` (`batch_size`) and the amount of outputs your model
+        with the ``num_examples`` (``batch_size``) and the amount of outputs your model
         produces, i.e. the model output does not grow in size as the input becomes
         larger.
 
-        We assume this is the case if `perturbations_per_eval == 1`
+        We assume this is the case if ``perturbations_per_eval == 1``
         and your feature mask is None or is associated to all
         examples in a batch (fm.shape[0] == 1 for all fm in feature_mask).
         """

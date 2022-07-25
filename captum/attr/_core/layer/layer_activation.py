@@ -76,7 +76,7 @@ class LayerActivation(LayerAttribution):
                         Default: None
             attribute_to_layer_input (bool, optional): Indicates whether to
                         compute the attribution with respect to the layer input
-                        or output. If `attribute_to_layer_input` is set to True
+                        or output. If ``attribute_to_layer_input`` is set to True
                         then the attributions will be computed with respect to
                         layer input, otherwise it will be computed with respect
                         to layer output.

@@ -151,7 +151,7 @@ class InternalInfluence(LayerAttribution, GradientAttribution):
                         arguments in inputs.
                         For a tensor, the first dimension of the tensor must
                         correspond to the number of examples. It will be
-                        repeated for each of `n_steps` along the integrated
+                        repeated for each of ``n_steps`` along the integrated
                         path. For all other types, the given argument is used
                         for all forward evaluations.
                         Note that attributions are not computed with respect
@@ -176,7 +176,7 @@ class InternalInfluence(LayerAttribution, GradientAttribution):
                         Default: None
             attribute_to_layer_input (bool, optional): Indicates whether to
                         compute the attribution with respect to the layer input
-                        or output. If `attribute_to_layer_input` is set to True
+                        or output. If ``attribute_to_layer_input`` is set to True
                         then the attributions will be computed with respect to
                         layer inputs, otherwise it will be computed with respect
                         to layer outputs.
@@ -192,8 +192,8 @@ class InternalInfluence(LayerAttribution, GradientAttribution):
                         Internal influence of each neuron in given
                         layer output. Attributions will always be the same size
                         as the output or input of the given layer depending on
-                        whether `attribute_to_layer_input` is set to `False` or
-                        `True` respectively.
+                        whether ``attribute_to_layer_input`` is set to ``False`` or
+                        ``True`` respectively.
                         Attributions are returned in a tuple if
                         the layer inputs / outputs contain multiple tensors,
                         otherwise a single tensor is returned.

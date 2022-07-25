@@ -222,13 +222,13 @@ class LayerDeepLift(LayerAttribution, DeepLift):
                         to these arguments.
                         Default: None
             return_convergence_delta (bool, optional): Indicates whether to return
-                        convergence delta or not. If `return_convergence_delta`
+                        convergence delta or not. If ``return_convergence_delta``
                         is set to True convergence delta will be returned in
                         a tuple following attributions.
                         Default: False
             attribute_to_layer_input (bool, optional): Indicates whether to
                         compute the attribution with respect to the layer input
-                        or output. If `attribute_to_layer_input` is set to True
+                        or output. If ``attribute_to_layer_input`` is set to True
                         then the attributions will be computed with respect to
                         layer input, otherwise it will be computed with respect
                         to layer output.
@@ -374,12 +374,12 @@ class LayerDeepLift(LayerAttribution, DeepLift):
 class LayerDeepLiftShap(LayerDeepLift, DeepLiftShap):
     r"""
     Extends LayerDeepLift and DeepLiftShap algorithms and approximates SHAP
-    values for given input `layer`.
+    values for given input ``layer``.
     For each input sample - baseline pair it computes DeepLift attributions
-    with respect to inputs or outputs of given `layer` averages
+    with respect to inputs or outputs of given ``layer`` averages
     resulting attributions across baselines. Whether to compute the attributions
     with respect to the inputs or outputs of the layer is defined by the
-    input flag `attribute_to_layer_input`.
+    input flag ``attribute_to_layer_input``.
     More details about the algorithm can be found here:
 
     https://papers.nips.cc/paper/7062-a-unified-approach-to-interpreting-model-predictions.pdf
@@ -553,13 +553,13 @@ class LayerDeepLiftShap(LayerDeepLift, DeepLiftShap):
                         to these arguments.
                         Default: None
             return_convergence_delta (bool, optional): Indicates whether to return
-                        convergence delta or not. If `return_convergence_delta`
+                        convergence delta or not. If ``return_convergence_delta``
                         is set to True convergence delta will be returned in
                         a tuple following attributions.
                         Default: False
             attribute_to_layer_input (bool, optional): Indicates whether to
                         compute the attributions with respect to the layer input
-                        or output. If `attribute_to_layer_input` is set to True
+                        or output. If ``attribute_to_layer_input`` is set to True
                         then the attributions will be computed with respect to
                         layer inputs, otherwise it will be computed with respect
                         to layer outputs.
@@ -607,8 +607,8 @@ class LayerDeepLiftShap(LayerDeepLift, DeepLiftShap):
                         Delta is calculated for each example input and baseline pair,
                         meaning that the number of elements in returned delta tensor
                         is equal to the
-                        `number of examples in input` * `number of examples
-                        in baseline`. The deltas are ordered in the first place by
+                        ``number of examples in input`` * ``number of examples
+                        in baseline``. The deltas are ordered in the first place by
                         input example, followed by the baseline.
                         Note that the logic described for deltas is guaranteed
                         when the default logic for attribution computations is used,
