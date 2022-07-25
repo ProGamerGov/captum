@@ -87,7 +87,8 @@ class Summarizer:
         Union[Dict[str, Optional[Tensor]], List[Dict[str, Optional[Tensor]]]]
     ]:
         r"""
-        Effectively calls ``get`` on each ``Stat`` object within this object for each input
+        Effectively calls ``get`` on each ``Stat`` object within this object for each
+        input.
 
         Returns:
             A dict or list of dict: mapping from the Stat
