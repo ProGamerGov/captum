@@ -212,9 +212,9 @@ def infidelity(
                 times within the batch.
 
         inputs (tensor or tuple of tensors): Input for which
-                attributions are computed. If forward_func takes a single
+                attributions are computed. If ``forward_func`` takes a single
                 tensor as input, a single input tensor should be provided.
-                If forward_func takes multiple tensors as input, a tuple
+                If ``forward_func`` takes multiple tensors as input, a tuple
                 of the input tensors should be provided. It is assumed
                 that for all given input tensors, dimension 0 corresponds
                 to the number of examples (aka batch size), and if
@@ -299,7 +299,7 @@ def infidelity(
                 argument of a Tensor or arbitrary (non-tuple) type or a tuple
                 containing multiple additional arguments including tensors
                 or any arbitrary python types. These arguments are provided to
-                forward_func in order, following the arguments in inputs.
+                ``forward_func`` in order, following the arguments in inputs.
                 Note that the perturbations are not computed with respect
                 to these arguments. This means that these arguments aren't
                 being passed to ``perturb_func`` as an input argument.

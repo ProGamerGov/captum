@@ -124,7 +124,7 @@ class FGSM(Perturbation):
                         requires additional arguments other than the inputs for
                         which attributions should not be computed, this argument
                         can be provided. These arguments are provided to
-                        forward_func in order following the arguments in inputs.
+                        ``forward_func`` in order following the arguments in inputs.
                         Default: None.
             targeted (bool, optional): If attack should be targeted.
                         Default: False.

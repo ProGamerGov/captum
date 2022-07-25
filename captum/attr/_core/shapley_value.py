@@ -551,10 +551,10 @@ class ShapleyValues(ShapleyValueSampling):
         Args:
 
                 inputs (tensor or tuple of tensors): Input for which Shapley value
-                            sampling attributions are computed. If forward_func takes
-                            a single tensor as input, a single input tensor should
-                            be provided.
-                            If forward_func takes multiple tensors as input, a tuple
+                            sampling attributions are computed. If ``forward_func``
+                            takes a single tensor as input, a single input tensor
+                            should be provided. If ``forward_func`` takes
+                            multiple tensors as input, a tuple
                             of the input tensors should be provided. It is assumed
                             that for all given input tensors, dimension 0 corresponds
                             to the number of examples (aka batch size), and if
@@ -622,7 +622,7 @@ class ShapleyValues(ShapleyValueSampling):
                             argument of a Tensor or arbitrary (non-tuple) type or a
                             tuple containing multiple additional arguments including
                             tensors or any arbitrary python types. These arguments
-                            are provided to forward_func in order following the
+                            are provided to ``forward_func`` in order following the
                             arguments in inputs.
                             For a tensor, the first dimension of the tensor must
                             correspond to the number of examples. For all other types,
