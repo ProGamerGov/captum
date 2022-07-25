@@ -207,8 +207,8 @@ def _get_k_most_influential_helper(
         influence_src_dataloader (DataLoader): The DataLoader, representing training
                 data, for which we want to compute proponents / opponents.
         influence_batch_fn (Callable): A callable that will be called via
-                ``influence_batch_fn(inputs, targets, batch)``, where ``batch`` is a batch
-                in the ``influence_src_dataloader`` argument.
+                ``influence_batch_fn(inputs, targets, batch)``, where ``batch`` is a
+                batch in the ``influence_src_dataloader`` argument.
         inputs (tuple of Any): A batch of examples. Does not represent labels,
                 which are passed as ``targets``.
         targets (tensor, optional): If computing TracIn scores on a loss function,
@@ -235,19 +235,20 @@ def _get_k_most_influential_helper(
                 Default: None
 
     Returns:
-        (indices, influence_scores): ``indices`` is a torch.long Tensor that contains the
-                indices of the proponents (or opponents) for each test example. Its
-                dimension is ``(inputs_batch_size, k)``, where ``inputs_batch_size`` is the
-                number of examples in ``inputs``. For example, if ``proponents==True``,
-                ``indices[i][j]`` is the index of the example in training dataset
-                ``influence_src_dataloader`` with the k-th highest influence score for
-                the j-th example in ``inputs``. ``indices`` is a ``torch.long`` tensor so that
-                it can directly be used to index other tensors. Each row of
-                ``influence_scores`` contains the influence scores for a different test
-                example, in sorted order. In particular, ``influence_scores[i][j]`` is
-                the influence score of example ``indices[i][j]`` in training dataset
-                ``influence_src_dataloader`` on example ``i`` in the test batch represented
-                by ``inputs`` and ``targets``.
+        (indices, influence_scores): ``indices`` is a torch.long Tensor that contains
+                the indices of the proponents (or opponents) for each test example. Its
+                dimension is ``(inputs_batch_size, k)``, where ``inputs_batch_size`` is
+				the number of examples in ``inputs``. For example, if
+				``proponents==True``, ``indices[i][j]`` is the index of the example in
+				training dataset ``influence_src_dataloader`` with the k-th highest
+				influence score for the j-th example in ``inputs``. ``indices`` is a
+				``torch.long`` tensor so that it can directly be used to index other
+				tensors. Each row of ``influence_scores`` contains the influence scores
+				for a different test example, in sorted order. In particular,
+				``influence_scores[i][j]`` is the influence score of example
+				``indices[i][j]`` in training dataset ``influence_src_dataloader`` on
+				example ``i`` in the test batch represented by ``inputs`` and
+				``targets``.
     """
     # For each test instance, maintain the best indices and corresponding distances
     # initially, these will be empty
