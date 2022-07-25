@@ -147,7 +147,7 @@ From analysing the neurons in our model, we know that the mixed4a_relu channel 3
 def visualize(model, loss_fn, image):
     transforms = opt.transforms.TransformationRobustness()
     obj = opt.InputOptimization(model, loss_fn, image, transforms)
-    history = obj.optimize(opt.optimization.n_steps(256, True), lr=0.024)
+    history = obj.optimize(opt.optimization.n_steps(256, True), lr=0.02)
     return image().detach()
 
 image = opt.images.NaturalImage((224, 224), batch=2).to(device)
