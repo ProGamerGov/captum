@@ -40,7 +40,7 @@ Modules
 
 ### Rendering Modules
 
-**Images**: A torch.Tensor subclass for image tensors, and mutiple image parameterizations.
+**Images**: A PyTorch tensor subclass for image tensors, and mutiple image parameterizations.
 
 **Transforms**: The transforms module contains various transforms that are useful for performing transform robustness when rendering.
 
