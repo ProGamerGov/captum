@@ -744,8 +744,8 @@ class Lime(LimeBase):
                     Other predefined interpretable linear models are provided in
                     captum._utils.models.linear_model.
 
-                    Alternatively, a custom model object must provide a ``fit`` method to
-                    train the model, given a dataloader, with batches containing
+                    Alternatively, a custom model object must provide a ``fit`` method
+                    to train the model, given a dataloader, with batches containing
                     three tensors:
 
                     - interpretable_inputs: Tensor
