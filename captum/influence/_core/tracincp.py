@@ -480,9 +480,10 @@ class TracInCP(TracInCPBase):
                     DataLoader used for processing should be as large as possible, but
                     not too large, so that certain intermediate quantities created
                     from a batch still fit in memory. Therefore, if
-                    ``influence_src_dataset`` is a Dataset, ``batch_size`` should be large.
-                    If ``influence_src_dataset`` was already a DataLoader to begin with,
-                    it should have been constructed to have a large batch size.
+                    ``influence_src_dataset`` is a Dataset, ``batch_size`` should be
+                    large. If ``influence_src_dataset`` was already a DataLoader to
+                    begin with, it should have been constructed to have a large batch
+                    size.
             checkpoints (str or list of str or Iterator): Either the directory of the
                     path to store and retrieve model checkpoints, a list of
                     filepaths with checkpoints from which to load, or an iterator which
@@ -498,14 +499,15 @@ class TracInCP(TracInCPBase):
                     for the layers specified in ``layers``.
                     Default: None
             loss_fn (Callable, optional): The loss function applied to model. There
-                    are two options for the return type of ``loss_fn``. First, ``loss_fn``
-                    can be a "per-example" loss function - returns a 1D Tensor of
-                    losses for each example in a batch. ``nn.BCELoss(reduction="none")``
-                    would be an "per-example" loss function. Second, ``loss_fn`` can be
-                    a "reduction" loss function that reduces the per-example losses,
-                    in a batch, and returns a single scalar Tensor. For this option,
-                    the reduction must be the *sum* or the *mean* of the per-example
-                    losses. For instance, ``nn.BCELoss(reduction="sum")`` is acceptable.
+                    are two options for the return type of ``loss_fn``. First,
+                    ``loss_fn`` can be a "per-example" loss function - returns a 1D
+                    Tensor of losses for each example in a batch.
+                    ``nn.BCELoss(reduction="none")`` would be an "per-example" loss
+                    function. Second, ``loss_fn`` can be a "reduction" loss function
+                    that reduces the per-example losses, in a batch, and returns a
+                    single scalar Tensor. For this option, the reduction must be the
+                    *sum* or the *mean* of the per-example losses. For instance,
+                    ``nn.BCELoss(reduction="sum")`` is acceptable.
                     Note for the first option, the ``sample_wise_grads_per_batch``
                     argument must be False, and for the second option,
                     ``sample_wise_grads_per_batch`` must be True.  Also note that for
@@ -533,9 +535,9 @@ class TracInCP(TracInCPBase):
                     computations w.r.t. to model parameters which is computationally
                     more efficient. This implementation can be enabled by setting the
                     ``sample_wise_grad_per_batch`` argument to ``True``, and should be
-                    enabled if and only if the ``loss_fn`` argument is a "reduction" loss
-                    function. For example, ``nn.BCELoss(reduction="sum")`` would be a
-                    valid ``loss_fn`` if this implementation is enabled (see
+                    enabled if and only if the ``loss_fn`` argument is a "reduction"
+                    loss function. For example, ``nn.BCELoss(reduction="sum")`` would
+                    be a valid ``loss_fn`` if this implementation is enabled (see
                     documentation for ``loss_fn`` for more details). Note that our
                     current implementation enables batch-wise gradient computations
                     only for a limited number of PyTorch nn.Modules: Conv2D and Linear.
@@ -655,22 +657,23 @@ class TracInCP(TracInCPBase):
 
         Args:
 
-            inputs (Any, optional): If not provided or ``None``, the self influence mode
-                    will be run. Otherwise, ``inputs`` is the test batch that will be
-                    used when running in either influence score or k-most influential
-                    mode. If the argument ``unpack_inputs`` is False, the
+            inputs (Any, optional): If not provided or ``None``, the self influence
+                    mode will be run. Otherwise, ``inputs`` is the test batch that will
+                    be used when running in either influence score or k-most
+                    influential mode. If the argument ``unpack_inputs`` is False, the
                     assumption is that ``self.model(inputs)`` produces the predictions
                     for a batch, and ``inputs`` can be of any type. Otherwise if the
                     argument ``unpack_inputs`` is True, the assumption is that
                     ``self.model(*inputs)`` produces the predictions for a batch, and
-                    ``inputs`` will need to be a tuple. In other words, ``inputs`` will be
-                    unpacked as an argument when passing to ``self.model``.
+                    ``inputs`` will need to be a tuple. In other words, ``inputs`` will
+                    be unpacked as an argument when passing to ``self.model``.
                     Default: None
             targets (tensor, optional): If computing influence scores on a loss
-                    function, these are the labels corresponding to the batch ``inputs``.
+                    function, these are the labels corresponding to the batch
+                    ``inputs``.
                     Default: None
-            k (int, optional): If not provided or ``None``, the influence score mode will
-                    be run. Otherwise, the k-most influential mode will be run,
+            k (int, optional): If not provided or ``None``, the influence score mode
+                    will be run. Otherwise, the k-most influential mode will be run,
                     and ``k`` is the number of proponents / opponents to return per
                     example in the test batch.
                     Default: None
@@ -867,18 +870,19 @@ class TracInCP(TracInCPBase):
                     Default: False
 
         Returns:
-            (indices, influence_scores) (namedtuple): ``indices`` is a torch.long Tensor
-                    that contains the indices of the proponents (or opponents) for each
-                    test example. Its dimension is ``(inputs_batch_size, k)``, where
-                    ``inputs_batch_size`` is the number of examples in ``inputs``. For
-                    example, if ``proponents==True``, ``indices[i][j]`` is the index of the
-                    example in training dataset ``influence_src_dataset`` with the
-                    k-th highest influence score for the j-th example in ``inputs``.
-                    ``indices`` is a ``torch.long`` tensor so that it can directly be used
-                    to index other tensors. Each row of ``influence_scores`` contains the
-                    influence scores for a different test example, in sorted order. In
-                    particular, ``influence_scores[i][j]`` is the influence score of
-                    example ``indices[i][j]`` in training dataset ``influence_src_dataset``
+            (indices, influence_scores) (namedtuple): ``indices`` is a torch.long
+                    Tensor that contains the indices of the proponents (or opponents)
+                    for each test example. Its dimension is ``(inputs_batch_size, k)``,
+                    where ``inputs_batch_size`` is the number of examples in
+                    ``inputs``. For example, if ``proponents==True``, ``indices[i][j]``
+                    is the index of the example in training dataset
+                    ``influence_src_dataset`` with the k-th highest influence score for
+                    the j-th example in ``inputs``. ``indices`` is a ``torch.long``
+                    tensor so that it can directly be used to index other tensors. Each
+                    row of ``influence_scores`` contains the influence scores for a
+                    different test example, in sorted order. In particular,
+                    ``influence_scores[i][j]`` is the influence score of example
+                    ``indices[i][j]`` in training dataset ``influence_src_dataset``
                     on example ``i`` in the test batch represented by ``inputs`` and
                     ``targets``.
         """

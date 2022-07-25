@@ -935,7 +935,8 @@ class TracInCPFastRandProj(TracInCPFast):
 
         Note that unlike ``TracInCPFast``, this class should *not* be run in self
         influence mode.  To compute self influence scores when only considering
-        gradients in the last fully-connected layer, please use ``TracInCPFast`` instead.
+        gradients in the last fully-connected layer, please use ``TracInCPFast``
+        instead.
 
         Args:
 
@@ -953,8 +954,8 @@ class TracInCPFastRandProj(TracInCPFast):
             targets (tensor): The labels corresponding to the batch ``inputs``. This
                     method is designed to be applied for a loss function, so ``targets``
                     is required.
-            k (int, optional): If not provided or ``None``, the influence score mode will
-                    be run. Otherwise, the k-most influential mode will be run,
+            k (int, optional): If not provided or ``None``, the influence score mode
+                    will be run. Otherwise, the k-most influential mode will be run,
                     and ``k`` is the number of proponents / opponents to return per
                     example in the test batch.
                     Default: None
