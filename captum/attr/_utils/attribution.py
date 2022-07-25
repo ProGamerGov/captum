@@ -78,7 +78,8 @@ class Attribution:
         delta may serve as a proxy of correctness of attribution algorithm's
         approximation. If deriving attribution class provides a
         ``compute_convergence_delta`` method, it should
-        override both ``compute_convergence_delta`` and ``has_convergence_delta`` methods.
+        override both ``compute_convergence_delta`` and ``has_convergence_delta``
+        methods.
 
         Returns:
             bool:
