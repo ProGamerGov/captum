@@ -121,12 +121,12 @@ class AV:
     ) -> str:
         r"""
         Returns a search string that can be used by glob to search
-		``source_dir/model_id`` for the desired layer/identifier pair. Leaving
-		``layer`` as None will search ids over all layers, and leaving ``identifier``
-		as none will search layers over all ids.  Leaving both as none will return a
-		path to glob for every activation. Assumes identifier is always specified when
-		saving activations, so that activations live at
-		source_dir/model_id/identifier/layer (and never source_dir/model_id/layer)
+        ``source_dir/model_id`` for the desired layer/identifier pair. Leaving
+        ``layer`` as None will search ids over all layers, and leaving ``identifier``
+        as none will search layers over all ids.  Leaving both as none will return a
+        path to glob for every activation. Assumes identifier is always specified when
+        saving activations, so that activations live at
+        source_dir/model_id/identifier/layer (and never source_dir/model_id/layer)
         """
 
         av_filesearch = AV._assemble_model_dir(source_dir, model_id)
@@ -173,9 +173,9 @@ class AV:
         Returns:
             exists (bool): Indicating whether the activation vectors for the ``layer``
                     and ``identifier`` (if provided) and num_id (if provided) were
-					stored in the manifold. If no ``identifier`` is provided, will
-					return ``True`` if any layer activation exists, whether it has an
-					identifier or not, and vice-versa.
+                    stored in the manifold. If no ``identifier`` is provided, will
+                    return ``True`` if any layer activation exists, whether it has an
+                    identifier or not, and vice-versa.
         """
         av_dir = AV._assemble_model_dir(path, model_id)
         av_filesearch = AV._construct_file_search(
@@ -449,10 +449,10 @@ class AV:
 
         Returns: If ``return_activations == True``, returns a single ``AVDataset`` if
                     ``layers`` is a str, otherwise, a list of ``AVDataset``s of the
-					length of ``layers``, where each element corresponds to a layer. In
-					either case, ``AVDataset``'s represent the activations for a single
-					layer, over the entire ``dataloader``.  If
-					``return_activations == False``, does not return anything.
+                    length of ``layers``, where each element corresponds to a layer. In
+                    either case, ``AVDataset``'s represent the activations for a single
+                    layer, over the entire ``dataloader``.  If
+                    ``return_activations == False``, does not return anything.
 
         """
 

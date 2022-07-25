@@ -810,10 +810,10 @@ def _compute_jacobian_wrt_params_with_sample_wise_trick(
                 tuple of gradients corresponding to the tuple of trainable parameters
                 returned by ``model.parameters()``. Each object grads[i] references to
                 the gradients for the parameters in the i-th trainable layer of the
-				model. Each grads[i] object is a tensor with the gradients for the
-				``inputs`` batch. For example, grads[i][j] would reference the
-				gradients for the parameters of the i-th layer, for the j-th member of
-				the minibatch.
+                model. Each grads[i] object is a tensor with the gradients for the
+                ``inputs`` batch. For example, grads[i][j] would reference the
+                gradients for the parameters of the i-th layer, for the j-th member of
+                the minibatch.
     """
     with torch.autograd.set_grad_enabled(True):
         sample_grad_wrapper = SampleGradientWrapper(model)

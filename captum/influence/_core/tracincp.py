@@ -75,9 +75,9 @@ class KMostInfluentialResults(NamedTuple):
     opponents, ``indices[i][j]`` stores the index in the training data of the example
     with the ``j``-th highest influence score on the ``i``-th example in the test batch.
     Similarly, the ``influence_scores`` field stores the actual influence scores, so
-	that ``influence_scores[i][j]`` is the influence score of example ``indices[i][j]``
-	in the training data on example ``i`` of the test batch. Please see
-	``TracInCPBase.influence`` for more details.
+    that ``influence_scores[i][j]`` is the influence score of example ``indices[i][j]``
+    in the training data on example ``i`` of the test batch. Please see
+    ``TracInCPBase.influence`` for more details.
     """
 
     indices: Tensor

@@ -58,7 +58,7 @@ class LayerGradientXActivation(LayerAttribution, GradientAttribution):
 
                         In case of layer gradient x activation, if
                         ``multiply_by_inputs`` is set to True, final sensitivity scores
-						are being multiplied by layer activations for inputs.
+                        are being multiplied by layer activations for inputs.
 
         """
         LayerAttribution.__init__(self, forward_func, layer, device_ids)
