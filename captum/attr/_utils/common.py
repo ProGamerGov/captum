@@ -287,29 +287,29 @@ def _reshape_and_sum(
     )
 
 
-def _call_ return_convergence_delta(
-    ``return_convergence_delta``: Callable[..., Tuple[Tensor, ...]],
+def _call_custom_attribution_func(
+    custom_attribution_func: Callable[..., Tuple[Tensor, ...]],
     multipliers: Tuple[Tensor, ...],
     inputs: Tuple[Tensor, ...],
     baselines: Tuple[Tensor, ...],
 ) -> Tuple[Tensor, ...]:
-    assert callable(return_convergence_delta), (
-        "``return_convergence_delta``"
+    assert callable(custom_attribution_func), (
+        "`custom_attribution_func`"
         " must be a callable function but {} provided".format(
             type(return_convergence_delta)
         )
     )
-    custom_attr_func_params = signature(return_convergence_delta).parameters
+    custom_attr_func_params = signature(custom_attribution_func).parameters
 
     if len(custom_attr_func_params) == 1:
-        return return_convergence_delta(multipliers)
+        return custom_attribution_func(multipliers)
     elif len(custom_attr_func_params) == 2:
-        return return_convergence_delta(multipliers, inputs)
+        return custom_attribution_func(multipliers, inputs)
     elif len(custom_attr_func_params) == 3:
-        return return_convergence_delta(multipliers, inputs, baselines)
+        return custom_attribution_func(multipliers, inputs, baselines)
     else:
         raise AssertionError(
-            "`return_convergence_delta` must take at least one and at most 3 arguments."
+            "`custom_attribution_func` must take at least one and at most 3 arguments."
         )
 
 
