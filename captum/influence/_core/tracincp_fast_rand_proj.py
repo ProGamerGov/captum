@@ -122,16 +122,16 @@ class TracInCPFast(TracInCPBase):
                     learning rate if it is saved. By default uses a utility to load a
                     model saved as a state dict.
                     Default: _load_flexible_state_dict
-            loss_fn (Callable, optional): The loss function applied to model. ``loss_fn``
-                    must be a "reduction" loss function that reduces the per-example
-                    losses in a batch, and returns a single scalar Tensor. Furthermore,
-                    the reduction must be the *sum* or the *mean* of the per-example
-                    losses. For instance, ``nn.BCELoss(reduction="sum")`` is acceptable.
-                    Also note that if ``loss_fn`` has no "reduction" attribute,
-                    the implementation assumes that the reduction is the *sum* of the
-                    per-example losses.  If this is not the case, i.e. the reduction
-                    is the *mean*, please set the "reduction" attribute of ``loss_fn``
-                    to "mean", i.e. ``loss_fn.reduction = "mean"``.
+            loss_fn (Callable, optional): The loss function applied to model.
+                    ``loss_fn`` must be a "reduction" loss function that reduces the
+                    per-example losses in a batch, and returns a single scalar Tensor.
+                    Furthermore, the reduction must be the *sum* or the *mean* of the
+                    per-example losses. For instance, ``nn.BCELoss(reduction="sum")``
+                    is acceptable. Also note that if ``loss_fn`` has no "reduction"
+                    attribute, the implementation assumes that the reduction is the
+                    *sum* of the per-example losses.  If this is not the case, i.e.
+                    the reduction is the *mean*, please set the "reduction" attribute
+                    of ``loss_fn`` to "mean", i.e. ``loss_fn.reduction = "mean"``.
                     Default: None
             batch_size (int or None, optional): Batch size of the DataLoader created to
                     iterate through ``influence_src_dataset``, if it is a Dataset.
@@ -243,14 +243,14 @@ class TracInCPFast(TracInCPBase):
                     function, so ``targets`` is required, unless running in
                     "self influence" mode.
                     Default: None
-            k (int, optional): If not provided or ``None``, the influence score mode will
-                    be run. Otherwise, the k-most influential mode will be run,
+            k (int, optional): If not provided or ``None``, the influence score mode
+                    will be run. Otherwise, the k-most influential mode will be run,
                     and ``k`` is the number of proponents / opponents to return per
                     example in the test batch.
                     Default: None
-            proponents (bool, optional): Whether seeking proponents (``proponents=True``)
-                    or opponents (``proponents=False``), if running in k-most influential
-                    mode.
+            proponents (bool, optional): Whether seeking proponents
+                    (``proponents=True``) or opponents (``proponents=False``), if
+                    running in k-most influential mode.
                     Default: True
             unpack_inputs (bool, optional): Whether to unpack the ``inputs`` argument to
                     when passing it to ``model``, if ``inputs`` is a tuple (no unpacking
@@ -270,13 +270,13 @@ class TracInCPFast(TracInCPBase):
         Returns:
             The return value of this method depends on which mode is run.
 
-            - self influence mode: if this mode is run (``inputs`` is None), returns a 1D
-              tensor of self influence scores over training dataset
+            - self influence mode: if this mode is run (``inputs`` is None), returns a
+              1D tensor of self influence scores over training dataset
               ``influence_src_dataset``. The length of this tensor is the number of
               examples in ``influence_src_dataset``, regardless of whether it is a
               Dataset or DataLoader.
-            - influence score mode: if this mode is run (``inputs`` is not None, ``k`` is
-              None), returns a 2D tensor ``influence_scores`` of shape
+            - influence score mode: if this mode is run (``inputs`` is not None, ``k``
+              is None), returns a 2D tensor ``influence_scores`` of shape
               ``(input_size, influence_src_dataset_size)``, where ``input_size`` is
               the number of examples in the test batch, and
               ``influence_src_dataset_size`` is the number of examples in
@@ -381,8 +381,8 @@ class TracInCPFast(TracInCPBase):
 
         Returns:
             influence_scores (tensor): Influence scores from the TracInCPFast method.
-            Its shape is ``(input_size, influence_src_dataset_size)``, where ``input_size``
-            is the number of examples in the test batch, and
+            Its shape is ``(input_size, influence_src_dataset_size)``, where
+            ``input_size`` is the number of examples in the test batch, and
             ``influence_src_dataset_size`` is the number of examples in
             training dataset ``influence_src_dataset``. For example:
             ``influence_scores[i][j]`` is the influence score for the j-th training
@@ -429,8 +429,8 @@ class TracInCPFast(TracInCPBase):
             k (int, optional): The number of proponents or opponents to return per test
                     example.
                     Default: 5
-            proponents (bool, optional): Whether seeking proponents (``proponents=True``)
-                    or opponents (``proponents=False``)
+            proponents (bool, optional): Whether seeking proponents
+                    (``proponents=True``) or opponents (``proponents=False``)
                     Default: True
             show_progress (bool, optional): To compute the proponents (or opponents)
                     for the batch of examples, we perform computation for each batch in
@@ -443,19 +443,20 @@ class TracInCPFast(TracInCPBase):
                     Default: False
 
         Returns:
-            (indices, influence_scores) (namedtuple): ``indices`` is a torch.long Tensor
-                    that contains the indices of the proponents (or opponents) for each
-                    test example. Its dimension is ``(inputs_batch_size, k)``, where
-                    ``inputs_batch_size`` is the number of examples in ``inputs``. For
-                    example, if ``proponents==True``, ``indices[i][j]`` is the index of the
-                    example in training dataset ``influence_src_dataset`` with the
-                    k-th highest influence score for the j-th example in ``inputs``.
-                    ``indices`` is a ``torch.long`` tensor so that it can directly be used
-                    to index other tensors. Each row of ``influence_scores`` contains the
-                    influence scores for a different test example, in sorted order. In
-                    particular, ``influence_scores[i][j]`` is the influence score of
-                    example ``indices[i][j]`` in training dataset ``influence_src_dataset``
-                    on example ``i`` in the test batch represented by ``inputs`` and
+            (indices, influence_scores) (namedtuple): ``indices`` is a torch.long
+                    Tensor that contains the indices of the proponents (or opponents)
+                    for each test example. Its dimension is ``(inputs_batch_size, k)``,
+                    where ``inputs_batch_size`` is the number of examples in
+                    ``inputs``. For example, if ``proponents==True``, ``indices[i][j]``
+                    is the index of the example in training dataset
+                    ``influence_src_dataset`` with the k-th highest influence score for
+                    the j-th example in ``inputs``. ``indices`` is a ``torch.long``
+                    tensor so that it can directly be used to index other tensors. Each
+                    row of ``influence_scores`` contains the influence scores for a
+                    different test example, in sorted order. In particular,
+                    ``influence_scores[i][j]`` is the influence score of example
+                    ``indices[i][j]`` in training dataset ``influence_src_dataset`` on
+                    example ``i`` in the test batch represented by ``inputs`` and
                     ``targets``.
         """
         desc = (
@@ -563,11 +564,11 @@ def _basic_computation_tracincp_fast(
     Args:
 
         influence_instance (TracInCPFast): A instance of TracInCPFast or its children.
-                We assume ``influence_instance`` has a ``loss_fn`` attribute, i.e. the loss
-                function applied to the output of the last fully-connected layer, as
-                well as a ``reduction_type`` attribute, which indicates whether ``loss_fn``
-                reduces the per-example losses by using their mean or sum. The
-                ``reduction_type`` attribute must either be "mean" or "sum".
+                We assume ``influence_instance`` has a ``loss_fn`` attribute, i.e. the
+                loss function applied to the output of the last fully-connected layer,
+                as well as a ``reduction_type`` attribute, which indicates whether
+                ``loss_fn`` reduces the per-example losses by using their mean or sum.
+                The ``reduction_type`` attribute must either be "mean" or "sum".
         inputs (tuple of Any): A batch of examples, which could be a training batch
                 or test batch, depending which method is the caller. Does not
                 represent labels, which are passed as ``targets``. The assumption is
@@ -622,9 +623,9 @@ class TracInCPFastRandProj(TracInCPFast):
         influence scores. "Interactive" means there will be multiple calls to
         ``influence``, with each call for a different batch of test examples, and
         subsequent calls rely on the results of previous calls. The implementation in
-        this class has been optimized so that each call to ``influence`` is fast, so that
-        it can be used for interactive analysis. This class should only be used for
-        interactive use cases. It should not be used if ``influence`` will only be
+        this class has been optimized so that each call to ``influence`` is fast, so
+        that it can be used for interactive analysis. This class should only be used
+        for interactive use cases. It should not be used if ``influence`` will only be
         called once, because to enable fast calls to ``influence``, time and memory
         intensive preprocessing is required in ``__init__``. Furthermore, it should not
         be used to calculate self influencs scores - ``TracInCPFast`` should be used
@@ -656,8 +657,8 @@ class TracInCPFastRandProj(TracInCPFast):
                     fully qualified name of the layer if it is a defined attribute of
                     the passed ``model``.
             influence_src_dataset (torch.utils.data.Dataset or torch.utils.DataLoader):
-                    In the ``influence`` method, we either compute the influence score of
-                    training examples on examples in a test batch, or self influence
+                    In the ``influence`` method, we either compute the influence score
+                    of training examples on examples in a test batch, or self influence
                     scores for those training examples, depending on which mode is used.
                     This argument represents the training dataset containing those
                     training examples. In order to compute those influence scores, we
@@ -670,9 +671,10 @@ class TracInCPFastRandProj(TracInCPFast):
                     DataLoader used for processing should be as large as possible, but
                     not too large, so that certain intermediate quantities created
                     from a batch still fit in memory. Therefore, if
-                    ``influence_src_dataset`` is a Dataset, ``batch_size`` should be large.
-                    If ``influence_src_dataset`` was already a DataLoader to begin with,
-                    it should have been constructed to have a large batch size.
+                    ``influence_src_dataset`` is a Dataset, ``batch_size`` should be
+                    large. If ``influence_src_dataset`` was already a DataLoader to
+                    begin with, it should have been constructed to have a large batch
+                    size.
             checkpoints (str or list of str or Iterator): Either the directory of the
                     path to store and retrieve model checkpoints, a list of
                     filepaths with checkpoints from which to load, or an iterator which
@@ -682,12 +684,13 @@ class TracInCPFastRandProj(TracInCPFast):
                     learning rate if it is saved. By default uses a utility to load a
                     model saved as a state dict.
                     Default: _load_flexible_state_dict
-            loss_fn (Callable, optional): The loss function applied to model. ``loss_fn``
-                    must be a "reduction" loss function that reduces the per-example
-                    losses in a batch, and returns a single scalar Tensor. Furthermore,
-                    the reduction must be the *sum* of the per-example losses. For
-                    instance, ``nn.BCELoss(reduction="sum")`` is acceptable, but
-                    ``nn.BCELoss(reduction="mean")`` is *not* acceptable.
+            loss_fn (Callable, optional): The loss function applied to model.
+                    ``loss_fn`` must be a "reduction" loss function that reduces the
+                    per-example losses in a batch, and returns a single scalar Tensor.
+                    Furthermore, the reduction must be the *sum* of the per-example
+                    losses. For instance, ``nn.BCELoss(reduction="sum")`` is
+                    acceptable, but ``nn.BCELoss(reduction="mean")`` is *not*
+                    acceptable.
                     Default: None
             batch_size (int or None, optional): Batch size of the DataLoader created to
                     iterate through ``influence_src_dataset``, if it is a Dataset.
@@ -715,16 +718,17 @@ class TracInCPFastRandProj(TracInCPFast):
                     ``projection_dim`` * C, where C is the number of checkpoints.
                     Regarding the dimension of each vector, D: Let I be the dimension
                     of the output of the last fully-connected layer times the dimension
-                    of the input of the last fully-connected layer. If ``projection_dim``
-                    is not ``None``, then D = min(I * C, ``projection_dim`` * C).
-                    Otherwise, D = I * C. In summary, if ``projection_dim`` is None, the
-                    dimension of this vector will be determined by the size of the
-                    input and output of the last fully-connected layer of ``model``, and
-                    the number of checkpoints. Otherwise, ``projection_dim`` must be an
-                    int, and random projection will be performed to ensure that the
-                    vector is of dimension no more than ``projection_dim`` * C.
-                    ``projection_dim`` corresponds to the variable d in the top of page
-                    15 of the TracIn paper: https://arxiv.org/abs/2002.08484.
+                    of the input of the last fully-connected layer. If
+                    ``projection_dim`` is not ``None``, then D = min(I * C,
+                    ``projection_dim`` * C). Otherwise, D = I * C. In summary, if
+                    ``projection_dim`` is None, the dimension of this vector will be
+                    determined by the size of the input and output of the last
+                    fully-connected layer of ``model``, and the number of checkpoints.
+                    Otherwise, ``projection_dim`` must be an int, and random projection
+                    will be performed to ensure that the vector is of dimension no more
+                    than ``projection_dim`` * C. ``projection_dim`` corresponds to the
+                    variable d in the top of page 15 of the TracIn
+                    paper: https://arxiv.org/abs/2002.08484.
                     Default: None
             seed (int, optional): Because this implementation chooses a random
                     projection, its output is random. Setting this seed specifies the
@@ -747,12 +751,12 @@ class TracInCPFastRandProj(TracInCPFast):
         warnings.warn(
             (
                 "WARNING: Using this implementation stores quantities related to the "
-                "entire ``influence_src_dataset`` in memory, and may results in running "
+                "entire `influence_src_dataset` in memory, and may results in running "
                 "out of memory. If this happens, consider using %s instead, for which "
-                "each call to ``influence`` to compute influence scores or proponents "
+                "each call to `influence` to compute influence scores or proponents "
                 "will be slower, but may avoid running out of memory."
             )
-            % "``TracInCPFast``"
+            % "`TracInCPFast`"
         )
 
         self.nearest_neighbors = (
@@ -831,23 +835,24 @@ class TracInCPFastRandProj(TracInCPFast):
             k (int, optional): The number of proponents or opponents to return per test
                     example.
                     Default: 5
-            proponents (bool, optional): Whether seeking proponents (``proponents=True``)
-                    or opponents (``proponents=False``)
+            proponents (bool, optional): Whether seeking proponents
+                    (``proponents=True``) or opponents (``proponents=False``)
                     Default: True
 
         Returns:
-            (indices, influence_scores) (namedtuple): ``indices`` is a torch.long Tensor
-                    that contains the indices of the proponents (or opponents) for each
-                    test example. Its dimension is ``(inputs_batch_size, k)``, where
-                    ``inputs_batch_size`` is the number of examples in ``inputs``. For
-                    example, if ``proponents==True``, ``indices[i][j]`` is the index of the
-                    example in training dataset ``influence_src_dataset`` with the
-                    k-th highest influence score for the j-th example in ``inputs``.
-                    ``indices`` is a ``torch.long`` tensor so that it can directly be used
-                    to index other tensors. Each row of ``influence_scores`` contains the
-                    influence scores for a different test example, in sorted order. In
-                    particular, ``influence_scores[i][j]`` is the influence score of
-                    example ``indices[i][j]`` in training dataset ``influence_src_dataset``
+            (indices, influence_scores) (namedtuple): ``indices`` is a torch.long
+                    Tensor that contains the indices of the proponents (or opponents)
+                    for each test example. Its dimension is ``(inputs_batch_size, k)``,
+                    where ``inputs_batch_size`` is the number of examples in
+                    ``inputs``. For example, if ``proponents==True``, ``indices[i][j]``
+                    is the index of the example in training dataset
+                    ``influence_src_dataset`` with the k-th highest influence score for
+                    the j-th example in ``inputs``. ``indices`` is a ``torch.long``
+                    tensor so that it can directly be used to index other tensors. Each
+                    row of ``influence_scores`` contains the influence scores for a
+                    different test example, in sorted order. In particular,
+                    ``influence_scores[i][j]`` is the influence score of example
+                    ``indices[i][j]`` in training dataset ``influence_src_dataset``
                     on example ``i`` in the test batch represented by ``inputs`` and
                     ``targets``.
         """
@@ -886,13 +891,13 @@ class TracInCPFastRandProj(TracInCPFast):
             (
                 "WARNING: If calculating self influence scores, when only considering "
                 "gradients with respect to the last fully-connected layer, "
-                "``TracInCPFastRandProj`` should not be used. Instead, please use "
-                "``TracInCPFast``. This is because when calculating self influence "
+                "`TracInCPFastRandProj` should not be used. Instead, please use "
+                "`TracInCPFast`. This is because when calculating self influence "
                 "scores, no quantities associated with a training example are stored "
                 "so that memory-saving benefit of the random projections used by "
-                "``TracInCPFastRandProj``needed. Further considering the fact that "
+                "`TracInCPFastRandProj` needed. Further considering the fact that "
                 "random projections results only in approximate self influence "
-                "scores, there is no reason to use ``TracInCPFastRandProj`` when "
+                "scores, there is no reason to use `TracInCPFastRandProj` when "
                 "calculating self-influence scores."
             )
         )
@@ -911,8 +916,8 @@ class TracInCPFastRandProj(TracInCPFast):
         This is the key method of this class, and can be run in 2 different modes,
         where the mode that is run depends on the arguments passed to this method
 
-        - influence score mode: This mode is used if ``inputs`` is not None, and ``k`` is
-          None. This mode computes the influence score of every example in
+        - influence score mode: This mode is used if ``inputs`` is not None, and ``k``
+          is None. This mode computes the influence score of every example in
           training dataset ``influence_src_dataset`` on every example in the test
           batch represented by ``inputs`` and ``targets``.
 
@@ -942,8 +947,8 @@ class TracInCPFastRandProj(TracInCPFast):
                     for a batch, and ``inputs`` can be of any type. Otherwise if the
                     argument ``unpack_inputs`` is True, the assumption is that
                     ``self.model(*inputs)`` produces the predictions for a batch, and
-                    ``inputs`` will need to be a tuple. In other words, ``inputs`` will be
-                    unpacked as an argument when passing to ``self.model``.
+                    ``inputs`` will need to be a tuple. In other words, ``inputs`` will
+                    be unpacked as an argument when passing to ``self.model``.
                     Default: None
             targets (tensor): The labels corresponding to the batch ``inputs``. This
                     method is designed to be applied for a loss function, so ``targets``
@@ -953,21 +958,21 @@ class TracInCPFastRandProj(TracInCPFast):
                     and ``k`` is the number of proponents / opponents to return per
                     example in the test batch.
                     Default: None
-            proponents (bool, optional): Whether seeking proponents (``proponents=True``)
-                    or opponents (``proponents=False``), if running in k-most influential
-                    mode.
+            proponents (bool, optional): Whether seeking proponents
+                    (``proponents=True``) or opponents (``proponents=False``), if
+                    running in k-most influential mode.
                     Default: True
-            unpack_inputs (bool, optional): Whether to unpack the ``inputs`` argument to
-                    when passing it to ``model``, if ``inputs`` is a tuple (no unpacking
-                    done otherwise).
+            unpack_inputs (bool, optional): Whether to unpack the ``inputs`` argument
+                    to when passing it to ``model``, if ``inputs`` is a tuple (no
+                    unpacking done otherwise).
                     Default: True
 
         Returns:
 
             The return value of this method depends on which mode is run.
 
-            - influence score mode: if this mode is run (``inputs`` is not None, ``k`` is
-              None), returns a 2D tensor ``influence_scores`` of shape
+            - influence score mode: if this mode is run (``inputs`` is not None, ``k``
+              is None), returns a 2D tensor ``influence_scores`` of shape
               ``(input_size, influence_src_dataset_size)``, where ``input_size`` is
               the number of examples in the test batch, and
               ``influence_src_dataset_size`` is the number of examples in
@@ -990,11 +995,11 @@ class TracInCPFastRandProj(TracInCPFast):
               ``targets``.
         """
         msg = (
-            "Since ``inputs`` is None, this suggests ``TracInCPFastRandProj`` is being "
-            "used in self influence mode. However, ``TracInCPFastRandProj`` should not "
+            "Since `inputs` is None, this suggests `TracInCPFastRandProj` is being "
+            "used in self influence mode. However, `TracInCPFastRandProj` should not "
             "be used to compute self influence scores.  If desiring self influence "
             "scores which only consider gradients in the last fully-connected layer, "
-            "please use ``TracInCPFast`` instead."
+            "please use `TracInCPFast` instead."
         )
         assert inputs is not None, msg
 
@@ -1063,16 +1068,16 @@ class TracInCPFastRandProj(TracInCPFast):
 
             # choose projection if needed
             # without projection, the dimension of the intermediate quantities returned
-            # by ``_get_intermediate_quantities_fast_rand_proj`` will be
-            # ``jacobian_dim`` * ``layer_input_dim`` * number of checkpoints
+            # by `_get_intermediate_quantities_fast_rand_proj` will be
+            # `jacobian_dim` * `layer_input_dim` * number of checkpoints
             # this is because for each checkpoint, we compute a "partial" intermediate
             # quantity, and the intermediate quantity is the concatenation of the
             # "partial" intermediate quantities, and the dimension of each "partial"
-            # intermediate quantity, without projection, is ``jacobian_dim`` *
-            # ``layer_input_dim``. However, ``projection_dim`` refers to the maximum
+            # intermediate quantity, without projection, is `jacobian_dim` *
+            # `layer_input_dim`. However, `projection_dim` refers to the maximum
             # allowable dimension of the "partial" intermediate quantity. Therefore,
-            # we only project if ``jacobian_dim`` * ``layer_input_dim`` > ``projection_dim``.
-            # ``projection_dim`` corresponds to the variable d in the top of page 15 of
+            # we only project if `jacobian_dim` * `layer_input_dim` > `projection_dim`.
+            # `projection_dim` corresponds to the variable d in the top of page 15 of
             # the TracIn paper: https://arxiv.org/abs/2002.08484.
             if jacobian_dim * layer_input_dim > projection_dim:
                 jacobian_projection_dim = min(int(projection_dim**0.5), jacobian_dim)
@@ -1108,8 +1113,8 @@ class TracInCPFastRandProj(TracInCPFast):
         Args:
 
             src_intermediate_quantities (tensor): the output of the
-                    ``_get_intermediate_quantities_tracin_fast_rand_proj`` function when
-                    applied to training dataset ``influence_src_dataset``. This
+                    ``_get_intermediate_quantities_tracin_fast_rand_proj`` function
+                    when applied to training dataset ``influence_src_dataset``. This
                     output is the vector representation of all training examples.
                     The dot product between the representation of a training example
                     and the representation of a test example gives the influence score
@@ -1140,19 +1145,19 @@ class TracInCPFastRandProj(TracInCPFast):
 
         Returns:
             checkpoint_projections (tensor): A tensor of dimension
-                    (N, D * C), where N is total number of examples in ``dataloader``, C
-                    is the number of checkpoints passed as the ``checkpoints`` argument
-                    of ``TracInCPFastRandProj.__init__``, and each row represents the
-                    vector for an example. Regarding D: Let I be the dimension of the
-                    output of the last fully-connected layer times the dimension of the
-                    input of the last fully-connected layer. If ``self.projection_dim``
-                    is specified in initialization,
+                    (N, D * C), where N is total number of examples in ``dataloader``,
+                    C is the number of checkpoints passed as the ``checkpoints``
+                    argument of ``TracInCPFastRandProj.__init__``, and each row
+                    represents the vector for an example. Regarding D: Let I be the
+                    dimension of the output of the last fully-connected layer times the
+                    dimension of the input of the last fully-connected layer. If
+                    ``self.projection_dim`` is specified in initialization,
                     D = min(I * C, ``self.projection_dim`` * C). Otherwise, D = I * C.
-                    In summary, if ``self.projection_dim`` is None, the dimension of each
-                    vector will be determined by the size of the input and output of
-                    the last fully-connected layer of ``model``. Otherwise,
-                    ``self.projection_dim`` must be an int, and random projection will be
-                    performed to ensure that the vector is of dimension no more than
+                    In summary, if ``self.projection_dim`` is None, the dimension of
+                    each vector will be determined by the size of the input and output
+                    of the last fully-connected layer of ``model``. Otherwise,
+                    ``self.projection_dim`` must be an int, and random projection will
+                    be performed to ensure that the vector is of dimension no more than
                     ``self.projection_dim`` * C. ``self.projection_dim`` corresponds to
                     the variable d in the top of page 15 of the TracIn paper:
                     https://arxiv.org/abs/2002.08484.
