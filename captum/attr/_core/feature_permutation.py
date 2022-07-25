@@ -196,9 +196,9 @@ class FeaturePermutation(FeatureAblation):
                             a simple output of progress.
                             Default: False
                 **kwargs (Any, optional): Any additional arguments used by child
-                            classes of FeatureAblation (such as Occlusion) to construct
-                            ablations. These arguments are ignored when using
-                            FeatureAblation directly.
+                            classes of :class:`.FeatureAblation` (such as
+                            :class:`.Occlusion`) to construct ablations. These
+                            arguments are ignored when using FeatureAblation directly.
                             Default: None
 
         Returns:
