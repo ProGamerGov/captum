@@ -101,10 +101,10 @@ class FeaturePermutation(FeatureAblation):
         **kwargs: Any,
     ) -> TensorOrTupleOfTensorsGeneric:
         r"""
-        This function is almost equivalent to ``FeatureAblation.attribute``. The
+        This function is almost equivalent to :func:`.FeatureAblation.attribute`. The
         main difference is the way ablated examples are generated. Specifically
         they are generated through the ``perm_func``, as we set the baselines for
-        ``FeatureAblation.attribute`` to None.
+        :func:`.FeatureAblation.attribute` to None.
 
 
         Args:
@@ -188,7 +188,7 @@ class FeaturePermutation(FeatureAblation):
                             (perturbations_per_eval * #examples) / num_devices
                             samples.
                             If the forward function returns a single scalar per batch,
-                            perturbations_per_eval must be set to 1.
+                            ``perturbations_per_eval`` must be set to 1.
                             Default: 1
                 show_progress (bool, optional): Displays the progress of computation.
                             It will try to use tqdm if available for advanced features
@@ -196,9 +196,9 @@ class FeaturePermutation(FeatureAblation):
                             a simple output of progress.
                             Default: False
                 **kwargs (Any, optional): Any additional arguments used by child
-                            classes of FeatureAblation (such as Occlusion) to construct
-                            ablations. These arguments are ignored when using
-                            FeatureAblation directly.
+                            classes of :class:`.FeatureAblation` (such as
+                            :class:`.Occlusion`) to construct ablations. These
+                            arguments are ignored when using FeatureAblation directly.
                             Default: None
 
         Returns:
