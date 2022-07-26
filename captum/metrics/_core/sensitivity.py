@@ -138,7 +138,7 @@ def sensitivity_max(
         perturb_radius (float, optional): The epsilon radius used for sampling.
             In the `default_perturb_func` it is used as the radius of
             the L-Infinity ball. In a general case it can serve as a radius of
-            any L_p nom.
+            any L_p norm.
             This argument is passed to `perturb_func` if it takes more than
             one argument.
 
