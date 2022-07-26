@@ -94,7 +94,7 @@ import captum.optim as opt
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 ```
 
-We load the pre-trained InceptionV1 model instance.
+We load the pre-trained InceptionV1 model instance, using Optim's ``RedirectedReLU`` instead ``nn.ReLU``.
 
 ```
 model = opt.models.googlenet(pretrained=True).to(device)
