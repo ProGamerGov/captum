@@ -181,7 +181,7 @@ loss_fn += opt.loss.NeuronActivation(model.mixed4b_relu, 443, batch_index=1)
 img = visualize(model, loss_fn, image)
 ```
 
-We can then see the results:
+We can then view the rendered neurons side by side with the contextual information:
 
 ```
 import torch.nn.functional as F
