@@ -91,7 +91,7 @@ class FGSM(Perturbation):
                         attack is computed. It can be provided as a single
                         tensor or a tuple of multiple tensors. If multiple
                         input tensors are provided, the batch sizes must be
-                        aligned accross all tensors.
+                        aligned across all tensors.
             epsilon (float): Step size of perturbation.
             target (Any): True labels of inputs if non-targeted attack is
                         desired. Target class of inputs if targeted attack
