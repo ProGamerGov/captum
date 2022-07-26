@@ -6,13 +6,14 @@ Overview
 1. [About](#about)
 2. [Structure](#structure)
 3. [Parameterizations](#parameterizations)
-4. [Modules](#modules)
+    1. [FFTImage](#fftimage)
+5. [Modules](#modules)
     1. [Rendering Modules](#rendering-modules)
     2. [Submodules](#submodules)
-5. [Getting Started](#getting-started)
-6. [Docs](#docs)
-7. [Tutorials](#tutorials)
-8. [References](#references)
+6. [Getting Started](#getting-started)
+7. [Docs](#docs)
+8. [Tutorials](#tutorials)
+9. [References](#references)
 
 About
 -----------------
