@@ -351,7 +351,7 @@ class InternalAttribution(Attribution, Generic[ModuleOrModuleList]):
 
 class LayerAttribution(InternalAttribution):
     r"""
-    Layer attribution provides attribution values for the given layer, quanitfying
+    Layer attribution provides attribution values for the given layer, quantifying
     the importance of each neuron within the given layer's output. The output
     attribution of calling attribute on a LayerAttribution object always matches
     the size of the layer output.
@@ -418,7 +418,7 @@ class LayerAttribution(InternalAttribution):
 
 class NeuronAttribution(InternalAttribution):
     r"""
-    Neuron attribution provides input attribution for a given neuron, quanitfying
+    Neuron attribution provides input attribution for a given neuron, quantifying
     the importance of each input feature in the activation of a particular neuron.
     Calling attribute on a NeuronAttribution object requires also providing
     the index of the neuron in the output of the given layer for which attributions
