@@ -12,6 +12,8 @@ Overview
     1. [Rendering Modules](#rendering-modules)
     2. [Submodules](#submodules)
 5. [Getting Started](#getting-started)
+    1. [Basic](#basic)
+    2. [Circuits](#circuits)
 6. [Docs](#docs)
 7. [Tutorials](#tutorials)
 8. [References](#references)
@@ -80,6 +82,8 @@ Modules
 
 Getting Started
 -----------------
+
+#### **Basic**
 
 Below we demonstrate the usage of the Optim library for rendering a simple channel loss objective.
 
