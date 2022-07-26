@@ -7,7 +7,12 @@ Overview
 2. [Structure](#structure)
 3. [Parameterizations](#parameterizations)
 4. [Modules](#modules)
-5. 
+  1. [Rendering Modules](#rendering-modules)
+  2. [Submodules](#submodules)
+5. [Getting Started](#getting-started)
+6. [Docs](#docs)
+7. [Tutorials](#tutorials)
+8. [References](#references)
 
 About
 -----------------
