@@ -37,6 +37,8 @@ The standard rendering process works like this for the forward pass, with loss o
 Parameterizations
 -----------------
 
+### FFTImage
+
 The default settings store image parameters in a fully decorrelated format where the spatial information and channel information is decorrelated. By preconditioning our optimizer with decorrelated data, we alter the loss landscape to make optimization significantly easier and decrease the presence of high frequency patterns. Parameterizations like these are also known as differentiable image parameterizations.
 
 ![](https://user-images.githubusercontent.com/10626398/176753493-b90f4e18-0133-4dca-afd4-26e811aa965e.svg?sanitize=true)
