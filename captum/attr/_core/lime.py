@@ -569,7 +569,7 @@ def default_from_interp_rep_transform(curr_sample, original_inputs, **kwargs):
     ), "Must provide feature_mask to use default interpretable representation transform"
     assert (
         "baselines" in kwargs
-    ), "Must provide baselines to use default interpretable representation transfrom"
+    ), "Must provide baselines to use default interpretable representation transform"
     feature_mask = kwargs["feature_mask"]
     if isinstance(feature_mask, Tensor):
         binary_mask = curr_sample[0][feature_mask].bool()
