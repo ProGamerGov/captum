@@ -186,7 +186,7 @@ class GradientAttribution(Attribution):
 
                 attributions (tensor or tuple of tensors): Precomputed attribution
                             scores. The user can compute those using any attribution
-                            algorithm. It is assumed the the shape and the
+                            algorithm. It is assumed the shape and the
                             dimensionality of attributions must match the shape and
                             the dimensionality of `start_point` and `end_point`.
                             It also assumes that the attribution tensor's
