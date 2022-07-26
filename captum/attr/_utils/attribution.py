@@ -50,7 +50,7 @@ class Attribution:
         inputs (tensor or tuple of tensors): Input for which attribution
                     is computed. It can be provided as a single tensor or
                     a tuple of multiple tensors. If multiple input tensors
-                    are provided, the batch sizes must be aligned accross all
+                    are provided, the batch sizes must be aligned across all
                     tensors.
 
 
