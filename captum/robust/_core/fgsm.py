@@ -21,7 +21,7 @@ from torch import Tensor
 
 class FGSM(Perturbation):
     r"""
-    Fast Gradient Sign Method is an one-step method that can generate
+    Fast Gradient Sign Method is a one-step method that can generate
     adversarial examples.
 
     For non-targeted attack, the formulation is::
