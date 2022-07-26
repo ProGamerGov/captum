@@ -120,10 +120,11 @@ def visualize(model, loss_fn, image, transforms):
 visualize(model, loss_fn, image, transforms)
 ```
 
-**Circuits**
+#### **Circuits**
 
+Below we demonstate how to use the circuits submodule to obtain important contextual information for the interactions of neurons in a neural network.
 
-We start off by loading a linear version of the InceptionV1 model along with the normal version for rendering.
+We start off by loading a linear version of the InceptionV1 model, where ``nn.MaxPool2d`` operations have been replaced with their ``nn.AvgPool2d`` equivalents. The nonlinear ``nn.ReLU`` layers have also been replaced Optim's equivalent of the linear ``nn.Identity`` layer.
 
 ```
 import captum.optim as opt
@@ -132,14 +133,12 @@ import torch.nn.functional as F
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-
 # Load InceptionV1 model with nonlinear layers replaced by their linear equivalents
 linear_model = (
     opt.models.googlenet(pretrained=True, use_linear_modules_only=True)
     .to(device)
     .eval()
 )
-model = opt.models.googlenet(pretrained=True).to(device).eval()
 ```
 
 We then extract the expanded weights between the InceptionV1 model's ``mixed4a_relu`` and ``mixed4b_relu`` layers, for all channels.
@@ -156,12 +155,13 @@ We can then create a heatmap for the connections between channel 308 of ``mixed4
 ```
 # Create heatmap image
 W_4a_4b_hm = opt.weights_to_heatmap_2d(W_4a_4b[443, 308, ...] / W_4a_4b[443, ...].max())
-hm_img = F.interpolate(W_4a_4b_hm[None, :], size=(224, 224), mode="nearest-exact")
 ```
 
 From analysing the neurons in our model, we know that the mixed4a_relu channel 308 neuron is a dog head detector, and the mixed4b_relu channel 443 neuron is a full dog body. Viewing the weights connecting both neurons allows us to see the nessecary contextual information for how the head is placed on the body.
 
 ```
+model = opt.models.googlenet(pretrained=True).to(device).eval()
+
 def visualize(model, loss_fn, image):
     transforms = opt.transforms.TransformationRobustness()
     obj = opt.InputOptimization(model, loss_fn, image, transforms)
@@ -172,12 +172,13 @@ image = opt.images.NaturalImage((224, 224), batch=2).to(device)
 loss_fn = opt.loss.NeuronActivation(model.mixed4a, 308, batch_index=0)
 loss_fn += opt.loss.NeuronActivation(model.mixed4b_relu, 443, batch_index=1)
 img = visualize(model, loss_fn, image)
-img_set = torch.cat([img[0:1], hm_img, img[1:2]])
 ```
 
 We can then see the results:
 
 ```
+hm_img = F.interpolate(W_4a_4b_hm[None, :], size=(224, 224), mode="nearest-exact")
+img_set = torch.cat([img[0:1], hm_img, img[1:2]])
 opt.show(img_set, images_per_row=3, figsize=(15, 10))
 ```
 
