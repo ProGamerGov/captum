@@ -100,7 +100,7 @@ We load the pre-trained InceptionV1 model instance, using Optim's ``RedirectedRe
 model = opt.models.googlenet(pretrained=True).to(device)
 ```
 
-Next we define our optimization objective as a layer channel target.
+Next we define our optimization objective using ``ChannelActivation``.
 
 ```
 loss_fn = opt.loss.ChannelActivation(model.mixed4a, 465)
