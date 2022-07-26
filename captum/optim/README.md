@@ -83,7 +83,7 @@ Modules
 Getting Started
 -----------------
 
-#### **Basic**
+### **Basic**
 
 Below we demonstrate the usage of the Optim library for rendering a simple channel loss objective.
 
@@ -124,7 +124,7 @@ def visualize(model, loss_fn, image, transforms):
 visualize(model, loss_fn, image, transforms)
 ```
 
-#### **Circuits**
+### **Circuits**
 
 Below we demonstate how to use the circuits submodule to obtain important contextual information for the neurons in a neural network.
 
