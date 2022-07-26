@@ -92,6 +92,18 @@ class TestLayerActivation(BaseTest):
             self, output, model_input[batch_index : batch_index + 1], delta=0.0
         )
 
+    def test_layer_activation_batch_index_negative(self) -> None:
+        model = torch.nn.Identity()
+        batch_index = -2
+        loss = opt.loss.LayerActivation(model, batch_index=batch_index)
+
+        model_input = torch.arange(0, 5 * 3 * 5 * 5).view(5, 3, 5, 5).float()
+        output = get_loss_value(model, loss, model_input)
+        self.assertEqual(loss.batch_index, (batch_index, batch_index + 1))
+        assertTensorAlmostEqual(
+            self, output, model_input[batch_index : batch_index + 1], delta=0.0
+        )
+
 
 class TestChannelActivation(BaseTest):
     def test_channel_activation_init(self) -> None:
