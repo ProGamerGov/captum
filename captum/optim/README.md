@@ -156,6 +156,8 @@ W_4a_4b = opt.circuits.extract_expanded_weights(
 
 Now that we have the expanded weights, we can anaylse the interactions that they show us.
 
+From analysing the neurons in our model, we know that the ``mixed4a_relu`` channel 308 neuron is a dog head detector, and the ``mixed4b_relu`` channel 443 neuron is a full dog body detector.
+
 Below we create a heatmap for the connections between channel 308 of ``mixed4a_relu`` and channel 443 of ``mixed4b_relu``. This heatmap shows us how the features between both channels interact.
 
 ```
@@ -163,9 +165,7 @@ Below we create a heatmap for the connections between channel 308 of ``mixed4a_r
 W_4a_4b_hm = opt.weights_to_heatmap_2d(W_4a_4b[443, 308, ...] / W_4a_4b[443, ...].max())
 ```
 
-From analysing the neurons in our model, we know that the mixed4a_relu channel 308 neuron is a dog head detector, and the mixed4b_relu channel 443 neuron is a full dog body. Viewing the weights connecting both neurons allows us to see the nessecary contextual information for how the head is placed on the body.
-
-Below we rendering both neuron targets:
+Below we render both neuron targets:
 
 ```
 model = opt.models.googlenet(pretrained=True).to(device).eval()
