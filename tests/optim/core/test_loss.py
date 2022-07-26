@@ -42,6 +42,86 @@ def get_loss_value(
     return loss(module_outputs).detach()
 
 
+class TestModuleOP(BaseTest):
+    def test_module_op_loss_unary_op(self) -> None:
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
+            raise unittest.SkipTest(
+                "Skipping ModuleOP unary op test due to insufficient Torch"
+                + " version."
+            )
+        model = BasicModel_ConvNet_Optim()
+        loss = opt_loss.ChannelActivation(model.layer, 0)
+        composed_loss = opt_loss.module_op(loss, None, operator.neg)
+
+        expected_name = "ChannelActivation [Conv2d(3, 2, ke..., 0]"
+        self.assertEqual(composed_loss.__name__, expected_name)
+        output = get_loss_value(model, composed_loss)
+        expected = -torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS]).sum().item()
+        self.assertEqual(output, expected)
+
+    def test_module_op_loss_num_add(self) -> None:
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
+            raise unittest.SkipTest(
+                "Skipping ModuleOP loss add num test due to insufficient Torch"
+                + " version."
+            )
+        model = BasicModel_ConvNet_Optim()
+        loss = opt_loss.ChannelActivation(model.layer, 0)
+        composed_loss = opt_loss.module_op(loss, 1.0, operator.add)
+
+        expected_name = "ChannelActivation [Conv2d(3, 2, ke..., 0]"
+        self.assertEqual(composed_loss.__name__, expected_name)
+        output = get_loss_value(model, composed_loss)
+        expected = torch.tensor([CHANNEL_ACTIVATION_0_LOSS]) + 1.0
+        self.assertEqual(output, expected.item())
+
+    def test_module_op_loss_loss_add(self) -> None:
+        if version.parse(torch.__version__) <= version.parse("1.6.0"):
+            raise unittest.SkipTest(
+                "Skipping ModuleOP Loss add Loss test due to insufficient Torch"
+                + " version."
+            )
+        model = BasicModel_ConvNet_Optim()
+        loss1 = opt_loss.ChannelActivation(model.layer, 0)
+        loss2 = opt_loss.ChannelActivation(model.layer, 1)
+        composed_loss = opt_loss.module_op(loss1, loss2, operator.add)
+
+        expected_name = (
+            "Compose(ChannelActivation [Conv2d(3, 2, ke..., 0], "
+            + "ChannelActivation [Conv2d(3, 2, ke..., 1])"
+        )
+        self.assertEqual(composed_loss.__name__, expected_name)
+        output = get_loss_value(model, composed_loss)
+        expected = (
+            torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_0_LOSS])
+            .sum()
+            .item()
+        )
+        self.assertEqual(output, expected)
+
+    def test_module_op_loss_pow_error(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        with self.assertRaises(TypeError):
+            loss = opt_loss.ChannelActivation(model.layer, 0)
+            opt_loss.module_op(loss, "string", operator.pow)  # type: ignore
+
+
+class TestRModuleOP(BaseTest):
+    def test_module_op_loss_num_div(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        loss = opt_loss.ChannelActivation(model.layer, 0)
+        composed_loss = opt_loss.rmodule_op(loss, 1.0, operator.pow)
+
+        output = get_loss_value(model, composed_loss)
+        self.assertEqual(output, 1.0**CHANNEL_ACTIVATION_0_LOSS)
+
+    def test_rmodule_op_loss_pow_error(self) -> None:
+        model = BasicModel_ConvNet_Optim()
+        with self.assertRaises(TypeError):
+            loss = opt_loss.ChannelActivation(model.layer, 0)
+            opt_loss.rmodule_op(loss, "string", operator.pow)  # type: ignore
+
+
 class TestDeepDream(BaseTest):
     def test_deepdream(self) -> None:
         model = BasicModel_ConvNet_Optim()
@@ -784,89 +864,8 @@ class TestSumLossList(BaseTest):
         self.assertEqual(out.sum().item(), 30000.0)
 
 
-class TestModuleOP(BaseTest):
-    def test_module_op_loss_unary_op(self) -> None:
-        if version.parse(torch.__version__) <= version.parse("1.6.0"):
-            raise unittest.SkipTest(
-                "Skipping ModuleOP unary op test due to insufficient Torch"
-                + " version."
-            )
-        model = BasicModel_ConvNet_Optim()
-        loss = opt_loss.ChannelActivation(model.layer, 0)
-        composed_loss = opt_loss.module_op(loss, None, operator.neg)
-
-        expected_name = "ChannelActivation [Conv2d(3, 2, ke..., 0]"
-        self.assertEqual(composed_loss.__name__, expected_name)
-        output = get_loss_value(model, composed_loss)
-        expected = -torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS]).sum().item()
-        self.assertEqual(output, expected)
-
-    def test_module_op_loss_num_add(self) -> None:
-        if version.parse(torch.__version__) <= version.parse("1.6.0"):
-            raise unittest.SkipTest(
-                "Skipping ModuleOP loss add num test due to insufficient Torch"
-                + " version."
-            )
-        model = BasicModel_ConvNet_Optim()
-        loss = opt_loss.ChannelActivation(model.layer, 0)
-        composed_loss = opt_loss.module_op(loss, 1.0, operator.add)
-
-        expected_name = "ChannelActivation [Conv2d(3, 2, ke..., 0]"
-        self.assertEqual(composed_loss.__name__, expected_name)
-        output = get_loss_value(model, composed_loss)
-        expected = torch.tensor([CHANNEL_ACTIVATION_0_LOSS]) + 1.0
-        self.assertEqual(output, expected.item())
-
-    def test_module_op_loss_loss_add(self) -> None:
-        if version.parse(torch.__version__) <= version.parse("1.6.0"):
-            raise unittest.SkipTest(
-                "Skipping ModuleOP Loss add Loss test due to insufficient Torch"
-                + " version."
-            )
-        model = BasicModel_ConvNet_Optim()
-        loss1 = opt_loss.ChannelActivation(model.layer, 0)
-        loss2 = opt_loss.ChannelActivation(model.layer, 1)
-        composed_loss = opt_loss.module_op(loss1, loss2, operator.add)
-
-        expected_name = (
-            "Compose(ChannelActivation [Conv2d(3, 2, ke..., 0], "
-            + "ChannelActivation [Conv2d(3, 2, ke..., 1])"
-        )
-        self.assertEqual(composed_loss.__name__, expected_name)
-        output = get_loss_value(model, composed_loss)
-        expected = (
-            torch.as_tensor([CHANNEL_ACTIVATION_0_LOSS, CHANNEL_ACTIVATION_0_LOSS])
-            .sum()
-            .item()
-        )
-        self.assertEqual(output, expected)
-
-    def test_module_op_loss_pow_error(self) -> None:
-        model = BasicModel_ConvNet_Optim()
-        with self.assertRaises(TypeError):
-            loss = opt_loss.ChannelActivation(model.layer, 0)
-            opt_loss.module_op(loss, "string", operator.pow)  # type: ignore
-
-
-class TestRModuleOP(BaseTest):
-    def test_module_op_loss_num_div(self) -> None:
-        model = BasicModel_ConvNet_Optim()
-        loss = opt_loss.ChannelActivation(model.layer, 0)
-        composed_loss = opt_loss.rmodule_op(loss, 1.0, operator.pow)
-
-        output = get_loss_value(model, composed_loss)
-        self.assertEqual(output, 1.0**CHANNEL_ACTIVATION_0_LOSS)
-
-    def test_rmodule_op_loss_pow_error(self) -> None:
-        model = BasicModel_ConvNet_Optim()
-        with self.assertRaises(TypeError):
-            loss = opt_loss.ChannelActivation(model.layer, 0)
-            opt_loss.rmodule_op(loss, "string", operator.pow)  # type: ignore
-
-
 class TestDefaultLossSummarize(BaseTest):
     def test_default_loss_summarize(self) -> None:
         x = torch.arange(0, 1 * 3 * 5 * 5).view(1, 3, 5, 5).float()
         output = opt_loss.default_loss_summarize(x)
         self.assertEqual(output.item(), -37.0)
-
