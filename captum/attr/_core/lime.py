@@ -767,7 +767,7 @@ class Lime(LimeBase):
                     This is often referred to as a similarity kernel.
 
                     This argument is optional and defaults to a function which
-                    applies an exponential kernel to the consine distance between
+                    applies an exponential kernel to the cosine distance between
                     the original input and perturbed input, with a kernel width
                     of 1.0.
 
