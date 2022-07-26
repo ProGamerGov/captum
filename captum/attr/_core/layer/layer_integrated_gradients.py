@@ -100,7 +100,7 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
         if isinstance(layer, list) and len(layer) > 1:
             warnings.warn(
                 "Multiple layers provided. Please ensure that each layer is"
-                "**not** solely solely dependent on the outputs of"
+                "**not** solely dependent on the outputs of"
                 "another layer. Please refer to the documentation for more"
                 "detail."
             )
