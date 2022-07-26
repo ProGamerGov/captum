@@ -31,7 +31,7 @@ def default_perturb_func(
     Args:
 
         inputs (tensor or a tuple of tensors): The input tensors that we'd
-                like to perturb by adding a random noise sampled unifromly
+                like to perturb by adding a random noise sampled uniformly
                 random from an L_infinity ball with a radius `perturb_radius`.
 
         radius (float): A radius used for sampling from
