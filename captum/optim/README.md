@@ -122,7 +122,7 @@ visualize(model, loss_fn, image, transforms)
 
 #### **Circuits**
 
-Below we demonstate how to use the circuits submodule to obtain important contextual information for the interactions of neurons in a neural network.
+Below we demonstate how to use the circuits submodule to obtain important contextual information for the neurons in a neural network.
 
 We start off by loading a linear version of the InceptionV1 model, where ``nn.MaxPool2d`` operations have been replaced with their ``nn.AvgPool2d`` equivalents. The nonlinear ``nn.ReLU`` layers have also been replaced Optim's equivalent of the linear ``nn.Identity`` layer.
 
@@ -141,7 +141,7 @@ linear_model = (
 )
 ```
 
-We then extract the expanded weights between the InceptionV1 model's ``mixed4a_relu`` and ``mixed4b_relu`` layers, for all channels.
+We then extract the expanded weights between the InceptionV1 model's ``mixed4a_relu`` and ``mixed4b_relu`` layers for all layer channels, using ``circuits.extract_expanded_weights`` function. We also crop away the unimportant padding, which in the case of our target layers gives us an output shape of 5 by 5.
 
 ```
 # Extract expanded weights
@@ -150,7 +150,9 @@ W_4a_4b = opt.circuits.extract_expanded_weights(
 )
 ```
 
-We can then create a heatmap for the connections between channel 308 of ``mixed4a_relu`` and channel 443 of ``mixed4b_relu``. This heatmap shows us how the features between both channels interact.
+Now that we have the expanded weights, we can anaylse the interactions that they show us.
+
+Below we create a heatmap for the connections between channel 308 of ``mixed4a_relu`` and channel 443 of ``mixed4b_relu``. This heatmap shows us how the features between both channels interact.
 
 ```
 # Create heatmap image
@@ -158,6 +160,8 @@ W_4a_4b_hm = opt.weights_to_heatmap_2d(W_4a_4b[443, 308, ...] / W_4a_4b[443, ...
 ```
 
 From analysing the neurons in our model, we know that the mixed4a_relu channel 308 neuron is a dog head detector, and the mixed4b_relu channel 443 neuron is a full dog body. Viewing the weights connecting both neurons allows us to see the nessecary contextual information for how the head is placed on the body.
+
+Below we rendering both neuron targets:
 
 ```
 model = opt.models.googlenet(pretrained=True).to(device).eval()
