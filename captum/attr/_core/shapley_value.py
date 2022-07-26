@@ -70,7 +70,7 @@ class ShapleyValueSampling(PerturbationAttribution):
                         any modification of it. The forward function can either
                         return a scalar per example, or a single scalar for the
                         full batch. If a single scalar is returned for the batch,
-                        `perturbations_per_eval` must be 1, and the returned
+                        ``perturbations_per_eval`` must be 1, and the returned
                         attributions will have first dimension 1, corresponding to
                         feature importance across all examples in the batch.
         """
@@ -132,8 +132,9 @@ class ShapleyValueSampling(PerturbationAttribution):
                                 inputs' tuple. This scalar value is broadcasted
                                 for corresponding input tensor.
 
-                            In the cases when `baselines` is not provided, we internally
-                            use zero scalar corresponding to each input tensor.
+                            In the cases when ``baselines`` is not provided, we
+                            internally use zero scalar corresponding to each input
+                            tensor.
                             Default: None
                 target (int, tuple, tensor or list, optional): Output indices for
                             which difference is computed (for classification cases,
@@ -199,7 +200,7 @@ class ShapleyValueSampling(PerturbationAttribution):
                             Default: None
                 n_samples (int, optional): The number of feature permutations
                             tested.
-                            Default: `25` if `n_samples` is not provided.
+                            Default: ``25`` if ``n_samples`` is not provided.
                 perturbations_per_eval (int, optional): Allows multiple ablations
                             to be processed simultaneously in one call to forward_fn.
                             Each forward pass will contain a maximum of
@@ -524,7 +525,7 @@ class ShapleyValues(ShapleyValueSampling):
                         any modification of it. The forward function can either
                         return a scalar per example, or a single scalar for the
                         full batch. If a single scalar is returned for the batch,
-                        `perturbations_per_eval` must be 1, and the returned
+                        ``perturbations_per_eval`` must be 1, and the returned
                         attributions will have first dimension 1, corresponding to
                         feature importance across all examples in the batch.
         """
@@ -550,10 +551,10 @@ class ShapleyValues(ShapleyValueSampling):
         Args:
 
                 inputs (tensor or tuple of tensors): Input for which Shapley value
-                            sampling attributions are computed. If forward_func takes
-                            a single tensor as input, a single input tensor should
-                            be provided.
-                            If forward_func takes multiple tensors as input, a tuple
+                            sampling attributions are computed. If ``forward_func``
+                            takes a single tensor as input, a single input tensor
+                            should be provided. If ``forward_func`` takes
+                            multiple tensors as input, a tuple
                             of the input tensors should be provided. It is assumed
                             that for all given input tensors, dimension 0 corresponds
                             to the number of examples (aka batch size), and if
@@ -585,8 +586,9 @@ class ShapleyValues(ShapleyValueSampling):
                                 inputs' tuple. This scalar value is broadcasted
                                 for corresponding input tensor.
 
-                            In the cases when `baselines` is not provided, we internally
-                            use zero scalar corresponding to each input tensor.
+                            In the cases when ``baselines`` is not provided, we
+                            internally use zero scalar corresponding to each input
+                            tensor.
                             Default: None
                 target (int, tuple, tensor or list, optional): Output indices for
                             which difference is computed (for classification cases,
@@ -620,7 +622,7 @@ class ShapleyValues(ShapleyValueSampling):
                             argument of a Tensor or arbitrary (non-tuple) type or a
                             tuple containing multiple additional arguments including
                             tensors or any arbitrary python types. These arguments
-                            are provided to forward_func in order following the
+                            are provided to ``forward_func`` in order following the
                             arguments in inputs.
                             For a tensor, the first dimension of the tensor must
                             correspond to the number of examples. For all other types,

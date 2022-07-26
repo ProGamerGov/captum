@@ -23,7 +23,7 @@ class DataInfluence(ABC):
                     its labels. This is the dataset for which we will be seeking for
                     influential instances. In most cases this is the training dataset.
             **kwargs: Additional key-value arguments that are necessary for specific
-                    implementation of `DataInfluence` abstract class.
+                    implementation of ``DataInfluence`` abstract class.
         """
         self.model = model
         self.influence_src_dataset = influence_src_dataset
@@ -33,11 +33,11 @@ class DataInfluence(ABC):
         r"""
         Args:
             inputs (Any): Batch of examples for which influential
-                    instances are computed. They are passed to the forward_func. If
-                    `inputs` if a tensor or tuple of tensors, the first dimension
+                    instances are computed. They are passed to the ``forward_func``. If
+                    ``inputs`` if a tensor or tuple of tensors, the first dimension
                     of a tensor corresponds to the batch dimension.
             **kwargs: Additional key-value arguments that are necessary for specific
-                    implementation of `DataInfluence` abstract class.
+                    implementation of ``DataInfluence`` abstract class.
 
         Returns:
             influences (Any): We do not add restrictions on the return type for now,

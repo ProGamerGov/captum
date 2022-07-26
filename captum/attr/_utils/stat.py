@@ -80,7 +80,7 @@ class Stat:
 class Count(Stat):
     """
     Counts the number of elements, i.e. the
-    number of `update`'s called
+    number of ``update``'s called
     """
 
     def __init__(self, name: Optional[str] = None) -> None:
@@ -158,7 +158,7 @@ class MSE(Stat):
 class Var(Stat):
     """
     Calculates the variance of a tensor, with an order. e.g.
-    if `order = 1` then it will calculate sample variance.
+    if ``order = 1`` then it will calculate sample variance.
 
     This is equal to mse / (n - order)
     """

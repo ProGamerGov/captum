@@ -29,8 +29,8 @@ def safe_div(
     default_denom: Union[Tensor, int, float] = 1.0,
 ) -> Tensor:
     r"""
-    A simple utility function to perform `numerator / denom`
-    if the statement is undefined => result will be `numerator / default_denorm`
+    A simple utility function to perform ``numerator / denom``
+    if the statement is undefined => result will be ``numerator / default_denorm``
     """
     if isinstance(denom, (int, float)):
         return numerator / (denom if denom != 0 else default_denom)
@@ -111,7 +111,7 @@ def _validate_input(
 def _zeros(inputs: Tuple[Tensor, ...]) -> Tuple[int, ...]:
     r"""
     Takes a tuple of tensors as input and returns a tuple that has the same
-    length as `inputs` with each element as the integer 0.
+    length as ``inputs`` with each element as the integer 0.
     """
     return tuple(0 if input.dtype is not torch.bool else False for input in inputs)
 

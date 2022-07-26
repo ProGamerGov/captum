@@ -42,10 +42,10 @@ def _get_context():
     Returns:
     _CONTEXT_COLAB: If in Colab with an IPython notebook context.
     _CONTEXT_IPYTHON: If not in Colab, but we are in an IPython notebook
-      context (e.g., from running `jupyter notebook` at the command
+      context (e.g., from running ``jupyter notebook`` at the command
       line).
     _CONTEXT_NONE: Otherwise (e.g., by running a Python script at the
-      command-line or using the `ipython` interactive shell).
+      command-line or using the ``ipython`` interactive shell).
     """
     # In Colab, the `google.colab` module is available, but the shell
     # returned by `IPython.get_ipython` does not have a `get_trait`

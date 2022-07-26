@@ -44,7 +44,7 @@ class Summarizer:
 
     def update(self, x: Union[float, Tensor, Tuple[Union[float, Tensor], ...]]):
         r"""
-        Calls `update` on each `Stat` object within the summarizer
+        Calls ``update`` on each ``Stat`` object within the summarizer
 
         Args:
             x (Tensor or Tuple[Tensor, ...]):
@@ -87,11 +87,12 @@ class Summarizer:
         Union[Dict[str, Optional[Tensor]], List[Dict[str, Optional[Tensor]]]]
     ]:
         r"""
-        Effectively calls `get` on each `Stat` object within this object for each input
+        Effectively calls ``get`` on each ``Stat`` object within this object for each
+        input.
 
         Returns:
             A dict or list of dict: mapping from the Stat
-            object's `name` to the associated value of `get`
+            object's ``name`` to the associated value of ``get``
         """
         if len(self._summarizers) == 0:
             return None
@@ -167,7 +168,7 @@ class SummarizerSingleTensor:
     A simple class that summarizes a single tensor. The basic functionality
     of this class is two operations .update and .summary
 
-    If possible use `Summarizer` instead.
+    If possible use ``Summarizer`` instead.
     """
 
     def __init__(self, stats: List[Stat], summary_stats_indices: List[int]) -> None:
@@ -175,8 +176,8 @@ class SummarizerSingleTensor:
         Args:
             stats (list of Stat): A list of all the Stat objects that
                 need to be updated. This must be in the appropriate order for
-                updates (see `_reorder_stats`)
-            summary_stats (list of int): A list of indicies, referencing `stats`,
+                updates (see ``_reorder_stats``)
+            summary_stats (list of int): A list of indicies, referencing ``stats``,
                 which are the stats you want to show in the .summary property. This
                 does not require any specific order.
         """
@@ -190,7 +191,7 @@ class SummarizerSingleTensor:
 
     def update(self, x: Tensor):
         r"""
-        Updates the summary of a given tensor `x`
+        Updates the summary of a given tensor ``x``
 
         Args:
             x (Tensor):
@@ -201,22 +202,22 @@ class SummarizerSingleTensor:
 
     def get(self, stat: Stat) -> Optional[Stat]:
         r"""
-        Retrieves `stat` from cache if this summarizer contains it.
+        Retrieves ``stat`` from cache if this summarizer contains it.
 
-        Note that `Stat` has it's hash/equality method overridden, such
+        Note that ``Stat`` has it's hash/equality method overridden, such
         that an object with the same class and parameters will have the
-        same hash. Thus, if you call `get` with a `Stat`, an associated
-        `Stat` with the same class and parameters belonging to this object
+        same hash. Thus, if you call ``get`` with a ``Stat``, an associated
+        ``Stat`` with the same class and parameters belonging to this object
         will be retrieved if it exists.
 
-        If no such object is retrieved then `None` is returned.
+        If no such object is retrieved then ``None`` is returned.
 
         Args:
             stat (Stat):
                 The stat to retrieve
         Returns:
             Stat
-                The cached stat object or `None`
+                The cached stat object or ``None``
         """
         if stat not in self._stat_to_stat:
             return None

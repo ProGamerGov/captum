@@ -18,7 +18,7 @@ class Classifier(ABC):
 
     More specifically the classifier can, for instance, be trained on the
     activations of a particular layer. Below we can see an example a sklearn
-    linear classifier wrapped by the `CustomClassifier` which extends `Classifier`
+    linear classifier wrapped by the ``CustomClassifier`` which extends ``Classifier``
     abstract class.
 
     Example::
@@ -68,7 +68,7 @@ class Classifier(ABC):
     ) -> Union[Dict, None]:
         r"""
         This method is responsible for training a classifier using the data
-        provided through `dataloader` input arguments. Based on the specific
+        provided through ``dataloader`` input arguments. Based on the specific
         implementation, it may or may not return a statistics about model
         training and evaluation.
 
@@ -104,13 +104,13 @@ class Classifier(ABC):
     def classes(self) -> List[int]:
         r"""
         This function returns the list of all classes that are used by the
-        classifier to train the model in the `train_and_eval` method.
+        classifier to train the model in the ``train_and_eval`` method.
         The order of returned classes has to match the same order used in
-        the weights matrix returned by the `weights` method.
+        the weights matrix returned by the ``weights`` method.
 
         Returns:
             classes (list): The list of classes used by the classifier to train
-            the model in the `train_and_eval` method.
+            the model in the ``train_and_eval`` method.
         """
         pass
 
@@ -122,7 +122,7 @@ class DefaultClassifier(Classifier):
     Note that default implementation slices input dataset into train and test
     splits and keeps them in memory.
     In case concept datasets are large, this can lead to out of memory and we
-    recommend to provide a custom Classier that extends `Classifier` abstract
+    recommend to provide a custom Classier that extends ``Classifier`` abstract
     class and handles large concept datasets accordingly.
     """
 
@@ -141,8 +141,8 @@ class DefaultClassifier(Classifier):
     ) -> Union[Dict, None]:
         r"""
          Implements Classifier::train_and_eval abstract method for small concept
-         datsets provided by `dataloader`.
-         It is assumed that when iterating over `dataloader` we can still
+         datsets provided by ``dataloader``.
+         It is assumed that when iterating over ``dataloader`` we can still
          retain the entire dataset in the memory.
          This method shuffles all examples randomly provided, splits them
          into train and test partitions and trains an SGDClassifier using sklearn
@@ -154,7 +154,7 @@ class DefaultClassifier(Classifier):
                     the inputs and corresponding labels. Dataloader allows us to
                     iterate over the dataset by loading the batches in lazy manner.
             test_split_ratio (float): The ratio of test split in the entire dataset
-                    served by input data loader `dataloader`.
+                    served by input data loader ``dataloader``.
 
                     Default: 0.33
         Returns:
@@ -209,13 +209,13 @@ class DefaultClassifier(Classifier):
     def classes(self) -> List[int]:
         r"""
         This function returns the list of all classes that are used by the
-        classifier to train the model in the `train_and_eval` method.
+        classifier to train the model in the ``train_and_eval`` method.
         The order of returned classes has to match the same order used in
-        the weights matrix returned by the `weights` method.
+        the weights matrix returned by the ``weights`` method.
 
         Returns:
             classes (list): The list of classes used by the classifier to train
-            the model in the `train_and_eval` method.
+            the model in the ``train_and_eval`` method.
         """
         return self.lm.classes().detach().numpy()  # type: ignore
 

@@ -43,8 +43,8 @@ class FeaturePermutation(FeatureAblation):
 
             return importance
 
-    It should be noted that the `error_metric` must be called in the
-    `forward_func`. You do not need to have an error metric, e.g. you
+    It should be noted that the ``error_metric`` must be called in the
+    ``forward_func``. You do not need to have an error metric, e.g. you
     could simply return the logits (the model output), but this may or may
     not provide a meaningful attribution.
 
@@ -60,7 +60,7 @@ class FeaturePermutation(FeatureAblation):
 
     The forward function can either return a scalar per example, or a single
     scalar for the full batch. If a single scalar is returned for the batch,
-    `perturbations_per_eval` must be 1, and the returned attributions will have
+    ``perturbations_per_eval`` must be 1, and the returned attributions will have
     first dimension 1, corresponding to feature importance across all
     examples in the batch.
 
@@ -82,7 +82,7 @@ class FeaturePermutation(FeatureAblation):
                 feature mask across the batch. This defaults to a function
                 which applies a random permutation, this argument only needs
                 to be provided if a custom permutation behavior is desired.
-                Default: `_permute_feature`
+                Default: ``_permute_feature``
         """
         FeatureAblation.__init__(self, forward_func=forward_func)
         self.perm_func = perm_func
@@ -190,7 +190,7 @@ class FeaturePermutation(FeatureAblation):
                             (perturbations_per_eval * #examples) / num_devices
                             samples.
                             If the forward function returns a single scalar per batch,
-                            perturbations_per_eval must be set to 1.
+                            ``perturbations_per_eval`` must be set to 1.
                             Default: 1
                 show_progress (bool, optional): Displays the progress of computation.
                             It will try to use tqdm if available for advanced features
@@ -277,17 +277,17 @@ class FeaturePermutation(FeatureAblation):
         **kwargs: Any,
     ) -> Tuple[Tensor, Tensor]:
         r"""
-        This function permutes the features of `expanded_input` with a given
+        This function permutes the features of ``expanded_input`` with a given
         feature mask and feature range. Permutation occurs via calling
-        `self.perm_func` across each batch within `expanded_input`. As with
-        `FeatureAblation._construct_ablated_input`:
-        - `expanded_input.shape = (num_features, num_examples, ...)`
-        - `num_features = end_feature - start_feature` (i.e. start and end is a
+        ``self.perm_func`` across each batch within ``expanded_input``. As with
+        ``FeatureAblation._construct_ablated_input``:
+        - ``expanded_input.shape = (num_features, num_examples, ...)``
+        - ``num_features = end_feature - start_feature`` (i.e. start and end is a
           half-closed interval)
-        - `input_mask` is a tensor of the same shape as one input, which
+        - ``input_mask`` is a tensor of the same shape as one input, which
           describes the locations of each feature via their "index"
 
-        Since `baselines` is set to None for `FeatureAblation.attribute, this
+        Since ``baselines`` is set to None for ``FeatureAblation.attribute, this
         will be the zero tensor, however, it is not used.
         """
         assert input_mask.shape[0] == 1, (

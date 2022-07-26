@@ -22,14 +22,14 @@ from torch import Tensor
 def infidelity_perturb_func_decorator(multipy_by_inputs: bool = True) -> Callable:
     r"""An auxiliary, decorator function that helps with computing
     perturbations given perturbed inputs. It can be useful for cases
-    when `pertub_func` returns only perturbed inputs and we
+    when ``pertub_func`` returns only perturbed inputs and we
     internally compute the perturbations as
     (input - perturbed_input) / (input - baseline) if
     multipy_by_inputs is set to True and
     (input - perturbed_input) otherwise.
 
-    If users decorate their `pertub_func` with
-    `@infidelity_perturb_func_decorator` function then their `pertub_func`
+    If users decorate their ``pertub_func`` with
+    ``@infidelity_perturb_func_decorator`` function then their ``pertub_func``
     needs to only return perturbed inputs.
 
     Args:
@@ -162,7 +162,7 @@ def infidelity(
 
                 If we want to only return perturbed inputs and compute
                 perturbations internally then we can wrap perturb_func with
-                `infidelity_perturb_func_decorator` decorator such as:
+                ``infidelity_perturb_func_decorator`` decorator such as:
 
                 >>> from captum.metrics import infidelity_perturb_func_decorator
 
@@ -171,30 +171,30 @@ def infidelity(
                 >>>   <MY-LOGIC-HERE>
                 >>>   return perturbed_inputs
 
-                In case `multipy_by_inputs` is False we compute perturbations by
-                `input - perturbed_input` difference and in case `multipy_by_inputs`
+                In case ``multipy_by_inputs`` is False we compute perturbations by
+                ``input - perturbed_input`` difference and in case ``multipy_by_inputs``
                 flag is True we compute it by dividing
                 (input - perturbed_input) by (input - baselines).
-                The user needs to only return perturbed inputs in `perturb_func`
+                The user needs to only return perturbed inputs in ``perturb_func``
                 as described above.
 
-                `infidelity_perturb_func_decorator` needs to be used with
-                `multipy_by_inputs` flag set to False in case infidelity
+                ``infidelity_perturb_func_decorator`` needs to be used with
+                ``multipy_by_inputs`` flag set to False in case infidelity
                 score is being computed for attribution maps that are local aka
                 that do not factor in inputs in the final attribution score.
                 Such attribution algorithms include Saliency, GradCam, Guided Backprop,
                 or Integrated Gradients and DeepLift attribution scores that are already
-                computed with `multipy_by_inputs=False` flag.
+                computed with ``multipy_by_inputs=False`` flag.
 
                 If there are more than one inputs passed to infidelity function those
-                will be passed to `perturb_func` as tuples in the same order as they
+                will be passed to ``perturb_func`` as tuples in the same order as they
                 are passed to infidelity function.
 
                 If inputs
                  - is a single tensor, the function needs to return a tuple
                    of perturbations and perturbed input such as:
                    perturb, perturbed_input and only perturbed_input in case
-                   `infidelity_perturb_func_decorator` is used.
+                   ``infidelity_perturb_func_decorator`` is used.
                  - is a tuple of tensors, corresponding perturbations and perturbed
                    inputs must be computed and returned as tuples in the
                    following format:
@@ -203,18 +203,18 @@ def infidelity(
                    perturbed_input2, ... perturbed_inputN)
 
                    Similar to previous case here as well we need to return only
-                   perturbed inputs in case `infidelity_perturb_func_decorator`
-                   decorates out `perturb_func`.
+                   perturbed inputs in case ``infidelity_perturb_func_decorator``
+                   decorates out ``perturb_func``.
 
-                It is important to note that for performance reasons `perturb_func`
+                It is important to note that for performance reasons ``perturb_func``
                 isn't called for each example individually but on a batch of
-                input examples that are repeated `max_examples_per_batch / batch_size`
+                input examples that are repeated ``max_examples_per_batch / batch_size``
                 times within the batch.
 
         inputs (tensor or tuple of tensors): Input for which
-                attributions are computed. If forward_func takes a single
+                attributions are computed. If ``forward_func`` takes a single
                 tensor as input, a single input tensor should be provided.
-                If forward_func takes multiple tensors as input, a tuple
+                If ``forward_func`` takes multiple tensors as input, a tuple
                 of the input tensors should be provided. It is assumed
                 that for all given input tensors, dimension 0 corresponds
                 to the number of examples (aka batch size), and if
@@ -253,7 +253,7 @@ def infidelity(
         attributions (tensor or tuple of tensors):
                 Attribution scores computed based on an attribution algorithm.
                 This attribution scores can be computed using the implementations
-                provided in the `captum.attr` package. Some of those attribution
+                provided in the ``captum.attr`` package. Some of those attribution
                 approaches are so called global methods, which means that
                 they factor in model inputs' multiplier, as described in:
                 https://arxiv.org/abs/1711.06104
@@ -261,7 +261,7 @@ def infidelity(
                 meaning that the inputs multiplier isn't factored in the
                 attribution scores.
                 This can be done duing the definition of the attribution algorithm
-                by passing `multipy_by_inputs=False` flag.
+                by passing ``multipy_by_inputs=False`` flag.
                 For example in case of Integrated Gradients (IG) we can obtain
                 local attribution scores if we define the constructor of IG as:
                 ig = IntegratedGradients(multipy_by_inputs=False)
@@ -276,16 +276,16 @@ def infidelity(
 
                 If we want to compute the infidelity of global attributions we
                 can use a binary perturbation matrix that will allow us to select
-                a subset of features from `inputs` or `inputs - baselines` space.
+                a subset of features from ``inputs`` or ``inputs - baselines`` space.
                 This will allow us to approximate sensitivity-n for a global
                 attribution algorithm.
 
-                `infidelity_perturb_func_decorator` function decorator is a helper
+                ``infidelity_perturb_func_decorator`` function decorator is a helper
                 function that computes perturbations under the hood if perturbed
                 inputs are provided.
 
-                For more details about how to use `infidelity_perturb_func_decorator`,
-                please, read the documentation about `perturb_func`
+                For more details about how to use ``infidelity_perturb_func_decorator``,
+                please, read the documentation about ``perturb_func``
 
                 Attributions have the same shape and dimensionality as the inputs.
                 If inputs is a single tensor then the attributions is a single
@@ -299,10 +299,10 @@ def infidelity(
                 argument of a Tensor or arbitrary (non-tuple) type or a tuple
                 containing multiple additional arguments including tensors
                 or any arbitrary python types. These arguments are provided to
-                forward_func in order, following the arguments in inputs.
+                ``forward_func`` in order, following the arguments in inputs.
                 Note that the perturbations are not computed with respect
                 to these arguments. This means that these arguments aren't
-                being passed to `perturb_func` as an input argument.
+                being passed to ``perturb_func`` as an input argument.
 
                 Default: None
         target (int, tuple, tensor or list, optional): Indices for selecting
@@ -332,19 +332,19 @@ def infidelity(
                 Default: None
         n_perturb_samples (int, optional): The number of times input tensors
                 are perturbed. Each input example in the inputs tensor is expanded
-                `n_perturb_samples`
-                times before calling `perturb_func` function.
+                ``n_perturb_samples``
+                times before calling ``perturb_func`` function.
 
                 Default: 10
         max_examples_per_batch (int, optional): The number of maximum input
                 examples that are processed together. In case the number of
-                examples (`input batch size * n_perturb_samples`) exceeds
-                `max_examples_per_batch`, they will be sliced
-                into batches of `max_examples_per_batch` examples and processed
-                in a sequential order. If `max_examples_per_batch` is None, all
-                examples are processed together. `max_examples_per_batch` should
-                at least be equal `input batch size` and at most
-                `input batch size * n_perturb_samples`.
+                examples (``input batch size * n_perturb_samples``) exceeds
+                ``max_examples_per_batch``, they will be sliced
+                into batches of ``max_examples_per_batch`` examples and processed
+                in a sequential order. If ``max_examples_per_batch`` is None, all
+                examples are processed together. ``max_examples_per_batch`` should
+                at least be equal ``input batch size`` and at most
+                ``input batch size * n_perturb_samples``.
 
                 Default: None
         normalize (bool, optional): Normalize the dot product of the input
@@ -392,10 +392,10 @@ def infidelity(
     ) -> Tuple[TensorOrTupleOfTensorsGeneric, TensorOrTupleOfTensorsGeneric]:
         r"""
         The perturbations are generated for each example
-        `current_n_perturb_samples` times.
+        ``current_n_perturb_samples`` times.
 
-        For performance reasons we are not calling `perturb_func` on each example but
-        on a batch that contains `current_n_perturb_samples`
+        For performance reasons we are not calling ``perturb_func`` on each example but
+        on a batch that contains ``current_n_perturb_samples``
         repeated instances per example.
         """
 

@@ -45,7 +45,7 @@ class LayerLRP(LRP, LayerAttribution):
             model (module): The forward function of the model or
                         any modification of it. Custom rules for a given layer need to
                         be defined as attribute
-                        `module.rule` and need to be of type PropagationRule.
+                        ``module.rule`` and need to be of type PropagationRule.
                         Model cannot contain any in-place nonlinear submodules;
                         these are not supported by the register_full_backward_hook
                         PyTorch API starting from PyTorch v1.9.
@@ -158,14 +158,14 @@ class LayerLRP(LRP, LayerAttribution):
                     Default: None
 
             return_convergence_delta (bool, optional): Indicates whether to return
-                    convergence delta or not. If `return_convergence_delta`
+                    convergence delta or not. If ``return_convergence_delta``
                     is set to True convergence delta will be returned in
                     a tuple following attributions.
                     Default: False
 
             attribute_to_layer_input (bool, optional): Indicates whether to
                         compute the attribution with respect to the layer input
-                        or output. If `attribute_to_layer_input` is set to True
+                        or output. If ``attribute_to_layer_input`` is set to True
                         then the attributions will be computed with respect to
                         layer input, otherwise it will be computed with respect
                         to layer output.

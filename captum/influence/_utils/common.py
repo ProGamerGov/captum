@@ -87,24 +87,24 @@ def _jacobian_loss_wrt_inputs(
         loss_fn (torch.nn.Module or Callable or None): The loss function. If a library
                 defined loss function is provided, it would be expected to be a
                 torch.nn.Module. If a custom loss is provided, it can be either type,
-                but must behave as a library loss function would if `reduction='sum'`
-                or `reduction='mean'`.
+                but must behave as a library loss function would if ``reduction='sum'``
+                or ``reduction='mean'``.
         out (tensor): This is a tensor that represents the batch of inputs to
-                `loss_fn`. In practice, this will be the output of a model; this is
-                why this argument is named `out`. `out` is a 2D tensor of shape
-                (batch size, model output dimensionality). We will call `loss_fn` via
-                `loss_fn(out, targets)`.
+                ``loss_fn``. In practice, this will be the output of a model; this is
+                why this argument is named ``out``. ``out`` is a 2D tensor of shape
+                (batch size, model output dimensionality). We will call ``loss_fn`` via
+                ``loss_fn(out, targets)``.
         targets (tensor): The labels for the batch of inputs.
         vectorize (bool): Flag to use experimental vectorize functionality for
-                `torch.autograd.functional.jacobian`.
-        reduction_type (str): The type of reduction used by `loss_fn`. If `loss_fn`
+                ``torch.autograd.functional.jacobian``.
+        reduction_type (str): The type of reduction used by ``loss_fn``. If ``loss_fn``
                 has the "reduction" attribute, we will check that they match. Can
                 only be "mean" or "sum".
 
     Returns:
         jacobians (tensor): Returns the jacobian of the per-sample loss (implicitly
-                defined by `loss_fn` and `reduction_type`) w.r.t each sample
-                in the batch represented by `out`. This is a 2D tensor, where the
+                defined by ``loss_fn`` and ``reduction_type``) w.r.t each sample
+                in the batch represented by ``out``. This is a 2D tensor, where the
                 first dimension is the batch dimension.
     """
     # TODO: allow loss_fn to be Callable
@@ -200,54 +200,55 @@ def _get_k_most_influential_helper(
 ) -> Tuple[Tensor, Tensor]:
     r"""
     Helper function that computes the quantities returned by
-    `TracInCPBase._get_k_most_influential`, using a specific implementation that is
+    ``TracInCPBase._get_k_most_influential``, using a specific implementation that is
     constant memory.
 
     Args:
         influence_src_dataloader (DataLoader): The DataLoader, representing training
                 data, for which we want to compute proponents / opponents.
         influence_batch_fn (Callable): A callable that will be called via
-                `influence_batch_fn(inputs, targets, batch)`, where `batch` is a batch
-                in the `influence_src_dataloader` argument.
+                ``influence_batch_fn(inputs, targets, batch)``, where ``batch`` is a
+                batch in the ``influence_src_dataloader`` argument.
         inputs (tuple of Any): A batch of examples. Does not represent labels,
-                which are passed as `targets`.
+                which are passed as ``targets``.
         targets (tensor, optional): If computing TracIn scores on a loss function,
-                these are the labels corresponding to the batch `inputs`.
+                these are the labels corresponding to the batch ``inputs``.
                 Default: None
         k (int, optional): The number of proponents or opponents to return per test
                 instance.
                 Default: 5
-        proponents (bool, optional): Whether seeking proponents (`proponents=True`)
-                or opponents (`proponents=False`)
+        proponents (bool, optional): Whether seeking proponents (``proponents=True``)
+                or opponents (``proponents=False``)
                 Default: True
         show_progress (bool, optional): To compute the proponents (or opponents)
                 for the batch of examples, we perform computation for each batch in
-                training dataset `influence_src_dataloader`, If `show_progress` is
+                training dataset ``influence_src_dataloader``, If ``show_progress`` is
                 true, the progress of this computation will be displayed. In
                 particular, the number of batches for which the computation has
                 been performed will be displayed. It will try to use tqdm if
                 available for advanced features (e.g. time estimation). Otherwise,
                 it will fallback to a simple output of progress.
                 Default: False
-        desc (str, optional): If `show_progress` is true, this is the description to
-                show when displaying progress. If `desc` is none, no description is
+        desc (str, optional): If ``show_progress`` is true, this is the description to
+                show when displaying progress. If ``desc`` is none, no description is
                 shown.
                 Default: None
 
     Returns:
-        (indices, influence_scores): `indices` is a torch.long Tensor that contains the
-                indices of the proponents (or opponents) for each test example. Its
-                dimension is `(inputs_batch_size, k)`, where `inputs_batch_size` is the
-                number of examples in `inputs`. For example, if `proponents==True`,
-                `indices[i][j]` is the index of the example in training dataset
-                `influence_src_dataloader` with the k-th highest influence score for
-                the j-th example in `inputs`. `indices` is a `torch.long` tensor so that
-                it can directly be used to index other tensors. Each row of
-                `influence_scores` contains the influence scores for a different test
-                example, in sorted order. In particular, `influence_scores[i][j]` is
-                the influence score of example `indices[i][j]` in training dataset
-                `influence_src_dataloader` on example `i` in the test batch represented
-                by `inputs` and `targets`.
+        (indices, influence_scores): ``indices`` is a torch.long Tensor that contains
+                the indices of the proponents (or opponents) for each test example. Its
+                dimension is ``(inputs_batch_size, k)``, where ``inputs_batch_size`` is
+                the number of examples in ``inputs``. For example, if
+                ``proponents==True``, ``indices[i][j]`` is the index of the example in
+                training dataset ``influence_src_dataloader`` with the k-th highest
+                influence score for the j-th example in ``inputs``. ``indices`` is a
+                ``torch.long`` tensor so that it can directly be used to index other
+                tensors. Each row of ``influence_scores`` contains the influence scores
+                for a different test example, in sorted order. In particular,
+                ``influence_scores[i][j]`` is the influence score of example
+                ``indices[i][j]`` in training dataset ``influence_src_dataloader`` on
+                example ``i`` in the test batch represented by ``inputs`` and
+                ``targets``.
     """
     # For each test instance, maintain the best indices and corresponding distances
     # initially, these will be empty

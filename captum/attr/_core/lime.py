@@ -87,7 +87,7 @@ class LimeBase(PerturbationAttribution):
                     attribution, it is expected that forward_func returns a scalar
                     representing the entire batch.
             interpretable_model (Model): Model object to train interpretable model.
-                    A Model object provides a `fit` method to train the model,
+                    A Model object provides a ``fit`` method to train the model,
                     given a dataloader, with batches containing three tensors:
 
                     - interpretable_inputs: Tensor
@@ -95,7 +95,7 @@ class LimeBase(PerturbationAttribution):
                     - expected_outputs: Tensor [1D num_samples],
                     - weights: Tensor [1D num_samples]
 
-                    The model object must also provide a `representation` method to
+                    The model object must also provide a ``representation`` method to
                     access the appropriate coefficients or representation of the
                     interpretable model after fitting.
                     Some predefined interpretable linear models are provided in
@@ -317,7 +317,7 @@ class LimeBase(PerturbationAttribution):
                         Default: None
             n_samples (int, optional): The number of samples of the original
                         model used to train the surrogate interpretable model.
-                        Default: `50` if `n_samples` is not provided.
+                        Default: ``50`` if ``n_samples`` is not provided.
             perturbations_per_eval (int, optional): Allows multiple samples
                         to be processed simultaneously in one call to forward_fn.
                         Each forward pass will contain a maximum of
@@ -744,8 +744,8 @@ class Lime(LimeBase):
                     Other predefined interpretable linear models are provided in
                     captum._utils.models.linear_model.
 
-                    Alternatively, a custom model object must provide a `fit` method to
-                    train the model, given a dataloader, with batches containing
+                    Alternatively, a custom model object must provide a ``fit`` method
+                    to train the model, given a dataloader, with batches containing
                     three tensors:
 
                     - interpretable_inputs: Tensor
@@ -753,7 +753,7 @@ class Lime(LimeBase):
                     - expected_outputs: Tensor [1D num_samples],
                     - weights: Tensor [1D num_samples]
 
-                    The model object must also provide a `representation` method to
+                    The model object must also provide a ``representation`` method to
                     access the appropriate coefficients or representation of the
                     interpretable model after fitting.
 
@@ -914,7 +914,7 @@ class Lime(LimeBase):
                             inputs' tuple. This scalar value is broadcasted
                             for corresponding input tensor.
 
-                        In the cases when `baselines` is not provided, we internally
+                        In the cases when ``baselines`` is not provided, we internally
                         use zero scalar corresponding to each input tensor.
                         Default: None
             target (int, tuple, tensor or list, optional): Output indices for
@@ -954,7 +954,7 @@ class Lime(LimeBase):
                         arguments in inputs.
                         For a tensor, the first dimension of the tensor must
                         correspond to the number of examples. It will be
-                        repeated for each of `n_steps` along the integrated
+                        repeated for each of ``n_steps`` along the integrated
                         path. For all other types, the given argument is used
                         for all forward evaluations.
                         Note that attributions are not computed with respect
@@ -980,7 +980,7 @@ class Lime(LimeBase):
                         Default: None
             n_samples (int, optional): The number of samples of the original
                         model used to train the surrogate interpretable model.
-                        Default: `50` if `n_samples` is not provided.
+                        Default: ``50`` if ``n_samples`` is not provided.
             perturbations_per_eval (int, optional): Allows multiple samples
                         to be processed simultaneously in one call to forward_fn.
                         Each forward pass will contain a maximum of

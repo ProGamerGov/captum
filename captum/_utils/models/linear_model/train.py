@@ -35,10 +35,10 @@ def sgd_train_linear_model(
     r"""
     Trains a linear model with SGD. This will continue to iterate your
     dataloader until we converged to a solution or alternatively until we have
-    exhausted `max_epoch`.
+    exhausted ``max_epoch``.
 
-    Convergence is defined by the loss not changing by `threshold` amount for
-    `patience` number of iterations.
+    Convergence is defined by the loss not changing by ``threshold`` amount for
+    ``patience`` number of iterations.
 
     Args:
         model
@@ -49,19 +49,19 @@ def sgd_train_linear_model(
             y are typical pairs for supervised learning and w is a weight
             vector.
 
-            We will call `model._construct_model_params` with construct_kwargs
-            and the input features set to `x.shape[1]` (`x.shape[0]` corresponds
-            to the batch size). We assume that `len(x.shape) == 2`, i.e. the
+            We will call ``model._construct_model_params`` with construct_kwargs
+            and the input features set to ``x.shape[1]`` (``x.shape[0]`` corresponds
+            to the batch size). We assume that ``len(x.shape) == 2``, i.e. the
             tensor is flat. The number of output features will be set to
-            y.shape[1] or 1 (if `len(y.shape) == 1`); we require `len(y.shape)
-            <= 2`.
+            y.shape[1] or 1 (if ``len(y.shape) == 1``); we require ``len(y.shape)
+            <= 2``.
         max_epoch
             The maximum number of epochs to exhaust
         reduce_lr
             Whether or not to reduce the learning rate as iterations progress.
             Halves the learning rate when the training loss does not move. This
             uses torch.optim.lr_scheduler.ReduceLROnPlateau and uses the
-            parameters `patience` and `threshold`
+            parameters ``patience`` and ``threshold``
         initial_lr
             The initial learning rate to use.
         alpha
@@ -70,11 +70,11 @@ def sgd_train_linear_model(
             The loss to optimise for. This must accept three parameters:
             x1 (predicted), x2 (labels) and a weight vector
         reg_term
-            Regularization is defined by the `reg_term` norm of the weights.
-            Please use `None` if you do not wish to use regularization.
+            Regularization is defined by the ``reg_term`` norm of the weights.
+            Please use ``None`` if you do not wish to use regularization.
         patience
             Defines the number of iterations in a row the loss must remain
-            within `threshold` in order to be classified as converged.
+            within ``threshold`` in order to be classified as converged.
         threshold
             Threshold for convergence detection.
         running_loss_window
@@ -82,22 +82,22 @@ def sgd_train_linear_model(
             to determine when we have converged (along with reducing the
             learning rate).
 
-            The reported training loss will take the last `running_loss_window`
+            The reported training loss will take the last ``running_loss_window``
             iterations and average them.
 
-            If `None` we will approximate this to be the number of examples in
+            If ``None`` we will approximate this to be the number of examples in
             an epoch.
         init_scheme
             Initialization to use prior to training the linear model.
         device
-            The device to send the model and data to. If None then no `.to` call
+            The device to send the model and data to. If None then no ``.to`` call
             will be used.
         debug
             Whether to print the loss, learning rate per iteration
 
     Returns
         This will return the final training loss (averaged with
-        `running_loss_window`)
+        ``running_loss_window``)
     """
     loss_window: List[torch.Tensor] = []
     min_avg_loss = None
@@ -247,7 +247,7 @@ def sklearn_train_linear_model(
     r"""
     Alternative method to train with sklearn. This does introduce some slight
     overhead as we convert the tensors to numpy and then convert the resulting
-    trained model to a `LinearModel` object. However, this conversion
+    trained model to a ``LinearModel`` object. However, this conversion
     should be negligible.
 
     Please note that this assumes:
@@ -267,9 +267,9 @@ def sklearn_train_linear_model(
             The sklearn model to use to train the model. Please refer to
             sklearn.linear_model for a list of modules to use.
         construct_kwargs
-            Additional arguments provided to the `sklearn_trainer` constructor
+            Additional arguments provided to the ``sklearn_trainer`` constructor
         fit_kwargs
-            Other arguments to send to `sklearn_trainer`'s `.fit` method
+            Other arguments to send to ``sklearn_trainer``'s ``.fit`` method
     """
     from functools import reduce
 

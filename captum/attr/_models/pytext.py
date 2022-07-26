@@ -13,7 +13,7 @@ class PyTextInterpretableEmbedding(EmbeddingBase):
     generate the embeddings and subtract the baseline.
     To do so, we separate embedding layers from the model, compute the embeddings
     separately and do all operations needed outside of the model.
-    The original embedding layer is being replaced by `PyTextInterpretableEmbedding`
+    The original embedding layer is being replaced by ``PyTextInterpretableEmbedding``
     layer which passes precomputed embedding vectors to lower layers.
     """
 
@@ -102,7 +102,7 @@ class BaselineGenerator:
         r"""
         Generates baseline for input word and dict features. In the future we
         will extend it to support char and other features as well.
-        This baseline is entirely based on the `<pad>` token.
+        This baseline is entirely based on the ``<pad>`` token.
 
         Args
 
@@ -142,11 +142,11 @@ class BaselineGenerator:
          sia_transformer:
          fbcode/assistant/sia/transformer/sia_transformer.py
          sia_transformer generates dict features in a special gazetter format
-         See `fbsource/fbcode/pytext/models/embeddings/dict_embedding.py`
+         See ``fbsource/fbcode/pytext/models/embeddings/dict_embedding.py``
 
          It generates word dict feature embeddings for each word token.
 
-         The output of SIATransformer after running it on `<pad>` token
+         The output of SIATransformer after running it on ``<pad>`` token
          looks as following:
         OutputRecord(tokens=['<', 'pad', '>'],
                      token_ranges=[(0, 1), (1, 4), (4, 5)],
@@ -194,7 +194,7 @@ class BaselineGenerator:
 
 def configure_task_integ_grads_embeddings(task):
     r"""
-    Wraps Pytext's DocNN model embedding with `IntegratedGradientsEmbedding` for
+    Wraps Pytext's DocNN model embedding with ``IntegratedGradientsEmbedding`` for
     a given input task.
     IntegratedGradientsEmbedding allows to perform baseline related operations
 
@@ -218,7 +218,7 @@ def configure_task_integ_grads_embeddings(task):
 
 def configure_model_integ_grads_embeddings(model):
     r"""
-    Wraps Pytext's DocNN model embedding with `IntegratedGradientsEmbedding`
+    Wraps Pytext's DocNN model embedding with ``IntegratedGradientsEmbedding``
     IntegratedGradientsEmbedding allows to perform baseline related operations
 
     Args
@@ -259,7 +259,7 @@ def reshape_dict_features(
     r"""
     Creates one-sample batch for dict features for sanity check purposes
     It reads and reshapes id, weight and seq_length feature arrays for given
-    input index `idx` from the input batch
+    input index ``idx`` from the input batch
 
     Args
 

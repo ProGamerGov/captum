@@ -67,10 +67,10 @@ class NeuronDeepLift(NeuronAttribution, GradientAttribution):
                         More detailed can be found here:
                         https://arxiv.org/abs/1711.06104
 
-                        In case of Neuron DeepLift, if `multiply_by_inputs`
+                        In case of Neuron DeepLift, if ``multiply_by_inputs``
                         is set to True, final sensitivity scores
                         are being multiplied by (inputs - baselines).
-                        This flag applies only if `custom_attribution_func` is
+                        This flag applies only if ``custom_attribution_func`` is
                         set to None.
         """
         NeuronAttribution.__init__(self, model, layer)
@@ -161,7 +161,7 @@ class NeuronDeepLift(NeuronAttribution, GradientAttribution):
                             inputs' tuple. This scalar value is broadcasted
                             for corresponding input tensor.
 
-                        In the cases when `baselines` is not provided, we internally
+                        In the cases when ``baselines`` is not provided, we internally
                         use zero scalar corresponding to each input tensor.
 
                         Default: None
@@ -178,7 +178,7 @@ class NeuronDeepLift(NeuronAttribution, GradientAttribution):
                         Default: None
             attribute_to_neuron_input (bool, optional): Indicates whether to
                         compute the attributions with respect to the neuron input
-                        or output. If `attribute_to_neuron_input` is set to True
+                        or output. If ``attribute_to_neuron_input`` is set to True
                         then the attributions will be computed with respect to
                         neuron's inputs, otherwise it will be computed with respect
                         to neuron's outputs.
@@ -198,11 +198,11 @@ class NeuronDeepLift(NeuronAttribution, GradientAttribution):
 
                         In case this function is not provided, we use the default
                         logic defined as: multipliers * (inputs - baselines)
-                        It is assumed that all input arguments, `multipliers`,
-                        `inputs` and `baselines` are provided in tuples of same
-                        length. `custom_attribution_func` returns a tuple of
+                        It is assumed that all input arguments, ``multipliers``,
+                        ``inputs`` and ``baselines`` are provided in tuples of same
+                        length. ``custom_attribution_func`` returns a tuple of
                         attribution tensors that have the same length as the
-                        `inputs`.
+                        ``inputs``.
                         Default: None
 
         Returns:
@@ -265,12 +265,12 @@ class NeuronDeepLift(NeuronAttribution, GradientAttribution):
 class NeuronDeepLiftShap(NeuronAttribution, GradientAttribution):
     r"""
     Extends NeuronAttribution and uses LayerDeepLiftShap algorithms and
-    approximates SHAP values for given input `layer` and `neuron_selector`.
+    approximates SHAP values for given input ``layer`` and ``neuron_selector``.
     For each input sample - baseline pair it computes DeepLift attributions
-    with respect to inputs or outputs of given `layer` and `neuron_selector`
+    with respect to inputs or outputs of given ``layer`` and ``neuron_selector``
     averages resulting attributions across baselines. Whether to compute the
     attributions with respect to the inputs or outputs of the layer is defined
-    by the input flag `attribute_to_layer_input`.
+    by the input flag ``attribute_to_layer_input``.
     More details about the algorithm can be found here:
 
     https://papers.nips.cc/paper/7062-a-unified-approach-to-interpreting-model-predictions.pdf
@@ -310,10 +310,10 @@ class NeuronDeepLiftShap(NeuronAttribution, GradientAttribution):
                         More detailed can be found here:
                         https://arxiv.org/abs/1711.06104
 
-                        In case of Neuron DeepLift Shap, if `multiply_by_inputs`
+                        In case of Neuron DeepLift Shap, if ``multiply_by_inputs``
                         is set to True, final sensitivity scores
                         are being multiplied by (inputs - baselines).
-                        This flag applies only if `custom_attribution_func` is
+                        This flag applies only if ``custom_attribution_func`` is
                         set to None.
         """
         NeuronAttribution.__init__(self, model, layer)
@@ -397,7 +397,7 @@ class NeuronDeepLiftShap(NeuronAttribution, GradientAttribution):
                           the dimensions of the corresponding input tensor
                           starting from the second dimension.
 
-                        - callable function, optionally takes `inputs` as an
+                        - callable function, optionally takes ``inputs`` as an
                           argument and either returns a single tensor
                           or a tuple of those.
 
@@ -416,7 +416,7 @@ class NeuronDeepLiftShap(NeuronAttribution, GradientAttribution):
                         Default: None
             attribute_to_neuron_input (bool, optional): Indicates whether to
                         compute the attributions with respect to the neuron input
-                        or output. If `attribute_to_neuron_input` is set to True
+                        or output. If ``attribute_to_neuron_input`` is set to True
                         then the attributions will be computed with respect to
                         neuron's inputs, otherwise it will be computed with respect
                         to neuron's outputs.
@@ -436,11 +436,11 @@ class NeuronDeepLiftShap(NeuronAttribution, GradientAttribution):
 
                         In case this function is not provided, we use the default
                         logic defined as: multipliers * (inputs - baselines)
-                        It is assumed that all input arguments, `multipliers`,
-                        `inputs` and `baselines` are provided in tuples of same
-                        length. `custom_attribution_func` returns a tuple of
+                        It is assumed that all input arguments, ``multipliers``,
+                        ``inputs`` and ``baselines`` are provided in tuples of same
+                        length. ``custom_attribution_func`` returns a tuple of
                         attribution tensors that have the same length as the
-                        `inputs`.
+                        ``inputs``.
                         Default: None
 
         Returns:

@@ -60,7 +60,7 @@ class NeuronIntegratedGradients(NeuronAttribution, GradientAttribution):
                         https://arxiv.org/abs/1711.06104
 
                         In case of Neuron Integrated Gradients,
-                        if `multiply_by_inputs` is set to True, final
+                        if ``multiply_by_inputs`` is set to True, final
                         sensitivity scores are being multiplied
                         by (inputs - baselines).
 
@@ -151,7 +151,7 @@ class NeuronIntegratedGradients(NeuronAttribution, GradientAttribution):
                             inputs' tuple. This scalar value is broadcasted
                             for corresponding input tensor.
 
-                        In the cases when `baselines` is not provided, we internally
+                        In the cases when ``baselines`` is not provided, we internally
                         use zero scalar corresponding to each input tensor.
 
                         Default: None
@@ -166,7 +166,7 @@ class NeuronIntegratedGradients(NeuronAttribution, GradientAttribution):
                         arguments in inputs.
                         For a tensor, the first dimension of the tensor must
                         correspond to the number of examples. It will be
-                        repeated for each of `n_steps` along the integrated
+                        repeated for each of ``n_steps`` along the integrated
                         path. For all other types, the given argument is used
                         for all forward evaluations.
                         Note that attributions are not computed with respect
@@ -175,9 +175,9 @@ class NeuronIntegratedGradients(NeuronAttribution, GradientAttribution):
             n_steps (int, optional): The number of steps used by the approximation
                         method. Default: 50.
             method (str, optional): Method for approximating the integral,
-                        one of `riemann_right`, `riemann_left`, `riemann_middle`,
-                        `riemann_trapezoid` or `gausslegendre`.
-                        Default: `gausslegendre` if no method is provided.
+                        one of ``riemann_right``, ``riemann_left``, ``riemann_middle``,
+                        ``riemann_trapezoid`` or ``gausslegendre``.
+                        Default: ``gausslegendre`` if no method is provided.
             internal_batch_size (int, optional): Divides total #steps * #examples
                         data points into chunks of size at most internal_batch_size,
                         which are computed (forward / backward passes)
@@ -191,7 +191,7 @@ class NeuronIntegratedGradients(NeuronAttribution, GradientAttribution):
                         Default: None
             attribute_to_neuron_input (bool, optional): Indicates whether to
                         compute the attributions with respect to the neuron input
-                        or output. If `attribute_to_neuron_input` is set to True
+                        or output. If ``attribute_to_neuron_input`` is set to True
                         then the attributions will be computed with respect to
                         neuron's inputs, otherwise it will be computed with respect
                         to neuron's outputs.

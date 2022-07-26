@@ -23,19 +23,19 @@ class NeuronGradientShap(NeuronAttribution, GradientAttribution):
 
     GradientShap approximates SHAP values by computing the expectations of
     gradients by randomly sampling from the distribution of baselines/references.
-    It adds white noise to each input sample `n_samples` times, selects a
+    It adds white noise to each input sample ``n_samples`` times, selects a
     random baseline from baselines' distribution and a random point along the
     path between the baseline and the input, and computes the gradient of the
-    neuron with index `neuron_selector` with respect to those selected random
+    neuron with index ``neuron_selector`` with respect to those selected random
     points. The final SHAP values represent the expected values of
-    `gradients * (inputs - baselines)`.
+    ``gradients * (inputs - baselines)``.
 
     GradientShap makes an assumption that the input features are independent
     and that the explanation model is linear, meaning that the explanations
     are modeled through the additive composition of feature effects.
     Under those assumptions, SHAP value can be approximated as the expectation
-    of gradients that are computed for randomly generated `n_samples` input
-    samples after adding gaussian noise `n_samples` times to each input for
+    of gradients that are computed for randomly generated ``n_samples`` input
+    samples after adding gaussian noise ``n_samples`` times to each input for
     different baselines/references.
 
     In some sense it can be viewed as an approximation of integrated gradients
@@ -61,16 +61,17 @@ class NeuronGradientShap(NeuronAttribution, GradientAttribution):
             layer (torch.nn.Module): Layer for which neuron attributions are computed.
                         The output size of the attribute method matches the
                         dimensions of the inputs or ouputs of the neuron with
-                        index `neuron_selector` in this layer, depending on whether
+                        index ``neuron_selector`` in this layer, depending on whether
                         we attribute to the inputs or outputs of the neuron.
                         Currently, it is assumed that the inputs or the outputs
                         of the neurons in this layer, depending on which one is
                         used for attribution, can only be a single tensor.
-            device_ids (list of int): Device ID list, necessary only if forward_func
-                        applies a DataParallel model. This allows reconstruction of
-                        intermediate outputs from batched results across devices.
-                        If forward_func is given as the DataParallel model itself,
-                        then it is not necessary to provide this argument.
+            device_ids (list of int): Device ID list, necessary only if
+                        ``forward_func`` applies a DataParallel model. This allows
+                        reconstruction of intermediate outputs from batched results
+                        across devices. If ``forward_func`` is given as the
+                        DataParallel model itself, then it is not necessary to provide
+                        this argument.
             multiply_by_inputs (bool, optional): Indicates whether to factor
                         model inputs' multiplier in the final attribution scores.
                         In the literature this is also known as local vs global
@@ -82,7 +83,7 @@ class NeuronGradientShap(NeuronAttribution, GradientAttribution):
                         https://arxiv.org/abs/1711.06104
 
                         In case of Neuron Gradient SHAP,
-                        if `multiply_by_inputs` is set to True, the
+                        if ``multiply_by_inputs`` is set to True, the
                         sensitivity scores for scaled inputs are
                         being multiplied by (inputs - baselines).
         """
@@ -107,9 +108,9 @@ class NeuronGradientShap(NeuronAttribution, GradientAttribution):
         Args:
 
             inputs (tensor or tuple of tensors): Input for which SHAP attribution
-                        values are computed. If `forward_func` takes a single
+                        values are computed. If ``forward_func`` takes a single
                         tensor as input, a single input tensor should be provided.
-                        If `forward_func` takes multiple tensors as input, a tuple
+                        If ``forward_func`` takes multiple tensors as input, a tuple
                         of the input tensors should be provided. It is assumed
                         that for all given input tensors, dimension 0 corresponds
                         to the number of examples, and if multiple input tensors
@@ -164,7 +165,7 @@ class NeuronGradientShap(NeuronAttribution, GradientAttribution):
                           the dimensions of the corresponding input tensor
                           starting from the second dimension.
 
-                        - callable function, optionally takes `inputs` as an
+                        - callable function, optionally takes ``inputs`` as an
                           argument and either returns a single tensor
                           or a tuple of those.
 
@@ -173,10 +174,10 @@ class NeuronGradientShap(NeuronAttribution, GradientAttribution):
             n_samples (int, optional): The number of randomly generated examples
                         per sample in the input batch. Random examples are
                         generated by adding gaussian random noise to each sample.
-                        Default: `5` if `n_samples` is not provided.
+                        Default: ``5`` if ``n_samples`` is not provided.
             stdevs    (float, or a tuple of float optional): The standard deviation
                         of gaussian noise with zero mean that is added to each
-                        input in the batch. If `stdevs` is a single float value
+                        input in the batch. If ``stdevs`` is a single float value
                         then that same value is used for all inputs. If it is
                         a tuple, then it must have the same length as the inputs
                         tuple. In this case, each stdev value in the stdevs tuple
@@ -190,14 +191,14 @@ class NeuronGradientShap(NeuronAttribution, GradientAttribution):
                         any arbitrary python type of any shape.
                         In case of the ND tensor the first dimension of the
                         tensor must correspond to the batch size. It will be
-                        repeated for each `n_steps` for each randomly generated
+                        repeated for each ``n_steps`` for each randomly generated
                         input sample.
                         Note that the gradients are not computed with respect
                         to these arguments.
                         Default: None
             attribute_to_neuron_input (bool, optional): Indicates whether to
                         compute the attributions with respect to the neuron input
-                        or output. If `attribute_to_neuron_input` is set to True
+                        or output. If ``attribute_to_neuron_input`` is set to True
                         then the attributions will be computed with respect to
                         neuron's inputs, otherwise it will be computed with respect
                         to neuron's outputs.

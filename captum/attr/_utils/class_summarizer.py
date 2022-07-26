@@ -13,7 +13,7 @@ from torch import Tensor
 class ClassSummarizer(Summarizer):
     r"""
     Used to keep track of summaries for associated classes. The
-    classes/labels can be of any type that are supported by `dict`.
+    classes/labels can be of any type that are supported by ``dict``.
 
     This also keeps track of an aggregate of all class summaries.
     """
@@ -41,8 +41,8 @@ class ClassSummarizer(Summarizer):
                 dimension of this input must be associated to
                 the batch size of the inputs.
             labels (int, tuple, tensor or list, optional):
-                The associated labels for `x`. If Any, we
-                assume `labels` represents the label for all inputs in `x`.
+                The associated labels for ``x``. If Any, we
+                assume ``labels`` represents the label for all inputs in ``x``.
 
                 If this is None we simply aggregate the total summary.
         """

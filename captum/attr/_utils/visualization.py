@@ -132,37 +132,37 @@ def visualize_image_attr(
         method (str, optional): Chosen method for visualizing attribution.
                     Supported options are:
 
-                    1. `heat_map` - Display heat map of chosen attributions
+                    1. ``heat_map`` - Display heat map of chosen attributions
 
-                    2. `blended_heat_map` - Overlay heat map over greyscale
+                    2. ``blended_heat_map`` - Overlay heat map over greyscale
                        version of original image. Parameter alpha_overlay
                        corresponds to alpha of heat map.
 
-                    3. `original_image` - Only display original image.
+                    3. ``original_image`` - Only display original image.
 
-                    4. `masked_image` - Mask image (pixel-wise multiply)
+                    4. ``masked_image`` - Mask image (pixel-wise multiply)
                        by normalized attribution values.
 
-                    5. `alpha_scaling` - Sets alpha channel of each pixel
+                    5. ``alpha_scaling`` - Sets alpha channel of each pixel
                        to be equal to normalized attribution value.
 
-                    Default: `heat_map`
+                    Default: ``heat_map``
         sign (str, optional): Chosen sign of attributions to visualize. Supported
                     options are:
 
-                    1. `positive` - Displays only positive pixel attributions.
+                    1. ``positive`` - Displays only positive pixel attributions.
 
-                    2. `absolute_value` - Displays absolute value of
+                    2. ``absolute_value`` - Displays absolute value of
                        attributions.
 
-                    3. `negative` - Displays only negative pixel attributions.
+                    3. ``negative`` - Displays only negative pixel attributions.
 
-                    4. `all` - Displays both positive and negative attribution
-                       values. This is not supported for `masked_image` or
-                       `alpha_scaling` modes, since signed information cannot
+                    4. ``all`` - Displays both positive and negative attribution
+                       values. This is not supported for ``masked_image`` or
+                       ``alpha_scaling`` modes, since signed information cannot
                        be represented in these modes.
 
-                    Default: `absolute_value`
+                    Default: ``absolute_value``
         plt_fig_axis (tuple, optional): Tuple of matplotlib.pyplot.figure and axis
                     on which to visualize. If None is provided, then a new figure
                     and axis are created.
@@ -170,7 +170,7 @@ def visualize_image_attr(
         outlier_perc (float or int, optional): Top attribution values which
                     correspond to a total of outlier_perc percentage of the
                     total attribution are set to 1 and scaling is performed
-                    using the minimum of these values. For sign=`all`, outliers
+                    using the minimum of these values. For sign=``all``, outliers
                     and scale value are computed using absolute value of
                     attributions.
                     Default: 2
@@ -181,7 +181,7 @@ def visualize_image_attr(
                     argument is only used for visualizations displaying heatmaps.
                     Default: None
         alpha_overlay (float, optional): Alpha to set for heatmap when using
-                    `blended_heat_map` visualization mode, which overlays the
+                    ``blended_heat_map`` visualization mode, which overlays the
                     heat map over the greyscaled original image.
                     Default: 0.5
         show_colorbar (bool, optional): Displays colorbar for heatmap below
@@ -378,7 +378,7 @@ def visualize_image_attr_multiple(
                     Default: True.
         **kwargs (Any, optional): Any additional arguments which will be passed
                     to every individual visualization. Such arguments include
-                    `show_colorbar`, `alpha_overlay`, `cmap`, etc.
+                    ``show_colorbar``, ``alpha_overlay``, ``cmap``, etc.
 
 
     Returns:
@@ -464,12 +464,12 @@ def visualize_timeseries_attr(
 
         attr (numpy.ndarray): Numpy array corresponding to attributions to be
                     visualized. Shape must be in the form (N, C) with channels
-                    as last dimension, unless `channels_last` is set to True.
+                    as last dimension, unless ``channels_last`` is set to True.
                     Shape must also match that of the timeseries data.
         data (numpy.ndarray): Numpy array corresponding to the original,
                     equidistant timeseries data. Shape must be in the form
                     (N, C) with channels as last dimension, unless
-                    `channels_last` is set to true.
+                    ``channels_last`` is set to true.
         x_values (numpy.ndarray, optional): Numpy array corresponding to the
                     points on the x-axis. Shape must be in the form (N, ). If
                     not provided, integers from 0 to N-1 are used.
@@ -477,34 +477,34 @@ def visualize_timeseries_attr(
         method (str, optional): Chosen method for visualizing attributions
                     overlaid onto data. Supported options are:
 
-                    1. `overlay_individual` - Plot each channel individually in
+                    1. ``overlay_individual`` - Plot each channel individually in
                         a separate panel, and overlay the attributions for each
-                        channel as a heat map. The `alpha_overlay` parameter
+                        channel as a heat map. The ``alpha_overlay`` parameter
                         controls the alpha of the heat map.
 
-                    2. `overlay_combined` - Plot all channels in the same panel,
+                    2. ``overlay_combined`` - Plot all channels in the same panel,
                         and overlay the average attributions as a heat map.
 
-                    3. `colored_graph` - Plot each channel in a separate panel,
+                    3. ``colored_graph`` - Plot each channel in a separate panel,
                         and color the graphs according to the attribution
                         values. Works best with color maps that does not contain
                         white or very bright colors.
 
-                    Default: `overlay_individual`
+                    Default: ``overlay_individual``
         sign (str, optional): Chosen sign of attributions to visualize.
                     Supported options are:
 
-                    1. `positive` - Displays only positive pixel attributions.
+                    1. ``positive`` - Displays only positive pixel attributions.
 
-                    2. `absolute_value` - Displays absolute value of
+                    2. ``absolute_value`` - Displays absolute value of
                         attributions.
 
-                    3. `negative` - Displays only negative pixel attributions.
+                    3. ``negative`` - Displays only negative pixel attributions.
 
-                    4. `all` - Displays both positive and negative attribution
+                    4. ``all`` - Displays both positive and negative attribution
                         values.
 
-                    Default: `absolute_value`
+                    Default: ``absolute_value``
         channel_labels (list of str, optional): List of labels
                     corresponding to each channel in data.
                     Default: None
@@ -519,7 +519,7 @@ def visualize_timeseries_attr(
         outlier_perc (float or int, optional): Top attribution values which
                     correspond to a total of outlier_perc percentage of the
                     total attribution are set to 1 and scaling is performed
-                    using the minimum of these values. For sign=`all`, outliers
+                    using the minimum of these values. For sign=``all``, outliers
                     and scale value are computed using absolute value of
                     attributions.
                     Default: 2
@@ -530,7 +530,7 @@ def visualize_timeseries_attr(
                     argument is only used for visualizations displaying heatmaps.
                     Default: None
         alpha_overlay (float, optional): Alpha to set for heatmap when using
-                    `blended_heat_map` visualization mode, which overlays the
+                    ``blended_heat_map`` visualization mode, which overlays the
                     heat map over the greyscaled original image.
                     Default: 0.7
         show_colorbar (bool): Displays colorbar for heat map below
@@ -546,7 +546,7 @@ def visualize_timeseries_attr(
                     figure object without showing.
                     Default: True.
         pyplot_kwargs: Keyword arguments forwarded to plt.plot, for example
-                    `linewidth=3`, `color='black'`, etc
+                    ``linewidth=3``, ``color='black'``, etc
 
     Returns:
         2-element tuple of **figure**, **axis**:

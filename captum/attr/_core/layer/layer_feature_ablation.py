@@ -91,7 +91,7 @@ class LayerFeatureAblation(LayerAttribution, PerturbationAttribution):
                         broadcastable to match it), based
                         on whether we are attributing to the input or output
                         of the target layer.
-                        In the cases when `baselines` is not provided, we internally
+                        In the cases when ``baselines`` is not provided, we internally
                         use zero as the baseline for each neuron.
                         Default: None
             target (int, tuple, tensor or list, optional): Output indices for
@@ -149,7 +149,7 @@ class LayerFeatureAblation(LayerAttribution, PerturbationAttribution):
                         Default: None
             attribute_to_layer_input (bool, optional): Indicates whether to
                         compute the attributions with respect to the layer input
-                        or output. If `attribute_to_layer_input` is set to True
+                        or output. If ``attribute_to_layer_input`` is set to True
                         then the attributions will be computed with respect to
                         layer's inputs, otherwise it will be computed with respect
                         to layer's outputs.
@@ -178,7 +178,7 @@ class LayerFeatureAblation(LayerAttribution, PerturbationAttribution):
                         the input or output of the given layer, depending on
                         whether we attribute to the inputs or outputs
                         of the layer which is decided by the input flag
-                        `attribute_to_layer_input`
+                        ``attribute_to_layer_input``
                         Attributions are returned in a tuple if
                         the layer inputs / outputs contain multiple tensors,
                         otherwise a single tensor is returned.

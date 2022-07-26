@@ -21,10 +21,10 @@ from torch import Tensor
 def default_perturb_func(
     inputs: TensorOrTupleOfTensorsGeneric, perturb_radius: float = 0.02
 ) -> Tuple[Tensor, ...]:
-    r"""A default function for generating perturbations of `inputs`
-    within perturbation radius of `perturb_radius`.
+    r"""A default function for generating perturbations of ``inputs``
+    within perturbation radius of ``perturb_radius``.
     This function samples uniformly random from the L_Infinity ball
-    with `perturb_radius` radius.
+    with ``perturb_radius`` radius.
     The users can override this function if they prefer to use a
     different perturbation function.
 
@@ -32,7 +32,7 @@ def default_perturb_func(
 
         inputs (tensor or a tuple of tensors): The input tensors that we'd
                 like to perturb by adding a random noise sampled unifromly
-                random from an L_infinity ball with a radius `perturb_radius`.
+                random from an L_infinity ball with a radius ``perturb_radius``.
 
         radius (float): A radius used for sampling from
                 an L_infinity ball.
@@ -41,7 +41,7 @@ def default_perturb_func(
 
         perturbed_input (tuple(tensor)): A list of perturbed inputs that
                 are createed by adding noise sampled uniformly random
-                from L_infiniy ball with a radius `perturb_radius` to the
+                from L_infiniy ball with a radius ``perturb_radius`` to the
                 original inputs.
 
     """
@@ -74,13 +74,13 @@ def sensitivity_max(
     `Interpretation of Neural Networks is Fragile`
     https://www.aaai.org/ojs/index.php/AAAI/article/view/4252
 
-    `sensitivity_max` metric measures maximum sensitivity of an explanation
+    ``sensitivity_max`` metric measures maximum sensitivity of an explanation
     using Monte Carlo sampling-based approximation. By default in order to
     do so it samples multiple data points from a sub-space of an L-Infinity
-    ball that has a `perturb_radius` radius using `default_perturb_func`
+    ball that has a ``perturb_radius`` radius using ``default_perturb_func``
     default perturbation function. In a general case users can
     use any L_p ball or any other custom sampling technique that they
-    prefer by providing a custom `perturb_func`.
+    prefer by providing a custom ``perturb_func``.
 
     Note that max sensitivity is similar to Lipschitz Continuity metric
     however it is more robust and easier to estimate.
@@ -104,15 +104,15 @@ def sensitivity_max(
     Args:
 
         explanation_func (Callable):
-                This function can be the `attribute` method of an
+                This function can be the ``attribute`` method of an
                 attribution algorithm or any other explanation method
                 that returns the explanations.
 
         inputs (tensor or tuple of tensors): Input for which
-                explanations are computed. If `explanation_func` takes a
+                explanations are computed. If ``explanation_func`` takes a
                 single tensor as input, a single input tensor should
                 be provided.
-                If `explanation_func` takes multiple tensors as input, a tuple
+                If ``explanation_func`` takes multiple tensors as input, a tuple
                 of the input tensors should be provided. It is assumed
                 that for all given input tensors, dimension 0 corresponds
                 to the number of examples (aka batch size), and if
@@ -121,32 +121,32 @@ def sensitivity_max(
 
         perturb_func (Callable):
                 The perturbation function of model inputs. This function takes
-                model inputs and optionally `perturb_radius` if
+                model inputs and optionally ``perturb_radius`` if
                 the function takes more than one argument and returns
                 perturbed inputs.
 
                 If there are more than one inputs passed to sensitivity function those
-                will be passed to `perturb_func` as tuples in the same order as they
+                will be passed to ``perturb_func`` as tuples in the same order as they
                 are passed to sensitivity function.
 
-                It is important to note that for performance reasons `perturb_func`
+                It is important to note that for performance reasons ``perturb_func``
                 isn't called for each example individually but on a batch of
-                input examples that are repeated `max_examples_per_batch / batch_size`
+                input examples that are repeated ``max_examples_per_batch / batch_size``
                 times within the batch.
 
             Default: default_perturb_func
         perturb_radius (float, optional): The epsilon radius used for sampling.
-            In the `default_perturb_func` it is used as the radius of
+            In the ``default_perturb_func`` it is used as the radius of
             the L-Infinity ball. In a general case it can serve as a radius of
             any L_p nom.
-            This argument is passed to `perturb_func` if it takes more than
+            This argument is passed to ``perturb_func`` if it takes more than
             one argument.
 
             Default: 0.02
         n_perturb_samples (int, optional): The number of times input tensors
                 are perturbed. Each input example in the inputs tensor is
-                expanded `n_perturb_samples` times before calling
-                `perturb_func` function.
+                expanded ``n_perturb_samples`` times before calling
+                ``perturb_func`` function.
 
                 Default: 10
         norm_ord (int, float, inf, -inf, 'fro', 'nuc', optional): The type of norm
@@ -157,22 +157,22 @@ def sensitivity_max(
                 Default: 'fro'
         max_examples_per_batch (int, optional): The number of maximum input
                 examples that are processed together. In case the number of
-                examples (`input batch size * n_perturb_samples`) exceeds
-                `max_examples_per_batch`, they will be sliced
-                into batches of `max_examples_per_batch` examples and processed
-                in a sequential order. If `max_examples_per_batch` is None, all
-                examples are processed together. `max_examples_per_batch` should
-                at least be equal `input batch size` and at most
-                `input batch size * n_perturb_samples`.
+                examples (``input batch size * n_perturb_samples``) exceeds
+                ``max_examples_per_batch``, they will be sliced
+                into batches of ``max_examples_per_batch`` examples and processed
+                in a sequential order. If ``max_examples_per_batch`` is None, all
+                examples are processed together. ``max_examples_per_batch`` should
+                at least be equal ``input batch size`` and at most
+                ``input batch size * n_perturb_samples``.
 
                 Default: None
          **kwargs (Any, optional): Contains a list of arguments that are passed
-                to `explanation_func` explanation function which in some cases
-                could be the `attribute` function of an attribution algorithm.
+                to ``explanation_func`` explanation function which in some cases
+                could be the ``attribute`` function of an attribution algorithm.
                 Any additional arguments that need be passed to the explanation
                 function should be included here.
                 For instance, such arguments include:
-                `additional_forward_args`, `baselines` and `target`.
+                ``additional_forward_args``, ``baselines`` and ``target``.
 
     Returns:
 
@@ -198,10 +198,10 @@ def sensitivity_max(
     ) -> TensorOrTupleOfTensorsGeneric:
         r"""
         The perturbations are generated for each example
-        `current_n_perturb_samples` times.
+        ``current_n_perturb_samples`` times.
 
-        For perfomance reasons we are not calling `perturb_func` on each example but
-        on a batch that contains `current_n_perturb_samples` repeated instances
+        For perfomance reasons we are not calling ``perturb_func`` on each example but
+        on a batch that contains ``current_n_perturb_samples`` repeated instances
         per example.
         """
         inputs_expanded: Union[Tensor, Tuple[Tensor, ...]] = tuple(

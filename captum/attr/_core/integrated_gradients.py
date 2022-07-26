@@ -65,7 +65,7 @@ class IntegratedGradients(GradientAttribution):
                     More detailed can be found here:
                     https://arxiv.org/abs/1711.06104
 
-                    In case of integrated gradients, if `multiply_by_inputs`
+                    In case of integrated gradients, if ``multiply_by_inputs``
                     is set to True, final sensitivity scores are being multiplied by
                     (inputs - baselines).
         """
@@ -124,7 +124,7 @@ class IntegratedGradients(GradientAttribution):
         (in case it is provided, otherwise it assumes that output is a
         scalar) to the inputs of the model using the approach described above.
 
-        In addition to that it also returns, if `return_convergence_delta` is
+        In addition to that it also returns, if ``return_convergence_delta`` is
         set to True, integral approximation delta based on the completeness
         property of integrated gradients.
 
@@ -163,7 +163,7 @@ class IntegratedGradients(GradientAttribution):
                             inputs' tuple. This scalar value is broadcasted
                             for corresponding input tensor.
 
-                        In the cases when `baselines` is not provided, we internally
+                        In the cases when ``baselines`` is not provided, we internally
                         use zero scalar corresponding to each input tensor.
 
                         Default: None
@@ -203,7 +203,7 @@ class IntegratedGradients(GradientAttribution):
                         arguments in inputs.
                         For a tensor, the first dimension of the tensor must
                         correspond to the number of examples. It will be
-                        repeated for each of `n_steps` along the integrated
+                        repeated for each of ``n_steps`` along the integrated
                         path. For all other types, the given argument is used
                         for all forward evaluations.
                         Note that attributions are not computed with respect
@@ -212,9 +212,9 @@ class IntegratedGradients(GradientAttribution):
             n_steps (int, optional): The number of steps used by the approximation
                         method. Default: 50.
             method (str, optional): Method for approximating the integral,
-                        one of `riemann_right`, `riemann_left`, `riemann_middle`,
-                        `riemann_trapezoid` or `gausslegendre`.
-                        Default: `gausslegendre` if no method is provided.
+                        one of ``riemann_right``, ``riemann_left``, ``riemann_middle``,
+                        ``riemann_trapezoid`` or ``gausslegendre``.
+                        Default: ``gausslegendre`` if no method is provided.
             internal_batch_size (int, optional): Divides total #steps * #examples
                         data points into chunks of size at most internal_batch_size,
                         which are computed (forward / backward passes)
@@ -227,7 +227,7 @@ class IntegratedGradients(GradientAttribution):
                         processed in one batch.
                         Default: None
             return_convergence_delta (bool, optional): Indicates whether to return
-                    convergence delta or not. If `return_convergence_delta`
+                    convergence delta or not. If ``return_convergence_delta``
                     is set to True convergence delta will be returned in
                     a tuple following attributions.
                     Default: False

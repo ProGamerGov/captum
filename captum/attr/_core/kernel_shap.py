@@ -121,7 +121,7 @@ class KernelShap(Lime):
                             inputs' tuple. This scalar value is broadcasted
                             for corresponding input tensor.
 
-                        In the cases when `baselines` is not provided, we internally
+                        In the cases when ``baselines`` is not provided, we internally
                         use zero scalar corresponding to each input tensor.
                         Default: None
             target (int, tuple, tensor or list, optional): Output indices for
@@ -161,7 +161,7 @@ class KernelShap(Lime):
                         arguments in inputs.
                         For a tensor, the first dimension of the tensor must
                         correspond to the number of examples. It will be
-                        repeated for each of `n_steps` along the integrated
+                        repeated for each of ``n_steps`` along the integrated
                         path. For all other types, the given argument is used
                         for all forward evaluations.
                         Note that attributions are not computed with respect
@@ -187,7 +187,7 @@ class KernelShap(Lime):
                         Default: None
             n_samples (int, optional): The number of samples of the original
                         model used to train the surrogate interpretable model.
-                        Default: `50` if `n_samples` is not provided.
+                        Default: ``50`` if ``n_samples`` is not provided.
             perturbations_per_eval (int, optional): Allows multiple samples
                         to be processed simultaneously in one call to forward_fn.
                         Each forward pass will contain a maximum of

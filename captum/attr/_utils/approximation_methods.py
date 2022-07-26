@@ -25,10 +25,10 @@ SUPPORTED_METHODS = SUPPORTED_RIEMANN_METHODS + ["gausslegendre"]
 def approximation_parameters(
     method: str,
 ) -> Tuple[Callable[[int], List[float]], Callable[[int], List[float]]]:
-    r"""Retrieves parameters for the input approximation `method`
+    r"""Retrieves parameters for the input approximation ``method``
 
     Args:
-        method: The name of the approximation method. Currently only `riemann`
+        method: The name of the approximation method. Currently only ``riemann``
                 and gauss legendre are
     """
     if method in SUPPORTED_RIEMANN_METHODS:
@@ -46,17 +46,17 @@ def riemann_builders(
     Args:
 
          n: The number of integration steps
-         method: `left`, `right`, `middle` and `trapezoid` riemann
+         method: ``left``, ``right``, ``middle`` and ``trapezoid`` riemann
 
     Returns:
         2-element tuple of **step_sizes**, **alphas**:
         - **step_sizes** (*callable*):
-                    `step_sizes` takes the number of steps as an
+                    ``step_sizes`` takes the number of steps as an
                     input argument and returns an array of steps sizes which
                     sum is smaller than or equal to one.
 
         - **alphas** (*callable*):
-                    `alphas` takes the number of steps as an input argument
+                    ``alphas`` takes the number of steps as an input argument
                     and returns the multipliers/coefficients for the inputs
                     of integrand in the range of [0, 1]
 
@@ -95,7 +95,7 @@ def riemann_builders(
 def gauss_legendre_builders() -> Tuple[
     Callable[[int], List[float]], Callable[[int], List[float]]
 ]:
-    r"""Numpy's `np.polynomial.legendre` function helps to compute step sizes
+    r"""Numpy's ``np.polynomial.legendre`` function helps to compute step sizes
     and alpha coefficients using gauss-legendre quadrature rule.
     Since numpy returns the integration parameters in different scales we need to
     rescale them to adjust to the desired scale.
@@ -111,12 +111,12 @@ def gauss_legendre_builders() -> Tuple[
     Returns:
         2-element tuple of **step_sizes**, **alphas**:
         - **step_sizes** (*callable*):
-                    `step_sizes` takes the number of steps as an
+                    ``step_sizes`` takes the number of steps as an
                     input argument and returns an array of steps sizes which
                     sum is smaller than or equal to one.
 
         - **alphas** (*callable*):
-                    `alphas` takes the number of steps as an input argument
+                    ``alphas`` takes the number of steps as an input argument
                     and returns the multipliers/coefficients for the inputs
                     of integrand in the range of [0, 1]
 

@@ -64,7 +64,7 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
 
                         Please note that layers to attribute on cannot be
                         dependent on each other. That is, a subset of layers in
-                        `layer` cannot produce the inputs for another layer.
+                        ``layer`` cannot produce the inputs for another layer.
 
                         For example, if your model is of a simple linked-list
                         based graph structure (think nn.Sequence), e.g. x -> l1
@@ -88,7 +88,7 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
                         More detailed can be found here:
                         https://arxiv.org/abs/1711.06104
 
-                        In case of layer integrated gradients, if `multiply_by_inputs`
+                        In case of layer integrated gradients, if ``multiply_by_inputs``
                         is set to True, final sensitivity scores are being multiplied by
                         layer activations for inputs - layer activations for baselines.
 
@@ -182,10 +182,10 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
         This method attributes the output of the model with given target index
         (in case it is provided, otherwise it assumes that output is a
         scalar) to layer inputs or outputs of the model, depending on whether
-        `attribute_to_layer_input` is set to True or False, using the approach
+        ``attribute_to_layer_input`` is set to True or False, using the approach
         described above.
 
-        In addition to that it also returns, if `return_convergence_delta` is
+        In addition to that it also returns, if ``return_convergence_delta`` is
         set to True, integral approximation delta based on the completeness
         property of integrated gradients.
 
@@ -223,7 +223,7 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
                               inputs' tuple. This scalar value is broadcasted
                               for corresponding input tensor.
 
-                        In the cases when `baselines` is not provided, we internally
+                        In the cases when ``baselines`` is not provided, we internally
                         use zero scalar corresponding to each input tensor.
 
                         Default: None
@@ -264,7 +264,7 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
 
                         For a tensor, the first dimension of the tensor must
                         correspond to the number of examples. It will be
-                        repeated for each of `n_steps` along the integrated
+                        repeated for each of ``n_steps`` along the integrated
                         path. For all other types, the given argument is used
                         for all forward evaluations.
 
@@ -274,9 +274,9 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
             n_steps (int, optional): The number of steps used by the approximation
                         method. Default: 50.
             method (str, optional): Method for approximating the integral,
-                        one of `riemann_right`, `riemann_left`, `riemann_middle`,
-                        `riemann_trapezoid` or `gausslegendre`.
-                        Default: `gausslegendre` if no method is provided.
+                        one of ``riemann_right``, ``riemann_left``, ``riemann_middle``,
+                        ``riemann_trapezoid`` or ``gausslegendre``.
+                        Default: ``gausslegendre`` if no method is provided.
             internal_batch_size (int, optional): Divides total #steps * #examples
                         data points into chunks of size at most internal_batch_size,
                         which are computed (forward / backward passes)
@@ -290,13 +290,13 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
                         processed in one batch.
                         Default: None
             return_convergence_delta (bool, optional): Indicates whether to return
-                        convergence delta or not. If `return_convergence_delta`
+                        convergence delta or not. If ``return_convergence_delta``
                         is set to True convergence delta will be returned in
                         a tuple following attributions.
                         Default: False
             attribute_to_layer_input (bool, optional): Indicates whether to
                         compute the attribution with respect to the layer input
-                        or output. If `attribute_to_layer_input` is set to True
+                        or output. If ``attribute_to_layer_input`` is set to True
                         then the attributions will be computed with respect to
                         layer input, otherwise it will be computed with respect
                         to layer output.
@@ -311,12 +311,12 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
                 **attributions** or 2-element tuple of **attributions**, **delta**:
 
                   - **attributions** (*tensor*, tuple of *tensors* or tuple of
-                  *tensors*): Integrated gradients with respect to `layer`'s inputs
+                  *tensors*): Integrated gradients with respect to ``layer``'s inputs
                         or outputs. Attributions will always be the same size and
                         dimensionality as the input or output of the given layer,
                         depending on whether we attribute to the inputs or outputs
                         of the layer which is decided by the input flag
-                        `attribute_to_layer_input`.
+                        ``attribute_to_layer_input``.
 
                         For a single layer, attributions are returned in a tuple if
                         the layer inputs / outputs contain multiple tensors,
