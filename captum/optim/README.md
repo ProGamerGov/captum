@@ -54,24 +54,24 @@ Modules
 
 ### Rendering Modules
 
-**Images**: A PyTorch tensor subclass for image tensors, and mutiple image parameterizations.
+* **Images**: A PyTorch tensor subclass for image tensors, and mutiple image parameterizations.
 
-**Transforms**: The transforms module contains various transforms that are useful for performing transform robustness when rendering.
+* **Transforms**: The transforms module contains various transforms that are useful for performing transform robustness when rendering.
 
-**Loss**: The loss module contains numerous loss objectives that are all fully composable with mathematical ops.
+* **Loss**: The loss module contains numerous loss objectives that are all fully composable with mathematical ops.
 
-**Optimization**: The optimization module contains the optimization class and a stop criteria function.
+* **Optimization**: The optimization module contains the optimization class and a stop criteria function.
 
 
 ### Submodules
 
-**Reducer**: The reducer module makes it easy to perform dimensionality reduction with a wide array of algorithms like [t-SNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html), [UMAP](https://umap-learn.readthedocs.io/en/latest/), [PCA](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html), & [NMF](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.NMF.html).
+* **Reducer**: The reducer module makes it easy to perform dimensionality reduction with a wide array of algorithms like [t-SNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html), [UMAP](https://umap-learn.readthedocs.io/en/latest/), [PCA](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html), & [NMF](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.NMF.html).
 
-**Circuits**: The circuits module allows for the extraction of meaningful weight interactions from between neurons which aren’t literally adjacent in a neural network.
+* **Circuits**: The circuits module allows for the extraction of meaningful weight interactions from between neurons which aren’t literally adjacent in a neural network.
 
-**Models**: The models module contains the model zoo of pretrained models along with various help functions and classes.
+* **Models**: The models module contains the model zoo of pretrained models along with various help functions and classes.
 
-**Dataset**: The dataset module provides functions for calculating color correlation matrices of image datasets.
+* **Dataset**: The dataset module provides functions for calculating color correlation matrices of image datasets.
 
 
 Getting Started
