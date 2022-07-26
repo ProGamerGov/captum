@@ -175,7 +175,7 @@ class FGSM(Perturbation):
         r"""
         A helper function to calculate the perturbed inputs given original
         inputs, gradient of loss function and epsilon. The calculation is
-        different for targetd v.s. non-targeted as described above.
+        different for targeted v.s. non-targeted as described above.
         """
         multiplier = -1 if targeted else 1
         inputs = tuple(
