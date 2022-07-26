@@ -28,6 +28,8 @@ The initial concept for the Optim module was devised by Ludwig Shubert, and then
 Structure
 -----------------
 
+### Image Optimization
+
 ![](https://user-images.githubusercontent.com/10626398/177629584-33e7ff7c-a504-404e-a7ab-d8d786b7e25a.svg?sanitize=true)
 
 The standard image rendering process works like this for the forward pass, with loss objectives being able to target any of the steps:
