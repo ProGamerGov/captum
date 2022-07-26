@@ -131,9 +131,8 @@ Below we demonstate how to use the circuits submodule to obtain important contex
 We start off by loading a linear version of the InceptionV1 model, where ``nn.MaxPool2d`` operations have been replaced with their ``nn.AvgPool2d`` equivalents. The nonlinear ``nn.ReLU`` layers have also been replaced Optim's equivalent of the linear ``nn.Identity`` layer.
 
 ```
-import captum.optim as opt
 import torch
-import torch.nn.functional as F
+import captum.optim as opt
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -185,8 +184,11 @@ img = visualize(model, loss_fn, image)
 We can then see the results:
 
 ```
+import torch.nn.functional as F
 hm_img = F.interpolate(W_4a_4b_hm[None, :], size=(224, 224), mode="nearest-exact")
 img_set = torch.cat([img[0:1], hm_img, img[1:2]])
+
+# Display images
 opt.show(img_set, images_per_row=3, figsize=(15, 10))
 ```
 
