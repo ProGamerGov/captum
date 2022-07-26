@@ -39,8 +39,8 @@ def default_perturb_func(
 
     Returns:
 
-        perturbed_input (tuple(tensor)): A list of perturbed inputs that
-                are createed by adding noise sampled uniformly random
+        perturbed_input (tuple of tensor): A list of perturbed inputs that
+                are created by adding noise sampled uniformly random
                 from L_infiniy ball with a radius `perturb_radius` to the
                 original inputs.
 
