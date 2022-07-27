@@ -1,4 +1,6 @@
-![Captum Mosaic](example_images/captum_mosaic.jpg)
+<div align="center">
+ <img src="example_images/captum_mosaic.jpg">
+</div>
 
 Overview
 =================
@@ -126,9 +128,6 @@ def visualize(model, loss_fn, image, transforms):
 
 visualize(model, loss_fn, image, transforms)
 ```
-
-![Basic Example](example_images/mixed4a_c0465.png)
-
 
 <div align="center">
  <img src="example_images/mixed4a_c0465.png">
