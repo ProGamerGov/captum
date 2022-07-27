@@ -6,7 +6,6 @@ from inspect import signature
 from typing import Any, Callable, cast, Dict, List, overload, Tuple, Union
 
 import numpy as np
-from packaging import version
 import torch
 from captum._utils.typing import (
     BaselineType,
@@ -15,6 +14,7 @@ from captum._utils.typing import (
     TensorOrTupleOfTensorsGeneric,
     TupleOrTensorOrBoolGeneric,
 )
+from packaging import version
 from torch import device, Tensor
 from torch.nn import Module
 
