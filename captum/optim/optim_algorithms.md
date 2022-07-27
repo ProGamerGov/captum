@@ -206,7 +206,7 @@ To learn more about FacetLoss visit the following resources:
   * [Supplementary Implementation](https://github.com/openai/CLIP-featurevis/blob/master/example_facets.py)
 
 
-## Images
+## Parameterization
 
 ### FFTImage
 
