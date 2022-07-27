@@ -207,7 +207,7 @@ opt.show(img_set, images_per_row=3, figsize=(15, 10))
 
 ![circuits_showcase](example_images/circuits_showcase.png)
 
-The information in InceptionV1 model flows from the neuron on the left to the neuron on the right in the forward pass, and the heatmap shows us how they interact.
+The information in InceptionV1 model flows from the neuron on the left to the neuron on the right in the forward pass, and the heatmap shows us how they interact. In the case of our example, we see how the dog head is placed onto the dog body.
 
 
 Docs
