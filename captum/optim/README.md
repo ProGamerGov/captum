@@ -134,7 +134,7 @@ visualize(model, loss_fn, image, transforms)
 
 ### **Circuits**
 
-Below we demonstate how to use the circuits submodule to obtain important contextual information for the neurons in a neural network.
+Below we demonstate how to use the circuits submodule to obtain important contextual information for neuron interactions in a neural network.
 
 We start off by loading a linear version of the InceptionV1 model, where ``nn.MaxPool2d`` operations have been replaced with their ``nn.AvgPool2d`` equivalents. The nonlinear ``nn.ReLU`` layers have also been replaced Optim's equivalent of the linear ``nn.Identity`` layer.
 
