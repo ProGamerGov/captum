@@ -3,18 +3,17 @@ id: faq
 title: FAQ
 ---
 
-**[Optim](#optim)**
 
-  * [How do I know if my model is compatible with the Optim?](#how-do-i-know-if-my-model-is-compatible-with-the-optim)
-  * [Are only 3 channel RGB images and 4 channel RGBA images supported and can I use a different color space?](#are-only-3-channel-rgb-images-and-4-channel-rgba-images-supported-and-can-i-use-a-different-color-space)
-  * [Why are my rendered visualizations poor quality or non-existent in outputs?](#why-are-my-rendered-visualizations-poor-quality-or-non-existent-in-outputs)
-  * [Does the Optim module support JIT?](#does-the-optim-module-support-jit)
-  * [What dtypes does the Optim module support?](#what-dtypes-does-the-optim-module-support)
-  * [How can I avoid out of memory errors when rendering?](#how-can-i-avoid-out-of-memory-errors-when-rendering)
-  * [Can I use Optim with a CPU or do I have to use a GPU?](#can-i-use-optim-with-a-cpu-or-do-i-have-to-use-a-gpu)
-  * [Do I have to use the provided transforms or can I use transforms from other libraries?](#do-i-have-to-use-the-provided-transforms-or-can-i-use-transforms-from-other-libraries)
-  * [Does Optim work with torch.fx?](#does-optim-work-with-torchfx)
-  * [Does Optim support TensorBoard?](#does-optim-support-tensorboard)
+* [How do I know if my model is compatible with the Optim?](#how-do-i-know-if-my-model-is-compatible-with-the-optim)
+* [Are only 3 channel RGB images and 4 channel RGBA images supported and can I use a different color space?](#are-only-3-channel-rgb-images-and-4-channel-rgba-images-supported-and-can-i-use-a-different-color-space)
+* [Why are my rendered visualizations poor quality or non-existent in outputs?](#why-are-my-rendered-visualizations-poor-quality-or-non-existent-in-outputs)
+* [Does the Optim module support JIT?](#does-the-optim-module-support-jit)
+* [What dtypes does the Optim module support?](#what-dtypes-does-the-optim-module-support)
+* [How can I avoid out of memory errors when rendering?](#how-can-i-avoid-out-of-memory-errors-when-rendering)
+* [Can I use Optim with a CPU or do I have to use a GPU?](#can-i-use-optim-with-a-cpu-or-do-i-have-to-use-a-gpu)
+* [Do I have to use the provided transforms or can I use transforms from other libraries?](#do-i-have-to-use-the-provided-transforms-or-can-i-use-transforms-from-other-libraries)
+* [Does Optim work with torch.fx?](#does-optim-work-with-torchfx)
+* [Does Optim support TensorBoard?](#does-optim-support-tensorboard)
 
 
 ## Optim
