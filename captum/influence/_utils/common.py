@@ -2,10 +2,11 @@
 
 from typing import Any, Callable, List, Optional, Tuple, Union
 
-from packaging import version
 import torch
 import torch.nn as nn
 from captum._utils.progress import progress
+
+from packaging import version
 from torch import Tensor
 from torch.nn import Module
 from torch.utils.data import DataLoader, Dataset
