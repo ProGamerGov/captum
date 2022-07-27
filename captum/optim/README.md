@@ -239,6 +239,8 @@ References
 
 * Exploring Neural Networks with Activation Atlases: https://distill.pub/2019/activation-atlas/
 
+* What does BERT dream of?: https://pair-code.github.io/interpretability/text-dream/blogpost/
+
 * Thread: Circuits: https://distill.pub/2020/circuits/
 
   * Visualizing Weights: https://distill.pub/2020/circuits/visualizing-weights/
