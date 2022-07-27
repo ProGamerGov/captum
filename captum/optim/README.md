@@ -175,7 +175,7 @@ model = opt.models.googlenet(pretrained=True).to(device).eval()
 def visualize(model, loss_fn, image):
     transforms = opt.transforms.TransformationRobustness()
     obj = opt.InputOptimization(model, loss_fn, image, transforms)
-    history = obj.optimize(opt.optimization.n_steps(256, True), lr=0.02)
+    history = obj.optimize(lr=0.01)
     return image().detach()
 
 image = opt.images.NaturalImage((224, 224), batch=2).to(device)
