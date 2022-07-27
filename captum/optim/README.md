@@ -167,6 +167,9 @@ Below we create a heatmap for the connections between channel 308 of ``mixed4a_r
 W_4a_4b_hm = opt.weights_to_heatmap_2d(W_4a_4b[443, 308, ...] / W_4a_4b[443, ...].max())
 ```
 
+![Circuits heatmap](example_images/4a_c308_4b_c443_heatmap.png)
+
+
 Now that we have our heatmap for context, we'll render both neuron targets:
 
 ```
