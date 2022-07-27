@@ -157,14 +157,14 @@ Now that we have the expanded weights, we can anaylse the interactions that they
 
 From analysing the neurons in our model, we know that the ``mixed4a_relu`` channel 308 neuron is a dog head detector, and the ``mixed4b_relu`` channel 443 neuron is a full dog body detector.
 
-Below we create a heatmap for the connections between channel 308 of ``mixed4a_relu`` and channel 443 of ``mixed4b_relu``. This heatmap shows us how the features between both channels interact. By default the heatmap uses shades of red for excitation, and shades of blue for inhibition.
+Below we create a heatmap for the connections between channel 308 of ``mixed4a_relu`` and channel 443 of ``mixed4b_relu``. This heatmap shows us how the features between both channels interact.
 
 ```
 # Create heatmap image
 W_4a_4b_hm = opt.weights_to_heatmap_2d(W_4a_4b[443, 308, ...] / W_4a_4b[443, ...].max())
 ```
 
-Below we render both neuron targets:
+Now that we have our heatmap for context, we'll render both neuron targets:
 
 ```
 model = opt.models.googlenet(pretrained=True).to(device).eval()
@@ -194,7 +194,8 @@ opt.show(img_set, images_per_row=3, figsize=(15, 10))
 
 ![circuits_showcase](https://user-images.githubusercontent.com/10626398/180571535-811fb987-d8c9-496f-9903-db52797930f6.png)
 
-The information in InceptionV1 model flows from the neuron on the left to the neuron on the right in the forward pass, and the heatmap shows us how they interact.
+The information in InceptionV1 model flows from the neuron on the left to the neuron on the right in the forward pass, and the heatmap shows us how they interact. By default the heatmap uses shades of red for excitation, and shades of blue for inhibition.
+
 
 Docs
 -----------------
