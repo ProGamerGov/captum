@@ -127,6 +127,9 @@ def visualize(model, loss_fn, image, transforms):
 visualize(model, loss_fn, image, transforms)
 ```
 
+![Basic Example](example_images/mixed4a_c0465.png)
+
+
 ### **Circuits**
 
 Below we demonstate how to use the circuits submodule to obtain important contextual information for the neurons in a neural network.
