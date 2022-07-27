@@ -6,6 +6,7 @@ from inspect import signature
 from typing import Any, Callable, cast, Dict, List, overload, Tuple, Union
 
 import numpy as np
+from packaging import version
 import torch
 from captum._utils.typing import (
     BaselineType,
@@ -671,7 +672,7 @@ def _register_backward_hook(
     ):
         return module.register_backward_hook(hook)
 
-    if torch.__version__ >= "1.9":
+    if version.parse(torch.__version__) >= version.parse("1.9.0"):
         # Only supported for torch >= 1.9
         return module.register_full_backward_hook(hook)
     else:
