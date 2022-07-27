@@ -130,6 +130,11 @@ visualize(model, loss_fn, image, transforms)
 ![Basic Example](example_images/mixed4a_c0465.png)
 
 
+<div align="center">
+ <img src="example_images/mixed4a_c0465.png">
+</div>
+
+
 ### **Circuits**
 
 Below we demonstate how to use the circuits submodule to obtain important contextual information for the neurons in a neural network.
