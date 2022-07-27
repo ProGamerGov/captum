@@ -249,4 +249,6 @@ References
 
   * Curve Detectors: https://distill.pub/2020/circuits/curve-detectors/
 
+* [Learning Transferable Visual Models From Natural Language Supervision](https://arxiv.org/abs/2103.00020)
+
 * Multimodal Neurons in Artificial Neural Networks: https://distill.pub/2021/multimodal-neurons/
