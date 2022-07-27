@@ -144,7 +144,7 @@ linear_model = (
 )
 ```
 
-We then extract the expanded weights between the InceptionV1 model's ``mixed4a_relu`` and ``mixed4b_relu`` layers for all layer channels, using ``circuits.extract_expanded_weights`` function. We also crop away the unimportant padding, which in the case of our target layers gives us an output shape of 5 by 5.
+We then extract the expanded weights between the InceptionV1 model's ``mixed4a_relu`` and ``mixed4b_relu`` layers, using Optim's ``circuits.extract_expanded_weights`` function. We also crop away the padding, which in the case of our target layers gives us an output shape of 5 by 5.
 
 ```
 # Extract expanded weights
@@ -157,7 +157,7 @@ Now that we have the expanded weights, we can anaylse the interactions that they
 
 From analysing the neurons in our model, we know that the ``mixed4a_relu`` channel 308 neuron is a dog head detector, and the ``mixed4b_relu`` channel 443 neuron is a full dog body detector.
 
-Below we create a heatmap for the connections between channel 308 of ``mixed4a_relu`` and channel 443 of ``mixed4b_relu``. This heatmap shows us how the features between both channels interact.
+Below we create a heatmap for the connections between channel 308 of ``mixed4a_relu`` and channel 443 of ``mixed4b_relu``. This heatmap shows us how the features between both channels interact. By default the heatmap uses shades of red for excitation, and shades of blue for inhibition.
 
 ```
 # Create heatmap image
