@@ -1,4 +1,4 @@
-![mosaic_11x6_2_logo](https://user-images.githubusercontent.com/10626398/180668004-bc43c4e5-a92c-41f0-9e99-06c6c9869f10.jpg)
+![Captum Mosaic](example_images/captum_mosaic.jpg)
 
 Overview
 =================
@@ -34,7 +34,7 @@ Structure
 
 ### Image Optimization
 
-![](https://user-images.githubusercontent.com/10626398/177629584-33e7ff7c-a504-404e-a7ab-d8d786b7e25a.svg?sanitize=true)
+![](example_images/optim_overview.svg?sanitize=true)
 
 The standard image rendering process works like this for the forward pass, with loss objectives being able to target any of the steps:
 
@@ -51,7 +51,7 @@ Parameterizations (also known as differentiable image parameterizations), are us
 
 The default settings store image parameters in a fully decorrelated format where the spatial information and channel information is decorrelated. By preconditioning our optimizer with decorrelated data, we alter the loss landscape to make optimization significantly easier and decrease the presence of high frequency patterns.
 
-![](https://user-images.githubusercontent.com/10626398/176753493-b90f4e18-0133-4dca-afd4-26e811aa965e.svg?sanitize=true)
+![](example_images/data_recorrelation_chart.svg?sanitize=true)
 
 * Decorrelated Data ➔ Recorrelate Spatial ➔ Recorrelate Color ➔ Squash Function ➔ Transforms ➔ Model
 
@@ -167,6 +167,11 @@ Below we create a heatmap for the connections between channel 308 of ``mixed4a_r
 W_4a_4b_hm = opt.weights_to_heatmap_2d(W_4a_4b[443, 308, ...] / W_4a_4b[443, ...].max())
 ```
 
+By default the heatmap uses shades of red for excitation, and shades of blue for inhibition.
+
+![Circuits heatmap](example_images/4a_c308_4b_c443_heatmap.png)
+
+
 Now that we have our heatmap for context, we'll render both neuron targets:
 
 ```
@@ -195,9 +200,9 @@ img_set = torch.cat([img[0:1], hm_img, img[1:2]])
 opt.show(img_set, images_per_row=3, figsize=(15, 10))
 ```
 
-![circuits_showcase](https://user-images.githubusercontent.com/10626398/180571535-811fb987-d8c9-496f-9903-db52797930f6.png)
+![circuits_showcase](example_images/circuits_showcase.png)
 
-The information in InceptionV1 model flows from the neuron on the left to the neuron on the right in the forward pass, and the heatmap shows us how they interact. By default the heatmap uses shades of red for excitation, and shades of blue for inhibition.
+The information in InceptionV1 model flows from the neuron on the left to the neuron on the right in the forward pass, and the heatmap shows us how they interact.
 
 
 Docs
