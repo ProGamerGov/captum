@@ -1,5 +1,5 @@
 <div align="center">
- <img src="captum/optim/example_images/captum_mosaic.jpg">
+ <img src="/captum/captum/optim/example_images/captum_mosaic.jpg">
 </div>
 
 Overview
