@@ -1,5 +1,5 @@
 import warnings
-from typing import Callable, Iterable, Optional
+from typing import Callable, Iterable, List, Optional
 
 import torch
 import torch.nn as nn
@@ -184,7 +184,7 @@ class InputOptimization(Objective, Parameterized):
         assert isinstance(optimizer, optim.Optimizer)
         loss_summarize_fn = loss_summarize_fn or default_loss_summarize
 
-        history = []
+        history: List[torch.Tensor] = []
         step = 0
         try:
             while stop_criteria(step, self, history, optimizer):
