@@ -36,7 +36,7 @@ Structure
 
 ### Image Optimization
 
-![](example_images/optim_overview.svg?sanitize=true)
+![](/captum/optim/example_images/optim_overview.svg?sanitize=true)
 
 The standard image rendering process works like this for the forward pass, with loss objectives being able to target any of the steps:
 
@@ -53,7 +53,7 @@ Parameterizations (also known as differentiable image parameterizations), are us
 
 The default settings store image parameters in a fully decorrelated format where the spatial information and channel information is decorrelated. By preconditioning our optimizer with decorrelated data, we alter the loss landscape to make optimization significantly easier and decrease the presence of high frequency patterns.
 
-![](example_images/data_recorrelation_chart.svg?sanitize=true)
+![](/captum/optim/example_images/data_recorrelation_chart.svg?sanitize=true)
 
 * Decorrelated Data ➔ Recorrelate Spatial ➔ Recorrelate Color ➔ Squash Function ➔ Transforms ➔ Model
 
@@ -129,7 +129,7 @@ def visualize(model, loss_fn, image, transforms):
 visualize(model, loss_fn, image, transforms)
 ```
 
-![Basic Example](example_images/mixed4a_c0465.png)
+![Basic Example](/captum/optim/example_images/mixed4a_c0465.png)
 
 
 ### **Circuits**
@@ -174,7 +174,7 @@ W_4a_4b_hm = opt.weights_to_heatmap_2d(W_4a_4b[443, 308, ...] / W_4a_4b[443, ...
 
 By default the heatmap uses shades of red for excitation, and shades of blue for inhibition.
 
-![Circuits heatmap](example_images/4a_c308_4b_c443_heatmap.png)
+![Circuits heatmap](/captum/optim/example_images/4a_c308_4b_c443_heatmap.png)
 
 
 Now that we have our heatmap for context, we'll render both neuron targets:
@@ -205,7 +205,7 @@ img_set = torch.cat([img[0:1], hm_img, img[1:2]])
 opt.show(img_set, images_per_row=3, figsize=(15, 10))
 ```
 
-![circuits_showcase](example_images/circuits_showcase.png)
+![circuits_showcase](/captum/optim/example_images/circuits_showcase.png)
 
 The information in InceptionV1 model flows from the neuron on the left to the neuron on the right in the forward pass, and the heatmap shows us how they interact. In the case of our example, we see how the dog head is placed onto the dog body.
 
