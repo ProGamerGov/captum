@@ -84,6 +84,8 @@ Modules
 
 * **Dataset**: The dataset module provides functions for calculating color correlation matrices of image datasets.
 
+* **Atlas**: A set of functions for creating various types of activation atlases.
+
 
 Getting Started
 -----------------
