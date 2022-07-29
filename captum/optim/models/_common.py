@@ -262,6 +262,13 @@ def collect_activations(
     """
     Collect target activations for a model.
 
+    Example::
+
+        >>> model = opt.models.googlenet(pretrained=True)
+        >>> target = model.mixed4c
+        >>> activ_dict = opt.models.collect_activations(model, target)
+        >>> activations = activ_dict[target]
+
     Args:
 
         model (nn.Module): A PyTorch model instance.
