@@ -265,9 +265,9 @@ def collect_activations(
     Example::
 
         >>> model = opt.models.googlenet(pretrained=True)
-        >>> target = model.mixed4c
+        >>> target = model.mixed4c  # Target layer
         >>> activ_dict = opt.models.collect_activations(model, target)
-        >>> activations = activ_dict[target]
+        >>> activations = activ_dict[target]  # Get activations from dict
 
     Args:
 
