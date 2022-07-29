@@ -38,6 +38,9 @@ Structure
 
 ![](/captum/optim/example_images/optim_overview.svg?sanitize=true)
 
+
+![](/captum/optim/example_images/optim_image_overview.svg?sanitize=true)
+
 The standard image rendering process works like this for the forward pass, with loss objectives being able to target any of the steps:
 
 * ``NaturalImage`` (``ImageParameterization`` ➔ ``ToRGB`` ➔ Squash Function ➔ ``ImageTensor``) ➔ Transforms ➔ Model
