@@ -49,12 +49,12 @@ class RedirectedReLU(torch.autograd.Function):
     """
 
     @staticmethod
-    def forward(self, input_tensor: torch.Tensor) -> torch.Tensor:  # type: ignore
+    def forward(self, input_tensor: torch.Tensor) -> torch.Tensor:
         self.save_for_backward(input_tensor)
         return input_tensor.clamp(min=0)
 
     @staticmethod
-    def backward(self, grad_output: torch.Tensor) -> torch.Tensor:  # type: ignore
+    def backward(self, grad_output: torch.Tensor) -> torch.Tensor:
         (input_tensor,) = self.saved_tensors
         relu_grad = grad_output.clone()
         relu_grad[input_tensor < 0] = 0
