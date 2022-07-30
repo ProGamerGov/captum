@@ -255,9 +255,7 @@ def autodoc_process_docstring(
 
         # Handle Any & Callable types
         lines[i] = re.sub(r"\bAny\b", ":data:`~typing.Any`", lines[i])
-        lines[i] = re.sub(
-            r"\bCallable\b", ":data:`~typing.Callable`", lines[i]
-        )
+        lines[i] = re.sub(r"\bCallable\b", ":data:`~typing.Callable`", lines[i])
 
         # Handle list & tuple types
         lines[i] = re.sub(replace_pattern(r"\blist\b"), ":class:`list`", lines[i])
