@@ -21,7 +21,6 @@ Captum API Reference
    influence
    utilities
    base_classes
-   common
    approximation_methods
 
 .. toctree::
