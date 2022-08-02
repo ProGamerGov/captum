@@ -1,5 +1,5 @@
 ---
-id: attribution_algorithms_comparison_matrix
+id: algorithms_comparison_matrix
 title: Algorithm Comparison Matrix
 ---
 
