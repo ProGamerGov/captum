@@ -70,7 +70,7 @@ Modules
 
 * **Transforms**: The transforms module contains various transforms that are useful for performing transform robustness when rendering.
 
-* **Loss**: The loss module contains numerous loss objectives that are all fully composable with mathematical ops.
+* **Loss**: The loss module contains numerous loss objectives that are all fully composable with mathematical ops. More details on the provided loss algorithms including their pros & cons, can be found on our website [here](https://captum.ai/docs/optim_algorithms).
 
 * **Optimization**: The optimization module contains the optimization class and a stop criteria function.
 
