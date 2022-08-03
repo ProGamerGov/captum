@@ -80,7 +80,7 @@ class AV:
             av = torch.load(fl)
             return av
 
-        def __len__(self):
+        def __len__(self) -> int:
             return len(self.files)
 
     AV_DIR_NAME: str = "av"
