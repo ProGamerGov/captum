@@ -216,7 +216,9 @@ The information in InceptionV1 model flows from the neuron on the left to the ne
 Docs
 -----------------
 
-The docs for the optim module can be found [here](https://captum.ai/api/). Additional docs for the included loss objectives can be found [here](https://captum.ai/docs/optim_algorithms).
+The docs for the optim module can be found [here](https://captum.ai/api/).
+
+Additional docs for the included loss objectives can be found [here](https://captum.ai/docs/optim_algorithms).
 
 
 Tutorials
