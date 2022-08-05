@@ -28,9 +28,6 @@ Random Transforms
 
 Image Correlation
 ---------------------------------
-.. note::
-    The ``ToRGB`` transform is built into ``NaturalImage``.
-
 .. autoclass:: ToRGB
     :members:
 
