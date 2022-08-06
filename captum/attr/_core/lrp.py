@@ -155,7 +155,7 @@ class LRP(GradientAttribution):
                     of rules is printed during propagation.
 
         Returns:
-            *tensor* or tuple of *tensors* of **attributions**
+            *tensor* or *tuple* of *tensors* of **attributions**
             or 2-element tuple of **attributions**, **delta**:
 
               - **attributions** (*tensor* or tuple of *tensors*):

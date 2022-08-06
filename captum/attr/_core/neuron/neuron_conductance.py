@@ -244,7 +244,7 @@ class NeuronConductance(NeuronAttribution, GradientAttribution):
                         Default: False
 
         Returns:
-            *tensor* or tuple of *tensors* of **attributions**:
+            *tensor* or *tuple* of *tensors* of **attributions**:
             - **attributions** (*tensor* or tuple of *tensors*):
                         Conductance for
                         particular neuron with respect to each input feature.

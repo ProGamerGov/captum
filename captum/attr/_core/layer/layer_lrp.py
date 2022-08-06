@@ -175,7 +175,7 @@ class LayerLRP(LRP, LayerAttribution):
                     Default: False
 
         Returns:
-            *tensor* or tuple of *tensors* of **attributions** or 2-element tuple of
+            *tensor* or *tuple* of *tensors* of **attributions** or 2-element tuple of
             **attributions**, **delta** or list of **attributions** and **delta**:
 
               - **attributions** (*tensor* or tuple of *tensors*):

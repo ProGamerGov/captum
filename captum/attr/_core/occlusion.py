@@ -187,7 +187,7 @@ class Occlusion(FeatureAblation):
                             Default: False
 
         Returns:
-                *tensor* or tuple of *tensors* of **attributions**:
+                *tensor* or *tuple* of *tensors* of **attributions**:
                 - **attributions** (*tensor* or tuple of *tensors*):
                             The attributions with respect to each input feature.
                             Attributions will always be
