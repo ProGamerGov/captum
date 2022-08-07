@@ -56,8 +56,8 @@ class Attribution:
 
     Returns:
 
-        *tensor* or tuple of *tensors* of **attributions**:
-        - **attributions** (*tensor* or tuple of *tensors*):
+        *tensor* or *tuple* of *tensors* of **attributions**:
+        - **attributions** (*tensor* or *tuple* of *tensors*):
                     Attribution values for each
                     input tensor. The `attributions` have the same shape and
                     dimensionality as the inputs.
@@ -470,8 +470,8 @@ class NeuronAttribution(InternalAttribution):
 
     Returns:
 
-            *tensor* or tuple of *tensors* of **attributions**:
-            - **attributions** (*tensor* or tuple of *tensors*):
+            *tensor* or *tuple* of *tensors* of **attributions**:
+            - **attributions** (*tensor* or *tuple* of *tensors*):
                     Attribution values for
                     each input vector. The `attributions` have the
                     dimensionality of inputs.

@@ -171,8 +171,8 @@ class LayerFeatureAblation(LayerAttribution, PerturbationAttribution):
                         Default: 1
 
         Returns:
-            *tensor* or tuple of *tensors* of **attributions**:
-            - **attributions** (*tensor* or tuple of *tensors*):
+            *tensor* or *tuple* of *tensors* of **attributions**:
+            - **attributions** (*tensor* or *tuple* of *tensors*):
                         Attribution of each neuron in given layer input or
                         output. Attributions will always be the same size as
                         the input or output of the given layer, depending on

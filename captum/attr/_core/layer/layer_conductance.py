@@ -235,7 +235,7 @@ class LayerConductance(LayerAttribution, GradientAttribution):
 
         Returns:
             **attributions** or 2-element tuple of **attributions**, **delta**:
-            - **attributions** (*tensor* or tuple of *tensors*):
+            - **attributions** (*tensor* or *tuple* of *tensors*):
                         Conductance of each neuron in given layer input or
                         output. Attributions will always be the same size as
                         the input or output of the given layer, depending on
