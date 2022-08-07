@@ -187,7 +187,7 @@ class GuidedBackprop(ModifiedReluGradientAttribution):
 
         Returns:
             *tensor* or *tuple* of *tensors* of **attributions**:
-            - **attributions** (*tensor* or tuple of *tensors*):
+            - **attributions** (*tensor* or *tuple* of *tensors*):
                         The guided backprop gradients with respect to each
                         input feature. Attributions will always
                         be the same size as the provided inputs, with each value
@@ -298,7 +298,7 @@ class Deconvolution(ModifiedReluGradientAttribution):
 
         Returns:
             *tensor* or *tuple* of *tensors* of **attributions**:
-            - **attributions** (*tensor* or tuple of *tensors*):
+            - **attributions** (*tensor* or *tuple* of *tensors*):
                         The deconvolution attributions with respect to each
                         input feature. Attributions will always
                         be the same size as the provided inputs, with each value

@@ -203,7 +203,7 @@ class NeuronIntegratedGradients(NeuronAttribution, GradientAttribution):
 
         Returns:
             *tensor* or *tuple* of *tensors* of **attributions**:
-            - **attributions** (*tensor* or tuple of *tensors*):
+            - **attributions** (*tensor* or *tuple* of *tensors*):
                         Integrated gradients for particular neuron with
                         respect to each input feature.
                         Attributions will always be the same size as the provided

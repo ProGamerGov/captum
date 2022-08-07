@@ -246,7 +246,7 @@ class LayerGradientShap(LayerAttribution, GradientAttribution):
                         Default: False
         Returns:
             **attributions** or 2-element tuple of **attributions**, **delta**:
-            - **attributions** (*tensor* or tuple of *tensors*):
+            - **attributions** (*tensor* or *tuple* of *tensors*):
                         Attribution score computed based on GradientSHAP with
                         respect to layer's input or output. Attributions will always
                         be the same size as the provided layer's inputs or outputs,

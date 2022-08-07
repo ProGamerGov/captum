@@ -195,7 +195,7 @@ class FeatureAblation(PerturbationAttribution):
 
         Returns:
             *tensor* or *tuple* of *tensors* of **attributions**:
-            - **attributions** (*tensor* or tuple of *tensors*):
+            - **attributions** (*tensor* or *tuple* of *tensors*):
                         The attributions with respect to each input feature.
                         If the forward function returns
                         a scalar value per example, attributions will be

@@ -135,7 +135,7 @@ class LayerGradientXActivation(LayerAttribution, GradientAttribution):
 
         Returns:
             *tensor* or *tuple* of *tensors* or *list* of **attributions**:
-            - **attributions** (*tensor* or tuple of *tensors* or *list*):
+            - **attributions** (*tensor* or *tuple* of *tensors* or *list*):
                         Product of gradient and activation for each
                         neuron in given layer output.
                         Attributions will always be the same size as the
