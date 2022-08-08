@@ -7,7 +7,6 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 import captum._utils.common as common
 import torch
 from captum._utils.av import AV
-from captum._utils.common import _parse_version
 from captum.attr import LayerActivation
 from captum.influence._core.influence import DataInfluence
 from torch import Tensor
@@ -41,7 +40,7 @@ def cosine_similarity(test, train, replace_nan=0) -> Tensor:
     test = test.view(test.shape[0], -1)
     train = train.view(train.shape[0], -1)
 
-    if _parse_version(torch.__version__) <= (1, 6, 0):
+    if common._parse_version(torch.__version__) <= (1, 6, 0):
         test_norm = torch.norm(test, p=None, dim=1, keepdim=True)
         train_norm = torch.norm(train, p=None, dim=1, keepdim=True)
     else:
