@@ -22,11 +22,11 @@ from torch.nn import Module
 def _parse_version(v: str, length: Optional[int] = 3) -> Tuple[int, ...]:
     """
     Parse version strings into tuples for comparison.
-    
+
     Versions should be in the form of "<major>.<minor>.<patch>", "<major>.<minor>",
     or "<major>". The "dev", "post" and other letter portions of the given version will
     be ignored.
-    
+
     Args:
 
         v (str): A version string.
@@ -42,7 +42,7 @@ def _parse_version(v: str, length: Optional[int] = 3) -> Tuple[int, ...]:
     v = [n for n in v.split(".") if n.isdigit()]
     assert v != []
     if length is not None:
-        v += (["0"] * (length - len(v)))
+        v += ["0"] * (length - len(v))
         assert len(v) == length
     return tuple(map(int, v))
 
