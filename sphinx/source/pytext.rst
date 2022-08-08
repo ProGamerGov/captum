@@ -1,11 +1,8 @@
 Captum.Models
 ==========================
 
-.. currentmodule:: captum.attr._models.pytext
-
-.. autoclass:: PyTextInterpretableEmbedding
+.. autoclass:: captum.attr._models.pytext.PyTextInterpretableEmbedding
     :members:
 
-
-.. autoclass:: BaselineGenerator
+.. autoclass:: captum.attr._models.pytext.BaselineGenerator
     :members:
