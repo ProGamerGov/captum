@@ -1,7 +1,7 @@
 Captum.Models
 ==========================
 
-.. automodule:: captum.attr._models.pytext
+.. currentmodule:: captum.attr._models.pytext
 
 .. autoclass:: PyTextInterpretableEmbedding
     :members:
