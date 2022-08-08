@@ -3,7 +3,13 @@
 from typing import cast, List, Tuple
 
 import torch
-from captum._utils.common import _parse_version, _reduce_list, _select_targets, _sort_key_list, safe_div
+from captum._utils.common import (
+    _parse_version,
+    _reduce_list,
+    _select_targets,
+    _sort_key_list,
+    safe_div,
+)
 from tests.helpers.basic import assertTensorAlmostEqual, BaseTest
 
 
