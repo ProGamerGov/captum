@@ -42,7 +42,7 @@ def _parse_version(v: str, length: Optional[int] = 3) -> Tuple[int, ...]:
     v = [n for n in v.split(".") if n.isdigit()]
     assert v != []
     if length is not None:
-        v += ([0] * (length - len(v)))
+        v += (["0"] * (length - len(v)))
         assert len(v) == length
     return tuple(map(int, v))
 
