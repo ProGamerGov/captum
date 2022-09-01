@@ -120,7 +120,7 @@ def train_cav(
         model_id (str): A unique identifier for the PyTorch model for which
                 we would like to load the layer activations and train a
                 model in order to compute CAVs.
-        concepts (list of Concept): A list of Concept objects that are used
+        concepts (list[Concept]): A list of Concept objects that are used
                 to train a classifier and learn decision boundaries between
                 those concepts for each layer defined in the `layers`
                 argument.
@@ -409,7 +409,7 @@ class TCAV(ConceptInterpreter):
 
         Args:
 
-            concepts (list of Concept): A list of Concept objects for which we want
+            concepts (list[Concept]): A list of Concept objects for which we want
                     to load the CAV.
 
         Returns:
