@@ -155,7 +155,7 @@ class LayerGradientShap(LayerAttribution, GradientAttribution):
                         that for all given input tensors, dimension 0 corresponds
                         to the number of examples, and if multiple input tensors
                         are provided, the examples must be aligned appropriately.
-            baselines (tensor, tuple of tensors, Callable):
+            baselines (tensor, tuple of tensors, or Callable):
                         Baselines define the starting point from which expectation
                         is computed and can be provided as:
 

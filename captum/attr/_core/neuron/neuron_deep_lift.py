@@ -378,7 +378,7 @@ class NeuronDeepLiftShap(NeuronAttribution, GradientAttribution):
                           or a 1D tensor with length equal to batch_size (one scalar
                           per input example)
 
-            baselines (tensor, tuple of tensors, Callable):
+            baselines (tensor, tuple of tensors, or Callable):
                         Baselines define reference samples that are compared with
                         the inputs. In order to assign attribution scores DeepLift
                         computes the differences between the inputs/outputs and

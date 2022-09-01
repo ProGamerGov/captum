@@ -147,7 +147,7 @@ class NeuronGradientShap(NeuronAttribution, GradientAttribution):
                           this function returns either a tensor with one element
                           or a 1D tensor with length equal to batch_size (one scalar
                           per input example)
-            baselines (tensor, tuple of tensors, Callable):
+            baselines (tensor, tuple of tensors, or Callable):
                         Baselines define the starting point from which expectation
                         is computed and can be provided as:
 
