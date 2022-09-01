@@ -191,7 +191,7 @@ class LayerGradientShap(LayerAttribution, GradientAttribution):
                         corresponds to the input with the same index in the inputs
                         tuple.
                         Default: 0.0
-            target (int, tuple, tensor or list, optional): Output indices for
+            target (int, tuple, tensor, or list, optional): Output indices for
                         which gradients are computed (for classification cases,
                         this is usually the target class).
                         If the network returns a scalar value per example,
