@@ -339,7 +339,7 @@ class InternalAttribution(Attribution, Generic[ModuleOrModuleList]):
                         function.
             layer (torch.nn.Module): Layer for which output attributions are computed.
                         Output size of attribute matches that of layer output.
-            device_ids (list of int): Device ID list, necessary only if forward_func
+            device_ids (list[int]): Device ID list, necessary only if forward_func
                         applies a DataParallel model, which allows reconstruction of
                         intermediate outputs from batched results across devices.
                         If forward_func is given as the DataParallel model itself,
@@ -372,7 +372,7 @@ class LayerAttribution(InternalAttribution):
                         function.
             layer (torch.nn.Module): Layer for which output attributions are computed.
                         Output size of attribute matches that of layer output.
-            device_ids (list of int): Device ID list, necessary only if forward_func
+            device_ids (list[int]): Device ID list, necessary only if forward_func
                         applies a DataParallel model, which allows reconstruction of
                         intermediate outputs from batched results across devices.
                         If forward_func is given as the DataParallel model itself,
@@ -442,7 +442,7 @@ class NeuronAttribution(InternalAttribution):
                         function.
             layer (torch.nn.Module): Layer for which output attributions are computed.
                         Output size of attribute matches that of layer output.
-            device_ids (list of int): Device ID list, necessary only if forward_func
+            device_ids (list[int]): Device ID list, necessary only if forward_func
                         applies a DataParallel model, which allows reconstruction of
                         intermediate outputs from batched results across devices.
                         If forward_func is given as the DataParallel model itself,
