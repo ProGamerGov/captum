@@ -413,7 +413,7 @@ class TCAV(ConceptInterpreter):
                     to load the CAV.
 
         Returns:
-            layers (list of layer): A list of layers for which some CAVs still need
+            layers (list[layer]): A list of layers for which some CAVs still need
                     to be computed.
             concept_layers (dict[concept, layer]): A dictionay of concept-layers
                     mapping for which we need to perform CAV computation through
