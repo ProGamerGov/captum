@@ -100,7 +100,7 @@ class Occlusion(FeatureAblation):
                             If None is provided, a stride of 1 is used for each
                             dimension of each input tensor.
                             Default: None
-                baselines (scalar, tensor, tuple of scalars, or tensors, optional):
+                baselines (scalar, tensor, tuple of scalar, or tensors, optional):
                             Baselines define reference value which replaces each
                             feature when occluded.
                             Baselines can be provided as:

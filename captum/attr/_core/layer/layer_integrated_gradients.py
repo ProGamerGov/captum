@@ -199,7 +199,7 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
                         that for all given input tensors, dimension 0 corresponds
                         to the number of examples, and if multiple input tensors
                         are provided, the examples must be aligned appropriately.
-            baselines (scalar, tensor, tuple of scalars, or tensors, optional):
+            baselines (scalar, tensor, tuple of scalar, or tensors, optional):
                         Baselines define the starting point from which integral
                         is computed and can be provided as:
 

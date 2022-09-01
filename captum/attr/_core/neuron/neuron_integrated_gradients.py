@@ -125,7 +125,7 @@ class NeuronIntegratedGradients(NeuronAttribution, GradientAttribution):
                           this function returns either a tensor with one element
                           or a 1D tensor with length equal to batch_size (one scalar
                           per input example)
-            baselines (scalar, tensor, tuple of scalars, or tensors, optional):
+            baselines (scalar, tensor, tuple of scalar, or tensors, optional):
                         Baselines define the starting point from which integral
                         is computed.
                         Baselines can be provided as:

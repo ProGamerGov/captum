@@ -106,7 +106,7 @@ class ShapleyValueSampling(PerturbationAttribution):
                             to the number of examples (aka batch size), and if
                             multiple input tensors are provided, the examples must
                             be aligned appropriately.
-                baselines (scalar, tensor, tuple of scalars, or tensors, optional):
+                baselines (scalar, tensor, tuple of scalar, or tensors, optional):
                             Baselines define reference value which replaces each
                             feature when ablated.
                             Baselines can be provided as:
@@ -559,7 +559,7 @@ class ShapleyValues(ShapleyValueSampling):
                             to the number of examples (aka batch size), and if
                             multiple input tensors are provided, the examples must
                             be aligned appropriately.
-                baselines (scalar, tensor, tuple of scalars, or tensors, optional):
+                baselines (scalar, tensor, tuple of scalar, or tensors, optional):
                             Baselines define reference value which replaces each
                             feature when ablated.
                             Baselines can be provided as:

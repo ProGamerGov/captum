@@ -143,7 +143,7 @@ class NeuronConductance(NeuronAttribution, GradientAttribution):
                           the gradient of output with respect to the intermedite neuron,
                           which cannot be computed for aggregations of multiple
                           intemediate neurons.
-            baselines (scalar, tensor, tuple of scalars, or tensors, optional):
+            baselines (scalar, tensor, tuple of scalar, or tensors, optional):
                         Baselines define the starting point from which integral
                         is computed and can be provided as:
 

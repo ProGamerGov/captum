@@ -887,7 +887,7 @@ class Lime(LimeBase):
                         that for all given input tensors, dimension 0 corresponds
                         to the number of examples, and if multiple input tensors
                         are provided, the examples must be aligned appropriately.
-            baselines (scalar, tensor, tuple of scalars, or tensors, optional):
+            baselines (scalar, tensor, tuple of scalar, or tensors, optional):
                         Baselines define reference value which replaces each
                         feature when the corresponding interpretable feature
                         is set to 0.

@@ -83,7 +83,7 @@ class LayerFeatureAblation(LayerAttribution, PerturbationAttribution):
                         that for all given input tensors, dimension 0 corresponds
                         to the number of examples, and if multiple input tensors
                         are provided, the examples must be aligned appropriately.
-            layer_baselines (scalar, tensor, tuple of scalars, or tensors, optional):
+            layer_baselines (scalar, tensor, tuple of scalar, or tensors, optional):
                         Layer baselines define reference values which replace each
                         layer input / output value when ablated.
                         Layer baselines should be a single tensor with dimensions
