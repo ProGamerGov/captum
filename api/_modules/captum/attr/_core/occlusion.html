@@ -6,7 +6,7 @@
 
               ga('create', 'UA-44373548-48', 'auto');
               ga('send', 'pageview');
-            </script><link rel="stylesheet" href="/css/code_block_buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/js/code_block_buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/mathjax.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/js/code_block_buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
         document.addEventListener('DOMContentLoaded', function() {
           addBackToTop(
             {"zIndex":100}
@@ -14,37 +14,44 @@
         });
         </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/captum_logo.svg" alt="Captum"/></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/introduction" target="_self">Docs</a></li><li class=""><a href="/tutorials/" target="_self">Tutorials</a></li><li class=""><a href="/api/" target="_self">API Reference</a></li><li class=""><a href="https://github.com/pytorch/captum" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div>
 <script type="text/javascript" id="documentation_options" data-url_root="./"
-  src="/js/documentation_options.js"></script>
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/js/underscore.js"></script>
-<script type="text/javascript" src="/js/doctools.js"></script>
-<script type="text/javascript" src="/js/language_data.js"></script>
-<script type="text/javascript" src="/js/searchtools.js"></script>
-<div class="sphinx"><div class="document">
+src="/_sphinx/documentation_options.js"></script>
+<script type="text/javascript" src="/_sphinx/jquery.js"></script>
+<script type="text/javascript" src="/_sphinx/underscore.js"></script>
+<script type="text/javascript" src="/_sphinx/doctools.js"></script>
+<script type="text/javascript" src="/_sphinx/language_data.js"></script>
+<script type="text/javascript" src="/_sphinx/searchtools.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"></script>
+<script src="/_sphinx/katex_autorenderer.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" />
+<div class="sphinx wrapper"><div class="document">
 <div class="documentwrapper">
 <div class="bodywrapper">
 <div class="body" role="main">
 <h1>Source code for captum.attr._core.occlusion</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="c1"># pyre-strict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
-
-<span class="kn">from</span> <span class="nn">captum.log</span> <span class="kn">import</span> <span class="n">log_usage</span>
-
-<span class="kn">from</span> <span class="nn">..._utils.common</span> <span class="kn">import</span> <span class="n">_format_input</span>
-<span class="kn">from</span> <span class="nn">..._utils.typing</span> <span class="kn">import</span> <span class="n">BaselineType</span><span class="p">,</span> <span class="n">TargetType</span><span class="p">,</span> <span class="n">TensorOrTupleOfTensorsGeneric</span>
-<span class="kn">from</span> <span class="nn">.._utils.common</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">captum._utils.common</span> <span class="kn">import</span> <span class="n">_format_tensor_into_tuples</span>
+<span class="kn">from</span> <span class="nn">captum._utils.typing</span> <span class="kn">import</span> <span class="n">BaselineType</span><span class="p">,</span> <span class="n">TargetType</span><span class="p">,</span> <span class="n">TensorOrTupleOfTensorsGeneric</span>
+<span class="kn">from</span> <span class="nn">captum.attr._core.feature_ablation</span> <span class="kn">import</span> <span class="n">FeatureAblation</span>
+<span class="kn">from</span> <span class="nn">captum.attr._utils.common</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_format_and_verify_sliding_window_shapes</span><span class="p">,</span>
     <span class="n">_format_and_verify_strides</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.feature_ablation</span> <span class="kn">import</span> <span class="n">FeatureAblation</span>
+<span class="kn">from</span> <span class="nn">captum.log</span> <span class="kn">import</span> <span class="n">log_usage</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
 
 
-<div class="viewcode-block" id="Occlusion"><a class="viewcode-back" href="../../../../occlusion.html#captum.attr.Occlusion">[docs]</a><span class="k">class</span> <span class="nc">Occlusion</span><span class="p">(</span><span class="n">FeatureAblation</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">"""</span>
+<div class="viewcode-block" id="Occlusion">
+<a class="viewcode-back" href="../../../../occlusion.html#captum.attr.Occlusion">[docs]</a>
+<span class="k">class</span> <span class="nc">Occlusion</span><span class="p">(</span><span class="n">FeatureAblation</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    A perturbation based approach to compute attribution, involving</span>
 <span class="sd">    replacing each contiguous rectangular region with a given baseline /</span>
 <span class="sd">    reference, and computing the difference in output. For features located</span>
@@ -64,17 +71,19 @@
 <span class="sd">    /tensorflow/methods.py#L401</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forward_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sa">r</span><span class="sd">"""</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forward_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 
-<span class="sd">            forward_func (callable): The forward function of the model or</span>
-<span class="sd">                        any modification of it</span>
+<span class="sd">            forward_func (Callable): The forward function of the model or</span>
+<span class="sd">                        any modification of it.</span>
 <span class="sd">        """</span>
         <span class="n">FeatureAblation</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forward_func</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_weights</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="Occlusion.attribute"><a class="viewcode-back" href="../../../../occlusion.html#captum.attr.Occlusion.attribute">[docs]</a>    <span class="nd">@log_usage</span><span class="p">()</span>
+<div class="viewcode-block" id="Occlusion.attribute">
+<a class="viewcode-back" href="../../../../occlusion.html#captum.attr.Occlusion.attribute">[docs]</a>
+    <span class="nd">@log_usage</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">attribute</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">inputs</span><span class="p">:</span> <span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">,</span>
@@ -84,13 +93,14 @@
         <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">baselines</span><span class="p">:</span> <span class="n">BaselineType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">target</span><span class="p">:</span> <span class="n">TargetType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">perturbations_per_eval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">show_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">:</span>
-        <span class="sa">r</span><span class="sd">"""</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 
-<span class="sd">                inputs (tensor or tuple of tensors):  Input for which occlusion</span>
+<span class="sd">                inputs (Tensor or tuple[Tensor, ...]): Input for which occlusion</span>
 <span class="sd">                            attributions are computed. If forward_func takes a single</span>
 <span class="sd">                            tensor as input, a single input tensor should be provided.</span>
 <span class="sd">                            If forward_func takes multiple tensors as input, a tuple</span>
@@ -99,7 +109,7 @@
 <span class="sd">                            to the number of examples (aka batch size), and if</span>
 <span class="sd">                            multiple input tensors are provided, the examples must</span>
 <span class="sd">                            be aligned appropriately.</span>
-<span class="sd">                sliding_window_shapes (tuple or tuple of tuples): Shape of patch</span>
+<span class="sd">                sliding_window_shapes (tuple or tuple[tuple]): Shape of patch</span>
 <span class="sd">                            (hyperrectangle) to occlude each input. For a single</span>
 <span class="sd">                            input tensor, this must be a tuple of length equal to the</span>
 <span class="sd">                            number of dimensions of the input tensor - 1, defining</span>
@@ -108,7 +118,7 @@
 <span class="sd">                            this must be a tuple containing one tuple for each input</span>
 <span class="sd">                            tensor defining the dimensions of the patch for that</span>
 <span class="sd">                            input tensor, as described for the single tensor case.</span>
-<span class="sd">                strides (int or tuple or tuple of ints or tuple of tuples, optional):</span>
+<span class="sd">                strides (int, tuple, tuple[int], or tuple[tuple], optional):</span>
 <span class="sd">                            This defines the step by which the occlusion hyperrectangle</span>
 <span class="sd">                            should be shifted by in each direction for each iteration.</span>
 <span class="sd">                            For a single tensor input, this can be either a single</span>
@@ -128,7 +138,7 @@
 <span class="sd">                            If None is provided, a stride of 1 is used for each</span>
 <span class="sd">                            dimension of each input tensor.</span>
 <span class="sd">                            Default: None</span>
-<span class="sd">                baselines (scalar, tensor, tuple of scalars or tensors, optional):</span>
+<span class="sd">                baselines (scalar, Tensor, tuple of scalar, or Tensor, optional):</span>
 <span class="sd">                            Baselines define reference value which replaces each</span>
 <span class="sd">                            feature when occluded.</span>
 <span class="sd">                            Baselines can be provided as:</span>
@@ -152,10 +162,11 @@
 <span class="sd">                              - or a scalar, corresponding to a tensor in the</span>
 <span class="sd">                                inputs' tuple. This scalar value is broadcasted</span>
 <span class="sd">                                for corresponding input tensor.</span>
+
 <span class="sd">                            In the cases when `baselines` is not provided, we internally</span>
 <span class="sd">                            use zero scalar corresponding to each input tensor.</span>
 <span class="sd">                            Default: None</span>
-<span class="sd">                target (int, tuple, tensor or list, optional):  Output indices for</span>
+<span class="sd">                target (int, tuple, Tensor, or list, optional): Output indices for</span>
 <span class="sd">                            which difference is computed (for classification cases,</span>
 <span class="sd">                            this is usually the target class).</span>
 <span class="sd">                            If the network returns a scalar value per example,</span>
@@ -180,7 +191,7 @@
 <span class="sd">                              target for the corresponding example.</span>
 
 <span class="sd">                            Default: None</span>
-<span class="sd">                additional_forward_args (any, optional): If the forward function</span>
+<span class="sd">                additional_forward_args (Any, optional): If the forward function</span>
 <span class="sd">                            requires additional arguments other than the inputs for</span>
 <span class="sd">                            which attributions should not be computed, this argument</span>
 <span class="sd">                            can be provided. It must be either a single additional</span>
@@ -207,10 +218,15 @@
 <span class="sd">                            (perturbations_per_eval * #examples) / num_devices</span>
 <span class="sd">                            samples.</span>
 <span class="sd">                            Default: 1</span>
+<span class="sd">                show_progress (bool, optional): Displays the progress of computation.</span>
+<span class="sd">                            It will try to use tqdm if available for advanced features</span>
+<span class="sd">                            (e.g. time estimation). Otherwise, it will fallback to</span>
+<span class="sd">                            a simple output of progress.</span>
+<span class="sd">                            Default: False</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">                *tensor* or tuple of *tensors* of **attributions**:</span>
-<span class="sd">                - **attributions** (*tensor* or tuple of *tensors*):</span>
+<span class="sd">                *Tensor* or *tuple[Tensor, ...]* of **attributions**:</span>
+<span class="sd">                - **attributions** (*Tensor* or *tuple[Tensor, ...]*):</span>
 <span class="sd">                            The attributions with respect to each input feature.</span>
 <span class="sd">                            Attributions will always be</span>
 <span class="sd">                            the same size as the provided inputs, with each value</span>
@@ -233,7 +249,7 @@
 <span class="sd">            &gt;&gt;&gt; # shifting in each direction by the default of 1.</span>
 <span class="sd">            &gt;&gt;&gt; attr = ablator.attribute(input, target=1, sliding_window_shapes=(3,3))</span>
 <span class="sd">        """</span>
-        <span class="n">formatted_inputs</span> <span class="o">=</span> <span class="n">_format_input</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">formatted_inputs</span> <span class="o">=</span> <span class="n">_format_tensor_into_tuples</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
 
         <span class="c1"># Formatting strides</span>
         <span class="n">strides</span> <span class="o">=</span> <span class="n">_format_and_verify_strides</span><span class="p">(</span><span class="n">strides</span><span class="p">,</span> <span class="n">formatted_inputs</span><span class="p">)</span>
@@ -286,18 +302,30 @@
             <span class="n">sliding_window_tensors</span><span class="o">=</span><span class="n">sliding_window_tensors</span><span class="p">,</span>
             <span class="n">shift_counts</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">shift_counts</span><span class="p">),</span>
             <span class="n">strides</span><span class="o">=</span><span class="n">strides</span><span class="p">,</span>
+            <span class="n">show_progress</span><span class="o">=</span><span class="n">show_progress</span><span class="p">,</span>
         <span class="p">)</span></div>
+
+
+    <span class="c1"># pyre-fixme[24] Generic type `Callable` expects 2 type parameters.</span>
+<div class="viewcode-block" id="Occlusion.attribute_future">
+<a class="viewcode-back" href="../../../../occlusion.html#captum.attr.Occlusion.attribute_future">[docs]</a>
+    <span class="k">def</span> <span class="nf">attribute_future</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">        This method is not implemented for Occlusion.</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"attribute_future is not implemented for Occlusion"</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">_construct_ablated_input</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">expanded_input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
-        <span class="n">input_mask</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span>
-        <span class="n">baseline</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">input_mask</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
+        <span class="n">baseline</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span>
         <span class="n">start_feature</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">end_feature</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
-        <span class="sa">r</span><span class="sd">"""</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Ablates given expanded_input tensor with given feature mask, feature range,</span>
 <span class="sd">        and baselines, and any additional arguments.</span>
 <span class="sd">        expanded_input shape is (num_features, num_examples, ...)</span>
@@ -328,12 +356,15 @@
             <span class="p">],</span>
             <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">baseline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"baseline should not be None"</span>
         <span class="n">ablated_tensor</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">expanded_input</span>
             <span class="o">*</span> <span class="p">(</span>
                 <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">expanded_input</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
                 <span class="o">-</span> <span class="n">input_mask</span>
             <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">expanded_input</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+            <span class="c1"># pyre-fixme[58]: `*` is not supported for operand types `Union[None, float,</span>
+            <span class="c1">#  Tensor]` and `Tensor`.</span>
         <span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">baseline</span> <span class="o">*</span> <span class="n">input_mask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">expanded_input</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">ablated_tensor</span><span class="p">,</span> <span class="n">input_mask</span>
 
@@ -345,7 +376,7 @@
         <span class="n">strides</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
         <span class="n">shift_counts</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
-        <span class="sd">"""</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        This constructs the current occlusion mask, which is the appropriate</span>
 <span class="sd">        shift of the sliding window tensor based on the ablated feature number.</span>
 <span class="sd">        The feature number ranges between 0 and the product of the shift counts</span>
@@ -387,31 +418,55 @@
         <span class="n">padded_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span>
             <span class="n">sliding_window_tsr</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">pad_values</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">padded_tensor</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">padded_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">padded_tensor</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">padded_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">_get_feature_range_and_mask</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">input_mask</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="n">feature_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"shift_counts"</span><span class="p">])</span>
-        <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">feature_max</span><span class="p">,</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">input_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]]]:</span>
+        <span class="n">feature_max</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">"shift_counts"</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">feature_max</span><span class="p">,</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_get_feature_counts</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inputs</span><span class="p">:</span> <span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">,</span>
+        <span class="n">feature_mask</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""return the numbers of possible input features"""</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">counts</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"shift_counts"</span><span class="p">])</span></div>
+
 </pre></div>
 </div>
 </div>
 </div>
-<div aria-label="main navigation" class="sphinxsidebar" role="navigation">
+<div aria-label="Main" class="sphinxsidebar" role="navigation">
 <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../../../index.html">Captum</a></h1>
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<search id="searchbox" role="search" style="display: none">
+<div class="searchformwrapper">
+<form action="../../../../search.html" class="search" method="get">
+<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" placeholder="Search" spellcheck="false" type="text"/>
+<input type="submit" value="Go"/>
+</form>
+</div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../attribution.html">Attribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../llm_attr.html">LLM Attribution Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../noise_tunnel.html">NoiseTunnel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../layer.html">Layer Attribution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../neuron.html">Neuron Attribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../robust.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concept.html">Concept-based Interpretability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../influence.html">Influential Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../module.html">Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../base_classes.html">Base Classes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Insights API Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Insights API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../insights.html">Insights</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../insights.html#features">Features</a></li>
@@ -425,20 +480,10 @@
 </ul></li>
 </ul>
 </div>
-<div id="searchbox" role="search" style="display: none">
-<h3 id="searchlabel">Quick search</h3>
-<div class="searchformwrapper">
-<form action="../../../../search.html" class="search" method="get">
-<input aria-labelledby="searchlabel" name="q" type="text"/>
-<input type="submit" value="Go"/>
-</form>
-</div>
-</div>
-<script>$('#searchbox').show(0);</script>
 </div>
 </div>
 <div class="clearer"></div>
-</div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><div class="footerSection"><h5>Docs</h5><a href="/docs/introduction">Introduction</a><a href="/docs/getting_started">Getting Started</a><a href="/tutorials/">Tutorials</a><a href="/api/">API Reference</a></div><div class="footerSection"><h5>Social</h5><div class="social"><a class="github-button" href="https://github.com/pytorch/captum" data-count-href="https://github.com/pytorch/captum/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Captum on GitHub">captum</a></div></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright"> Copyright © 2020 Facebook Inc.</section><script>
+</div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><div class="footerSection"><h5>Docs</h5><a href="/docs/introduction">Introduction</a><a href="/docs/getting_started">Getting Started</a><a href="/tutorials/">Tutorials</a><a href="/api/">API Reference</a></div><div class="footerSection"><h5>Legal</h5><a href="https://opensource.facebook.com/legal/privacy/" target="_blank" rel="noreferrer noopener">Privacy</a><a href="https://opensource.facebook.com/legal/terms/" target="_blank" rel="noreferrer noopener">Terms</a></div><div class="footerSection"><h5>Social</h5><div class="social"><a class="github-button" href="https://github.com/pytorch/captum" data-count-href="https://github.com/pytorch/captum/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Captum on GitHub">captum</a></div></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright"> Copyright © 2025 Facebook Inc.</section><script>
             (function() {
               var BAD_BASE = '/captum/';
               if (window.location.origin !== 'https://captum.ai') {

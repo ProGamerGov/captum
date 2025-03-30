@@ -6,7 +6,7 @@
 
               ga('create', 'UA-44373548-48', 'auto');
               ga('send', 'pageview');
-            </script><link rel="stylesheet" href="/css/code_block_buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/js/code_block_buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/mathjax.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/js/code_block_buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
         document.addEventListener('DOMContentLoaded', function() {
           addBackToTop(
             {"zIndex":100}
@@ -14,51 +14,56 @@
         });
         </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/captum_logo.svg" alt="Captum"/></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/introduction" target="_self">Docs</a></li><li class=""><a href="/tutorials/" target="_self">Tutorials</a></li><li class=""><a href="/api/" target="_self">API Reference</a></li><li class=""><a href="https://github.com/pytorch/captum" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div>
 <script type="text/javascript" id="documentation_options" data-url_root="./"
-  src="/js/documentation_options.js"></script>
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/js/underscore.js"></script>
-<script type="text/javascript" src="/js/doctools.js"></script>
-<script type="text/javascript" src="/js/language_data.js"></script>
-<script type="text/javascript" src="/js/searchtools.js"></script>
-<div class="sphinx"><div class="document">
+src="/_sphinx/documentation_options.js"></script>
+<script type="text/javascript" src="/_sphinx/jquery.js"></script>
+<script type="text/javascript" src="/_sphinx/underscore.js"></script>
+<script type="text/javascript" src="/_sphinx/doctools.js"></script>
+<script type="text/javascript" src="/_sphinx/language_data.js"></script>
+<script type="text/javascript" src="/_sphinx/searchtools.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"></script>
+<script src="/_sphinx/katex_autorenderer.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" />
+<div class="sphinx wrapper"><div class="document">
 <div class="documentwrapper">
 <div class="bodywrapper">
 <div class="body" role="main">
-<div class="section" id="base-classes">
-<h1>Base Classes<a class="headerlink" href="#base-classes" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="attribution">
-<h2>Attribution<a class="headerlink" href="#attribution" title="Permalink to this headline">¶</a></h2>
+<section id="base-classes">
+<h1>Base Classes<a class="headerlink" href="#base-classes" title="Link to this heading">¶</a></h1>
+<section id="attribution">
+<h2>Attribution<a class="headerlink" href="#attribution" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt id="captum.attr.Attribution">
-<em class="property">class </em><code class="sig-prename descclassname">captum.attr.</code><code class="sig-name descname">Attribution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">forward_func</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#Attribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#captum.attr.Attribution" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="captum.attr.Attribution">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">captum.attr.</span></span><span class="sig-name descname"><span class="pre">Attribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#Attribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#captum.attr.Attribution" title="Link to this definition">¶</a></dt>
 <dd><p>All attribution algorithms extend this class. It enforces its child classes
 to extend and override core <cite>attribute</cite> method.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>forward_func</strong> (<em>callable</em><em> or </em><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><em>torch.nn.Module</em></a>) – This can either be an instance
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forward_func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em> or </em><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><em>torch.nn.Module</em></a>) – This can either be an instance
 of pytorch model or any modification of model’s forward
 function.</p>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="captum.attr.Attribution.attribute">
-<code class="sig-name descname">attribute</code><em class="property">: Callable</em><a class="headerlink" href="#captum.attr.Attribution.attribute" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="captum.attr.Attribution.attribute">
+<span class="sig-name descname"><span class="pre">attribute</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a></em><a class="headerlink" href="#captum.attr.Attribution.attribute" title="Link to this definition">¶</a></dt>
 <dd><p>This method computes and returns the attribution values for each input tensor.
 Deriving classes are responsible for implementing its logic accordingly.</p>
 <p>Specific attribution algorithms that extend this class take relevant
 arguments.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>inputs</strong> (<em>tensor</em><em> or </em><em>tuple of tensors</em>) – Input for which attribution
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>, </em><em>...</em><em>]</em>) – Input for which attribution
 is computed. It can be provided as a single tensor or
 a tuple of multiple tensors. If multiple input tensors
-are provided, the batch sizes must be aligned accross all
+are provided, the batch sizes must be aligned across all
 tensors.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><dl class="simple">
-<dt><strong>attributions</strong> (<em>tensor</em> or tuple of <em>tensors</em>):</dt><dd><p>Attribution values for each
+<dt><strong>attributions</strong> (<em>Tensor</em> or <em>tuple[Tensor, …]</em>):</dt><dd><p>Attribution values for each
 input tensor. The <cite>attributions</cite> have the same shape and
 dimensionality as the inputs.
 If a single tensor is provided as inputs, a single tensor
@@ -70,37 +75,72 @@ corresponding sized tensors is returned.</p>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>tensor</em> or tuple of <em>tensors</em> of <strong>attributions</strong></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tensor</em> or <em>tuple[Tensor, …]</em> of <strong>attributions</strong></p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py attribute">
-<dt id="captum.attr.Attribution.compute_convergence_delta">
-<code class="sig-name descname">compute_convergence_delta</code><em class="property">: Callable</em><a class="headerlink" href="#captum.attr.Attribution.compute_convergence_delta" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="captum.attr.Attribution.attribute_future">
+<span class="sig-name descname"><span class="pre">attribute_future</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a></em><a class="headerlink" href="#captum.attr.Attribution.attribute_future" title="Link to this definition">¶</a></dt>
+<dd><p>This method computes and returns a Future of attribution values for each input
+tensor. Deriving classes are responsible for implementing its logic accordingly.</p>
+<p>Specific attribution algorithms that extend this class take relevant
+arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>, </em><em>...</em><em>]</em>) – Input for which attribution
+is computed. It can be provided as a single tensor or
+a tuple of multiple tensors. If multiple input tensors
+are provided, the batch sizes must be aligned across all
+tensors.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><dl class="simple">
+<dt><strong>attributions</strong> (<em>Future[Tensor]</em> or <em>Future[tuple[Tensor, …]]</em>):</dt><dd><p>Future of attribution values for each input tensor.
+The results should be the same as the attribute
+method, except that the results are returned as a Future.
+If a single tensor is provided as inputs, a single Future tensor
+is returned. If a tuple is provided for inputs, a Future of a
+tuple of corresponding sized tensors is returned.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Future[Tensor]</em> or <em>Future[tuple[Tensor, …]]</em> of <strong>attributions</strong></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="captum.attr.Attribution.compute_convergence_delta">
+<span class="sig-name descname"><span class="pre">compute_convergence_delta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a></em><a class="headerlink" href="#captum.attr.Attribution.compute_convergence_delta" title="Link to this definition">¶</a></dt>
 <dd><p>The attribution algorithms which derive <cite>Attribution</cite> class and provide
 convergence delta (aka approximation error) should implement this method.
 Convergence delta can be computed based on certain properties of the
 attribution alogrithms.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>attributions</strong> (<em>tensor</em><em> or </em><em>tuple of tensors</em>) – Attribution scores that
+<li><p><strong>attributions</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>, </em><em>...</em><em>]</em>) – Attribution scores that
 are precomputed by an attribution algorithm.
 Attributions can be provided in form of a single tensor
 or a tuple of those. It is assumed that attribution
 tensor’s dimension 0 corresponds to the number of
 examples, and if multiple input tensors are provided,
 the examples must be aligned appropriately.</p></li>
-<li><p><strong>*args</strong> (<em>optional</em>) – Additonal arguments that are used by the
+<li><p><strong>*args</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>, </em><em>optional</em>) – Additonal arguments that are used by the
 sub-classes depending on the specific implementation
 of <cite>compute_convergence_delta</cite>.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><dl class="simple">
-<dt><strong>deltas</strong> (<em>tensor</em>):</dt><dd><p>Depending on specific implementaion of
+<dt><strong>deltas</strong> (<em>Tensor</em>):</dt><dd><p>Depending on specific implementaion of
 sub-classes, convergence delta can be returned per
 sample in form of a tensor or it can be aggregated
 across multuple samples and returned in form of a
@@ -111,22 +151,22 @@ single floating point tensor.</p>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>tensor</em> of <strong>deltas</strong></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tensor</em> of <strong>deltas</strong></p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
-<dt id="captum.attr.Attribution.get_name">
-<em class="property">classmethod </em><code class="sig-name descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#Attribution.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#captum.attr.Attribution.get_name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="captum.attr.Attribution.get_name">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#Attribution.get_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#captum.attr.Attribution.get_name" title="Link to this definition">¶</a></dt>
 <dd><p>Create readable class name by inserting a space before any capital
 characters besides the very first.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>a readable class name</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -134,8 +174,8 @@ characters besides the very first.</p>
 ‘Integrated Gradients’</p>
 </dd></dl>
 <dl class="py method">
-<dt id="captum.attr.Attribution.has_convergence_delta">
-<code class="sig-name descname">has_convergence_delta</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#Attribution.has_convergence_delta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#captum.attr.Attribution.has_convergence_delta" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="captum.attr.Attribution.has_convergence_delta">
+<span class="sig-name descname"><span class="pre">has_convergence_delta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#Attribution.has_convergence_delta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#captum.attr.Attribution.has_convergence_delta" title="Link to this definition">¶</a></dt>
 <dd><p>This method informs the user whether the attribution algorithm provides
 a convergence delta (aka an approximation error) or not. Convergence
 delta may serve as a proxy of correctness of attribution algorithm’s
@@ -143,35 +183,35 @@ approximation. If deriving attribution class provides a
 <cite>compute_convergence_delta</cite> method, it should
 override both <cite>compute_convergence_delta</cite> and <cite>has_convergence_delta</cite> methods.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Returns whether the attribution algorithm
 provides a convergence delta (aka approximation error) or not.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 </dd></dl>
-</div>
-<div class="section" id="layer-attribution">
-<h2>Layer Attribution<a class="headerlink" href="#layer-attribution" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="layer-attribution">
+<h2>Layer Attribution<a class="headerlink" href="#layer-attribution" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt id="captum.attr.LayerAttribution">
-<em class="property">class </em><code class="sig-prename descclassname">captum.attr.</code><code class="sig-name descname">LayerAttribution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">forward_func</span></em>, <em class="sig-param"><span class="n">layer</span></em>, <em class="sig-param"><span class="n">device_ids</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#LayerAttribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#captum.attr.LayerAttribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Layer attribution provides attribution values for the given layer, quanitfying
+<dt class="sig sig-object py" id="captum.attr.LayerAttribution">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">captum.attr.</span></span><span class="sig-name descname"><span class="pre">LayerAttribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#LayerAttribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#captum.attr.LayerAttribution" title="Link to this definition">¶</a></dt>
+<dd><p>Layer attribution provides attribution values for the given layer, quantifying
 the importance of each neuron within the given layer’s output. The output
 attribution of calling attribute on a LayerAttribution object always matches
 the size of the layer output.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>forward_func</strong> (<em>callable</em><em> or </em><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><em>torch.nn.Module</em></a>) – This can either be an instance
+<li><p><strong>forward_func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em> or </em><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><em>torch.nn.Module</em></a>) – This can either be an instance
 of pytorch model or any modification of model’s forward
 function.</p></li>
-<li><p><strong>layer</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><em>torch.nn.Module</em></a>) – Layer for which output attributions are computed.
+<li><p><strong>layer</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><em>torch.nn.Module</em></a>) – Layer for which output attributions are computed.
 Output size of attribute matches that of layer output.</p></li>
-<li><p><strong>device_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>)</em>) – Device ID list, necessary only if forward_func
+<li><p><strong>device_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Device ID list, necessary only if forward_func
 applies a DataParallel model, which allows reconstruction of
 intermediate outputs from batched results across devices.
 If forward_func is given as the DataParallel model itself,
@@ -180,21 +220,21 @@ then it is not necessary to provide this argument.</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="captum.attr.LayerAttribution.interpolate">
-<em class="property">static </em><code class="sig-name descname">interpolate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">layer_attribution</span></em>, <em class="sig-param"><span class="n">interpolate_dims</span></em>, <em class="sig-param"><span class="n">interpolate_mode</span><span class="o">=</span><span class="default_value">'nearest'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#LayerAttribution.interpolate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#captum.attr.LayerAttribution.interpolate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="captum.attr.LayerAttribution.interpolate">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_attribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolate_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolate_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nearest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#LayerAttribution.interpolate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#captum.attr.LayerAttribution.interpolate" title="Link to this definition">¶</a></dt>
 <dd><p>Interpolates given 3D, 4D or 5D layer attribution to given dimensions.
 This is often utilized to upsample the attribution of a convolutional layer
 to the size of an input, which allows visualizing in the input space.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>layer_attribution</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><em>torch.Tensor</em></a>) – Tensor of given layer attributions.</p></li>
-<li><p><strong>interpolate_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Upsampled dimensions. The
+<li><p><strong>layer_attribution</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a>) – Tensor of given layer attributions.</p></li>
+<li><p><strong>interpolate_dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Upsampled dimensions. The
 number of elements must be the number of dimensions
 of layer_attribution - 2, since the first dimension
 corresponds to number of examples and the second is
 assumed to correspond to the number of channels.</p></li>
-<li><p><strong>interpolate_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Method for interpolation, which
+<li><p><strong>interpolate_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Method for interpolation, which
 must be a valid input interpolation mode for
 torch.nn.functional. These methods are
 “nearest”, “area”, “linear” (3D-only), “bilinear”
@@ -203,10 +243,10 @@ based on the number of dimensions of the given layer
 attribution.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><dl class="simple">
-<dt><strong>attributions</strong> (<em>tensor</em>):</dt><dd><p>Upsampled layer attributions with first 2 dimensions matching
+<dt><strong>attributions</strong> (<em>Tensor</em>):</dt><dd><p>Upsampled layer attributions with first 2 dimensions matching
 slayer_attribution and remaining dimensions given by
 interpolate_dims.</p>
 </dd>
@@ -215,19 +255,19 @@ interpolate_dims.</p>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>tensor</em> of upsampled <strong>attributions</strong></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tensor</em> of upsampled <strong>attributions</strong></p>
 </dd>
 </dl>
 </dd></dl>
 </dd></dl>
-</div>
-<div class="section" id="neuron-attribution">
-<h2>Neuron Attribution<a class="headerlink" href="#neuron-attribution" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="neuron-attribution">
+<h2>Neuron Attribution<a class="headerlink" href="#neuron-attribution" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt id="captum.attr.NeuronAttribution">
-<em class="property">class </em><code class="sig-prename descclassname">captum.attr.</code><code class="sig-name descname">NeuronAttribution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">forward_func</span></em>, <em class="sig-param"><span class="n">layer</span></em>, <em class="sig-param"><span class="n">device_ids</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#NeuronAttribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#captum.attr.NeuronAttribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Neuron attribution provides input attribution for a given neuron, quanitfying
+<dt class="sig sig-object py" id="captum.attr.NeuronAttribution">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">captum.attr.</span></span><span class="sig-name descname"><span class="pre">NeuronAttribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#NeuronAttribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#captum.attr.NeuronAttribution" title="Link to this definition">¶</a></dt>
+<dd><p>Neuron attribution provides input attribution for a given neuron, quantifying
 the importance of each input feature in the activation of a particular neuron.
 Calling attribute on a NeuronAttribution object requires also providing
 the index of the neuron in the output of the given layer for which attributions
@@ -235,14 +275,14 @@ are required.
 The output attribution of calling attribute on a NeuronAttribution object
 always matches the size of the input.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>forward_func</strong> (<em>callable</em><em> or </em><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><em>torch.nn.Module</em></a>) – This can either be an instance
+<li><p><strong>forward_func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em> or </em><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><em>torch.nn.Module</em></a>) – This can either be an instance
 of pytorch model or any modification of model’s forward
 function.</p></li>
-<li><p><strong>layer</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><em>torch.nn.Module</em></a>) – Layer for which output attributions are computed.
+<li><p><strong>layer</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><em>torch.nn.Module</em></a>) – Layer for which output attributions are computed.
 Output size of attribute matches that of layer output.</p></li>
-<li><p><strong>device_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>(</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>)</em>) – Device ID list, necessary only if forward_func
+<li><p><strong>device_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Device ID list, necessary only if forward_func
 applies a DataParallel model, which allows reconstruction of
 intermediate outputs from batched results across devices.
 If forward_func is given as the DataParallel model itself,
@@ -251,28 +291,28 @@ then it is not necessary to provide this argument.</p></li>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="captum.attr.NeuronAttribution.attribute">
-<code class="sig-name descname">attribute</code><em class="property">: Callable</em><a class="headerlink" href="#captum.attr.NeuronAttribution.attribute" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="captum.attr.NeuronAttribution.attribute">
+<span class="sig-name descname"><span class="pre">attribute</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a></em><a class="headerlink" href="#captum.attr.NeuronAttribution.attribute" title="Link to this definition">¶</a></dt>
 <dd><p>This method computes and returns the neuron attribution values for each
 input tensor. Deriving classes are responsible for implementing
 its logic accordingly.</p>
 <p>Specific attribution algorithms that extend this class take relevant
 arguments.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>inputs</strong> – A single high dimensional input tensor or a tuple of them.</p></li>
-<li><p><strong>neuron_index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a>) – Tuple providing index of neuron in output
+<li><p><strong>neuron_selector</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Tuple providing index of neuron in output
 of given layer for which attribution is desired. Length of
 this tuple must be one less than the number of
 dimensions in the output of the given layer (since
 dimension 0 corresponds to number of examples).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><dl class="simple">
-<dt><strong>attributions</strong> (<em>tensor</em> or tuple of <em>tensors</em>):</dt><dd><p>Attribution values for
+<dt><strong>attributions</strong> (<em>Tensor</em> or <em>tuple[Tensor, …]</em>):</dt><dd><p>Attribution values for
 each input vector. The <cite>attributions</cite> have the
 dimensionality of inputs.</p>
 </dd>
@@ -281,31 +321,31 @@ dimensionality of inputs.</p>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>tensor</em> or tuple of <em>tensors</em> of <strong>attributions</strong></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tensor</em> or <em>tuple[Tensor, …]</em> of <strong>attributions</strong></p>
 </dd>
 </dl>
 </dd></dl>
 </dd></dl>
-</div>
-<div class="section" id="gradient-attribution">
-<h2>Gradient Attribution<a class="headerlink" href="#gradient-attribution" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="gradient-attribution">
+<h2>Gradient Attribution<a class="headerlink" href="#gradient-attribution" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt id="captum.attr.GradientAttribution">
-<em class="property">class </em><code class="sig-prename descclassname">captum.attr.</code><code class="sig-name descname">GradientAttribution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">forward_func</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#GradientAttribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#captum.attr.GradientAttribution" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="captum.attr.GradientAttribution">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">captum.attr.</span></span><span class="sig-name descname"><span class="pre">GradientAttribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#GradientAttribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#captum.attr.GradientAttribution" title="Link to this definition">¶</a></dt>
 <dd><p>All gradient based attribution algorithms extend this class. It requires a
 forward function, which most commonly is the forward function of the model
 that we want to interpret or the model itself.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>forward_func</strong> (<em>callable</em><em> or </em><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><em>torch.nn.Module</em></a>) – This can either be an instance
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forward_func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em> or </em><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><em>torch.nn.Module</em></a>) – This can either be an instance
 of pytorch model or any modification of model’s forward
 function.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="captum.attr.GradientAttribution.compute_convergence_delta">
-<code class="sig-name descname">compute_convergence_delta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">attributions</span></em>, <em class="sig-param"><span class="n">start_point</span></em>, <em class="sig-param"><span class="n">end_point</span></em>, <em class="sig-param"><span class="n">target</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">additional_forward_args</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#GradientAttribution.compute_convergence_delta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#captum.attr.GradientAttribution.compute_convergence_delta" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="captum.attr.GradientAttribution.compute_convergence_delta">
+<span class="sig-name descname"><span class="pre">compute_convergence_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attributions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_forward_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#GradientAttribution.compute_convergence_delta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#captum.attr.GradientAttribution.compute_convergence_delta" title="Link to this definition">¶</a></dt>
 <dd><p>Here we provide a specific implementation for <cite>compute_convergence_delta</cite>
 which is based on a common property among gradient-based attribution algorithms.
 In the literature sometimes it is also called completeness axiom. Completeness
@@ -318,28 +358,28 @@ the same shape and dimensionality. It also assumes that the target must have
 the same number of examples as the <cite>start_point</cite> and the <cite>end_point</cite> in case
 it is provided in form of a list or a non-singleton tensor.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>attributions</strong> (<em>tensor</em><em> or </em><em>tuple of tensors</em>) – Precomputed attribution
+<li><p><strong>attributions</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>, </em><em>...</em><em>]</em>) – Precomputed attribution
 scores. The user can compute those using any attribution
-algorithm. It is assumed the the shape and the
+algorithm. It is assumed the shape and the
 dimensionality of attributions must match the shape and
 the dimensionality of <cite>start_point</cite> and <cite>end_point</cite>.
 It also assumes that the attribution tensor’s
 dimension 0 corresponds to the number of
 examples, and if multiple input tensors are provided,
 the examples must be aligned appropriately.</p></li>
-<li><p><strong>start_point</strong> (<em>tensor</em><em> or </em><em>tuple of tensors</em><em>, </em><em>optional</em>) – <cite>start_point</cite>
+<li><p><strong>start_point</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>, </em><em>...</em><em>]</em><em>, </em><em>optional</em>) – <cite>start_point</cite>
 is passed as an input to model’s forward function. It
 is the starting point of attributions’ approximation.
 It is assumed that both <cite>start_point</cite> and <cite>end_point</cite>
 have the same shape and dimensionality.</p></li>
-<li><p><strong>end_point</strong> (<em>tensor</em><em> or </em><em>tuple of tensors</em>) – <cite>end_point</cite>
+<li><p><strong>end_point</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>, </em><em>...</em><em>]</em>) – <cite>end_point</cite>
 is passed as an input to model’s forward function. It
 is the end point of attributions’ approximation.
 It is assumed that both <cite>start_point</cite> and <cite>end_point</cite>
 have the same shape and dimensionality.</p></li>
-<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><em>tuple</em></a><em>, </em><em>tensor</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><em>list</em></a><em>, </em><em>optional</em>) – <p>Output indices for
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.6)"><em>Tensor</em></a><em>, or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em>, </em><em>optional</em>) – <p>Output indices for
 which gradients are computed (for classification cases,
 this is usually the target class).
 If the network returns a scalar value per example,
@@ -363,7 +403,7 @@ target for the corresponding example.</p></li>
 </ul>
 <p>Default: None</p>
 </p></li>
-<li><p><strong>additional_forward_args</strong> (<em>any</em><em>, </em><em>optional</em>) – If the forward function
+<li><p><strong>additional_forward_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>, </em><em>optional</em>) – If the forward function
 requires additional arguments other than the inputs for
 which attributions should not be computed, this argument
 can be provided. It must be either a single additional
@@ -379,10 +419,10 @@ and <cite>end_point</cite> when computing the forward pass.
 Default: None</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><dl class="simple">
-<dt><strong>deltas</strong> (<em>tensor</em>):</dt><dd><p>This implementation returns convergence delta per
+<dt><strong>deltas</strong> (<em>Tensor</em>):</dt><dd><p>This implementation returns convergence delta per
 sample. Deriving sub-classes may do any type of aggregation
 of those values, if necessary.</p>
 </dd>
@@ -391,44 +431,58 @@ of those values, if necessary.</p>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><em>tensor</em> of <strong>deltas</strong></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tensor</em> of <strong>deltas</strong></p>
 </dd>
 </dl>
 </dd></dl>
 </dd></dl>
-</div>
-<div class="section" id="perturbation-attribution">
-<h2>Perturbation Attribution<a class="headerlink" href="#perturbation-attribution" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="perturbation-attribution">
+<h2>Perturbation Attribution<a class="headerlink" href="#perturbation-attribution" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt id="captum.attr.PerturbationAttribution">
-<em class="property">class </em><code class="sig-prename descclassname">captum.attr.</code><code class="sig-name descname">PerturbationAttribution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">forward_func</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#PerturbationAttribution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#captum.attr.PerturbationAttribution" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="captum.attr.PerturbationAttribution">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">captum.attr.</span></span><span class="sig-name descname"><span class="pre">PerturbationAttribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">forward_func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/captum/attr/_utils/attribution.html#PerturbationAttribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#captum.attr.PerturbationAttribution" title="Link to this definition">¶</a></dt>
 <dd><p>All perturbation based attribution algorithms extend this class. It requires a
 forward function, which most commonly is the forward function of the model
 that we want to interpret or the model itself.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>forward_func</strong> (<em>callable</em><em> or </em><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.6.0a0+4392e52 ))"><em>torch.nn.Module</em></a>) – This can either be an instance
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>forward_func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em> or </em><a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch v2.6)"><em>torch.nn.Module</em></a>) – This can either be an instance
 of pytorch model or any modification of model’s forward
 function.</p>
 </dd>
 </dl>
 </dd></dl>
+</section>
+</section>
 </div>
 </div>
 </div>
-</div>
-</div>
-<div aria-label="main navigation" class="sphinxsidebar" role="navigation">
+<div aria-label="Main" class="sphinxsidebar" role="navigation">
 <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">Captum</a></h1>
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<search id="searchbox" role="search" style="display: none">
+<div class="searchformwrapper">
+<form action="search.html" class="search" method="get">
+<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" placeholder="Search" spellcheck="false" type="text"/>
+<input type="submit" value="Go"/>
+</form>
+</div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="attribution.html">Attribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="llm_attr.html">LLM Attribution Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="noise_tunnel.html">NoiseTunnel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="layer.html">Layer Attribution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="neuron.html">Neuron Attribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="robust.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concept.html">Concept-based Interpretability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="influence.html">Influential Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module.html">Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Base Classes</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#attribution">Attribution</a></li>
@@ -439,7 +493,7 @@ function.</p>
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Insights API Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Insights API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="insights.html">Insights</a></li>
 <li class="toctree-l1"><a class="reference internal" href="insights.html#features">Features</a></li>
@@ -453,20 +507,10 @@ function.</p>
 </ul></li>
 </ul>
 </div>
-<div id="searchbox" role="search" style="display: none">
-<h3 id="searchlabel">Quick search</h3>
-<div class="searchformwrapper">
-<form action="search.html" class="search" method="get">
-<input aria-labelledby="searchlabel" name="q" type="text"/>
-<input type="submit" value="Go"/>
-</form>
-</div>
-</div>
-<script>$('#searchbox').show(0);</script>
 </div>
 </div>
 <div class="clearer"></div>
-</div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><div class="footerSection"><h5>Docs</h5><a href="/docs/introduction">Introduction</a><a href="/docs/getting_started">Getting Started</a><a href="/tutorials/">Tutorials</a><a href="/api/">API Reference</a></div><div class="footerSection"><h5>Social</h5><div class="social"><a class="github-button" href="https://github.com/pytorch/captum" data-count-href="https://github.com/pytorch/captum/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Captum on GitHub">captum</a></div></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright"> Copyright © 2020 Facebook Inc.</section><script>
+</div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><div class="footerSection"><h5>Docs</h5><a href="/docs/introduction">Introduction</a><a href="/docs/getting_started">Getting Started</a><a href="/tutorials/">Tutorials</a><a href="/api/">API Reference</a></div><div class="footerSection"><h5>Legal</h5><a href="https://opensource.facebook.com/legal/privacy/" target="_blank" rel="noreferrer noopener">Privacy</a><a href="https://opensource.facebook.com/legal/terms/" target="_blank" rel="noreferrer noopener">Terms</a></div><div class="footerSection"><h5>Social</h5><div class="social"><a class="github-button" href="https://github.com/pytorch/captum" data-count-href="https://github.com/pytorch/captum/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Captum on GitHub">captum</a></div></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright"> Copyright © 2025 Facebook Inc.</section><script>
             (function() {
               var BAD_BASE = '/captum/';
               if (window.location.origin !== 'https://captum.ai') {

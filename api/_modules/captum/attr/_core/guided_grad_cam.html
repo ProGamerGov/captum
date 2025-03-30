@@ -6,7 +6,7 @@
 
               ga('create', 'UA-44373548-48', 'auto');
               ga('send', 'pageview');
-            </script><link rel="stylesheet" href="/css/code_block_buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/js/code_block_buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/mathjax.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/js/code_block_buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
         document.addEventListener('DOMContentLoaded', function() {
           addBackToTop(
             {"zIndex":100}
@@ -14,36 +14,43 @@
         });
         </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/captum_logo.svg" alt="Captum"/></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/introduction" target="_self">Docs</a></li><li class=""><a href="/tutorials/" target="_self">Tutorials</a></li><li class=""><a href="/api/" target="_self">API Reference</a></li><li class=""><a href="https://github.com/pytorch/captum" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div>
 <script type="text/javascript" id="documentation_options" data-url_root="./"
-  src="/js/documentation_options.js"></script>
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/js/underscore.js"></script>
-<script type="text/javascript" src="/js/doctools.js"></script>
-<script type="text/javascript" src="/js/language_data.js"></script>
-<script type="text/javascript" src="/js/searchtools.js"></script>
-<div class="sphinx"><div class="document">
+src="/_sphinx/documentation_options.js"></script>
+<script type="text/javascript" src="/_sphinx/jquery.js"></script>
+<script type="text/javascript" src="/_sphinx/underscore.js"></script>
+<script type="text/javascript" src="/_sphinx/doctools.js"></script>
+<script type="text/javascript" src="/_sphinx/language_data.js"></script>
+<script type="text/javascript" src="/_sphinx/searchtools.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"></script>
+<script src="/_sphinx/katex_autorenderer.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" />
+<div class="sphinx wrapper"><div class="document">
 <div class="documentwrapper">
 <div class="bodywrapper">
 <div class="body" role="main">
 <h1>Source code for captum.attr._core.guided_grad_cam</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="c1"># pyre-strict</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">captum._utils.common</span> <span class="kn">import</span> <span class="n">_format_output</span><span class="p">,</span> <span class="n">_format_tensor_into_tuples</span><span class="p">,</span> <span class="n">_is_tuple</span>
+<span class="kn">from</span> <span class="nn">captum._utils.typing</span> <span class="kn">import</span> <span class="n">TargetType</span><span class="p">,</span> <span class="n">TensorOrTupleOfTensorsGeneric</span>
+<span class="kn">from</span> <span class="nn">captum.attr._core.guided_backprop_deconvnet</span> <span class="kn">import</span> <span class="n">GuidedBackprop</span>
+<span class="kn">from</span> <span class="nn">captum.attr._core.layer.grad_cam</span> <span class="kn">import</span> <span class="n">LayerGradCam</span>
+<span class="kn">from</span> <span class="nn">captum.attr._utils.attribution</span> <span class="kn">import</span> <span class="n">GradientAttribution</span><span class="p">,</span> <span class="n">LayerAttribution</span>
+<span class="kn">from</span> <span class="nn">captum.log</span> <span class="kn">import</span> <span class="n">log_usage</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
 <span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Module</span>
 
-<span class="kn">from</span> <span class="nn">captum.log</span> <span class="kn">import</span> <span class="n">log_usage</span>
 
-<span class="kn">from</span> <span class="nn">..._utils.common</span> <span class="kn">import</span> <span class="n">_format_input</span><span class="p">,</span> <span class="n">_format_output</span><span class="p">,</span> <span class="n">_is_tuple</span>
-<span class="kn">from</span> <span class="nn">..._utils.typing</span> <span class="kn">import</span> <span class="n">TargetType</span><span class="p">,</span> <span class="n">TensorOrTupleOfTensorsGeneric</span>
-<span class="kn">from</span> <span class="nn">.._utils.attribution</span> <span class="kn">import</span> <span class="n">GradientAttribution</span><span class="p">,</span> <span class="n">LayerAttribution</span>
-<span class="kn">from</span> <span class="nn">.guided_backprop_deconvnet</span> <span class="kn">import</span> <span class="n">GuidedBackprop</span>
-<span class="kn">from</span> <span class="nn">.layer.grad_cam</span> <span class="kn">import</span> <span class="n">LayerGradCam</span>
-
-
-<div class="viewcode-block" id="GuidedGradCam"><a class="viewcode-back" href="../../../../guided_grad_cam.html#captum.attr.GuidedGradCam">[docs]</a><span class="k">class</span> <span class="nc">GuidedGradCam</span><span class="p">(</span><span class="n">GradientAttribution</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">"""</span>
+<div class="viewcode-block" id="GuidedGradCam">
+<a class="viewcode-back" href="../../../../guided_grad_cam.html#captum.attr.GuidedGradCam">[docs]</a>
+<span class="k">class</span> <span class="nc">GuidedGradCam</span><span class="p">(</span><span class="n">GradientAttribution</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Computes element-wise product of guided backpropagation attributions</span>
 <span class="sd">    with upsampled (non-negative) GradCAM attributions.</span>
 <span class="sd">    GradCAM attributions are computed with respect to the layer</span>
@@ -67,7 +74,7 @@
 
 <span class="sd">    More details regarding GuidedGradCAM can be found in the original</span>
 <span class="sd">    GradCAM paper here:</span>
-<span class="sd">    https://arxiv.org/pdf/1610.02391.pdf</span>
+<span class="sd">    https://arxiv.org/abs/1610.02391</span>
 
 <span class="sd">    Warning: Ensure that all ReLU operations in the forward function of the</span>
 <span class="sd">    given model are performed using a module (nn.module.ReLU).</span>
@@ -77,44 +84,46 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Module</span><span class="p">,</span> <span class="n">layer</span><span class="p">:</span> <span class="n">Module</span><span class="p">,</span> <span class="n">device_ids</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sa">r</span><span class="sd">"""</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 
 <span class="sd">            model (nn.Module):  The reference to PyTorch model instance.</span>
 <span class="sd">            layer (torch.nn.Module): Layer for which GradCAM attributions are computed.</span>
 <span class="sd">                          Currently, only layers with a single tensor output are</span>
 <span class="sd">                          supported.</span>
-<span class="sd">            device_ids (list(int)): Device ID list, necessary only if forward_func</span>
-<span class="sd">                          applies a DataParallel model. This allows reconstruction of</span>
+<span class="sd">            device_ids (list[int]): Device ID list, necessary only if model</span>
+<span class="sd">                          is a DataParallel model. This allows reconstruction of</span>
 <span class="sd">                          intermediate outputs from batched results across devices.</span>
-<span class="sd">                          If forward_func is given as the DataParallel model itself,</span>
+<span class="sd">                          If model is given as the DataParallel model itself,</span>
 <span class="sd">                          then it is not necessary to provide this argument.</span>
 <span class="sd">        """</span>
         <span class="n">GradientAttribution</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grad_cam</span> <span class="o">=</span> <span class="n">LayerGradCam</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">device_ids</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">guided_backprop</span> <span class="o">=</span> <span class="n">GuidedBackprop</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GuidedGradCam.attribute"><a class="viewcode-back" href="../../../../guided_grad_cam.html#captum.attr.GuidedGradCam.attribute">[docs]</a>    <span class="nd">@log_usage</span><span class="p">()</span>
+<div class="viewcode-block" id="GuidedGradCam.attribute">
+<a class="viewcode-back" href="../../../../guided_grad_cam.html#captum.attr.GuidedGradCam.attribute">[docs]</a>
+    <span class="nd">@log_usage</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">attribute</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">inputs</span><span class="p">:</span> <span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">,</span>
         <span class="n">target</span><span class="p">:</span> <span class="n">TargetType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">interpolate_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"nearest"</span><span class="p">,</span>
         <span class="n">attribute_to_layer_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">:</span>
-        <span class="sa">r</span><span class="sd">"""</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 
-<span class="sd">            inputs (tensor or tuple of tensors):  Input for which attributions</span>
-<span class="sd">                        are computed. If forward_func takes a single</span>
+<span class="sd">            inputs (Tensor or tuple[Tensor, ...]): Input for which attributions</span>
+<span class="sd">                        are computed. If model takes a single</span>
 <span class="sd">                        tensor as input, a single input tensor should be provided.</span>
-<span class="sd">                        If forward_func takes multiple tensors as input, a tuple</span>
+<span class="sd">                        If model takes multiple tensors as input, a tuple</span>
 <span class="sd">                        of the input tensors should be provided. It is assumed</span>
 <span class="sd">                        that for all given input tensors, dimension 0 corresponds</span>
 <span class="sd">                        to the number of examples, and if multiple input tensors</span>
 <span class="sd">                        are provided, the examples must be aligned appropriately.</span>
-<span class="sd">            target (int, tuple, tensor or list, optional):  Output indices for</span>
+<span class="sd">            target (int, tuple, Tensor, or list, optional): Output indices for</span>
 <span class="sd">                        which gradients are computed (for classification cases,</span>
 <span class="sd">                        this is usually the target class).</span>
 <span class="sd">                        If the network returns a scalar value per example,</span>
@@ -139,14 +148,14 @@
 <span class="sd">                          target for the corresponding example.</span>
 
 <span class="sd">                        Default: None</span>
-<span class="sd">            additional_forward_args (any, optional): If the forward function</span>
+<span class="sd">            additional_forward_args (Any, optional): If the forward function</span>
 <span class="sd">                        requires additional arguments other than the inputs for</span>
 <span class="sd">                        which attributions should not be computed, this argument</span>
 <span class="sd">                        can be provided. It must be either a single additional</span>
 <span class="sd">                        argument of a Tensor or arbitrary (non-tuple) type or a</span>
 <span class="sd">                        tuple containing multiple additional arguments including</span>
 <span class="sd">                        tensors or any arbitrary python types. These arguments</span>
-<span class="sd">                        are provided to forward_func in order following the</span>
+<span class="sd">                        are provided to model in order following the</span>
 <span class="sd">                        arguments in inputs.</span>
 <span class="sd">                        Note that attributions are not computed with respect</span>
 <span class="sd">                        to these arguments.</span>
@@ -177,8 +186,8 @@
 <span class="sd">                        Default: False</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            *tensor* of **attributions**:</span>
-<span class="sd">            - **attributions** (*tensor*):</span>
+<span class="sd">            *Tensor* of **attributions**:</span>
+<span class="sd">            - **attributions** (*Tensor*):</span>
 <span class="sd">                    Element-wise product of (upsampled) GradCAM</span>
 <span class="sd">                    and Guided Backprop attributions.</span>
 <span class="sd">                    If a single tensor is provided as inputs, a single tensor is</span>
@@ -208,10 +217,10 @@
 <span class="sd">            &gt;&gt;&gt; attribution = guided_gc.attribute(input, 3)</span>
 <span class="sd">        """</span>
         <span class="n">is_inputs_tuple</span> <span class="o">=</span> <span class="n">_is_tuple</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
-        <span class="n">inputs</span> <span class="o">=</span> <span class="n">_format_input</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">inputs_tuple</span> <span class="o">=</span> <span class="n">_format_tensor_into_tuples</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
         <span class="n">grad_cam_attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_cam</span><span class="o">.</span><span class="n">attribute</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grad_cam</span><span class="p">,</span>  <span class="c1"># self</span>
-            <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="n">inputs_tuple</span><span class="p">,</span>
             <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
             <span class="n">additional_forward_args</span><span class="o">=</span><span class="n">additional_forward_args</span><span class="p">,</span>
             <span class="n">attribute_to_layer_input</span><span class="o">=</span><span class="n">attribute_to_layer_input</span><span class="p">,</span>
@@ -223,20 +232,21 @@
                 <span class="s2">"outputs is not supported."</span>
             <span class="p">)</span>
             <span class="n">grad_cam_attr</span> <span class="o">=</span> <span class="n">grad_cam_attr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
         <span class="n">guided_backprop_attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">guided_backprop</span><span class="o">.</span><span class="n">attribute</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">guided_backprop</span><span class="p">,</span>  <span class="c1"># self</span>
-            <span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">,</span>
+            <span class="n">inputs</span><span class="o">=</span><span class="n">inputs_tuple</span><span class="p">,</span>
             <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
             <span class="n">additional_forward_args</span><span class="o">=</span><span class="n">additional_forward_args</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">output_attr</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputs_tuple</span><span class="p">)):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">output_attr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">guided_backprop_attr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                     <span class="o">*</span> <span class="n">LayerAttribution</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span>
                         <span class="n">grad_cam_attr</span><span class="p">,</span>
-                        <span class="n">inputs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span>
+                        <span class="nb">tuple</span><span class="p">(</span><span class="n">inputs_tuple</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:]),</span>
                         <span class="n">interpolate_mode</span><span class="o">=</span><span class="n">interpolate_mode</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
@@ -244,29 +254,48 @@
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                     <span class="s2">"Couldn't appropriately interpolate GradCAM attributions for some "</span>
                     <span class="s2">"input tensors, returning empty tensor for corresponding "</span>
-                    <span class="s2">"attributions."</span>
+                    <span class="s2">"attributions."</span><span class="p">,</span>
+                    <span class="n">stacklevel</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">output_attr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">_format_output</span><span class="p">(</span><span class="n">is_inputs_tuple</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">output_attr</span><span class="p">))</span></div></div>
+        <span class="c1"># pyre-fixme[7]: Expected `TensorOrTupleOfTensorsGeneric` but got</span>
+        <span class="c1">#  `Tuple[Tensor, ...]`.</span>
+        <span class="k">return</span> <span class="n">_format_output</span><span class="p">(</span><span class="n">is_inputs_tuple</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">output_attr</span><span class="p">))</span></div>
+</div>
+
 </pre></div>
 </div>
 </div>
 </div>
-<div aria-label="main navigation" class="sphinxsidebar" role="navigation">
+<div aria-label="Main" class="sphinxsidebar" role="navigation">
 <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../../../index.html">Captum</a></h1>
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<search id="searchbox" role="search" style="display: none">
+<div class="searchformwrapper">
+<form action="../../../../search.html" class="search" method="get">
+<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" placeholder="Search" spellcheck="false" type="text"/>
+<input type="submit" value="Go"/>
+</form>
+</div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../attribution.html">Attribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../llm_attr.html">LLM Attribution Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../noise_tunnel.html">NoiseTunnel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../layer.html">Layer Attribution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../neuron.html">Neuron Attribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../robust.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concept.html">Concept-based Interpretability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../influence.html">Influential Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../module.html">Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../base_classes.html">Base Classes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Insights API Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Insights API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../insights.html">Insights</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../insights.html#features">Features</a></li>
@@ -280,20 +309,10 @@
 </ul></li>
 </ul>
 </div>
-<div id="searchbox" role="search" style="display: none">
-<h3 id="searchlabel">Quick search</h3>
-<div class="searchformwrapper">
-<form action="../../../../search.html" class="search" method="get">
-<input aria-labelledby="searchlabel" name="q" type="text"/>
-<input type="submit" value="Go"/>
-</form>
-</div>
-</div>
-<script>$('#searchbox').show(0);</script>
 </div>
 </div>
 <div class="clearer"></div>
-</div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><div class="footerSection"><h5>Docs</h5><a href="/docs/introduction">Introduction</a><a href="/docs/getting_started">Getting Started</a><a href="/tutorials/">Tutorials</a><a href="/api/">API Reference</a></div><div class="footerSection"><h5>Social</h5><div class="social"><a class="github-button" href="https://github.com/pytorch/captum" data-count-href="https://github.com/pytorch/captum/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Captum on GitHub">captum</a></div></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright"> Copyright © 2020 Facebook Inc.</section><script>
+</div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><div class="footerSection"><h5>Docs</h5><a href="/docs/introduction">Introduction</a><a href="/docs/getting_started">Getting Started</a><a href="/tutorials/">Tutorials</a><a href="/api/">API Reference</a></div><div class="footerSection"><h5>Legal</h5><a href="https://opensource.facebook.com/legal/privacy/" target="_blank" rel="noreferrer noopener">Privacy</a><a href="https://opensource.facebook.com/legal/terms/" target="_blank" rel="noreferrer noopener">Terms</a></div><div class="footerSection"><h5>Social</h5><div class="social"><a class="github-button" href="https://github.com/pytorch/captum" data-count-href="https://github.com/pytorch/captum/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Captum on GitHub">captum</a></div></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright"> Copyright © 2025 Facebook Inc.</section><script>
             (function() {
               var BAD_BASE = '/captum/';
               if (window.location.origin !== 'https://captum.ai') {

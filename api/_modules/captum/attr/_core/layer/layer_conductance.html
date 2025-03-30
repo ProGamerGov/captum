@@ -6,7 +6,7 @@
 
               ga('create', 'UA-44373548-48', 'auto');
               ga('send', 'pageview');
-            </script><link rel="stylesheet" href="/css/code_block_buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/js/code_block_buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/mathjax.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/js/code_block_buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
         document.addEventListener('DOMContentLoaded', function() {
           addBackToTop(
             {"zIndex":100}
@@ -14,50 +14,61 @@
         });
         </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/captum_logo.svg" alt="Captum"/></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/introduction" target="_self">Docs</a></li><li class=""><a href="/tutorials/" target="_self">Tutorials</a></li><li class=""><a href="/api/" target="_self">API Reference</a></li><li class=""><a href="https://github.com/pytorch/captum" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div>
 <script type="text/javascript" id="documentation_options" data-url_root="./"
-  src="/js/documentation_options.js"></script>
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/js/underscore.js"></script>
-<script type="text/javascript" src="/js/doctools.js"></script>
-<script type="text/javascript" src="/js/language_data.js"></script>
-<script type="text/javascript" src="/js/searchtools.js"></script>
-<div class="sphinx"><div class="document">
+src="/_sphinx/documentation_options.js"></script>
+<script type="text/javascript" src="/_sphinx/jquery.js"></script>
+<script type="text/javascript" src="/_sphinx/underscore.js"></script>
+<script type="text/javascript" src="/_sphinx/doctools.js"></script>
+<script type="text/javascript" src="/_sphinx/language_data.js"></script>
+<script type="text/javascript" src="/_sphinx/searchtools.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"></script>
+<script src="/_sphinx/katex_autorenderer.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" />
+<div class="sphinx wrapper"><div class="document">
 <div class="documentwrapper">
 <div class="bodywrapper">
 <div class="body" role="main">
 <h1>Source code for captum.attr._core.layer.layer_conductance</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="c1"># pyre-strict</span>
 <span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
-<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Module</span>
-
-<span class="kn">from</span> <span class="nn">captum.log</span> <span class="kn">import</span> <span class="n">log_usage</span>
-
-<span class="kn">from</span> <span class="nn">...._utils.common</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">captum._utils.common</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_expand_additional_forward_args</span><span class="p">,</span>
     <span class="n">_expand_target</span><span class="p">,</span>
     <span class="n">_format_additional_forward_args</span><span class="p">,</span>
     <span class="n">_format_output</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">...._utils.gradient</span> <span class="kn">import</span> <span class="n">compute_layer_gradients_and_eval</span>
-<span class="kn">from</span> <span class="nn">...._utils.typing</span> <span class="kn">import</span> <span class="n">BaselineType</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">TargetType</span>
-<span class="kn">from</span> <span class="nn">..._utils.approximation_methods</span> <span class="kn">import</span> <span class="n">approximation_parameters</span>
-<span class="kn">from</span> <span class="nn">..._utils.attribution</span> <span class="kn">import</span> <span class="n">GradientAttribution</span><span class="p">,</span> <span class="n">LayerAttribution</span>
-<span class="kn">from</span> <span class="nn">..._utils.batching</span> <span class="kn">import</span> <span class="n">_batch_attribution</span>
-<span class="kn">from</span> <span class="nn">..._utils.common</span> <span class="kn">import</span> <span class="n">_format_input_baseline</span><span class="p">,</span> <span class="n">_reshape_and_sum</span><span class="p">,</span> <span class="n">_validate_input</span>
+<span class="kn">from</span> <span class="nn">captum._utils.gradient</span> <span class="kn">import</span> <span class="n">compute_layer_gradients_and_eval</span>
+<span class="kn">from</span> <span class="nn">captum._utils.typing</span> <span class="kn">import</span> <span class="n">BaselineType</span><span class="p">,</span> <span class="n">TargetType</span>
+<span class="kn">from</span> <span class="nn">captum.attr._utils.approximation_methods</span> <span class="kn">import</span> <span class="n">approximation_parameters</span>
+<span class="kn">from</span> <span class="nn">captum.attr._utils.attribution</span> <span class="kn">import</span> <span class="n">GradientAttribution</span><span class="p">,</span> <span class="n">LayerAttribution</span>
+<span class="kn">from</span> <span class="nn">captum.attr._utils.batching</span> <span class="kn">import</span> <span class="n">_batch_attribution</span>
+<span class="kn">from</span> <span class="nn">captum.attr._utils.common</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_format_input_baseline</span><span class="p">,</span>
+    <span class="n">_reshape_and_sum</span><span class="p">,</span>
+    <span class="n">_validate_input</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">captum.log</span> <span class="kn">import</span> <span class="n">log_usage</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Module</span>
 
 
-<div class="viewcode-block" id="LayerConductance"><a class="viewcode-back" href="../../../../../layer.html#captum.attr.LayerConductance">[docs]</a><span class="k">class</span> <span class="nc">LayerConductance</span><span class="p">(</span><span class="n">LayerAttribution</span><span class="p">,</span> <span class="n">GradientAttribution</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">"""</span>
+<div class="viewcode-block" id="LayerConductance">
+<a class="viewcode-back" href="../../../../../layer.html#captum.attr.LayerConductance">[docs]</a>
+<span class="k">class</span> <span class="nc">LayerConductance</span><span class="p">(</span><span class="n">LayerAttribution</span><span class="p">,</span> <span class="n">GradientAttribution</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Computes conductance with respect to the given layer. The</span>
 <span class="sd">    returned output is in the shape of the layer's output, showing the total</span>
 <span class="sd">    conductance of each hidden layer neuron.</span>
 
 <span class="sd">    The details of the approach can be found here:</span>
 <span class="sd">    https://arxiv.org/abs/1805.12233</span>
-<span class="sd">    https://arxiv.org/pdf/1807.09946.pdf</span>
+<span class="sd">    https://arxiv.org/abs/1807.09946</span>
 
 <span class="sd">    Note that this provides the total conductance of each neuron in the</span>
 <span class="sd">    layer's output. To obtain the breakdown of a neuron's conductance by input</span>
@@ -67,14 +78,14 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">forward_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
+        <span class="n">forward_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span>
         <span class="n">layer</span><span class="p">:</span> <span class="n">Module</span><span class="p">,</span>
         <span class="n">device_ids</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sa">r</span><span class="sd">"""</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 
-<span class="sd">            forward_func (callable):  The forward function of the model or any</span>
+<span class="sd">            forward_func (Callable): The forward function of the model or any</span>
 <span class="sd">                          modification of it</span>
 <span class="sd">            layer (torch.nn.Module): Layer for which attributions are computed.</span>
 <span class="sd">                          Output size of attribute matches this layer's input or</span>
@@ -82,7 +93,7 @@
 <span class="sd">                          the inputs or outputs of the layer, corresponding to</span>
 <span class="sd">                          attribution of each neuron in the input or output of</span>
 <span class="sd">                          this layer.</span>
-<span class="sd">            device_ids (list(int)): Device ID list, necessary only if forward_func</span>
+<span class="sd">            device_ids (list[int]): Device ID list, necessary only if forward_func</span>
 <span class="sd">                          applies a DataParallel model. This allows reconstruction of</span>
 <span class="sd">                          intermediate outputs from batched results across devices.</span>
 <span class="sd">                          If forward_func is given as the DataParallel model itself,</span>
@@ -91,8 +102,11 @@
         <span class="n">LayerAttribution</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forward_func</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">device_ids</span><span class="p">)</span>
         <span class="n">GradientAttribution</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forward_func</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LayerConductance.has_convergence_delta"><a class="viewcode-back" href="../../../../../layer.html#captum.attr.LayerConductance.has_convergence_delta">[docs]</a>    <span class="k">def</span> <span class="nf">has_convergence_delta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="LayerConductance.has_convergence_delta">
+<a class="viewcode-back" href="../../../../../layer.html#captum.attr.LayerConductance.has_convergence_delta">[docs]</a>
+    <span class="k">def</span> <span class="nf">has_convergence_delta</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span></div>
+
 
     <span class="nd">@typing</span><span class="o">.</span><span class="n">overload</span>
     <span class="k">def</span> <span class="nf">attribute</span><span class="p">(</span>
@@ -100,15 +114,15 @@
         <span class="n">inputs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
         <span class="n">baselines</span><span class="p">:</span> <span class="n">BaselineType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">target</span><span class="p">:</span> <span class="n">TargetType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
         <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"gausslegendre"</span><span class="p">,</span>
         <span class="n">internal_batch_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">return_convergence_delta</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">],</span>
         <span class="n">attribute_to_layer_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span> <span class="n">Tensor</span><span class="p">]:</span>
-        <span class="o">...</span>
+        <span class="n">grad_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span> <span class="n">Tensor</span><span class="p">]:</span> <span class="o">...</span>
 
     <span class="nd">@typing</span><span class="o">.</span><span class="n">overload</span>
     <span class="k">def</span> <span class="nf">attribute</span><span class="p">(</span>
@@ -116,16 +130,20 @@
         <span class="n">inputs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
         <span class="n">baselines</span><span class="p">:</span> <span class="n">BaselineType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">target</span><span class="p">:</span> <span class="n">TargetType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
         <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"gausslegendre"</span><span class="p">,</span>
         <span class="n">internal_batch_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">return_convergence_delta</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">attribute_to_layer_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
-        <span class="o">...</span>
+        <span class="n">grad_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span> <span class="o">...</span>
 
-<div class="viewcode-block" id="LayerConductance.attribute"><a class="viewcode-back" href="../../../../../layer.html#captum.attr.LayerConductance.attribute">[docs]</a>    <span class="nd">@log_usage</span><span class="p">()</span>
+<div class="viewcode-block" id="LayerConductance.attribute">
+<a class="viewcode-back" href="../../../../../layer.html#captum.attr.LayerConductance.attribute">[docs]</a>
+    <span class="nd">@log_usage</span><span class="p">()</span>
+    <span class="c1"># pyre-fixme[43]: This definition does not have the same decorators as the</span>
+    <span class="c1">#  preceding overload(s).</span>
     <span class="k">def</span> <span class="nf">attribute</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">inputs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
@@ -133,19 +151,20 @@
             <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span>
         <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">target</span><span class="p">:</span> <span class="n">TargetType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
         <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"gausslegendre"</span><span class="p">,</span>
         <span class="n">internal_batch_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">return_convergence_delta</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">attribute_to_layer_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">grad_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span>
         <span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span> <span class="n">Tensor</span><span class="p">]</span>
     <span class="p">]:</span>
-        <span class="sa">r</span><span class="sd">"""</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 
-<span class="sd">            inputs (tensor or tuple of tensors):  Input for which layer</span>
+<span class="sd">            inputs (Tensor or tuple[Tensor, ...]): Input for which layer</span>
 <span class="sd">                        conductance is computed. If forward_func takes a single</span>
 <span class="sd">                        tensor as input, a single input tensor should be provided.</span>
 <span class="sd">                        If forward_func takes multiple tensors as input, a tuple</span>
@@ -153,7 +172,7 @@
 <span class="sd">                        that for all given input tensors, dimension 0 corresponds</span>
 <span class="sd">                        to the number of examples, and if multiple input tensors</span>
 <span class="sd">                        are provided, the examples must be aligned appropriately.</span>
-<span class="sd">            baselines (scalar, tensor, tuple of scalars or tensors, optional):</span>
+<span class="sd">            baselines (scalar, Tensor, tuple of scalar, or Tensor, optional):</span>
 <span class="sd">                        Baselines define the starting point from which integral</span>
 <span class="sd">                        is computed and can be provided as:</span>
 
@@ -177,11 +196,12 @@
 <span class="sd">                          - or a scalar, corresponding to a tensor in the</span>
 <span class="sd">                            inputs' tuple. This scalar value is broadcasted</span>
 <span class="sd">                            for corresponding input tensor.</span>
+
 <span class="sd">                        In the cases when `baselines` is not provided, we internally</span>
 <span class="sd">                        use zero scalar corresponding to each input tensor.</span>
 
 <span class="sd">                        Default: None</span>
-<span class="sd">            target (int, tuple, tensor or list, optional):  Output indices for</span>
+<span class="sd">            target (int, tuple, Tensor, or list, optional): Output indices for</span>
 <span class="sd">                        which gradients are computed (for classification cases,</span>
 <span class="sd">                        this is usually the target class).</span>
 <span class="sd">                        If the network returns a scalar value per example,</span>
@@ -206,7 +226,7 @@
 <span class="sd">                          target for the corresponding example.</span>
 
 <span class="sd">                        Default: None</span>
-<span class="sd">            additional_forward_args (any, optional): If the forward function</span>
+<span class="sd">            additional_forward_args (Any, optional): If the forward function</span>
 <span class="sd">                        requires additional arguments other than the inputs for</span>
 <span class="sd">                        which attributions should not be computed, this argument</span>
 <span class="sd">                        can be provided. It must be either a single additional</span>
@@ -225,7 +245,7 @@
 <span class="sd">                        Default: None</span>
 <span class="sd">            n_steps (int, optional): The number of steps used by the approximation</span>
 <span class="sd">                        method. Default: 50.</span>
-<span class="sd">            method (string, optional): Method for approximating the integral,</span>
+<span class="sd">            method (str, optional): Method for approximating the integral,</span>
 <span class="sd">                        one of `riemann_right`, `riemann_left`, `riemann_middle`,</span>
 <span class="sd">                        `riemann_trapezoid` or `gausslegendre`.</span>
 <span class="sd">                        Default: `gausslegendre` if no method is provided.</span>
@@ -256,10 +276,13 @@
 <span class="sd">                        attribute to the input or output, is a single tensor.</span>
 <span class="sd">                        Support for multiple tensors will be added later.</span>
 <span class="sd">                        Default: False</span>
+<span class="sd">            grad_kwargs (Dict[str, Any], optional): Additional keyword</span>
+<span class="sd">                        arguments for torch.autograd.grad.</span>
+<span class="sd">                        Default: None</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            **attributions** or 2-element tuple of **attributions**, **delta**:</span>
-<span class="sd">            - **attributions** (*tensor* or tuple of *tensors*):</span>
+<span class="sd">            - **attributions** (*Tensor* or *tuple[Tensor, ...]*):</span>
 <span class="sd">                        Conductance of each neuron in given layer input or</span>
 <span class="sd">                        output. Attributions will always be the same size as</span>
 <span class="sd">                        the input or output of the given layer, depending on</span>
@@ -269,7 +292,7 @@
 <span class="sd">                        Attributions are returned in a tuple if</span>
 <span class="sd">                        the layer inputs / outputs contain multiple tensors,</span>
 <span class="sd">                        otherwise a single tensor is returned.</span>
-<span class="sd">            - **delta** (*tensor*, returned if return_convergence_delta=True):</span>
+<span class="sd">            - **delta** (*Tensor*, returned if return_convergence_delta=True):</span>
 <span class="sd">                        The difference between the total</span>
 <span class="sd">                        approximated and true conductance.</span>
 <span class="sd">                        This is computed using the property that the total sum of</span>
@@ -277,7 +300,7 @@
 <span class="sd">                        the total sum of the attributions.</span>
 <span class="sd">                        Delta is calculated per example, meaning that the number of</span>
 <span class="sd">                        elements in returned delta tensor is equal to the number of</span>
-<span class="sd">                        of examples in inputs.</span>
+<span class="sd">                        examples in inputs.</span>
 
 <span class="sd">        Examples::</span>
 
@@ -338,16 +361,18 @@
             <span class="k">return</span> <span class="n">_format_output</span><span class="p">(</span><span class="n">is_layer_tuple</span><span class="p">,</span> <span class="n">attributions</span><span class="p">),</span> <span class="n">delta</span>
         <span class="k">return</span> <span class="n">_format_output</span><span class="p">(</span><span class="n">is_layer_tuple</span><span class="p">,</span> <span class="n">attributions</span><span class="p">)</span></div>
 
+
     <span class="k">def</span> <span class="nf">_attribute</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">inputs</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
         <span class="n">baselines</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">...</span><span class="p">],</span>
         <span class="n">target</span><span class="p">:</span> <span class="n">TargetType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
         <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"gausslegendre"</span><span class="p">,</span>
         <span class="n">attribute_to_layer_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">step_sizes_and_alphas</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">grad_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
         <span class="n">num_examples</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">step_sizes_and_alphas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -381,14 +406,18 @@
 
         <span class="c1"># Conductance Gradients - Returns gradient of output with respect to</span>
         <span class="c1"># hidden layer and hidden layer evaluated at each input.</span>
-        <span class="p">(</span><span class="n">layer_gradients</span><span class="p">,</span> <span class="n">layer_evals</span><span class="p">,)</span> <span class="o">=</span> <span class="n">compute_layer_gradients_and_eval</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">layer_gradients</span><span class="p">,</span>
+            <span class="n">layer_evals</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">compute_layer_gradients_and_eval</span><span class="p">(</span>
             <span class="n">forward_fn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">forward_func</span><span class="p">,</span>
-            <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">cast</span><span class="p">(</span><span class="n">Module</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">),</span>
             <span class="n">inputs</span><span class="o">=</span><span class="n">scaled_features_tpl</span><span class="p">,</span>
             <span class="n">additional_forward_args</span><span class="o">=</span><span class="n">input_additional_args</span><span class="p">,</span>
             <span class="n">target_ind</span><span class="o">=</span><span class="n">expanded_target</span><span class="p">,</span>
             <span class="n">device_ids</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device_ids</span><span class="p">,</span>
             <span class="n">attribute_to_layer_input</span><span class="o">=</span><span class="n">attribute_to_layer_input</span><span class="p">,</span>
+            <span class="n">grad_kwargs</span><span class="o">=</span><span class="n">grad_kwargs</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Compute differences between consecutive evaluations of layer_eval.</span>
@@ -407,7 +436,7 @@
                 <span class="n">grad_diff</span> <span class="o">*</span> <span class="n">layer_gradient</span><span class="p">[:</span><span class="o">-</span><span class="n">num_examples</span><span class="p">],</span>
                 <span class="n">n_steps</span><span class="p">,</span>
                 <span class="n">num_examples</span><span class="p">,</span>
-                <span class="n">layer_eval</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span>
+                <span class="nb">tuple</span><span class="p">(</span><span class="n">layer_eval</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">layer_gradient</span><span class="p">,</span> <span class="n">layer_eval</span><span class="p">,</span> <span class="n">grad_diff</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
                 <span class="n">layer_gradients</span><span class="p">,</span> <span class="n">layer_evals</span><span class="p">,</span> <span class="n">grad_diffs</span>
@@ -416,26 +445,41 @@
         <span class="k">return</span> <span class="n">_format_output</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">attributions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">,</span> <span class="n">attributions</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">multiplies_by_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">multiplies_by_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span></div>
+
 </pre></div>
 </div>
 </div>
 </div>
-<div aria-label="main navigation" class="sphinxsidebar" role="navigation">
+<div aria-label="Main" class="sphinxsidebar" role="navigation">
 <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../../../../index.html">Captum</a></h1>
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<search id="searchbox" role="search" style="display: none">
+<div class="searchformwrapper">
+<form action="../../../../../search.html" class="search" method="get">
+<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" placeholder="Search" spellcheck="false" type="text"/>
+<input type="submit" value="Go"/>
+</form>
+</div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../attribution.html">Attribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../llm_attr.html">LLM Attribution Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../noise_tunnel.html">NoiseTunnel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../layer.html">Layer Attribution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../neuron.html">Neuron Attribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../robust.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../concept.html">Concept-based Interpretability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../influence.html">Influential Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../module.html">Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../base_classes.html">Base Classes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Insights API Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Insights API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../insights.html">Insights</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../insights.html#features">Features</a></li>
@@ -449,20 +493,10 @@
 </ul></li>
 </ul>
 </div>
-<div id="searchbox" role="search" style="display: none">
-<h3 id="searchlabel">Quick search</h3>
-<div class="searchformwrapper">
-<form action="../../../../../search.html" class="search" method="get">
-<input aria-labelledby="searchlabel" name="q" type="text"/>
-<input type="submit" value="Go"/>
-</form>
-</div>
-</div>
-<script>$('#searchbox').show(0);</script>
 </div>
 </div>
 <div class="clearer"></div>
-</div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><div class="footerSection"><h5>Docs</h5><a href="/docs/introduction">Introduction</a><a href="/docs/getting_started">Getting Started</a><a href="/tutorials/">Tutorials</a><a href="/api/">API Reference</a></div><div class="footerSection"><h5>Social</h5><div class="social"><a class="github-button" href="https://github.com/pytorch/captum" data-count-href="https://github.com/pytorch/captum/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Captum on GitHub">captum</a></div></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright"> Copyright © 2020 Facebook Inc.</section><script>
+</div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><div class="footerSection"><h5>Docs</h5><a href="/docs/introduction">Introduction</a><a href="/docs/getting_started">Getting Started</a><a href="/tutorials/">Tutorials</a><a href="/api/">API Reference</a></div><div class="footerSection"><h5>Legal</h5><a href="https://opensource.facebook.com/legal/privacy/" target="_blank" rel="noreferrer noopener">Privacy</a><a href="https://opensource.facebook.com/legal/terms/" target="_blank" rel="noreferrer noopener">Terms</a></div><div class="footerSection"><h5>Social</h5><div class="social"><a class="github-button" href="https://github.com/pytorch/captum" data-count-href="https://github.com/pytorch/captum/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Captum on GitHub">captum</a></div></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright"> Copyright © 2025 Facebook Inc.</section><script>
             (function() {
               var BAD_BASE = '/captum/';
               if (window.location.origin !== 'https://captum.ai') {

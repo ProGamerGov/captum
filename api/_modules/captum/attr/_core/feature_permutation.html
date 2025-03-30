@@ -6,7 +6,7 @@
 
               ga('create', 'UA-44373548-48', 'auto');
               ga('send', 'pageview');
-            </script><link rel="stylesheet" href="/css/code_block_buttons.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/js/code_block_buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script type="text/javascript" src="/js/mathjax.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script type="text/javascript" src="/js/code_block_buttons.js"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script><script src="https://unpkg.com/vanilla-back-to-top@7.1.14/dist/vanilla-back-to-top.min.js"></script><script>
         document.addEventListener('DOMContentLoaded', function() {
           addBackToTop(
             {"zIndex":100}
@@ -14,27 +14,33 @@
         });
         </script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/captum_logo.svg" alt="Captum"/></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/introduction" target="_self">Docs</a></li><li class=""><a href="/tutorials/" target="_self">Tutorials</a></li><li class=""><a href="/api/" target="_self">API Reference</a></li><li class=""><a href="https://github.com/pytorch/captum" target="_self">GitHub</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div>
 <script type="text/javascript" id="documentation_options" data-url_root="./"
-  src="/js/documentation_options.js"></script>
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/js/underscore.js"></script>
-<script type="text/javascript" src="/js/doctools.js"></script>
-<script type="text/javascript" src="/js/language_data.js"></script>
-<script type="text/javascript" src="/js/searchtools.js"></script>
-<div class="sphinx"><div class="document">
+src="/_sphinx/documentation_options.js"></script>
+<script type="text/javascript" src="/_sphinx/jquery.js"></script>
+<script type="text/javascript" src="/_sphinx/underscore.js"></script>
+<script type="text/javascript" src="/_sphinx/doctools.js"></script>
+<script type="text/javascript" src="/_sphinx/language_data.js"></script>
+<script type="text/javascript" src="/_sphinx/searchtools.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"></script>
+<script src="/_sphinx/katex_autorenderer.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" />
+<div class="sphinx wrapper"><div class="document">
 <div class="documentwrapper">
 <div class="bodywrapper">
 <div class="body" role="main">
 <h1>Source code for captum.attr._core.feature_permutation</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="c1"># pyre-strict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
-
+<span class="kn">from</span> <span class="nn">captum._utils.typing</span> <span class="kn">import</span> <span class="n">BaselineType</span><span class="p">,</span> <span class="n">TargetType</span><span class="p">,</span> <span class="n">TensorOrTupleOfTensorsGeneric</span>
+<span class="kn">from</span> <span class="nn">captum.attr._core.feature_ablation</span> <span class="kn">import</span> <span class="n">FeatureAblation</span>
 <span class="kn">from</span> <span class="nn">captum.log</span> <span class="kn">import</span> <span class="n">log_usage</span>
-
-<span class="kn">from</span> <span class="nn">..._utils.typing</span> <span class="kn">import</span> <span class="n">TargetType</span><span class="p">,</span> <span class="n">TensorOrTupleOfTensorsGeneric</span>
-<span class="kn">from</span> <span class="nn">.feature_ablation</span> <span class="kn">import</span> <span class="n">FeatureAblation</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">torch.futures</span> <span class="kn">import</span> <span class="n">Future</span>
 
 
 <span class="k">def</span> <span class="nf">_permute_feature</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">feature_mask</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tensor</span><span class="p">:</span>
@@ -51,8 +57,10 @@
     <span class="p">)</span>
 
 
-<div class="viewcode-block" id="FeaturePermutation"><a class="viewcode-back" href="../../../../feature_permutation.html#captum.attr.FeaturePermutation">[docs]</a><span class="k">class</span> <span class="nc">FeaturePermutation</span><span class="p">(</span><span class="n">FeatureAblation</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">"""</span>
+<div class="viewcode-block" id="FeaturePermutation">
+<a class="viewcode-back" href="../../../../feature_permutation.html#captum.attr.FeaturePermutation">[docs]</a>
+<span class="k">class</span> <span class="nc">FeaturePermutation</span><span class="p">(</span><span class="n">FeatureAblation</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    A perturbation based approach to compute attribution, which</span>
 <span class="sd">    takes each input feature, permutes the feature values within a batch,</span>
 <span class="sd">    and computes the difference between original and shuffled outputs for</span>
@@ -81,7 +89,8 @@
 <span class="sd">    of examples to compute attributions and cannot be performed on a single example.</span>
 
 <span class="sd">    By default, each scalar value within</span>
-<span class="sd">    each input tensor is taken as a feature and shuffled independently. Passing</span>
+<span class="sd">    each input tensor is taken as a feature and shuffled independently, *unless*</span>
+<span class="sd">    attribute() is called with enable_cross_tensor_attribution=True. Passing</span>
 <span class="sd">    a feature mask, allows grouping features to be shuffled together.</span>
 <span class="sd">    Each input scalar in the group will be given the same attribution value</span>
 <span class="sd">    equal to the change in target as a result of shuffling the entire feature</span>
@@ -98,13 +107,17 @@
 <span class="sd">    https://christophm.github.io/interpretable-ml-book/feature-importance.html</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">forward_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">perm_func</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">_permute_feature</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">"""</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">forward_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Future</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]],</span>
+        <span class="n">perm_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span> <span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="n">_permute_feature</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        Args:</span>
 
-<span class="sd">            forward_func (callable): The forward function of the model or</span>
-<span class="sd">                any modification of it</span>
-<span class="sd">            perm_func (callable, optional): A function that accepts a batch of</span>
+<span class="sd">            forward_func (Callable): The forward function of the model or</span>
+<span class="sd">                any modification of it.</span>
+<span class="sd">            perm_func (Callable, optional): A function that accepts a batch of</span>
 <span class="sd">                inputs and a feature mask, and "permutes" the feature using</span>
 <span class="sd">                feature mask across the batch. This defaults to a function</span>
 <span class="sd">                which applies a random permutation, this argument only needs</span>
@@ -116,25 +129,31 @@
 
     <span class="c1"># suppressing error caused by the child class not having a matching</span>
     <span class="c1"># signature to the parent</span>
-<div class="viewcode-block" id="FeaturePermutation.attribute"><a class="viewcode-back" href="../../../../feature_permutation.html#captum.attr.FeaturePermutation.attribute">[docs]</a>    <span class="nd">@log_usage</span><span class="p">()</span>
+<div class="viewcode-block" id="FeaturePermutation.attribute">
+<a class="viewcode-back" href="../../../../feature_permutation.html#captum.attr.FeaturePermutation.attribute">[docs]</a>
+    <span class="nd">@log_usage</span><span class="p">()</span>
     <span class="k">def</span> <span class="nf">attribute</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">inputs</span><span class="p">:</span> <span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">,</span>
         <span class="n">target</span><span class="p">:</span> <span class="n">TargetType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">feature_mask</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">perturbations_per_eval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">show_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">enable_cross_tensor_attribution</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">:</span>
-        <span class="sa">r</span><span class="sd">"""</span>
-<span class="sd">        This function is almost equivalent to `FeatureAblation.attribute`. The</span>
-<span class="sd">        main difference is the way ablated examples are generated. Specifically</span>
-<span class="sd">        they are generated through the `perm_func`, as we set the baselines for</span>
-<span class="sd">        `FeatureAblation.attribute` to None.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
+<span class="sd">        This function is almost equivalent to</span>
+<span class="sd">        :func:`FeatureAblation.attribute &lt;captum.attr.FeatureAblation.attribute&gt;`. The</span>
+<span class="sd">        main difference is the way ablated examples are generated. Specifically they</span>
+<span class="sd">        are generated through the ``perm_func``, as we set the baselines for</span>
+<span class="sd">        :func:`FeatureAblation.attribute &lt;captum.attr.FeatureAblation.attribute&gt;` to</span>
+<span class="sd">        ``None``.</span>
 
 
 <span class="sd">        Args:</span>
-<span class="sd">                inputs (tensor or tuple of tensors):  Input for which</span>
+<span class="sd">                inputs (Tensor or tuple[Tensor, ...]): Input for which</span>
 <span class="sd">                            permutation attributions are computed. If</span>
 <span class="sd">                            forward_func takes a single tensor as input, a</span>
 <span class="sd">                            single input tensor should be provided.  If</span>
@@ -144,7 +163,7 @@
 <span class="sd">                            0 corresponds to the number of examples (aka batch</span>
 <span class="sd">                            size), and if multiple input tensors are provided,</span>
 <span class="sd">                            the examples must be aligned appropriately.</span>
-<span class="sd">                target (int, tuple, tensor or list, optional):  Output indices for</span>
+<span class="sd">                target (int, tuple, Tensor, or list, optional): Output indices for</span>
 <span class="sd">                            which difference is computed (for classification cases,</span>
 <span class="sd">                            this is usually the target class).</span>
 <span class="sd">                            If the network returns a scalar value per example,</span>
@@ -169,7 +188,7 @@
 <span class="sd">                              target for the corresponding example.</span>
 
 <span class="sd">                            Default: None</span>
-<span class="sd">                additional_forward_args (any, optional): If the forward function</span>
+<span class="sd">                additional_forward_args (Any, optional): If the forward function</span>
 <span class="sd">                            requires additional arguments other than the inputs for</span>
 <span class="sd">                            which attributions should not be computed, this argument</span>
 <span class="sd">                            can be provided. It must be either a single additional</span>
@@ -184,7 +203,7 @@
 <span class="sd">                            Note that attributions are not computed with respect</span>
 <span class="sd">                            to these arguments.</span>
 <span class="sd">                            Default: None</span>
-<span class="sd">                feature_mask (tensor or tuple of tensors, optional):</span>
+<span class="sd">                feature_mask (Tensor or tuple[Tensor, ...], optional):</span>
 <span class="sd">                            feature_mask defines a mask for the input, grouping</span>
 <span class="sd">                            features which should be ablated together. feature_mask</span>
 <span class="sd">                            should contain the same number of tensors as inputs.</span>
@@ -195,14 +214,16 @@
 <span class="sd">                            corresponding to the same feature should have the</span>
 <span class="sd">                            same value.  Note that features within each input</span>
 <span class="sd">                            tensor are ablated independently (not across</span>
-<span class="sd">                            tensors).</span>
+<span class="sd">                            tensors), unless enable_cross_tensor_attribution is</span>
+<span class="sd">                            True.</span>
 
 <span class="sd">                            The first dimension of each mask must be 1, as we require</span>
 <span class="sd">                            to have the same group of features for each input sample.</span>
 
 <span class="sd">                            If None, then a feature mask is constructed which assigns</span>
 <span class="sd">                            each scalar within a tensor as a separate feature, which</span>
-<span class="sd">                            is permuted independently.</span>
+<span class="sd">                            is permuted independently, unless</span>
+<span class="sd">                            enable_cross_tensor_attribution is True.</span>
 <span class="sd">                            Default: None</span>
 <span class="sd">                perturbations_per_eval (int, optional): Allows permutations</span>
 <span class="sd">                            of multiple features to be processed simultaneously</span>
@@ -216,15 +237,24 @@
 <span class="sd">                            If the forward function returns a single scalar per batch,</span>
 <span class="sd">                            perturbations_per_eval must be set to 1.</span>
 <span class="sd">                            Default: 1</span>
+<span class="sd">                show_progress (bool, optional): Displays the progress of computation.</span>
+<span class="sd">                            It will try to use tqdm if available for advanced features</span>
+<span class="sd">                            (e.g. time estimation). Otherwise, it will fallback to</span>
+<span class="sd">                            a simple output of progress.</span>
+<span class="sd">                            Default: False</span>
+<span class="sd">                enable_cross_tensor_attribution (bool, optional): If True, then</span>
+<span class="sd">                            features can be grouped across input tensors depending on</span>
+<span class="sd">                            the values in the feature mask.</span>
+<span class="sd">                            Default: False</span>
 <span class="sd">                **kwargs (Any, optional): Any additional arguments used by child</span>
-<span class="sd">                            classes of FeatureAblation (such as Occlusion) to construct</span>
-<span class="sd">                            ablations. These arguments are ignored when using</span>
-<span class="sd">                            FeatureAblation directly.</span>
+<span class="sd">                            classes of :class:`.FeatureAblation` (such as</span>
+<span class="sd">                            :class:`.Occlusion`) to construct ablations. These</span>
+<span class="sd">                            arguments are ignored when using FeatureAblation directly.</span>
 <span class="sd">                            Default: None</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            *tensor* or tuple of *tensors* of **attributions**:</span>
-<span class="sd">            - **attributions** (*tensor* or tuple of *tensors*):</span>
+<span class="sd">            *Tensor* or *tuple[Tensor, ...]* of **attributions**:</span>
+<span class="sd">            - **attributions** (*Tensor* or *tuple[Tensor, ...]*):</span>
 <span class="sd">                        The attributions with respect to each input feature.</span>
 <span class="sd">                        If the forward function returns</span>
 <span class="sd">                        a scalar value per example, attributions will be</span>
@@ -274,6 +304,10 @@
 <span class="sd">            &gt;&gt;&gt; attr = feature_perm.attribute(input, target=1,</span>
 <span class="sd">            &gt;&gt;&gt;                               feature_mask=feature_mask)</span>
 <span class="sd">        """</span>
+        <span class="c1"># Remove baselines from kwargs if provided so we don't specify this field</span>
+        <span class="c1"># twice in the FeatureAblation.attribute call below.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">"baselines"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"baselines"</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">FeatureAblation</span><span class="o">.</span><span class="n">attribute</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">inputs</span><span class="p">,</span>
@@ -282,19 +316,49 @@
             <span class="n">additional_forward_args</span><span class="o">=</span><span class="n">additional_forward_args</span><span class="p">,</span>
             <span class="n">feature_mask</span><span class="o">=</span><span class="n">feature_mask</span><span class="p">,</span>
             <span class="n">perturbations_per_eval</span><span class="o">=</span><span class="n">perturbations_per_eval</span><span class="p">,</span>
+            <span class="n">show_progress</span><span class="o">=</span><span class="n">show_progress</span><span class="p">,</span>
+            <span class="n">enable_cross_tensor_attribution</span><span class="o">=</span><span class="n">enable_cross_tensor_attribution</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FeaturePermutation.attribute_future">
+<a class="viewcode-back" href="../../../../feature_permutation.html#captum.attr.FeaturePermutation.attribute_future">[docs]</a>
+    <span class="k">def</span> <span class="nf">attribute_future</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inputs</span><span class="p">:</span> <span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">,</span>
+        <span class="n">target</span><span class="p">:</span> <span class="n">TargetType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">additional_forward_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">feature_mask</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">perturbations_per_eval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">show_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Future</span><span class="p">[</span><span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kwargs</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">"baselines"</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">"baselines"</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">FeatureAblation</span><span class="o">.</span><span class="n">attribute_future</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">inputs</span><span class="p">,</span>
+            <span class="n">baselines</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
+            <span class="n">additional_forward_args</span><span class="o">=</span><span class="n">additional_forward_args</span><span class="p">,</span>
+            <span class="n">feature_mask</span><span class="o">=</span><span class="n">feature_mask</span><span class="p">,</span>
+            <span class="n">perturbations_per_eval</span><span class="o">=</span><span class="n">perturbations_per_eval</span><span class="p">,</span>
+            <span class="n">show_progress</span><span class="o">=</span><span class="n">show_progress</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">_construct_ablated_input</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">expanded_input</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
-        <span class="n">input_mask</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span>
-        <span class="n">baseline</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span>
+        <span class="n">input_mask</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
+        <span class="n">baseline</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">],</span>
         <span class="n">start_feature</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">end_feature</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
-        <span class="sa">r</span><span class="sd">"""</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">        This function permutes the features of `expanded_input` with a given</span>
 <span class="sd">        feature mask and feature range. Permutation occurs via calling</span>
 <span class="sd">        `self.perm_func` across each batch within `expanded_input`. As with</span>
@@ -308,13 +372,18 @@
 <span class="sd">        Since `baselines` is set to None for `FeatureAblation.attribute, this</span>
 <span class="sd">        will be the zero tensor, however, it is not used.</span>
 <span class="sd">        """</span>
-        <span class="k">assert</span> <span class="n">input_mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">input_mask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_mask</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">input_mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="p">),</span> <span class="p">(</span>
             <span class="s2">"input_mask.shape[0] != 1: pass in one mask in order to permute"</span>
             <span class="s2">"the same features for each input"</span>
         <span class="p">)</span>
         <span class="n">current_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
             <span class="p">[</span><span class="n">input_mask</span> <span class="o">==</span> <span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_feature</span><span class="p">,</span> <span class="n">end_feature</span><span class="p">)],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span>
         <span class="p">)</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
+        <span class="n">current_mask</span> <span class="o">=</span> <span class="n">current_mask</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">expanded_input</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
 
         <span class="n">output</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
             <span class="p">[</span>
@@ -322,25 +391,84 @@
                 <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">expanded_input</span><span class="p">,</span> <span class="n">current_mask</span><span class="p">)</span>
             <span class="p">]</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">current_mask</span></div>
+        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">current_mask</span>
+
+    <span class="k">def</span> <span class="nf">_construct_ablated_input_across_tensors</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">inputs</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+        <span class="n">input_mask</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+        <span class="n">baselines</span><span class="p">:</span> <span class="n">BaselineType</span><span class="p">,</span>
+        <span class="n">feature_idxs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">feature_idx_to_tensor_idx</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span>
+        <span class="n">current_num_ablated_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">],</span> <span class="o">...</span><span class="p">]]:</span>
+        <span class="n">current_masks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Tensor</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">tensor_idxs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">tensor_idx</span>
+            <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="n">feature_idx_to_tensor_idx</span><span class="p">[</span><span class="n">feature_idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">feature_idx</span> <span class="ow">in</span> <span class="n">feature_idxs</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">tensor_idx</span> <span class="ow">in</span> <span class="n">sublist</span>
+        <span class="p">}</span>
+        <span class="n">permuted_inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">input_tensor</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inputs</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tensor_idxs</span><span class="p">:</span>
+                <span class="n">current_masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                <span class="n">permuted_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">tensor_mask</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">permuted_input</span> <span class="o">=</span> <span class="n">input_tensor</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">feature_idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">feature_idxs</span><span class="p">):</span>
+                <span class="n">original_input_size</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">input_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="n">current_num_ablated_features</span>
+                <span class="p">)</span>
+                <span class="n">start_idx</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">original_input_size</span>
+                <span class="n">end_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">original_input_size</span>
+
+                <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">input_mask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">feature_idx</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">input_tensor</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,)</span> <span class="o">*</span> <span class="n">input_tensor</span><span class="o">.</span><span class="n">dim</span><span class="p">())</span>
+                <span class="n">tensor_mask</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+                <span class="n">permuted_input</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">perm_func</span><span class="p">(</span>
+                    <span class="n">input_tensor</span><span class="p">[</span><span class="n">start_idx</span><span class="p">:</span><span class="n">end_idx</span><span class="p">],</span> <span class="n">mask</span>
+                <span class="p">)</span>
+            <span class="n">current_masks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">tensor_mask</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+            <span class="n">permuted_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">permuted_input</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">permuted_inputs</span><span class="p">),</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">current_masks</span><span class="p">)</span></div>
+
 </pre></div>
 </div>
 </div>
 </div>
-<div aria-label="main navigation" class="sphinxsidebar" role="navigation">
+<div aria-label="Main" class="sphinxsidebar" role="navigation">
 <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../../../index.html">Captum</a></h1>
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+<search id="searchbox" role="search" style="display: none">
+<div class="searchformwrapper">
+<form action="../../../../search.html" class="search" method="get">
+<input aria-labelledby="searchlabel" autocapitalize="off" autocomplete="off" autocorrect="off" name="q" placeholder="Search" spellcheck="false" type="text"/>
+<input type="submit" value="Go"/>
+</form>
+</div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../attribution.html">Attribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../llm_attr.html">LLM Attribution Classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../noise_tunnel.html">NoiseTunnel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../layer.html">Layer Attribution</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../neuron.html">Neuron Attribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../metrics.html">Metrics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../robust.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../concept.html">Concept-based Interpretability</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../influence.html">Influential Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../module.html">Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../utilities.html">Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../base_classes.html">Base Classes</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Insights API Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Insights API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../insights.html">Insights</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../insights.html#features">Features</a></li>
@@ -354,20 +482,10 @@
 </ul></li>
 </ul>
 </div>
-<div id="searchbox" role="search" style="display: none">
-<h3 id="searchlabel">Quick search</h3>
-<div class="searchformwrapper">
-<form action="../../../../search.html" class="search" method="get">
-<input aria-labelledby="searchlabel" name="q" type="text"/>
-<input type="submit" value="Go"/>
-</form>
-</div>
-</div>
-<script>$('#searchbox').show(0);</script>
 </div>
 </div>
 <div class="clearer"></div>
-</div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><div class="footerSection"><h5>Docs</h5><a href="/docs/introduction">Introduction</a><a href="/docs/getting_started">Getting Started</a><a href="/tutorials/">Tutorials</a><a href="/api/">API Reference</a></div><div class="footerSection"><h5>Social</h5><div class="social"><a class="github-button" href="https://github.com/pytorch/captum" data-count-href="https://github.com/pytorch/captum/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Captum on GitHub">captum</a></div></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright"> Copyright © 2020 Facebook Inc.</section><script>
+</div></div></div><footer class="nav-footer" id="footer"><section class="sitemap"><div class="footerSection"><h5>Docs</h5><a href="/docs/introduction">Introduction</a><a href="/docs/getting_started">Getting Started</a><a href="/tutorials/">Tutorials</a><a href="/api/">API Reference</a></div><div class="footerSection"><h5>Legal</h5><a href="https://opensource.facebook.com/legal/privacy/" target="_blank" rel="noreferrer noopener">Privacy</a><a href="https://opensource.facebook.com/legal/terms/" target="_blank" rel="noreferrer noopener">Terms</a></div><div class="footerSection"><h5>Social</h5><div class="social"><a class="github-button" href="https://github.com/pytorch/captum" data-count-href="https://github.com/pytorch/captum/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star Captum on GitHub">captum</a></div></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright"> Copyright © 2025 Facebook Inc.</section><script>
             (function() {
               var BAD_BASE = '/captum/';
               if (window.location.origin !== 'https://captum.ai') {
