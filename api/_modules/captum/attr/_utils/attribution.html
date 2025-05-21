@@ -56,8 +56,6 @@ src="/_sphinx/documentation_options.js"></script>
 <span class="kn">from</span> <span class="nn">torch.nn</span> <span class="kn">import</span> <span class="n">Module</span>
 
 
-<span class="c1"># pyre-fixme[13]: Attribute `attribute` is never initialized.</span>
-<span class="c1"># pyre-fixme[13]: Attribute `compute_convergence_delta` is never initialized.</span>
 <div class="viewcode-block" id="Attribution">
 <a class="viewcode-back" href="../../../../base_classes.html#captum.attr.Attribution">[docs]</a>
 <span class="k">class</span> <span class="nc">Attribution</span><span class="p">:</span>
@@ -245,7 +243,7 @@ src="/_sphinx/documentation_options.js"></script>
 
 <div class="viewcode-block" id="GradientAttribution.compute_convergence_delta">
 <a class="viewcode-back" href="../../../../base_classes.html#captum.attr.GradientAttribution.compute_convergence_delta">[docs]</a>
-    <span class="nd">@log_usage</span><span class="p">()</span>
+    <span class="nd">@log_usage</span><span class="p">(</span><span class="n">part_of_slo</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">compute_convergence_delta</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">attributions</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
@@ -527,7 +525,6 @@ src="/_sphinx/documentation_options.js"></script>
 
 
 
-<span class="c1"># pyre-fixme[13]: Attribute `attribute` is never initialized.</span>
 <span class="c1"># pyre-fixme[24]: Generic type `InternalAttribution` expects 1 type parameter.</span>
 <div class="viewcode-block" id="NeuronAttribution">
 <a class="viewcode-back" href="../../../../base_classes.html#captum.attr.NeuronAttribution">[docs]</a>

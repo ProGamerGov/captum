@@ -116,7 +116,7 @@ src="/_sphinx/documentation_options.js"></script>
 
 <div class="viewcode-block" id="FGSM.perturb">
 <a class="viewcode-back" href="../../../../robust.html#captum.robust.FGSM.perturb">[docs]</a>
-    <span class="nd">@log_usage</span><span class="p">()</span>
+    <span class="nd">@log_usage</span><span class="p">(</span><span class="n">part_of_slo</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">perturb</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">inputs</span><span class="p">:</span> <span class="n">TensorOrTupleOfTensorsGeneric</span><span class="p">,</span>
@@ -192,8 +192,6 @@ src="/_sphinx/documentation_options.js"></script>
 <span class="sd">                        is returned. If a tuple is provided for inputs, a tuple of</span>
 <span class="sd">                        corresponding sized tensors is returned.</span>
 <span class="sd">        """</span>
-        <span class="c1"># pyre-fixme[6]: For 1st argument expected `Tensor` but got</span>
-        <span class="c1">#  `TensorOrTupleOfTensorsGeneric`.</span>
         <span class="n">is_inputs_tuple</span> <span class="o">=</span> <span class="n">_is_tuple</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
         <span class="c1"># pyre-fixme[35]: Target cannot be annotated.</span>
         <span class="n">inputs</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">_format_tensor_into_tuples</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
