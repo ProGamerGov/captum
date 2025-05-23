@@ -119,7 +119,7 @@ class VGG(nn.Module):
                 Default: ``1000``
             transform_input (bool, optional): If ``True``, preprocesses the input
                 according to the method with which it was trained on ImageNet.
-                Default: ``False``
+                Default: ``True``
             scale_input (bool, optional): If ``True`` and ``transform_input`` is ``True``, scale
                 the input range from [0, 1] to [0, 255] in the internal preprocessing.
                 Default: ``True``
