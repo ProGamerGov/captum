@@ -1,11 +1,12 @@
 import unittest
+
 import torch
+from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 
 from captum.optim.models.vgg import vgg16
-from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 from captum.testing.helpers.basic import assertTensorAlmostEqual, BaseTest
-from tests.optim.helpers.models import check_layer_in_model
 from packaging import version
+from tests.optim.helpers.models import check_layer_in_model
 
 
 class TestVGG16(BaseTest):
@@ -30,9 +31,9 @@ class TestVGG16(BaseTest):
         x = torch.randn(1, 3, 224, 224).clamp(0, 1)
         model = vgg16(pretrained=True)
         output = model._transform_input(x)
-        expected_output = (
-            x * 255 - torch.tensor([123.68, 116.779, 103.939], device=x.device).view(3, 1, 1)
-        )
+        expected_output = x * 255 - torch.tensor(
+            [123.68, 116.779, 103.939], device=x.device
+        ).view(3, 1, 1)
         expected_output = expected_output[:, [2, 1, 0]]  # RGB to BGR
         assertTensorAlmostEqual(self, output, expected_output, 0)
 
