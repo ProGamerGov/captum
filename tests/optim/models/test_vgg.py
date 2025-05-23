@@ -3,7 +3,7 @@ import unittest
 import torch
 from captum.optim.models._common import RedirectedReluLayer, SkipLayer
 
-from captum.optim.models.vgg import vgg16
+from captum.optim.models import vgg16
 from captum.testing.helpers.basic import assertTensorAlmostEqual, BaseTest
 from packaging import version
 from tests.optim.helpers.models import check_layer_in_model
