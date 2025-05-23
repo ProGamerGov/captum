@@ -6,8 +6,8 @@ import captum.concept as concept
 import captum.influence as influence
 import captum.log as log
 import captum.metrics as metrics
-import captum.robust as robust
 import captum.optim as optim
+import captum.robust as robust
 
 
 __version__ = "0.8.0"
